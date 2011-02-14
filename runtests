@@ -1,0 +1,210 @@
+#!/bin/sh
+##
+## $Revision$ $Date$
+##
+
+PROGNAME=`basename $0`
+DIRNAME=`dirname $0`
+
+DEFAULT_WEB="none"
+
+warn() {
+    echo "${PROGNAME}: $*"
+}
+
+die() {
+    warn "$*"
+    exit 1
+}
+
+usage() {
+    cat <<EOF
+usage: $PROGNAME [options] <test> [<test> ...] [mvn options]
+
+options:
+    -h,--help               Display help information
+    -w,--web <container>    Specify the container to test with (default: $DEFAULT_WEB)
+    -tv,--tomcat-version    Specify the tomcat version (implies -w tomcat)
+    -d,--debug              Enable Geronimo server and TCK appclient debug options (5005 and 5003)
+    -de,--debug-embedded    Enable TCK embedded ejb debug options (port 5001)
+    -dh,--debug-harness     Enable TCK harness debug options (port 5002)
+    -da,--debug-appclient   Enable TCK appclient debug options (port 5003)
+    -dj,--debug-javatest    Enable TCK javatest debug options (port 5004)
+    -ds,--debug-server      Enable Geronimo server debug options (port 5005)
+    -o,--option <option>    Enable an option
+    -ol,--offline           Run maven offline
+    --                      Stop option processing
+EOF
+    exit 1
+}
+
+if [ $# -lt 1 ]; then
+    usage
+fi
+
+tests=""
+web="$DEFAULT_WEB"
+profile="$DEFAULT_PROFILE"
+args=""
+options=""
+tomcatVersion="-Dtomcat.version=6.0.32"
+
+assertOptionArg() {
+    if [ "x$2" = "x" ]; then
+        die "Option '$1' requires an argument"
+    fi
+}
+
+appendOption() {
+    echo "Including options=$1"
+    if [ "x$options" = "x" ]; then
+        options="$1"
+    else
+        options="${options},$1"
+    fi
+}
+
+appendArgs() {
+    if [ "x$args" = "x" ]; then
+        args="$*"
+    else
+        args="$args $*"
+    fi
+}
+
+appendTests() {
+    if [ "x$tests" = "x" ]; then
+        tests="$1"
+    else
+        tests="${tests},$1"
+    fi
+}
+
+processOptions() {
+    while [ "x$1" != "x" ]; do
+        case "$1" in
+            -h|--help)
+                usage
+                ;;
+
+            -w|--web)
+                assertOptionArg $1 $2
+                web="$2"; shift
+                ;;
+
+            -tv|--tomcat-version)
+		web="tomcat"
+                assertOptionArg $1 $2
+                tomcatVersion="-Dtomcat.version=$2"; shift
+                ;;
+
+            -o|--option)
+                assertOptionArg $1 $2
+                appendOption "$2"; shift
+                ;;
+
+            -d|--debug)
+                appendOption "debug"
+                appendOption "appclient-debug"
+                ;;
+
+            -da|--debug-appclient)
+                appendOption "appclient-debug"
+                ;;
+
+            -de|--debug-embedded)
+                appendOption "embedded-debug"
+                ;;
+
+            -dh|--debug-harness)
+                appendOption "harness-debug"
+                ;;
+
+            -dj|--debug-javatest)
+                appendOption "javatest-debug"
+                ;;
+
+            -ds|--debug-server)
+                appendOption "debug"
+                ;;
+
+            -ol|--offline)
+                appendArgs "-o"
+                ;;
+
+            --)
+                shift
+                appendArgs "$*"
+                break
+                ;;
+
+            # Collect extra options to pass on to mvn
+            -*)
+                appendArgs "$1"
+                ;;
+
+            # Non-option args are tests
+            *)
+                appendTests "$1"
+                ;;
+        esac
+        shift
+    done
+}
+
+if [ "x$RUNTESTS_OPTIONS" != "x" ]; then
+    echo "Including options from environment: $RUNTESTS_OPTIONS"
+    processOptions $RUNTESTS_OPTIONS
+fi
+
+processOptions "$@"
+
+# Validate web
+case "$web" in
+    tomee|tomcat|none)
+        profile="full"
+        true
+        ;;
+    tomcat-web)
+        profile="web"
+        appendOption "web-profile"
+        true
+        ;;
+    *)
+        echo "Unknown web container: $web"
+        exit 3
+        ;;
+esac
+
+# Append options if any
+if [ "x$options" != "x" ]; then
+    appendArgs "-Doptions=$options"
+fi
+
+# Make sure a test was selected
+if [ "x$tests" = "x" ]; then
+    usage
+fi
+
+# Pick the mvn executable to use
+if [ "x$M2_HOME" = "x" ]; then
+    mvn="mvn"
+else
+    mvn="$M2_HOME/bin/mvn"
+fi
+
+if [ -n "$tomcatVersion" ]; then
+    ant -f download.xml $tomcatVersion
+fi
+
+
+# Fire up Maven to do the real work
+exec "$mvn" --file "$DIRNAME/pom.xml" \
+    --batch-mode \
+    --errors \
+    -Dwebcontainer="$web" \
+    -Djavaee.level="$profile" \
+    -DassemblyId="$web" \
+    -Dtests="$tests" \
+    $tomcatVersion \
+    $args

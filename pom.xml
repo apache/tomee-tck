@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+     http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!-- $Revision$ $Date$ -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.apache.openejb.cts</groupId>
+  <artifactId>openejb-tck</artifactId>
+  <name>OpenEJB TCK Harness</name>
+
+  <version>3.2-SNAPSHOT</version><!--openejb.version-->
+
+  <description>
+    OpenEJB TCK Harness
+  </description>
+
+  <properties>
+    <!--
+    NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
+    -->
+    <javaee.cts.home>${javaee6.cts.home}</javaee.cts.home>
+    <javaee.ri.home>${javaee6.ri.home}</javaee.ri.home>
+
+    <repoPath>${user.home}/.m2/repository</repoPath>
+
+    <tomcat.version>6.0.32</tomcat.version>
+    <!--<tomcat.version>7.0.6</tomcat.version>-->
+
+    <!-- externalized ports for tx.jte file -->
+    <webcontainer.default.host>localhost</webcontainer.default.host>
+    <webcontainer.default.port>8080</webcontainer.default.port>
+    <webcontainer.default.ssl.port>8443</webcontainer.default.ssl.port>
+    <webcontainer.default.clientcert.port>8444</webcontainer.default.clientcert.port>
+    <webcontainer.ri.host>localhost</webcontainer.ri.host>
+    <webcontainer.ri.port>8000</webcontainer.ri.port>
+    <orb.default.host>localhost</orb.default.host>
+    <orb.default.port>2809</orb.default.port>
+    <orb.ri.host>localhost</orb.ri.host>
+    <orb.ri.port>3700</orb.ri.port>
+    <rmiiiop.http.server.host>localhost</rmiiiop.http.server.host>
+    <rmiiiop.http.server.port>10000</rmiiiop.http.server.port>
+
+    <!-- Random CTS properties that have been externalized -->
+    <deliverable.class>com.sun.ts.lib.deliverable.cts.CTSDeliverable</deliverable.class>
+    <deploy_delay_in_minutes>5</deploy_delay_in_minutes>
+    <cts.harness.debug>false</cts.harness.debug>
+
+    <!-- Disable Surefire, we are using Javatest to execute integration tests -->
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-standalone</artifactId>
+      <type>zip</type>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-tomee-tomcat7</artifactId>
+      <type>zip</type>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <version>4.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>tsharness</artifactId>
+      <version>6.0a</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>javatest</artifactId>
+      <version>6.0a</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>cts</artifactId>
+      <version>6.0a</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>whitebox</artifactId>
+      <version>6.0a</version>
+    </dependency>
+
+    <dependency>
+      <groupId>backport-util-concurrent</groupId>
+      <artifactId>backport-util-concurrent</artifactId>
+      <version>2.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-core</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-client</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-tomcat-webapp</artifactId>
+      <type>war</type>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb.tck</groupId>
+      <artifactId>tomcat</artifactId>
+      <type>zip</type>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.geronimo.modules</groupId>
+      <artifactId>geronimo-mail</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>jstl</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+    <testResources>
+      <testResource>
+        <directory>${pom.basedir}/src/test/resources</directory>
+      </testResource>
+    </testResources>
+
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.codehaus.gmaven</groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <version>1.2</version>
+          <configuration>
+            <scriptpath>
+              <element>${pom.basedir}/src/test/script</element>
+            </scriptpath>
+            <classpath>
+              <element>
+                <groupId>jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>0.9.94</version>
+              </element>
+            </classpath>
+            <defaults>
+              <testSectionsFile>${pom.basedir}/sections.properties</testSectionsFile>
+              <logOutputDirectory>${project.build.directory}/logs</logOutputDirectory>
+              <backupLogs>true</backupLogs>
+            </defaults>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <!--
+    NOTE: These are the default plugin executions that should always execute.
+          This performs setup and validation of the environment.
+    -->
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-idea-plugin</artifactId>
+        <configuration>
+          <jdkName>1.6</jdkName>
+          <jdkLevel>1.6</jdkLevel>
+          <linkModules>true</linkModules>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.openejb</groupId>
+                  <artifactId>openejb-standalone</artifactId>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.activemq</groupId>
+                  <artifactId>activemq-core</artifactId>
+                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>backport-util-concurrent</groupId>
+                  <artifactId>backport-util-concurrent</artifactId>
+                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.sun.javaee.tck</groupId>
+                  <artifactId>tsharness</artifactId>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.sun.javaee.tck</groupId>
+                  <artifactId>cts</artifactId>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.sun.javaee.tck</groupId>
+                  <artifactId>whitebox</artifactId>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.geronimo.modules</groupId>
+                  <artifactId>geronimo-mail</artifactId>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>jstl</groupId>
+                  <artifactId>jstl</artifactId>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>1.2</version>
+
+        <dependencies>
+          <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+          </dependency>
+        </dependencies>
+
+        <executions>
+          <execution>
+            <id>create-schema</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <driver>org.hsqldb.jdbcDriver</driver>
+              <url>jdbc:hsqldb:file:${openejb.home}/data/hsqldb/hsqldb</url>
+              <username>sa</username>
+              <password></password>
+              <autocommit>true</autocommit>
+              <onError>continue</onError>
+              <srcFiles>
+                <srcFile>src/test/sql/hsql/hsql.init.sql</srcFile>
+                <srcFile>src/test/sql/hsql/hsql.ddl.sql</srcFile>
+                <srcFile>src/test/sql/hsql/hsql.ddl.jstl.sql</srcFile>
+                <!-- hsql stored proceures will need some work -->
+                <!--srcFile>src/test/sql/hsql/hsql.ddl.sprocs.sql</srcFile-->
+
+                <srcFile>src/test/sql/hsql/hsql.shutdown.sql</srcFile>
+              </srcFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>gmaven-plugin</artifactId>
+
+        <executions>
+          <execution>
+            <id>validate-environment</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                new commands.ValidateCommand(this).execute()
+              </source>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>setup-environment</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                new commands.SetupCommand(this).execute()
+              </source>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>javatest</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <classpath>
+                <element>
+                  <groupId>jline</groupId>
+                  <artifactId>jline</artifactId>
+                  <version>0.9.94</version>
+                </element>
+
+                <!-- Included to access the testsuite reporting classes -->
+                <element>
+                  <groupId>org.apache.geronimo.cts</groupId>
+                  <artifactId>j2eetck-maven-plugin</artifactId>
+                  <version>3.0.13022011</version>
+                </element>
+              </classpath>
+              <defaults>
+                <logOutput>true</logOutput>
+                <logOutputDirectory>${project.build.directory}/logs</logOutputDirectory>
+              </defaults>
+              <source>
+                new commands.JavaTestCommand(this).execute()
+              </source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <!-- =================== -->
+    <!-- Standalone Environment -->
+    <!-- =================== -->
+
+    <profile>
+      <id>standalone-environment</id>
+
+      <activation>
+        <property>
+          <name>webcontainer</name>
+          <value>none</value>
+        </property>
+      </activation>
+
+      <properties>
+        <!-- where we will unpack openejb -->
+        <openejb.home>${project.build.directory}/openejb-${pom.version}</openejb.home>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>unpack</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>openejb-standalone</artifactId>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- =================== -->
+    <!-- Tomcat Environment -->
+    <!-- =================== -->
+
+    <profile>
+      <id>tomcat-environment</id>
+
+      <activation>
+        <property>
+          <name>webcontainer</name>
+          <value>tomcat</value>
+        </property>
+      </activation>
+
+      <properties>
+        <!-- where we will unpack tomcat -->
+        <openejb.home>${project.build.directory}/apache-tomcat-${tomcat.version}</openejb.home>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>unpack</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openejb.tck</groupId>
+                      <artifactId>tomcat</artifactId>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>openejb-tomcat-webapp</artifactId>
+                      <type>war</type>
+                      <outputDirectory>${openejb.home}/webapps/openejb</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+
+
+    <!-- =================== -->
+    <!-- TomEE Environment -->
+    <!-- =================== -->
+
+    <profile>
+      <id>tomee-environment</id>
+
+      <activation>
+        <property>
+          <name>webcontainer</name>
+          <value>tomee</value>
+        </property>
+      </activation>
+
+      <properties>
+        <!-- where we will unpack tomcat -->
+        <openejb.home>${project.build.directory}/apache-tomee-tomcat-7.0.6</openejb.home>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+
+            <executions>
+              <execution>
+                <id>unpack</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>openejb-tomee-tomcat7</artifactId>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <repositories>
+    <repository>
+      <id>openejb-cts-file</id>
+      <name>OpenEJB CTS File Repository</name>
+      <url>file://${pom.basedir}/src/test/repo</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>openejb-cts-file</id>
+      <name>OpenEJB CTS File Repository</name>
+      <url>file://${pom.basedir}/src/test/repo</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>

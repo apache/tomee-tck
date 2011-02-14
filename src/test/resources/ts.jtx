@@ -1,0 +1,62 @@
+#
+# Copyright 2009 Sun Microsystems, Inc. All rights reserved.
+# SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+#
+# $Id: ts.jtx 61026 2010-03-29 15:02:15Z dougd $
+#
+
+################
+# JSF Excludes
+################
+
+#
+# Bug ID: 6930386
+#
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig1Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig2Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig3Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig4Test
+
+#
+# Bug ID: 6938654
+#
+com/sun/ts/tests/jsf/api/javax_faces/component/uiinput/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectmany/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectone/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectboolean/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputhidden/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputsecret/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputtext/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputtextarea/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectbooleancheckbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanycheckbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanylistbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanymenu/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonelistbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonemenu/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectoneradio/URLClient.java#uiInputValidate3Test
+
+
+################
+# J2EETOOLS Excludes
+################
+
+#
+# Bug ID: 6422030
+#
+com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java#testStartRAR_from_standalone
+com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java#testStopRAR_from_standalone
+
+################
+# EJB30 Excludes
+################
+
+#
+# Bug ID: 6915860
+#
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_appmanaged
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_appmanagedNoTx
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_pmservlet
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_puservlet
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateful3
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateless3
