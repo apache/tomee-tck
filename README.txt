@@ -38,8 +38,8 @@ GETTING SETUP
 
 TEST RUN
 
- From inside the openejb-tck directory, a command like this will get
- you a little taste of running the TCK:
+ From inside the openejb-tck/trunk/ directory, a command like this
+ will get you a little taste of running the TCK:
 
   ./runtests com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
