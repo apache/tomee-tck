@@ -46,7 +46,7 @@ class PathBuilder
         assert directory != null
         
         def dir = new File(directory)
-        assert dir.isDirectory()
+        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
         
         def p = ant.path() {
             fileset(dir: dir) {
@@ -70,7 +70,7 @@ class PathBuilder
         assert directory != null
         
         def dir = new File(directory)
-        assert dir.isDirectory()
+        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
         
         def p = ant.path() {
             fileset(dir: dir) {
@@ -96,7 +96,7 @@ class PathBuilder
         assert d != null
 
         def dir = new File(d)
-        assert dir.isDirectory()
+        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
 
         def p = ant.path() {ant.pathelement(location: d)}
         paths.add(p)
