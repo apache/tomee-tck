@@ -17,9 +17,7 @@
  * under the License.
  */
 
-package commands
-
-import java.io.PrintStream;
+package openejb.tck.commands
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DefaultLogger;

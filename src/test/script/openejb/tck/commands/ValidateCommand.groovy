@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package commands
+package openejb.tck.commands
 
 import org.apache.commons.lang.SystemUtils
 

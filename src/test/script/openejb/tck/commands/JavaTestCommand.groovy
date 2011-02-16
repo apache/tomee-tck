@@ -17,15 +17,15 @@
  * under the License.
  */
 
-package commands
+package openejb.tck.commands
 
 import org.apache.commons.lang.SystemUtils
 import org.apache.commons.lang.time.StopWatch
 
 import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportFileLocator
 import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportTestCaseLoader
-import util.Messages
-import util.OutputScanner
+import openejb.tck.util.Messages
+import openejb.tck.util.OutputScanner
 
 /**
  * Executes JavaTest to run the TCK tests.

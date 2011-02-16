@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package util
+package openejb.tck.util
 
 /**
  * Provides a primitive progress output for JavaTest by scanning the log file

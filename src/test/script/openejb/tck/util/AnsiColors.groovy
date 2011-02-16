@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package util
+package openejb.tck.util
 
 import jline.Terminal
 

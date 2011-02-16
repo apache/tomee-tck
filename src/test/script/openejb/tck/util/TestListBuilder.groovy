@@ -17,9 +17,9 @@
  * under the License.
  */
 
-package util
+package openejb.tck.util
 
-import commands.CommandSupport
+import openejb.tck.commands.CommandSupport
 
 /**
  * Builds a list of testnames suitable for passing to JavaTest.

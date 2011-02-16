@@ -17,9 +17,10 @@
  * under the License.
  */
 
-package commands
+package openejb.tck.commands
 
-import util.*
+import openejb.tck.util.PathBuilder
+import openejb.tck.util.TestListBuilder
 
 /**
  * Support for commands
