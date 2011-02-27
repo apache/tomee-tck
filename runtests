@@ -33,6 +33,8 @@ options:
     -ds,--debug-server      Enable Geronimo server debug options (port 5005)
     -o,--option <option>    Enable an option
     -ol,--offline           Run maven offline
+    -c,--clean              Mvn clean
+    -U,--update             Mvn update snapshots
     --                      Stop option processing
 EOF
     exit 1
@@ -130,6 +132,13 @@ processOptions() {
 
             -ol|--offline)
                 appendArgs "-o"
+                ;;
+            -U|--update)
+                appendArgs "-U"
+                ;;
+
+            -c|--clean)
+                appendArgs "clean"
                 ;;
 
             --)
