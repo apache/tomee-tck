@@ -49,7 +49,7 @@ web="$DEFAULT_WEB"
 profile="$DEFAULT_PROFILE"
 args=""
 options=""
-tomcatVersion="-Dtomcat.version=6.0.32"
+#tomcatVersion="-Dtomcat.version=6.0.32"
 
 assertOptionArg() {
     if [ "x$2" = "x" ]; then
@@ -133,12 +133,13 @@ processOptions() {
             -ol|--offline)
                 appendArgs "-o"
                 ;;
+
             -U|--update)
                 appendArgs "-U"
                 ;;
 
             -c|--clean)
-                appendArgs "clean"
+                appendArgs "clean install"
                 ;;
 
             --)
@@ -208,7 +209,7 @@ fi
 
 
 # Fire up Maven to do the real work
-exec "$mvn" --file "$DIRNAME/pom.xml" \
+echo exec "$mvn" --file "$DIRNAME/pom.xml" \
     --batch-mode \
     --errors \
     -Dwebcontainer="$web" \
