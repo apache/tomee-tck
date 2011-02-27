@@ -562,6 +562,17 @@
 
   <repositories>
     <repository>
+      <id>apache-m2-snapshot</id>
+      <name>Apache M2 Snapshot Repository</name>
+      <url>http://repository.apache.org/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+	</releases>
+      <snapshots>
+	<enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
       <id>openejb-cts-file</id>
       <name>OpenEJB CTS File Repository</name>
       <url>file://${pom.basedir}/src/test/repo</url>
