@@ -209,7 +209,7 @@ fi
 
 
 # Fire up Maven to do the real work
-echo exec "$mvn" --file "$DIRNAME/pom.xml" \
+exec "$mvn" --file "$DIRNAME/pom.xml" \
     --batch-mode \
     --errors \
     -Dwebcontainer="$web" \
