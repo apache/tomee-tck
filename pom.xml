@@ -303,7 +303,7 @@
           <dependency>
             <groupId>hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
+            <version>1.8.0.10</version>
           </dependency>
         </dependencies>
 
@@ -325,6 +325,7 @@
                 <srcFile>src/test/sql/hsql/hsql.init.sql</srcFile>
                 <srcFile>src/test/sql/hsql/hsql.ddl.sql</srcFile>
                 <srcFile>src/test/sql/hsql/hsql.ddl.jstl.sql</srcFile>
+                <srcFile>src/test/sql/hsql/hsql.ddl.persistence.sql</srcFile>
                 <!-- hsql stored proceures will need some work -->
                 <!--srcFile>src/test/sql/hsql/hsql.ddl.sprocs.sql</srcFile-->
 
