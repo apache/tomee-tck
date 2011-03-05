@@ -86,6 +86,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-lite</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
       <version>4.1.1</version>
@@ -253,6 +259,11 @@
             </goals>
             <configuration>
               <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.openejb</groupId>
+                  <artifactId>openejb-lite</artifactId>
+                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.activemq</groupId>
                   <artifactId>activemq-core</artifactId>
