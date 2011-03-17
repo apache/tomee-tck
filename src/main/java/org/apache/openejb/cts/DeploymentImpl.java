@@ -51,7 +51,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String CLIENT_MAIN = "org.apache.openejb.client.Main";
 
     static {
-        final RemoteServer remoteServer = new RemoteServer();
+        final RemoteServer remoteServer = new RemoteServer(60, true);
         remoteServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
