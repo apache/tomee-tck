@@ -29,7 +29,7 @@
   <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>3.4.0-SNAPSHOT</version><!--openejb.version-->
+  <version>4.0.0-SNAPSHOT</version><!--openejb.version-->
 
   <description>
     OpenEJB TCK Harness
