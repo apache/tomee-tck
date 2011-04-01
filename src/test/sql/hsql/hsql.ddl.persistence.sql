@@ -1,3 +1,12 @@
+-- Think the original source might have been from the oracle sql files from the tck
+-- 
+-- The following changes where made:
+--
+--   BLOB -> LONGVARBINARY
+--   NUMBER -> NUMERIC
+--   FOO TYPE PRIMARY KEY NOT NULL -> FOO TYPE NOT NULL ..., CONSTRAINT PK_TABLENAME PRIMARY KEY(FOO)
+--   VARCHAR2 -> VARCHAR
+
 DROP table ADDRESS cascade;
 CREATE TABLE ADDRESS (id VARCHAR(255) PRIMARY KEY, street VARCHAR(255), city VARCHAR(255), state VARCHAR(255),zip VARCHAR(255));
 
