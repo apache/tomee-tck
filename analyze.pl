@@ -2,6 +2,8 @@
 use strict;
 use warnings;
 
+my $limit = $ARGV[0];
+
 sub unique {
     my @list = @_;
     my %seen = ();
@@ -38,13 +40,15 @@ foreach my $testOutput (<STDIN>) {
 
 my @sortedKeys = sort {$#{$exceptions{$b}} <=> $#{$exceptions{$a}}} keys %exceptions;
 
+my $l = 0;
 foreach my $exception (@sortedKeys) {
     my $count = $#{$exceptions{$exception}} +1;
     print "$count\t$exception\n";
+    last if ++$l >= $limit;
 }
 
 print "\n\n\n";
-
+$l = 0;
 foreach my $exception (@sortedKeys) {
     my @tests = @{$exceptions{$exception}};
     
@@ -57,4 +61,6 @@ foreach my $exception (@sortedKeys) {
     }
 
     print "\n\n\n";
+
+    last if ++$l >= $limit;
 }
