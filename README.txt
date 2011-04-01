@@ -105,7 +105,7 @@ LOGS
 
  The server logs are in the usual place:
 
-   target/openejb-3.2-SNAPSHOT/logs/openejb.log
+   target/openejb-4.0.0-SNAPSHOT/logs/openejb.log
    target/apache-tomcat-7.0.8/logs/openejb.log
 
 SELECTING TESTS
