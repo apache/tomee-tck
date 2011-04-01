@@ -1,6 +1,7 @@
 #!/bin/bash
 
-./runtests "$@" com.sun.ts.tests.ejb30.lite.appexception \
+./runtests "$@" \
+    com.sun.ts.tests.ejb30.lite.appexception \
     com.sun.ts.tests.ejb30.lite.basic \
     com.sun.ts.tests.ejb30.lite.ejbcontext \
     com.sun.ts.tests.ejb30.lite.enventry \
