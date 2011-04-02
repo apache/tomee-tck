@@ -445,7 +445,7 @@
 
       <properties>
         <!-- where we will unpack openejb -->
-        <openejb.home>${project.build.directory}/openejb-${project.version}</openejb.home>
+        <openejb.home>${project.build.directory}/apache-openejb-${project.version}</openejb.home>
       </properties>
 
       <build>
