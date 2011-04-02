@@ -233,9 +233,20 @@ abstract class CommandSupport
         // ts.run.classpath - used to run the appclient
         builder = new PathBuilder(this)
         builder.reference("openejb.jee.classes")
-        builder.reference("openejb.porting.classes")
-        builder.directory = openejbLib
-        builder.appendAll("*.jar")
+        builder.directory = "${project.build.directory}"
+        builder.append("openejb-tck-*.jar")
+        builder.directory = "${project.build.directory}/lib"
+        builder.append("openejb-lite*.jar")
+        builder.directory = "${javaeetckHome}/lib"
+        builder.append("javatest.jar")
+        builder.append("tsharness.jar")
+        builder.append("cts.jar")
+        builder.append("commons-httpclient*.jar")
+        builder.append("jdom.jar")
+        builder.append("dom4j.jar")
+        builder.append("jaxb-api.jar")
+        builder.append("jaxb-impl.jar")
+        builder.append("jaxb-xjc.jar")
         builder.getPath("openejb.embedded.classpath")
     }
 

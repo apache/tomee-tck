@@ -50,6 +50,7 @@ class SetupCommand
                     'ts.run.classpath',
                     'ts.run.classpath.ri.suffix',
                     'ts.harness.classpath',
+                    'openejb.embedded.classpath',
                     'geronimo.specs.classpath',
                     'geronimo.porting.classes'
                 ]
@@ -84,6 +85,7 @@ class SetupCommand
                     def vars = [
                         'basedir',
                         'openejb.home',
+                        'openejb.embedded.classpath',
                         'javaee.home',
                         'javaee.ri.home',
                         'javaee.home.ri',
