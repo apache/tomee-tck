@@ -89,7 +89,7 @@
 
     <dependency>
       <groupId>org.apache.openejb</groupId>
-      <artifactId>openejb-tomee-tomcat7</artifactId>
+      <artifactId>apache-tomee</artifactId>
       <type>zip</type>
       <version>${project.version}</version>
     </dependency>
@@ -553,7 +553,7 @@
 
       <properties>
         <!-- where we will unpack tomcat -->
-        <openejb.home>${project.build.directory}/apache-tomee-tomcat-${tomcat.version}</openejb.home>
+        <openejb.home>${project.build.directory}/apache-tomee-${project.version}</openejb.home>
       </properties>
 
       <build>
@@ -574,7 +574,7 @@
                   <artifactItems>
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
-                      <artifactId>openejb-tomee-tomcat7</artifactId>
+                      <artifactId>apache-tomee</artifactId>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
@@ -598,6 +598,7 @@
 	</releases>
       <snapshots>
 	<enabled>true</enabled>
+	<updatePolicy>never</updatePolicy>
       </snapshots>
     </repository>
     <repository>
