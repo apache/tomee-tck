@@ -595,10 +595,9 @@
       <url>http://repository.apache.org/snapshots/</url>
       <releases>
         <enabled>false</enabled>
-	</releases>
+      </releases>
       <snapshots>
 	<enabled>true</enabled>
-	<updatePolicy>never</updatePolicy>
       </snapshots>
     </repository>
     <repository>
