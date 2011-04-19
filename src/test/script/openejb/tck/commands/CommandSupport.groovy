@@ -214,6 +214,8 @@ abstract class CommandSupport
         builder.append("jaxb-api.jar")
         builder.append("jaxb-impl.jar")
         builder.append("jaxb-xjc.jar")
+        builder.directory = "${openejbHome}/lib"
+        builder.append("jasper-el.jar")
         builder.getPath("ts.run.classpath")
 
         // ts.harness.classpath
