@@ -242,6 +242,8 @@ class SetupCommand
         ant.copy(todir: "${openejbHome}", overwrite: true) {
             if ("tomcat".equals(System.getProperty("webcontainer"))) {
                 fileset(dir: "${project.basedir}/src/test/tomcat")
+            } else if ("tomee".equals(System.getProperty("webcontainer"))) {
+                fileset(dir: "${project.basedir}/src/test/tomee")
             } else {
                 fileset(dir: "${project.basedir}/src/test/openejb")
             }
