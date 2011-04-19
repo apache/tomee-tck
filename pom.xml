@@ -157,6 +157,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-tomcat-loader</artifactId>
+      <type>jar</type>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.openejb.tck</groupId>
       <artifactId>tomcat</artifactId>
       <type>zip</type>
@@ -526,6 +533,12 @@
                       <artifactId>openejb-tomcat-webapp</artifactId>
                       <type>war</type>
                       <outputDirectory>${openejb.home}/webapps/openejb</outputDirectory>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>openejb-tomcat-loader</artifactId>
+                      <type>jar</type>
+                      <outputDirectory>${openejb.home}/lib</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
