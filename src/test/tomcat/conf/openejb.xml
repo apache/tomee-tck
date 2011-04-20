@@ -56,11 +56,15 @@
 -->
 
 <Connector id="Default JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
     UserName     cts
     Password     cts
 </Connector>
 
 <Connector id="Default Unmanaged JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
     UserName     cts
     Password     cts
 </Connector>

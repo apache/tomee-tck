@@ -27,13 +27,15 @@
 </Container>
 
 <Resource id="CtsDataSource" type="DataSource">
-    JdbcUrl      jdbc:hsqldb:file:data/hsqldb/hsqldb
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
     UserName     cts
     Password     cts
 </Resource>
 
 <Resource id="CtsDataSourceUnmanaged" type="DataSource">
-    JdbcUrl      jdbc:hsqldb:file:data/hsqldb/hsqldb
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
     UserName     cts
     Password     cts
 </Resource>

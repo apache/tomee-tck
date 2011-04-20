@@ -47,17 +47,19 @@
 </Container>
 
 
-<Resource id="CtsDataSource" type="DataSource">
-    JdbcUrl      jdbc:hsqldb:file:data/hsqldb/hsqldb
+<Connector id="Default JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:1527/derbydb;create=true
     UserName     cts
     Password     cts
-</Resource>
+</Connector>
 
-<Resource id="CtsDataSourceUnmanaged" type="DataSource">
-    JdbcUrl      jdbc:hsqldb:file:data/hsqldb/hsqldb
+<Connector id="Default Unmanaged JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:1527/derbydb;create=true
     UserName     cts
     Password     cts
-</Resource>
+</Connector>
 
 
 <Resource id="JmsResourceAdapter" type="ActiveMQResourceAdapter">

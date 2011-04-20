@@ -20,6 +20,7 @@
 package openejb.tck.commands
 
 import org.apache.commons.lang.SystemUtils
+import java.sql.DriverManager
 
 /**
  * Setup the environment for running the TCK.
@@ -269,27 +270,27 @@ class SetupCommand
 
         //
         // NOTE: This tsant script only needs to be run once with each new CTS image or
-        //       when the DB is changed from HSQL to something else. It copies tssql.stmt
+        //       when the DB is changed from Derby to something else. It copies tssql.stmt
         //       containing the correct DML to ${j2eetckHome}/bin where it must reside.
         //       It also updates the jstl wars as necessary for the DB selected.
         //
-        // Process the dml for hsql just once if it hasn't already been done
+        // Process the dml for derby just once if it hasn't already been done
         def dmlProcessedFile = new File("${javaeeCtsHome}/dml_processed")
         if (!dmlProcessedFile.exists()) {
-            log.info("Processing DML for HSQL")
+            log.info("Processing DML for Derby")
 
             // Ant task only works if sql file is in the correct place
-            ant.mkdir(dir: "${javaeeCtsHome}/sql/hsql")
-            ant.copy( toDir: "${javaeeCtsHome}/sql/hsql", overwrite: true ) {
-                fileset(dir: "${project.basedir}/src/test/sql/hsql") {
-                    include(name: "hsql.dml*.sql")
+            ant.mkdir(dir: "${javaeeCtsHome}/sql/derby")
+            ant.copy( toDir: "${javaeeCtsHome}/sql/derby", overwrite: true ) {
+                fileset(dir: "${project.basedir}/src/test/sql/derby") {
+                    include(name: "derby.dml*.sql")
                 }
             }
 
-            // Configure CTS using HSQL dml
+            // Configure CTS using Derby dml
             TsAntCommand command = new TsAntCommand(this)
             command.props['target.dml.file'] = 'tssql.stmt'
-            command.props['dml.file'] = 'hsql/hsql.dml.sql'
+            command.props['dml.file'] = 'derby/derby.dml.sql'
             command.workingDirectory = "${javaeeCtsHome}/bin"
             command.execute('copy.dml.file')
 
@@ -322,5 +323,13 @@ class SetupCommand
             }
         }
         ant.mkdir(dir: logOutputDirectory)
+		
+		//
+		// Stop any previous running copy of Derby, from SQL setup
+		//
+		//log.info("Attempting to stop Derby embedded database...")
+		//Class.forName("org.apache.derby.jdbc.EmbeddedDriver")
+		//DriverManager.getConnection("jdbc:derby:${openejbHome}/data/derbydb;user=cts;password=cts;shutdown=true")
+		//log.info("Derby embedded database stopped.")
     }
 }
