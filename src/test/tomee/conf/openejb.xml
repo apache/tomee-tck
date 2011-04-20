@@ -29,7 +29,6 @@
 <Container id="StatefulContainer" ctype="STATEFUL">
     Passivator   org.apache.openejb.core.stateful.SimplePassivater
     TimeOut  20
-    PoolSize  100
     BulkPassivate  50
 </Container>
 
