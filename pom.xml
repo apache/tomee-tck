@@ -164,7 +164,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb.tck</groupId>
+      <groupId>org.apache.openejb</groupId>
       <artifactId>tomcat</artifactId>
       <type>zip</type>
       <version>${tomcat.version}</version>
@@ -618,6 +618,19 @@
       <id>openejb-cts-file</id>
       <name>OpenEJB CTS File Repository</name>
       <url>file://${pom.basedir}/src/test/repo</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </repository>
+    <repository>
+      <id>openejb-svn-repo</id>
+      <name>OpenEJB SVN Repository</name>
+      <url>http://svn.apache.org/repos/asf/openejb/repo/</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
