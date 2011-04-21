@@ -366,7 +366,31 @@
         </executions>
       </plugin>
 
-      <plugin>
+      <!-- TomEE embedds a lot of applications in. We should remove all not necessary web
+          application for TCK (ie. all but openejb and ROOT -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+                <execution>
+                    <id>remove-apps</id>
+                    <phase>pre-integration-test</phase>
+                    <goals><goal>run</goal></goals>
+                    <configuration>
+                        <target>
+                            <delete dir="${openejb.home}/webapps/docs"/>
+                            <delete dir="${openejb.home}/webapps/examples"/>
+                            <delete dir="${openejb.home}/webapps/ejb-examples"/>
+                            <delete dir="${openejb.home}/webapps/manager"/>
+                            <delete dir="${openejb.home}/webapps/host-manager"/>
+                        </target>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>sql-maven-plugin</artifactId>
         <version>1.2</version>
