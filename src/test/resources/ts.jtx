@@ -2,12 +2,23 @@
 # Copyright 2009 Sun Microsystems, Inc. All rights reserved.
 # SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 #
-# $Id: ts.jtx 61026 2010-03-29 15:02:15Z dougd $
+# $Id: ts.jtx 62049 2011-02-03 13:45:02Z dougd $
 #
 
 ################
-# JSF Excludes
+# JSF
 ################
+
+#
+# Bug ID:  6982305
+#
+# ***** DO NOT UNCOMMENT THIS TEST ******
+#
+# The test code has been commented out in the source, due to a limitation with Javatest we
+# were unable to exclude this Test via this file. The Javatest limitation is a case sensitivity
+# issue.
+#
+#com/sun/ts/tests/jsf/api/javax_faces/application/resourcehandlerwrapper/URLClient.java#resourceHandlerWrapperLibraryExistsTest
 
 #
 # Bug ID: 6930386
@@ -36,9 +47,19 @@ com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonelistbox/URLClie
 com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonemenu/URLClient.java#uiInputValidate3Test
 com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectoneradio/URLClient.java#uiInputValidate3Test
 
+#
+# Bug ID:  6969488 (Tests have been removed form workspace, see Bug for more details.)
+#
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventCtorTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventGetComponentTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIAETest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerNegativeTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerPostiveTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventProcessListenerTest
+
 
 ################
-# J2EETOOLS Excludes
+# J2EETOOLS
 ################
 
 #
@@ -48,8 +69,14 @@ com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java
 com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java#testStopRAR_from_standalone
 
 ################
-# EJB30 Excludes
+# EJB30
 ################
+
+#
+# Bug ID: 6987622
+#
+com/sun/ts/tests/ejb30/lite/basic/mock/Client.java#passByEmpty_from_ejbembed
+com/sun/ts/tests/ejb30/lite/basic/mock/Client.java#passByReason_from_ejbembed
 
 #
 # Bug ID: 6915860
@@ -60,3 +87,58 @@ com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLite
 com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_puservlet
 com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateful3
 com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateless3
+
+#
+# Bug ID: 7013229
+#
+com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupDataSource
+com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupHelloBean
+
+
+################
+# WEBSERVICES13
+################
+
+#
+# Bug ID: 6962404
+#
+com/sun/ts/tests/webservices13/ejb/annotations/WSEjbWSRefRespBindAndAddressingCombinedTest/Client.java#VerifyAddrHeadersExistForEnabledNotRequiredPort
+com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingAnnotations/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
+com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingDDs/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
+
+################
+# CONNECTOR
+################
+
+#
+# Bug ID:  7006428
+#
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+
+
+################
+# JSP
+################
+
+#
+# Bug ID:  GLASSFISH-15161
+#
+com/sun/ts/tests/jsp/spec/security/secform/Client.java#test12
+
+
+################
+# XA
+################
+
+#
+# Bug ID:  6992031
+#
+com/sun/ts/tests/xa/ee/tsr/TsrClient.java#testTSRFunctionality1
