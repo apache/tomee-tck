@@ -267,6 +267,16 @@ class SetupCommand
             file: "${project.basedir}/src/test/keystores/clientcert.jks",
             todir: "${openejbHome}/conf"
         )
+		
+		//
+		// deploy the connectors
+		//
+		ant.copy(todir: "${openejbHome}/apps", overwrite: true) {
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox") {
+				include(name: "old-dd-whitebox*.rar")
+				include(name: "whitebox*.rar")
+			}
+		}
 
         //
         // NOTE: This tsant script only needs to be run once with each new CTS image or

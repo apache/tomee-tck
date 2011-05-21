@@ -170,13 +170,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
-      <artifactId>tomcat</artifactId>
-      <type>zip</type>
-      <version>${tomcat.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
       <artifactId>geronimo-mail</artifactId>
       <version>2.0.2</version>
