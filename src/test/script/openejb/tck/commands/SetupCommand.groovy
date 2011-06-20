@@ -276,6 +276,21 @@ class SetupCommand
 				include(name: "old-dd-whitebox*.rar")
 				include(name: "whitebox*.rar")
 			}
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/annotated") {
+				include(name: "whitebox*.rar")
+			}
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/ibanno") {
+				include(name: "whitebox*.rar")
+			}
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mdcomplete") {
+				include(name: "whitebox*.rar")
+			}
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mixedmode") {
+				include(name: "whitebox*.rar")
+			}
+			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/multianno") {
+				include(name: "whitebox*.rar")
+			}
 		}
 
         //
