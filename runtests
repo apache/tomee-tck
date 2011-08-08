@@ -34,6 +34,7 @@ options:
     -o,--option <option>    Enable an option
     -ol,--offline           Run maven offline
     -c,--clean              Mvn clean
+    -tr,--temp-repo         Mvn -Dmaven.repo.local=temp
     -U,--update             Mvn update snapshots
     --                      Stop option processing
 EOF
@@ -140,6 +141,10 @@ processOptions() {
 
             -c|--clean)
                 appendArgs "clean install"
+                ;;
+
+            -tr|--temp-repo)
+                appendArgs "-Dmaven.repo.local=repo"
                 ;;
 
             --)
