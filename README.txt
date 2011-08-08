@@ -6,7 +6,7 @@ GETTING SETUP
 
  The Java EE 6 TCK and RI can be downloaded from here:
 
-  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/javaeetck-6.0_25-Oct-2010.zip
+  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/javaeetck-6.0_29-Jun-2011.zip
   svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/javaee6_ri-3.0.1-b22.zip
 
  Both are required to run the TCK.  The TCK is 813M, beware.
@@ -41,7 +41,7 @@ TEST RUN
  From inside the openejb-tck/trunk/ directory, a command like this
  will get you a little taste of running the TCK:
 
-  ./runtests com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
+  ./runtests --web tomee com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
  We don't yet pass all of the TCK, but the above tests should be among
  the passing sections and are a good way to validate all is setup
