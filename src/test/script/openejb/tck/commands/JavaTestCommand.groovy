@@ -105,7 +105,7 @@ class JavaTestCommand
         println("=" * 79)
         println()
     }
-    
+
     def javatest() {
         log.info("Executing JavaTest...")
         
@@ -161,7 +161,7 @@ class JavaTestCommand
         // Track how long the run takes
         def watch = new StopWatch()
         watch.start()
-        
+
         try {
             ant.java(classname: "com.sun.javatest.tool.Main", failonerror: false, fork: "yes", maxmemory: "150m") {
                 //
@@ -197,6 +197,9 @@ class JavaTestCommand
                     log.info("Enabling server debug options")
                     jvmarg(value: '-Dopenejb.server.debug=true')
                 }
+
+                sysproperty(key: "user.language", value: 'en')
+                sysproperty(key: "user.country", value: 'US')
 
                 sysproperty(key: "openejb.server.uri", value: require('openejb.server.uri'))
                 sysproperty(key: "openejb.servicemanager.enabled", value: true)
@@ -243,7 +246,7 @@ class JavaTestCommand
                     sysproperty(key: 'command.testExecuteEmbedded.debugopts', value: '-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5001')
                 }
 
-                if (SystemUtils.IS_OS_WINDOWS) {
+                if (SystemUtils.IS_OS_WINDOWS && System.getProperty("openejb.cygwin") == null) {
                     sysproperty(key: "windir", value: System.getenv('windir'))
                     sysproperty(key: "SYSTEMROOT", value: System.getenv('SystemRoot'))
                 }
@@ -263,7 +266,7 @@ class JavaTestCommand
                 arg(file: "${project.build.directory}/ts.jte")
 
                 arg(value: "-env")
-                if (SystemUtils.IS_OS_WINDOWS) {
+                if (SystemUtils.IS_OS_WINDOWS && System.getProperty("openejb.cygwin") == null) {
                     arg(value: "ts_win32")
                 }
                 else {

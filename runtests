@@ -196,6 +196,12 @@ if [ "x$options" != "x" ]; then
     appendArgs "-Doptions=$options"
 fi
 
+# cygwin special case
+uname=$( uname -s )
+if [[ $uname == @(Cygwin|CYGWIN_*) ]]; then
+    appendArgs "-Dopenejb.cygwin=$uname"
+fi
+
 # Make sure a test was selected
 if [ "x$tests" = "x" ]; then
     usage
