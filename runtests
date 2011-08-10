@@ -193,13 +193,7 @@ esac
 
 # Append options if any
 if [ "x$options" != "x" ]; then
-    appendArgs "-Doptions=$options"
-fi
-
-# cygwin special case
-uname=$( uname -s )
-if [[ $uname == @(Cygwin|CYGWIN_*) ]]; then
-    appendArgs "-Dopenejb.cygwin=$uname"
+   appendArgs "-Doptions=$options"
 fi
 
 # Make sure a test was selected
@@ -209,7 +203,7 @@ fi
 
 # Pick the mvn executable to use
 if [ "x$M2_HOME" = "x" ]; then
-    mvn="mvn"
+     mvn="mvn"
 else
     mvn="$M2_HOME/bin/mvn"
 fi
@@ -220,7 +214,7 @@ fi
 
 
 # Fire up Maven to do the real work
-exec "$mvn" --file "$DIRNAME/pom.xml" \
+exec mvn --file "$DIRNAME/pom.xml" \
     --batch-mode \
     --errors \
     -Dwebcontainer="$web" \
@@ -228,4 +222,16 @@ exec "$mvn" --file "$DIRNAME/pom.xml" \
     -DassemblyId="$web" \
     -Dtests="$tests" \
     $tomcatVersion \
-    $args
+    $args | sed -e "s/\(\[INFO\]\ \-.*\)/${TEXT_BLUE}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ BUILD SUCCESS.*\)/${BOLD}${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ BUILD FAILURE\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ FAILURE\ \[.*s]\)/${TEXT_RED}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ SUCCESS\ \[.*s]\)/${TEXT_GREEN}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ SKIPPED\)/${TEXT_YELLOW}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ Building .*\)/${TEXT_CYAN}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[WARNING\].*\)/${BOLD}${TEXT_YELLOW}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[ERROR\].*\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
+               -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${BOLD}${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${BOLD}${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${BOLD}${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${BOLD}${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
+
+# Make sure formatting is reset
+echo -ne ${RESET_FORMATTING}

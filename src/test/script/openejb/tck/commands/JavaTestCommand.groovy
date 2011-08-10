@@ -246,7 +246,7 @@ class JavaTestCommand
                     sysproperty(key: 'command.testExecuteEmbedded.debugopts', value: '-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5001')
                 }
 
-                if (SystemUtils.IS_OS_WINDOWS && System.getProperty("openejb.cygwin") == null) {
+                if (SystemUtils.IS_OS_WINDOWS) {
                     sysproperty(key: "windir", value: System.getenv('windir'))
                     sysproperty(key: "SYSTEMROOT", value: System.getenv('SystemRoot'))
                 }
@@ -266,7 +266,7 @@ class JavaTestCommand
                 arg(file: "${project.build.directory}/ts.jte")
 
                 arg(value: "-env")
-                if (SystemUtils.IS_OS_WINDOWS && System.getProperty("openejb.cygwin") == null) {
+                if (SystemUtils.IS_OS_WINDOWS) {
                     arg(value: "ts_win32")
                 }
                 else {
@@ -302,11 +302,10 @@ class JavaTestCommand
         }
 
         watch.stop()
-        
         if (logOutput) {
             outputScanner.shutdown()
         }
-        
+
         // Display the test summary
         line()
         
@@ -314,7 +313,6 @@ class JavaTestCommand
         def locator = new ReportFileLocator(dir);
         def loader = new ReportTestCaseLoader(dir, true, locator);
         def testcases = loader.loadTestCases();
-
         def count = testcases.size()
         def passed = 0
         def failed = 0
