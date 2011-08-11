@@ -206,6 +206,7 @@ abstract class CommandSupport
 		builder.append("derby-*.jar")
 		builder.append("derbyclient-*.jar")
         builder.append("log4j-*.jar")
+        builder.append("openejb-client*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")
