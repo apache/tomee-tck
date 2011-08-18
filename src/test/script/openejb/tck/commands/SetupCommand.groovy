@@ -79,8 +79,8 @@ class SetupCommand
                     map['javaee.level'] = 'web'
                 }
 
-                // TODO Does this value make sense for our integration?
-                map['servlet_adaptor'] = 'org/apache/geronimo/wink/GeronimoRestServlet.class'
+                // to avoid loadClass exception - useless for OpenEJB - at least today
+                map['servlet_adaptor'] = 'org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet'
                 map['jaxrs_impl_name'] = 'cxf'
 
                 map['basedir'] = project.basedir
@@ -245,8 +245,8 @@ class SetupCommand
 
         if(jaxrs.equals('true')){
 
-            ant.mkdir(dir: "$javaeeCtsHome/bin/xml/impl/tomee")
-            ant.copy(todir: "$javaeeCtsHome/bin/xml/impl/tomee") {
+            ant.mkdir(dir: "$javaeeCtsHome/bin/xml/impl/openejb")
+            ant.copy(todir: "$javaeeCtsHome/bin/xml/impl/openejb") {
             fileset(dir: "${project.basedir}/src/test/resources/jaxrs") {
                 include(name: 'cxf.xml')
             }

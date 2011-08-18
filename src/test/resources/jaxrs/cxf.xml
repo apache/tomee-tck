@@ -41,20 +41,10 @@
         <!--
         Create implementation specific web with servlet information
         -->
-        <copy file="${ts.home}/src/${pkg.dir}/web.xml.template" tofile="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}"/>
+        <copy file="${ts.home}/src/${pkg.dir}/web.xml.template" tofile="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}" overwrite="true" />
 
         <echo message="${servlet_adaptor}"/>
-        <propertyregex property="servlet_adaptor_class"
-                       input="${servlet_adaptor}"
-                       regexp="/"
-                       replace="."/>
-        <propertyregex property="servlet_adaptor_class.1"
-                       input="${servlet_adaptor_class}"
-                       regexp=".class$"
-                       replace=""/>
-        <echo message="${servlet_adaptor_class.1}"/>
-
-        <replace file="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}" value="${servlet_adaptor_class.1}">
+        <replace file="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}" value="${servlet_adaptor}">
             <replacetoken>servlet_adaptor</replacetoken>
         </replace>
 
