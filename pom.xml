@@ -29,7 +29,8 @@
   <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>4.0.0-SNAPSHOT</version><!--openejb.version-->
+  <version>4.0.0-SNAPSHOT</version>
+  <!--openejb.version-->
 
   <description>
     OpenEJB TCK Harness
@@ -180,13 +181,13 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.6.1.0</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbynet</artifactId>
@@ -259,14 +260,14 @@
         </configuration>
       </plugin>
 
-	  <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.1</version>
         <executions>
           <execution>
-          	<id>start-database</id>
-          	<phase>pre-integration-test</phase>
+            <id>start-database</id>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>java</goal>
             </goals>
@@ -361,29 +362,31 @@
 
       <!-- TomEE embedds a lot of applications in. We should remove all not necessary web
           application for TCK (ie. all but openejb and ROOT -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.5</version>
-            <executions>
-                <execution>
-                    <id>remove-apps</id>
-                    <phase>pre-integration-test</phase>
-                    <goals><goal>run</goal></goals>
-                    <configuration>
-                        <target>
-                            <delete dir="${openejb.home}/webapps/docs"/>
-                            <delete dir="${openejb.home}/webapps/examples"/>
-                            <delete dir="${openejb.home}/webapps/ejb-examples"/>
-                            <delete dir="${openejb.home}/webapps/manager"/>
-                            <delete dir="${openejb.home}/webapps/host-manager"/>
-                        </target>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>remove-apps</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <delete dir="${openejb.home}/webapps/docs"/>
+                <delete dir="${openejb.home}/webapps/examples"/>
+                <delete dir="${openejb.home}/webapps/ejb-examples"/>
+                <delete dir="${openejb.home}/webapps/manager"/>
+                <delete dir="${openejb.home}/webapps/host-manager"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-        <plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>sql-maven-plugin</artifactId>
         <version>1.2</version>
@@ -425,7 +428,7 @@
         <groupId>org.codehaus.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>
         <version>1.3</version>
-        
+
         <dependencies>
           <dependency>
             <groupId>org.apache.derby</groupId>
@@ -619,7 +622,6 @@
     </profile>
 
 
-
     <!-- =================== -->
     <!-- TomEE Environment -->
     <!-- =================== -->
@@ -681,7 +683,7 @@
         <enabled>false</enabled>
       </releases>
       <snapshots>
-	<enabled>true</enabled>
+        <enabled>true</enabled>
       </snapshots>
     </repository>
     <repository>
