@@ -672,6 +672,44 @@
         </plugins>
       </build>
     </profile>
+
+    <!-- ==================== -->
+    <!-- Reverse Test setup   -->
+    <!-- ==================== -->
+
+    <profile>
+      <id>reverse-setup</id>
+
+      <activation>
+        <property>
+          <name>reverse</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.gmaven</groupId>
+            <artifactId>gmaven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-reverse-tests</id>
+                <phase>process-test-resources</phase>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <configuration>
+                  <source>
+                    new commands.ReverseSetupCommand(this).execute()
+                  </source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <repositories>

@@ -25,12 +25,15 @@ options:
     -h,--help               Display help information
     -w,--web <container>    Specify the container to test with (default: $DEFAULT_WEB)
     -tv,--tomcat-version    Specify the tomcat version (implies -w tomcat)
-    -d,--debug              Enable Geronimo server and TCK appclient debug options (5005 and 5003)
+    -d,--debug              Enable Server and TCK appclient debug options (5005 and 5003)
     -de,--debug-embedded    Enable TCK embedded ejb debug options (port 5001)
     -dh,--debug-harness     Enable TCK harness debug options (port 5002)
     -da,--debug-appclient   Enable TCK appclient debug options (port 5003)
     -dj,--debug-javatest    Enable TCK javatest debug options (port 5004)
-    -ds,--debug-server      Enable Geronimo server debug options (port 5005)
+    -ds,--debug-server      Enable Server debug options (port 5005)
+    -c,--connector          deploy connectors for connector tests
+    -j,--jaxrs              build jaxrs tck wars
+    --reverse               Generate jaxws jws reverse artifacts
     -o,--option <option>    Enable an option
     -ol,--offline           Run maven offline
     -c,--clean              Mvn clean
@@ -129,6 +132,22 @@ processOptions() {
 
             -ds|--debug-server)
                 appendOption "debug"
+                ;;
+
+            -c|--connector)
+                appendArgs "-Dconnector=true"
+                ;;
+
+            -j|--jaxrs)
+                appendArgs "-Djaxrs=true"
+                ;;
+
+            --interop)
+                appendArgs "-Dinterop=true"
+                ;;
+
+            --reverse)
+                appendArgs "-Dreverse=true"
                 ;;
 
             -ol|--offline)

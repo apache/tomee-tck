@@ -79,6 +79,10 @@ class SetupCommand
                     map['javaee.level'] = 'web'
                 }
 
+                // TODO Does this value make sense for our integration?
+                map['servlet_adaptor'] = 'org/apache/geronimo/wink/GeronimoRestServlet.class'
+                map['jaxrs_impl_name'] = 'cxf'
+
                 map['basedir'] = project.basedir
 
                 // Need to sanatize some properties which reference files or paths when running Windows... :-(
@@ -237,6 +241,25 @@ class SetupCommand
             overwrite: true
         )
 
+        def jaxrs = get('jaxrs')
+
+        if(jaxrs.equals('true')){
+
+            ant.mkdir(dir: "$javaeeCtsHome/bin/xml/impl/tomee")
+            ant.copy(todir: "$javaeeCtsHome/bin/xml/impl/tomee") {
+            fileset(dir: "${project.basedir}/src/test/resources/jaxrs") {
+                include(name: 'cxf.xml')
+            }
+          }
+
+            log.info("generating jaxrs tck dist artifacts based on vi setting")
+            TsAntCommand command = new TsAntCommand(this)
+            command.workingDirectory = "${javaeeCtsHome}/bin"
+            command.execute('update.jaxrs.wars')
+
+        }
+
+
         //
         // Copy openejb configuration files into server
         //
@@ -268,30 +291,34 @@ class SetupCommand
             todir: "${openejbHome}/conf"
         )
 		
-		//
-		// deploy the connectors
-		//
-		ant.copy(todir: "${openejbHome}/apps", overwrite: true) {
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox") {
-				include(name: "old-dd-whitebox*.rar")
-				include(name: "whitebox*.rar")
-			}
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/annotated") {
-				include(name: "whitebox*.rar")
-			}
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/ibanno") {
-				include(name: "whitebox*.rar")
-			}
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mdcomplete") {
-				include(name: "whitebox*.rar")
-			}
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mixedmode") {
-				include(name: "whitebox*.rar")
-			}
-			fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/multianno") {
-				include(name: "whitebox*.rar")
-			}
-		}
+        def connector = get('connector')
+
+        if(connector.equals('true')){
+            //
+            // deploy the connectors
+            //
+            ant.copy(todir: "${openejbHome}/apps", overwrite: true) {
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox") {
+                    include(name: "old-dd-whitebox*.rar")
+                    include(name: "whitebox*.rar")
+                }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/annotated") {
+                    include(name: "whitebox*.rar")
+                }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/ibanno") {
+                    include(name: "whitebox*.rar")
+                }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mdcomplete") {
+                    include(name: "whitebox*.rar")
+                }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/mixedmode") {
+                    include(name: "whitebox*.rar")
+                }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/multianno") {
+                    include(name: "whitebox*.rar")
+                }
+            }
+        }
 
         //
         // NOTE: This tsant script only needs to be run once with each new CTS image or
