@@ -2,7 +2,7 @@
 # Copyright 2009 Sun Microsystems, Inc. All rights reserved.
 # SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 #
-# $Id: ts.jtx 62049 2011-02-03 13:45:02Z dougd $
+# $Id: ts.jtx 63182 2011-07-11 13:40:12Z dougd $
 #
 
 ################
@@ -94,6 +94,93 @@ com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLite
 com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupDataSource
 com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupHelloBean
 
+#
+# Bug Id: 12715556
+#
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet2
+
+#################
+# INTEROP
+#################
+
+#
+# Bug ID: 16989 (http://java.net/jira/browse/GLASSFISH-16989)
+#
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_appclient
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_ejb
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_jsp
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_servlet
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_appclient
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_appclient_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_ejb
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_ejb_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_jsp
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_jsp_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_servlet
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_servlet_reverse
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test1
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test10
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test2
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test3
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test4
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test9
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxNS_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxNS_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxRN_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxRN_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxBM_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxBM_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxN_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxNS_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxR_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxRN_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxS_Single/Client.java#test1
+
+#
+# Bug ID: 16661 (http://java.net/jira/browse/GLASSFISH-16661)
+#
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxN_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test13
+
 
 ################
 # WEBSERVICES13
@@ -129,7 +216,7 @@ com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociatio
 ################
 
 #
-# Bug ID:  GLASSFISH-15161
+# Bug ID:  (http://java.net/jira/browse/GLASSFISH-15161)
 #
 com/sun/ts/tests/jsp/spec/security/secform/Client.java#test12
 
@@ -142,3 +229,13 @@ com/sun/ts/tests/jsp/spec/security/secform/Client.java#test12
 # Bug ID:  6992031
 #
 com/sun/ts/tests/xa/ee/tsr/TsrClient.java#testTSRFunctionality1
+
+
+################
+# SERVLET
+################
+
+#
+# Bug ID:  12680183
+#
+com/sun/ts/tests/servlet/spec/annotation/injection/URLClient.java#test1
