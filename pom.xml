@@ -129,13 +129,13 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>whitebox</artifactId>
-      <version>6.0a</version>
+        <version>${javaee.tck.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
-      <version>6.0a</version>
+      <version>${javaee.tck.version}</version>
     </dependency>
 
     <dependency>
