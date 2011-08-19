@@ -79,8 +79,8 @@ class SetupCommand
                     map['javaee.level'] = 'web'
                 }
 
-                // to avoid loadClass exception - useless for OpenEJB - at least today
-                map['servlet_adaptor'] = 'org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet'
+                // map['servlet_adaptor'] = 'org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet'
+                map['servlet_adaptor'] = 'org.apache.openejb.server.rest.OpenEJBRestServlet'
                 map['jaxrs_impl_name'] = 'cxf'
 
                 map['basedir'] = project.basedir
