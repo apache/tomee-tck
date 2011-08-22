@@ -122,8 +122,9 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         moduleIds.addAll(info.getAppClientRuntimeData().keySet());
 
         for (String path : info.getRuntimeFiles()) {
-            if (path.startsWith(earPath)) {
-                String name = path.substring(earPath.length() + 1);
+            String earName = earName(path, earPath);
+            if (earName != null && path.contains(earName)) {
+                String name = path.substring(path.indexOf(earName) + earName.length() + 1);
                 properties.put(ALT_DD + "/" + name, path);
             } else {
                 String fileName = new File(path).getName();
@@ -143,6 +144,25 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
             throw new TSDeploymentException("Unable to create deployment plan", e);
         }
         return new ByteArrayInputStream(out.toByteArray());
+    }
+
+    private String earName(final String path, final String earPath) {
+        String earName = earPath;
+        int end = earName.indexOf(".ear");
+        if (end > 0) {
+            end += 4; // .ear
+
+            int start;
+            int currentIdx = 0;
+            do {
+                start = currentIdx;
+                currentIdx = earName.indexOf("/", currentIdx + 1);
+            } while (currentIdx < end - 1 && currentIdx > start);
+
+            earName = earName.substring(start + 1, end);
+            return earName;
+        }
+        return null;
     }
 
     public Target[] getTargetsToUse(Target[] targets, DeploymentInfo info) {
