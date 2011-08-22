@@ -31,7 +31,7 @@ options:
     -da,--debug-appclient   Enable TCK appclient debug options (port 5003)
     -dj,--debug-javatest    Enable TCK javatest debug options (port 5004)
     -ds,--debug-server      Enable Server debug options (port 5005)
-    -c,--connector          deploy connectors for connector tests
+    --connector             deploy connectors for connector tests
     -j,--jaxrs              build jaxrs tck wars
     --reverse               Generate jaxws jws reverse artifacts
     -o,--option <option>    Enable an option
@@ -134,7 +134,7 @@ processOptions() {
                 appendOption "debug"
                 ;;
 
-            -c|--connector)
+            --connector)
                 appendArgs "-Dconnector=true"
                 ;;
 
@@ -251,6 +251,16 @@ export BACKGROUND_MAGENTA=`tput setab 5`
 export BACKGROUND_CYAN=`tput setab 6`
 export BACKGROUND_WHITE=`tput setab 7`
 export RESET_FORMATTING=`tput sgr0`
+
+echo exec mvn --file "$DIRNAME/pom.xml" \
+    --batch-mode \
+    --errors \
+    -Dwebcontainer="$web" \
+    -Djavaee.level="$profile" \
+    -DassemblyId="$web" \
+    -Dtests="$tests" \
+    $tomcatVersion \
+    $args
 
 # Fire up Maven to do the real work
 exec mvn --file "$DIRNAME/pom.xml" \
