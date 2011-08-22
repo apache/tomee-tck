@@ -33,13 +33,24 @@ import javax.enterprise.deploy.spi.status.ProgressObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.openejb.config.RemoteServer;
 
@@ -187,6 +198,52 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //                classPath += PATH_SEP + file.getAbsolutePath();
 //            }
 //        }
+
+        // lib/ directory if exists
+        File file = new File(p.getProperty("ear_file"));
+        if (file.getName().endsWith("ar") && !file.isDirectory() && file.exists()) {
+            JarInputStream jarFile = null;
+            try {
+                jarFile = new JarInputStream(new FileInputStream(file));
+                ZipEntry entry;
+                byte[] buf = new byte[1024];
+                int n;
+                while ((entry = jarFile.getNextEntry()) != null) {
+                    if (entry.getName().startsWith("lib/") && entry.getName().endsWith(".jar")) {
+                        File extracted = File.createTempFile("ext", ".jar");
+                        extracted.deleteOnExit();
+
+                        FileOutputStream fos = new FileOutputStream(extracted);
+                        while ((n = jarFile.read(buf, 0, 1024)) > -1) {
+                            fos.write(buf, 0, n);
+                        }
+                        fos.close();
+
+                        classPath += PATH_SEP + extracted.getPath();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } finally {
+                if (jarFile != null) {
+                    try {
+                        jarFile.close();
+                    } catch (IOException e) {
+                        // no-op
+                    }
+                }
+            }
+        } else if (file.isDirectory()) {
+            File libDir = new File(file,  "lib");
+            if (libDir.exists()) {
+                for (File lib : libDir.listFiles()) {
+                    if (lib.getName().endsWith(".jar")) {
+                        classPath += PATH_SEP + lib.getPath();
+                    }
+                }
+            }
+        }
+
         return "-cp " + classPath + " -Dopenejb.client.moduleId=" + clientname + " " + CLIENT_MAIN + " " + executeArgs;
     }
 
