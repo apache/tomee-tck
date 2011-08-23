@@ -252,6 +252,8 @@ export BACKGROUND_CYAN=`tput setab 6`
 export BACKGROUND_WHITE=`tput setab 7`
 export RESET_FORMATTING=`tput sgr0`
 
+svn info
+
 echo exec mvn --file "$DIRNAME/pom.xml" \
     --batch-mode \
     --errors \
@@ -263,7 +265,7 @@ echo exec mvn --file "$DIRNAME/pom.xml" \
     $args
 
 # Fire up Maven to do the real work
-exec mvn --file "$DIRNAME/pom.xml" \
+exec mvn -V --file "$DIRNAME/pom.xml" \
     --batch-mode \
     --errors \
     -Dwebcontainer="$web" \
