@@ -182,10 +182,10 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 
     public String getAppClientArgs(Properties p) {
         String executeArgs = p.getProperty("executeArgs");
+        String clientname = p.getProperty("client_name");
         String earFile = p.getProperty("ear_file");
         earFile = new File(earFile).getName();
         earFile = earFile.substring(0, earFile.lastIndexOf('.'));
-        String clientname = p.getProperty("client_name");
         File appClientJar = new File(new File(appsDir, earFile), clientname + ".jar");
         String classPath = appClientJar.getAbsolutePath();
 
@@ -200,7 +200,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        }
 
         // lib/ directory if exists
-        File file = new File(p.getProperty("ear_file"));
+        /*File file = new File(p.getProperty("ear_file"));
         if (file.getName().endsWith("ar") && !file.isDirectory() && file.exists()) {
             JarInputStream jarFile = null;
             try {
@@ -242,7 +242,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
                     }
                 }
             }
-        }
+        }*/
 
         return "-cp " + classPath + " -Dopenejb.client.moduleId=" + clientname + " " + CLIENT_MAIN + " " + executeArgs;
     }
