@@ -62,7 +62,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String CLIENT_MAIN = "org.apache.openejb.client.Main";
 
     static {
-        System.setProperty("java.opts", "-XX:MaxPermSize=256m");
+        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
         final RemoteServer remoteServer = new RemoteServer(120, true);
         remoteServer.start();
 
