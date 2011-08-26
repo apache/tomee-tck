@@ -56,7 +56,6 @@
     ResourceAdapter JmsResourceAdapter
 </Resource>
 
-
 <Resource id="MailSession" type="javax.mail.Session">
 mail.smtp.class=org.apache.geronimo.mail.NullTransport
 </Resource>

@@ -350,7 +350,7 @@ class SetupCommand
             ant.touch(file: dmlProcessedFile)
 
         } else {
-            log.info("DML already processed for HSQL")
+            log.info("DML already processed for Derby")
         }
 
         //
