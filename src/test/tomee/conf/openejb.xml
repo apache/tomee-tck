@@ -22,7 +22,7 @@
 
 <Container id="CmpContainer" ctype="CMP_ENTITY">
     CmpEngineFactory org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
-    Engine  hsql
+    Engine  derby
     ConnectorName  CtsDataSource
 </Container>
 
@@ -38,6 +38,10 @@
     TimeOut  0
     PoolSize  10
     StrictPooling  true
+</Container>
+
+<Container id="SingletonContainer" ctype="SINGLETON">
+    AccessTimeout  2 minutes
 </Container>
 
 <Container id="JmsMdbContainer" ctype="MESSAGE">
@@ -59,6 +63,7 @@
     JdbcUrl jdbc:derby://localhost:1527/derbydb;create=true
     UserName     cts
     Password     cts
+    JtaManaged  false
 </Resource>
 
 

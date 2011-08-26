@@ -202,7 +202,7 @@ abstract class CommandSupport
         builder.directory = openejbLib
         builder.appendAll("commons-logging-*.jar")
         builder.appendAll("openjpa-*.jar")
-        builder.append("hsqldb-*.jar")
+//        builder.append("hsqldb-*.jar")
 		builder.append("derby-*.jar")
 		builder.append("derbyclient-*.jar")
         builder.append("log4j-*.jar")
@@ -253,6 +253,9 @@ abstract class CommandSupport
         builder.append("jaxb-api.jar")
         builder.append("jaxb-impl.jar")
         builder.append("jaxb-xjc.jar")
+        builder.directory = openejbLib
+		builder.append("derby-*.jar")
+		builder.append("derbyclient-*.jar")
         builder.getPath("openejb.embedded.classpath")
     }
 
