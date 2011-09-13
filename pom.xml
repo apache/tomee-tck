@@ -177,12 +177,6 @@
     </dependency>
 
     <dependency>
-      <groupId>jstl</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
       <version>10.6.1.0</version>
@@ -347,11 +341,6 @@
                 <artifactItem>
                   <groupId>org.apache.geronimo.modules</groupId>
                   <artifactId>geronimo-mail</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>jstl</groupId>
-                  <artifactId>jstl</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
