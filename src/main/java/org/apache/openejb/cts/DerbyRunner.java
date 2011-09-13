@@ -31,7 +31,7 @@ public class DerbyRunner {
 		public void run() {
 			System.out.println("Starting embedded Derby database");
 			try {
-	            serverControl = new NetworkServerControl("127.0.0.1", "11527");
+	            serverControl = new NetworkServerControl("127.0.0.1", Integer.toString(NetworkServerControl.DEFAULT_PORTNUMBER));
 	            serverControl.start(new Log4jPrintWriter("Derby", Level.INFO));
 	        } catch (Exception e) {
 	        	e.printStackTrace();

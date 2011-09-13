@@ -221,6 +221,11 @@ class JavaTestCommand
                 sysproperty(key: "com.sun.aas.installRoot", file: javaeeRiHome)
                 sysproperty(key: "DEPLOY_DELAY_IN_MINUTES", value: require('deploy_delay_in_minutes'))
 
+                sysproperty(key: "java.protocol.handler.pkgs", value: 'javax.net.ssl')
+                sysproperty(key: "javax.net.ssl.keyStorePassword", value: 'changeit')
+                sysproperty(key: "javax.net.ssl.keyStore", file: "${project.basedir}/src/test/keystores/clientcert.jks")
+                sysproperty(key: "javax.net.ssl.trustStore", file: "${project.basedir}/src/test/keystores/ssl-truststore")
+
                 if (options.contains('appclient-debug')) {
                     log.info("Enabling appclient-debug options")
 
