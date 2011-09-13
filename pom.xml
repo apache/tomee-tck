@@ -726,19 +726,6 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    <repository>
-      <id>openejb-svn-repo</id>
-      <name>OpenEJB SVN Repository</name>
-      <url>http://svn.apache.org/repos/asf/openejb/repo/</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-    </repository>
   </repositories>
 
   <pluginRepositories>
