@@ -2,7 +2,7 @@
 # Copyright 2009 Sun Microsystems, Inc. All rights reserved.
 # SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 #
-# $Id: ts.jtx 63182 2011-07-11 13:40:12Z dougd $
+# $Id: ts.jtx 63334 2011-08-17 12:41:41Z dougd $
 #
 
 ################
@@ -138,6 +138,28 @@ com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.jav
 com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet
 com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet2
 
+#
+# Bug ID: 1280474 (https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=12804747&rptno_count=1&pos=1&report_title=&query_id=-1 )
+#
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbliteservlet2
+
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbliteservlet2
+
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet2
+
+
 #################
 # INTEROP
 #################
@@ -216,7 +238,7 @@ com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociatio
 ################
 
 #
-# Bug ID:  (http://java.net/jira/browse/GLASSFISH-15161)
+# Bug ID: 15161 (http://java.net/jira/browse/GLASSFISH-15161)
 #
 com/sun/ts/tests/jsp/spec/security/secform/Client.java#test12
 
