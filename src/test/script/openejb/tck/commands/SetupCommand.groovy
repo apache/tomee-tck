@@ -290,6 +290,10 @@ class SetupCommand
             file: "${project.basedir}/src/test/keystores/clientcert.jks",
             todir: "${openejbHome}/conf"
         )
+        ant.copy(
+            file: "${project.basedir}/src/test/keystores/ssl-truststore",
+            todir: "${openejbHome}/conf"
+        )
 		
         def connector = get('connector')
 

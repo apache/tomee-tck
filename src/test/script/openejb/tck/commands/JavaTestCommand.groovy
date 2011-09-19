@@ -225,6 +225,7 @@ class JavaTestCommand
                 sysproperty(key: "javax.net.ssl.keyStorePassword", value: 'changeit')
                 sysproperty(key: "javax.net.ssl.keyStore", file: "${project.basedir}/src/test/keystores/clientcert.jks")
                 sysproperty(key: "javax.net.ssl.trustStore", file: "${project.basedir}/src/test/keystores/ssl-truststore")
+                sysproperty(key: "javax.net.ssl.trustStorePassword", file: "changeit")
 
                 if (options.contains('appclient-debug')) {
                     log.info("Enabling appclient-debug options")
