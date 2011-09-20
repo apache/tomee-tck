@@ -79,6 +79,8 @@
 
     <!-- Disable Surefire, we are using Javatest to execute integration tests -->
     <maven.test.skip>true</maven.test.skip>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
