@@ -44,11 +44,11 @@
     AccessTimeout  2 minutes
 </Container>
 
-<Container id="JmsMdbContainer" ctype="MESSAGE">
-    ResourceAdapter JmsResourceAdapter
-    ActivationSpecClass org.apache.activemq.ra.ActiveMQActivationSpec
-    InstanceLimit 10
-</Container>
+<!--<Container id="JmsMdbContainer" ctype="MESSAGE">-->
+    <!--ResourceAdapter JmsResourceAdapter-->
+    <!--ActivationSpecClass org.apache.activemq.ra.ActiveMQActivationSpec-->
+    <!--InstanceLimit 10-->
+<!--</Container>-->
 
 <!-- That should be also specified in the system.properties file of the target environment -->
 <Resource id="jdbc/DB1" type="DataSource">
@@ -67,20 +67,20 @@
 </Resource>
 
 
-<Resource id="JmsResourceAdapter" type="ActiveMQResourceAdapter">
-    # Broker configuration
-    BrokerXmlConfig broker:(tcp://localhost:61616)?useJmx=false
+<!--<Resource id="JmsResourceAdapter" type="ActiveMQResourceAdapter">-->
+    <!--# Broker configuration-->
+    <!--BrokerXmlConfig broker:(tcp://localhost:61616)?useJmx=false-->
 
-    # Broker address
-    ServerUrl vm://localhost?async=true
+    <!--# Broker address-->
+    <!--ServerUrl vm://localhost?async=true-->
 
-    DataSource   CtsDataSourceUnmanaged
-</Resource>
+    <!--DataSource   CtsDataSourceUnmanaged-->
+<!--</Resource>-->
 
 
-<Resource id="JmsConnectionFactory" type="javax.jms.ConnectionFactory">
-    ResourceAdapter JmsResourceAdapter
-</Resource>
+<!--<Resource id="JmsConnectionFactory" type="javax.jms.ConnectionFactory">-->
+    <!--ResourceAdapter JmsResourceAdapter-->
+<!--</Resource>-->
 
 
 <Resource id="MailSession" type="javax.mail.Session">

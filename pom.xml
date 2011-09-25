@@ -181,13 +181,25 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.6.1.0</version>
+      <version>10.7.1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbynet</artifactId>
-      <version>10.6.1.0</version>
+      <version>10.7.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyclient</artifactId>
+      <version>10.7.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.openejb</groupId>
+      <artifactId>openejb-derbynet</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
@@ -344,6 +356,26 @@
                   <groupId>org.apache.geronimo.modules</groupId>
                   <artifactId>geronimo-mail</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.openejb</groupId>
+                  <artifactId>openejb-derbynet</artifactId>
+                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.derby</groupId>
+                  <artifactId>derby</artifactId>
+                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.derby</groupId>
+                  <artifactId>derbynet</artifactId>
+                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.derby</groupId>
+                  <artifactId>derbyclient</artifactId>
+                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
