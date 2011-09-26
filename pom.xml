@@ -662,7 +662,7 @@
       <properties>
         <!-- where we will unpack tomcat -->
         <!--openejb.home>${project.build.directory}/apache-tomee-${project.version}</openejb.home-->
-        <openejb.home>target/apache-tomee-${project.version}</openejb.home>
+        <openejb.home>target/apache-tomee-webprofile-${project.version}</openejb.home>
       </properties>
 
       <build>
