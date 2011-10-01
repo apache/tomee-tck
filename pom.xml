@@ -95,7 +95,7 @@
       <groupId>org.apache.openejb</groupId>
       <artifactId>apache-tomee</artifactId>
       <type>zip</type>
-      <version>${project.version}</version>
+      <version>1.0.0-beta-1</version>
       <classifier>webprofile</classifier>
     </dependency>
 
@@ -663,7 +663,7 @@
       <properties>
         <!-- where we will unpack tomcat -->
         <!--openejb.home>${project.build.directory}/apache-tomee-${project.version}</openejb.home-->
-        <openejb.home>target/apache-tomee-webprofile-${project.version}</openejb.home>
+        <openejb.home>target/apache-tomee-webprofile-1.0.0-beta-1</openejb.home>
       </properties>
 
       <build>
@@ -765,7 +765,7 @@
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-012</url>
+      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-019</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
