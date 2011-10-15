@@ -25,6 +25,7 @@ import com.sun.ts.lib.deliverable.PropertyNotSetException;
 import com.sun.ts.lib.porting.DeploymentInfo;
 import com.sun.ts.lib.porting.TSDeploymentException;
 import com.sun.ts.lib.porting.TSDeploymentInterface2;
+import org.apache.openejb.config.RemoteServer;
 
 import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.Target;
@@ -33,26 +34,13 @@ import javax.enterprise.deploy.spi.status.ProgressObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import org.apache.openejb.config.RemoteServer;
 
 public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String HEAD = "OpenEJB - ";
