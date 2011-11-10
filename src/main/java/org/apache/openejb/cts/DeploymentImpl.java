@@ -53,6 +53,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
 //        System.setProperty("java.opts", "-XX:MaxPermSize=32m");
 //        System.setProperty("openejb.server.profile", "true");
+    	System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote");
         final RemoteServer remoteServer = new RemoteServer(120, true);
         remoteServer.start();
 

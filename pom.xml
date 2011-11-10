@@ -204,6 +204,11 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+    	<groupId>org.apache.openejb</groupId>
+    	<artifactId>webdeployer</artifactId>
+    	<version>${version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -377,6 +382,11 @@
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derbyclient</artifactId>
+                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.openejb</groupId>
+                  <artifactId>webdeployer</artifactId>
                   <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
