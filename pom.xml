@@ -26,10 +26,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.openejb.cts</groupId>
-  <artifactId>openejb-tck</artifactId>
+  <artifactId>openejb-3ck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>4.0.0-beta-2-SNAPSHOT</version>
+  <version>4.0.0-beta-3-SNAPSHOT</version>
   <!--openejb.version-->
 
   <description>
@@ -54,8 +54,8 @@
 
     <repoPath>${localRepository}</repoPath>
 
-    <openejb.version>${project.version}</openejb.version>
-    <tomee.version>1.0.0-beta-2-SNAPSHOT</tomee.version>
+    <openejb.version>${project3version}</openejb.version>
+    <tomee.version>1.0.0-beta-3-SNAPSHOT</tomee.version>
     <tomcat.version>6.0.32</tomcat.version>
     <!--<tomcat.version>7.0.8</tomcat.version>-->
 
