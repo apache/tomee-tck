@@ -26,7 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.openejb.cts</groupId>
-  <artifactId>openejb-3ck</artifactId>
+  <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
   <version>4.0.0-beta-3-SNAPSHOT</version>
@@ -367,27 +367,27 @@
                 <artifactItem>
                   <groupId>org.apache.openejb</groupId>
                   <artifactId>openejb-derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derby</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derbyclient</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.openejb</groupId>
                   <artifactId>webdeployer</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/openejb/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -639,7 +639,7 @@
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>tomee-webapp</artifactId>
                       <type>war</type>
-                      <outputDirectory>${openejb.home}/webapps/openejb</outputDirectory>
+                      <outputDirectory>${openejb.home}/webapps/tomee</outputDirectory>
                     </artifactItem>
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>

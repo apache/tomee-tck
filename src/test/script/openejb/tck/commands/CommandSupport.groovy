@@ -161,8 +161,8 @@ abstract class CommandSupport
         def openejbLib
         def openejbServerUri
         if (webcontainer.startsWith("tom")) {
-            openejbLib = "${openejbHome}/webapps/openejb/lib"
-            openejbServerUri = "http://localhost:8080/openejb/ejb"
+            openejbLib = "${openejbHome}/webapps/tomee/lib"
+            openejbServerUri = "http://localhost:8080/tomee/ejb"
         } else {
             openejbLib = "${openejbHome}/lib"
             openejbServerUri = "ejbd://localhost:4201"
