@@ -626,7 +626,7 @@ application for TCK (ie. all but openejb and ROOT -->
         </executions>
       </plugin>
 
-      <!--plugin>
+      <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>sql-maven-plugin</artifactId>
           <version>1.2</version>
@@ -662,7 +662,7 @@ application for TCK (ie. all but openejb and ROOT -->
                   </configuration>
               </execution>
           </executions>
-      </plugin-->
+      </plugin>
 
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
