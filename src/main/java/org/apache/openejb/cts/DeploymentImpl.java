@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Set;
@@ -56,8 +55,9 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        System.setProperty("openejb.server.profile", "true");
     	System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote");
         final RemoteServer remoteServer = new RemoteServer(120, true);
-        remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
-        //remoteServer.start();
+        // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
+        // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
+        remoteServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
