@@ -377,6 +377,51 @@
       </build>
     </profile>
 
+    <profile>
+      <id>tomee-plus-environment</id>
+
+      <activation>
+        <property>
+          <name>webcontainer</name>
+          <value>tomee-plus</value>
+        </property>
+      </activation>
+
+      <properties>
+        <openejb.home>target/apache-tomee-plus-${tomee.version}</openejb.home>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.1</version>
+            <executions>
+              <execution>
+                <id>unpack</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>apache-tomee</artifactId>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                      <classifier>plus</classifier>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!-- ==================== -->
     <!-- Reverse Test setup   -->
     <!-- ==================== -->
@@ -407,6 +452,64 @@
                   <source>
                     new commands.ReverseSetupCommand(this).execute()
                   </source>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
+    sql commands are very long to execute
+    and not always useful (jaxrs tests for instance)
+    so simply let skip it in an easy manner
+    -->
+    <profile>
+      <id>sql</id>
+
+      <activation>
+        <property>
+          <name>sql</name>
+          <value>active</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sql-maven-plugin</artifactId>
+            <version>1.2</version>
+
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derbyclient</artifactId>
+                <version>10.7.1.1</version>
+              </dependency>
+            </dependencies>
+
+            <executions>
+              <execution>
+                <id>create-schema</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <configuration>
+                  <driver>org.apache.derby.jdbc.ClientDriver</driver>
+                  <url>jdbc:derby://localhost:1527/derbydb;create=true</url>
+                  <username>cts</username>
+                  <password>cts</password>
+                  <autocommit>true</autocommit>
+                  <onError>continue</onError>
+                  <srcFiles>
+                    <srcFile>src/test/sql/derby/derby.ddl.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.jstl.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.persistence.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.sprocs.sql</srcFile>
+                  </srcFiles>
                 </configuration>
               </execution>
             </executions>
@@ -624,44 +727,6 @@ application for TCK (ie. all but openejb and ROOT -->
             </configuration>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>sql-maven-plugin</artifactId>
-          <version>1.2</version>
-
-          <dependencies>
-              <dependency>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derbyclient</artifactId>
-                  <version>10.7.1.1</version>
-              </dependency>
-          </dependencies>
-
-          <executions>
-              <execution>
-                  <id>create-schema</id>
-                  <phase>pre-integration-test</phase>
-                  <goals>
-                      <goal>execute</goal>
-                  </goals>
-                  <configuration>
-                      <driver>org.apache.derby.jdbc.ClientDriver</driver>
-                      <url>jdbc:derby://localhost:1527/derbydb;create=true</url>
-                      <username>cts</username>
-                      <password>cts</password>
-                      <autocommit>true</autocommit>
-                      <onError>continue</onError>
-                      <srcFiles>
-                          <srcFile>src/test/sql/derby/derby.ddl.sql</srcFile>
-                          <srcFile>src/test/sql/derby/derby.ddl.jstl.sql</srcFile>
-                          <srcFile>src/test/sql/derby/derby.ddl.persistence.sql</srcFile>
-                          <srcFile>src/test/sql/derby/derby.ddl.sprocs.sql</srcFile>
-                      </srcFiles>
-                  </configuration>
-              </execution>
-          </executions>
       </plugin>
 
       <plugin>

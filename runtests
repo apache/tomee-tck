@@ -7,6 +7,7 @@ PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
 
 DEFAULT_WEB="none"
+DEFAULT_SQL="active"
 
 warn() {
     echo "${PROGNAME}: $*"
@@ -24,6 +25,7 @@ usage: $PROGNAME [options] <test> [<test> ...] [mvn options]
 options:
     -h,--help               Display help information
     -w,--web <container>    Specify the container to test with (default: $DEFAULT_WEB)
+    -sql <skip|active>      Wether sql databases should be created or not (default: $DEFAULT_SQL)
     -tv,--tomcat-version    Specify the tomcat version (implies -w tomcat)
     -d,--debug              Enable Server and TCK appclient debug options (5005 and 5003)
     -de,--debug-embedded    Enable TCK embedded ejb debug options (port 5001)
@@ -50,6 +52,7 @@ fi
 
 tests=""
 web="$DEFAULT_WEB"
+sql="$DEFAULT_SQL"
 profile="$DEFAULT_PROFILE"
 args=""
 options=""
@@ -89,6 +92,12 @@ appendTests() {
 processOptions() {
     while [ "x$1" != "x" ]; do
         case "$1" in
+            -sql)
+                assertOptionArg $1 $2
+                sql=$2
+                shift
+                ;;
+
             -h|--help)
                 usage
                 ;;
@@ -195,7 +204,7 @@ processOptions "$@"
 
 # Validate web
 case "$web" in
-    tomee|tomcat|none)
+    tomee-plus|tomee|tomcat|none)
         profile="full"
         true
         ;;
@@ -252,28 +261,20 @@ export BACKGROUND_CYAN=`tput setab 6`
 export BACKGROUND_WHITE=`tput setab 7`
 export RESET_FORMATTING=`tput sgr0`
 
-svn info
+CONFIG=" -DassemblyId=$web -Dtests=$tests -Djavaee.level=$profile -Dwebcontainer=$web -Dsql=$sql"
 
-echo exec mvn --file "$DIRNAME/pom.xml" \
-    --batch-mode \
-    --errors \
-    -Dwebcontainer="$web" \
-    -Djavaee.level="$profile" \
-    -DassemblyId="$web" \
-    -Dtests="$tests" \
-    $tomcatVersion \
-    $args
+echo ">>> config => $( echo "$CONFIG" | sed 's/ /\n/g')"
+echo "" # just an empty line
+
+svn info
 
 # Fire up Maven to do the real work
 exec mvn -V --file "$DIRNAME/pom.xml" \
-    --batch-mode \
-    --errors \
-    -Dwebcontainer="$web" \
-    -Djavaee.level="$profile" \
-    -DassemblyId="$web" \
-    -Dtests="$tests" \
-    $tomcatVersion \
-    $args | sed -e "s/\(\[INFO\]\ \-.*\)/${TEXT_BLUE}${BOLD}\1${RESET_FORMATTING}/g" \
+      --batch-mode \
+      --errors \
+      $CONFIG \
+      $tomcatVersion \
+      $args | sed -e "s/\(\[INFO\]\ \-.*\)/${TEXT_BLUE}${BOLD}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[INFO\]\ BUILD SUCCESS.*\)/${BOLD}${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[INFO\]\ BUILD FAILURE\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[INFO\]\ .*\ FAILURE\ \[.*s]\)/${TEXT_RED}${BOLD}\1${RESET_FORMATTING}/g" \

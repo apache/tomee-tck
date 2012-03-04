@@ -210,7 +210,6 @@ class SetupCommand
         log.info("Setting up TCK environment...")
         
         // Esnure that openejb.home is now set to a directory
-
         def openejbHome = requireDirectory('openejb.home')
 
         initPaths()
