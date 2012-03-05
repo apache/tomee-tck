@@ -60,7 +60,7 @@ class ValidateCommand
         }
         
         // Ensure that javaee.cts.home and javaee.ri.home are set to valid directories
-        ['javaee.cts.home', 'javaee.ri.home', 'openejb.home'].each {
+        ['javaee.cts.home', 'javaee.ri.home'].each {
             def dir = requireDirectory(it)
 
             //
