@@ -267,6 +267,8 @@ class SetupCommand
                 fileset(dir: "${project.basedir}/src/test/tomcat")
             } else if ("tomee".equals(System.getProperty("webcontainer"))) {
                 fileset(dir: "${project.basedir}/src/test/tomee")
+            } else if ("tomee-plus".equals(System.getProperty("webcontainer"))) {
+                fileset(dir: "${project.basedir}/src/test/tomee-plus")
             } else {
                 fileset(dir: "${project.basedir}/src/test/openejb")
             }
