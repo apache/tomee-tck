@@ -816,7 +816,7 @@ application for TCK (ie. all but openejb and ROOT -->
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-075</url>
+      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-041</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
