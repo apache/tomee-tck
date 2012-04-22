@@ -21,7 +21,7 @@
  -->
 <Server port="8005" shutdown="SHUTDOWN">
   <!-- OpenEJB plugin for Tomcat -->
-  <Listener className="org.apache.tomee.loader.OpenEJBListener" />
+  <Listener className="org.apache.tomee.catalina.ServerListener" />
   <!-- Security listener. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
   -->

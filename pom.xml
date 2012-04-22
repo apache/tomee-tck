@@ -675,27 +675,27 @@
                 <artifactItem>
                   <groupId>org.apache.openejb</groupId>
                   <artifactId>openejb-derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derby</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derbyclient</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.openejb</groupId>
                   <artifactId>webdeployer</artifactId>
-                  <outputDirectory>${openejb.home}/webapps/tomee/lib</outputDirectory>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
