@@ -29,7 +29,7 @@
   <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>4.0.0-beta-3-SNAPSHOT</version>
+  <version>1.0-SNAPSHOT</version>
   <!--openejb.version-->
 
   <description>
@@ -37,6 +37,11 @@
   </description>
 
   <properties>
+    <openejb.version>4.1.0-SNAPSHOT</openejb.version>
+    <tomee.version>1.1.0-SNAPSHOT</tomee.version>
+
+    <tomcat.version>7.0.27</tomcat.version>
+
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
     -->
@@ -54,10 +59,6 @@
 
     <repoPath>${localRepository}</repoPath>
 
-    <openejb.version>${project.version}</openejb.version>
-    <tomee.version>1.0.0-beta-3-SNAPSHOT</tomee.version>
-    <tomcat.version>6.0.32</tomcat.version>
-    <!--<tomcat.version>7.0.8</tomcat.version>-->
 
     <!-- externalized ports for tx.jte file -->
     <webcontainer.default.host>localhost</webcontainer.default.host>
@@ -87,23 +88,8 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.openejb</groupId>
-      <artifactId>openejb-standalone</artifactId>
-      <type>zip</type>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.openejb</groupId>
-      <artifactId>apache-tomee</artifactId>
-      <type>zip</type>
-      <version>${tomee.version}</version>
-      <classifier>webprofile</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.openejb</groupId>
       <artifactId>openejb-lite</artifactId>
-      <version>${project.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
@@ -151,27 +137,20 @@
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>openejb-core</artifactId>
-      <version>${project.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>openejb-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.openejb</groupId>
-      <artifactId>tomee-webapp</artifactId>
-      <type>war</type>
-      <version>${project.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>tomee-loader</artifactId>
       <type>jar</type>
-      <version>${project.version}</version>
+      <version>${tomee.version}</version>
     </dependency>
 
     <dependency>
@@ -201,13 +180,13 @@
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>openejb-derbynet</artifactId>
-      <version>${project.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>webdeployer</artifactId>
-      <version>${project.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
   </dependencies>
 
@@ -229,7 +208,7 @@
 
       <properties>
         <!-- where we will unpack openejb -->
-        <openejb.home>${project.build.directory}/apache-openejb-${project.version}</openejb.home>
+        <openejb.home>${project.build.directory}/apache-openejb-${openejb.version}</openejb.home>
       </properties>
 
       <build>
@@ -261,6 +240,15 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>openejb-standalone</artifactId>
+          <type>zip</type>
+          <version>${openejb.version}</version>
+        </dependency>
+      </dependencies>
     </profile>
 
     <!-- =================== -->
@@ -323,6 +311,25 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>tomee-webapp</artifactId>
+          <type>war</type>
+          <version>${openejb.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>apache-tomcat</artifactId>
+          <type>war</type>
+          <version>${tomcat.version}</version>
+        </dependency>
+
+      </dependencies>
+
     </profile>
 
 
@@ -375,6 +382,19 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>apache-tomee</artifactId>
+          <type>zip</type>
+          <version>${tomee.version}</version>
+          <classifier>webprofile</classifier>
+        </dependency>
+
+      </dependencies>
+
     </profile>
 
     <profile>
@@ -420,6 +440,19 @@
           </plugin>
         </plugins>
       </build>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>apache-tomee</artifactId>
+          <type>zip</type>
+          <version>${tomee.version}</version>
+          <classifier>plus</classifier>
+        </dependency>
+
+      </dependencies>
+
     </profile>
 
     <!-- ==================== -->
