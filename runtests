@@ -41,6 +41,9 @@ options:
     -c,--clean              Mvn clean
     -tr,--temp-repo         Mvn -Dmaven.repo.local=temp
     -U,--update             Mvn update snapshots
+    --source                Source a script to change environment settings such as jdk version
+    --env                   Print the environment prior to running mvn
+    -nc,--no-colors             Do not print in colors
     --                      Stop option processing
 EOF
     exit 1
@@ -50,12 +53,18 @@ if [ $# -lt 1 ]; then
     usage
 fi
 
+JAVA_HOME=$JAVA_HOME
+PATH=$PATH
 tests=""
 web="$DEFAULT_WEB"
 sql="$DEFAULT_SQL"
 profile="$DEFAULT_PROFILE"
 args=""
 options=""
+env=""
+nc=""
+src=""
+
 #tomcatVersion="-Dtomcat.version=6.0.32"
 
 assertOptionArg() {
@@ -175,6 +184,20 @@ processOptions() {
                 appendArgs "-Dmaven.repo.local=repo"
                 ;;
 
+            --source)
+                assertOptionArg "$1" "$2"
+                src="$(readlink -f "$2")"
+                shift
+                ;;
+
+            --env)
+                env=1
+                ;;
+
+            -nc|--no-colors)
+                nc=1
+                ;;
+
             --)
                 shift
                 appendArgs "$*"
@@ -240,35 +263,45 @@ if [ -n "$tomcatVersion" ]; then
     ant -f download.xml $tomcatVersion
 fi
 
-export BOLD=`tput bold`
-export UNDERLINE_ON=`tput smul`
-export UNDERLINE_OFF=`tput rmul`
-export TEXT_BLACK=`tput setaf 0`
-export TEXT_RED=`tput setaf 1`
-export TEXT_GREEN=`tput setaf 2`
-export TEXT_YELLOW=`tput setaf 3`
-export TEXT_BLUE=`tput setaf 4`
-export TEXT_MAGENTA=`tput setaf 5`
-export TEXT_CYAN=`tput setaf 6`
-export TEXT_WHITE=`tput setaf 7`
-export BACKGROUND_BLACK=`tput setab 0`
-export BACKGROUND_RED=`tput setab 1`
-export BACKGROUND_GREEN=`tput setab 2`
-export BACKGROUND_YELLOW=`tput setab 3`
-export BACKGROUND_BLUE=`tput setab 4`
-export BACKGROUND_MAGENTA=`tput setab 5`
-export BACKGROUND_CYAN=`tput setab 6`
-export BACKGROUND_WHITE=`tput setab 7`
-export RESET_FORMATTING=`tput sgr0`
+if [ -z $nc ]; then
+    export BOLD=`tput bold`
+    export UNDERLINE_ON=`tput smul`
+    export UNDERLINE_OFF=`tput rmul`
+    export TEXT_BLACK=`tput setaf 0`
+    export TEXT_RED=`tput setaf 1`
+    export TEXT_GREEN=`tput setaf 2`
+    export TEXT_YELLOW=`tput setaf 3`
+    export TEXT_BLUE=`tput setaf 4`
+    export TEXT_MAGENTA=`tput setaf 5`
+    export TEXT_CYAN=`tput setaf 6`
+    export TEXT_WHITE=`tput setaf 7`
+    export BACKGROUND_BLACK=`tput setab 0`
+    export BACKGROUND_RED=`tput setab 1`
+    export BACKGROUND_GREEN=`tput setab 2`
+    export BACKGROUND_YELLOW=`tput setab 3`
+    export BACKGROUND_BLUE=`tput setab 4`
+    export BACKGROUND_MAGENTA=`tput setab 5`
+    export BACKGROUND_CYAN=`tput setab 6`
+    export BACKGROUND_WHITE=`tput setab 7`
+    export RESET_FORMATTING=`tput sgr0`
+fi
 
 CONFIG=" -DassemblyId=$web -Dtests=$tests -Djavaee.level=$profile -Dwebcontainer=$web -Dsql=$sql"
 
 echo ">>> config => $( echo "$CONFIG" | sed 's/ /\n/g')"
 echo "" # just an empty line
 
+[ ! -z "$src" ] && {
+    ls "$src"
+    source "$src"
+}
+[ ! -z $env ] && export
+
 svn info
 
 # Fire up Maven to do the real work
+
+if [ -z $nc ]; then
 exec mvn -V --file "$DIRNAME/pom.xml" \
       --batch-mode \
       --errors \
@@ -284,6 +317,14 @@ exec mvn -V --file "$DIRNAME/pom.xml" \
                -e "s/\(\[WARNING\].*\)/${BOLD}${TEXT_YELLOW}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[ERROR\].*\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
                -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${BOLD}${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${BOLD}${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${BOLD}${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${BOLD}${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
+else
+exec mvn -V --file "$DIRNAME/pom.xml" \
+      --batch-mode \
+      --errors \
+      $CONFIG \
+      $tomcatVersion \
+      $args 
+fi
 
 # Make sure formatting is reset
 echo -ne ${RESET_FORMATTING}
