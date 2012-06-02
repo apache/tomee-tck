@@ -29,6 +29,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 public class DriverManagerXADataSource implements XADataSource {
     private String jdbcUrl;
@@ -66,6 +68,10 @@ public class DriverManagerXADataSource implements XADataSource {
 
     public void setLoginTimeout(int loginTimeout) {
         this.loginTimeout = loginTimeout;
+    }
+
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new SQLFeatureNotSupportedException("getParentLogger");
     }
 
     private static class DriverManagerXAConnection implements XAConnection {
