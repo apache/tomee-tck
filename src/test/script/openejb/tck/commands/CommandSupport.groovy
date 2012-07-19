@@ -170,6 +170,8 @@ abstract class CommandSupport
         project.properties.setProperty("openejb.lib", openejbLib)
         project.properties.setProperty("openejb.server.uri", openejbServerUri)
 
+        dumpLibs(new File(openejbLib))
+
         //
         // Setup Ant paths required to run the TCK and make sure they have the expected number
         // of elements so we can safley avoid using version numbers
@@ -261,5 +263,21 @@ abstract class CommandSupport
     def selectTests() {
         def builder = new TestListBuilder(this)
         return builder.getTests()
+    }
+
+    def dumpLibs(lib) {
+        if (project.properties.containsKey("openejb.dump.libraries")) {
+            return;
+        }
+
+        log.info("Start - Container libraries")
+        if (lib.exists() && lib.isDirectory()) {
+            lib.listFiles().grep(~/.*.jar/).sort{ it.name }.each  {
+                log.info(" - $it.name")
+            }
+        }
+        log.info("End - Container libraries")
+
+        project.properties.setProperty("openejb.dump.libraries", "done")
     }
 }
