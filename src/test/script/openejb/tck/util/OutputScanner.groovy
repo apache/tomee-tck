@@ -36,6 +36,10 @@ class OutputScanner
 
     def Thread thread
 
+    def passed = 0
+    def failed = 0
+    def errors = 0
+
     public OutputScanner(filename) {
         assert filename
 
@@ -80,6 +84,7 @@ class OutputScanner
 
     public void run() {
         Reader reader
+        def testStr
 
         while (running) {
             if (reader == null) {
@@ -102,20 +107,26 @@ class OutputScanner
                         tmp = tmp.replaceFirst(/\./, '#')
                         testname = tmp.reverse()
 
-                        print("    ${testname} - ")
+                        testStr = " - ${testname} - "
                     }
                     else if (line.startsWith('Finished Test:')) {
                         def passfail = 'UNKNOWN'
 
                         if (line.contains('PASSED.')) {
+                            passed++
+                            print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.passed()
                             println()
                         }
                         else if (line.contains('FAILED.')) {
+                            failed++
+                            print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.failed()
                             println()
                         }
                         else if (line.contains('ERROR.')) {
+                            errors++
+                            print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.error()
                             println()
                         }

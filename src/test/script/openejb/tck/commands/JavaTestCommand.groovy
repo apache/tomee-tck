@@ -112,6 +112,8 @@ class JavaTestCommand
         initPaths()
         
         def tests = selectTests()
+        println(tests)
+
 
         def timeout = getInteger('timeout', -1)
         def logOutput = getBoolean('logOutput', false)
@@ -289,6 +291,7 @@ class JavaTestCommand
                 arg(value: "pass,fail,error,notRun")
 
                 arg(value: "-tests")
+
                 tests.each {
                     log.info("Including tests: ${it}")
                     arg(value: it)
