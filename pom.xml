@@ -849,7 +849,7 @@ application for TCK (ie. all but openejb and ROOT -->
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-052</url>
+      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-053</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
@@ -859,6 +859,7 @@ application for TCK (ie. all but openejb and ROOT -->
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
+    
     
     
     
