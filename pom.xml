@@ -751,6 +751,7 @@ application for TCK (ie. all but openejb and ROOT -->
             </goals>
             <configuration>
               <target>
+                <delete dir="${openejb.home}/webapps/ROOT"/>
                 <delete dir="${openejb.home}/webapps/docs"/>
                 <delete dir="${openejb.home}/webapps/examples"/>
                 <delete dir="${openejb.home}/webapps/ejb-examples"/>
