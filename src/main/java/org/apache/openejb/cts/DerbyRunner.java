@@ -21,17 +21,24 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.openejb.util.Log4jPrintWriter;
 
+import java.net.InetAddress;
+
 public class DerbyRunner {
 
 	private static class DerbyThread extends Thread {
 		private static Logger log = Logger.getLogger(DerbyRunner.class);
 		private static final int SLEEP_INTERVAL = 60000;
 		private NetworkServerControl serverControl;
+        private int port = NetworkServerControl.DEFAULT_PORTNUMBER;
+
+        public DerbyThread (int derbyPort) {
+            port = derbyPort;
+        }
 
 		public void run() {
-			System.out.println("Starting embedded Derby database");
+			System.out.println("Starting embedded Derby database on port " + port);
 			try {
-	            serverControl = new NetworkServerControl("127.0.0.1", Integer.toString(NetworkServerControl.DEFAULT_PORTNUMBER));
+	            serverControl = new NetworkServerControl(InetAddress.getByAddress(new byte[] {127, 0, 0, 1}), port);
 	            serverControl.start(new Log4jPrintWriter("Derby", Level.INFO));
 	        } catch (Exception e) {
 	        	e.printStackTrace();
@@ -52,8 +59,17 @@ public class DerbyRunner {
 	
 	
 	public static void main(String[] args) {
-		DerbyThread thread = new DerbyThread();
-		thread.setDaemon(true);
+        int port = NetworkServerControl.DEFAULT_PORTNUMBER;
+        if (args.length == 1) {
+            try {
+                port = Integer.parseInt(args[0]);
+                //System.setProperty("derby.drda.portNumber", Integer.toString(port));
+            } catch (NumberFormatException e) {
+                System.out.println("Could not convert port " + args[0] + ". Using the default " + port);
+            }
+        }
+        DerbyThread thread = new DerbyThread(port);
+        thread.setDaemon(true);
 		thread.setName("DerbyServerDaemon");
 		thread.start();
 	}
