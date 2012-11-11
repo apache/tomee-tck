@@ -206,6 +206,7 @@ class JavaTestCommand
                 sysproperty(key: "openejb.server.uri", value: require('openejb.server.uri'))
                 sysproperty(key: "openejb.servicemanager.enabled", value: true)
 
+                sysproperty(key: "server.shutdown.port", value: require('webcontainer.default.shutdown.port'))
                 sysproperty(key: "openejb.home", file: openejbHome)
                 sysproperty(key: "com.sun.ejb.home", file: openejbHome)
                 sysproperty(key: "TS_HOME", file: javaeeCtsHome)

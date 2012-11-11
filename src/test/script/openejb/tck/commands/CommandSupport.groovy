@@ -157,12 +157,13 @@ abstract class CommandSupport
         def javaeetckHome = get('javaee.cts.home')
         def javaeeRiHome = get('javaee.ri.home')
         def webcontainer = get('webcontainer')
+        def tomeeHttpPort = get('webcontainer.default.port')
 
         def openejbLib
         def openejbServerUri
         if (webcontainer.startsWith("tom")) {
             openejbLib = "${openejbHome}/lib"
-            openejbServerUri = "http://localhost:8080/tomee/ejb"
+            openejbServerUri = "http://localhost:${tomeeHttpPort}/tomee/ejb"
         } else {
             openejbLib = "${openejbHome}/lib"
             openejbServerUri = "ejbd://localhost:4201"

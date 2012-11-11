@@ -262,15 +262,32 @@ class SetupCommand
         //
         // Copy openejb configuration files into server
         //
-        ant.copy(todir: "${openejbHome}", overwrite: true) {
+        ant.copy(todir: "${openejbHome}", filtering: true, overwrite: true) {
+
+            def map = [:]
+            map.putAll(System.properties)
+            map.putAll(project.properties)
+
+            def wcFiles
+
             if ("tomcat".equals(System.getProperty("webcontainer"))) {
-                fileset(dir: "${project.basedir}/src/test/tomcat")
+                wcFiles = "${project.basedir}/src/test/tomcat"
+
             } else if ("tomee".equals(System.getProperty("webcontainer"))) {
-                fileset(dir: "${project.basedir}/src/test/tomee")
+                wcFiles = "${project.basedir}/src/test/tomee"
+
             } else if ("tomee-plus".equals(System.getProperty("webcontainer"))) {
-                fileset(dir: "${project.basedir}/src/test/tomee-plus")
+                wcFiles = "${project.basedir}/src/test/tomee-plus"
+
             } else {
-                fileset(dir: "${project.basedir}/src/test/openejb")
+                wcFiles = "${project.basedir}/src/test/openejb"
+            }
+
+            fileset(dir: wcFiles)
+            filterset(begintoken: '%', endtoken: '%') {
+                map.each {
+                    filter(token: it.key, value: it.value)
+                }
             }
         }
 

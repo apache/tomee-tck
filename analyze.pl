@@ -27,7 +27,7 @@ foreach my $testOutput (<STDIN>) {
 	# Maybe remove some details so failures can be more easily grouped
 	
 	$t =~ s,(Could not load WEB-INF/classes/).*(.class),${1}.....${2},;
-	$t =~ s,(http://localhost:8080).*(_vehicle_[^/]+)/.*,$1/.....$2.....,;
+	$t =~ s,(http://localhost:).*(_vehicle_[^/]+)/.*,$1/.....$2.....,;
 	$t =~ s,(404 Not Found for http://localhost:8080/jsf_).*,$1.....,;
 	$t =~ s,(Module failed validation.).*,$1.....,;
 	$t =~ s,(No provider available for resource-ref 'null' of type 'com.sun.ts.tests.common.connector.whitebox.TSConnectionFactory').*,$1.....,;
