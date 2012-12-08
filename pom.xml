@@ -874,7 +874,7 @@ application for TCK (ie. all but openejb and ROOT -->
     <repository>
       <id>orgapacheopenejb-118</id>
       <name>Staging repo for TomEE 1.5.1</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-124/</url>
+      <url>https://repository.apache.org/content/repositories/orgapacheopenejb-126/</url>
     </repository>
     <repository>
       <id>apache-m2-snapshot</id>
