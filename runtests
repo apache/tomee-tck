@@ -243,7 +243,7 @@ case "$web" in
 esac
 
 rm -r derbydb
-unzip derbydb.zip
+unzip -q derbydb.zip
 sql=skip
 
 # Append options if any
