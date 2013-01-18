@@ -616,8 +616,8 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
-        <!--<version>1.8-SNAPSHOT</version>-->
+        <!--<version>1.7</version>-->
+        <version>1.8-SNAPSHOT</version>
         <executions>
           <execution>
             <id>reserve-network-port</id>
@@ -899,6 +899,18 @@ application for TCK (ie. all but openejb and ROOT -->
   </repositories>
 
   <pluginRepositories>
+    <pluginRepository>
+      <id>codehaus-snapshots</id>
+      <name>Codehaus Snapshot</name>
+      <url>https://nexus.codehaus.org/content/repositories/snapshots/</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
     <pluginRepository>
       <id>openejb-cts-file</id>
       <name>OpenEJB CTS File Repository</name>
