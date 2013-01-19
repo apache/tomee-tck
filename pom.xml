@@ -70,6 +70,7 @@
     <orb.ri.port>3700</orb.ri.port>
     <rmiiiop.http.server.host>localhost</rmiiiop.http.server.host>
     <rmiiiop.http.server.port>10000</rmiiiop.http.server.port>
+    <harness.log.port>2000</harness.log.port>
 
     <!-- Random CTS properties that have been externalized -->
     <deliverable.class>com.sun.ts.lib.deliverable.cts.CTSDeliverable</deliverable.class>
@@ -632,6 +633,7 @@
                 <portName>webcontainer.default.clientcert.port</portName>
                 <portName>webcontainer.default.shutdown.port</portName>
                 <portName>derby.server.port</portName>
+                <portName>harness.log.port</portName>
               </portNames>
             </configuration>
           </execution>
