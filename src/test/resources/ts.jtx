@@ -1,0 +1,263 @@
+#
+# Copyright 2009 Sun Microsystems, Inc. All rights reserved.
+# SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+#
+# $Id: ts.jtx 63334 2011-08-17 12:41:41Z dougd $
+#
+
+################
+# JSF
+################
+
+#
+# Bug ID:  6982305
+#
+# ***** DO NOT UNCOMMENT THIS TEST ******
+#
+# The test code has been commented out in the source, due to a limitation with Javatest we
+# were unable to exclude this Test via this file. The Javatest limitation is a case sensitivity
+# issue.
+#
+#com/sun/ts/tests/jsf/api/javax_faces/application/resourcehandlerwrapper/URLClient.java#resourceHandlerWrapperLibraryExistsTest
+
+#
+# Bug ID: 6930386
+#
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig1Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig2Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig3Test
+com/sun/ts/tests/jsf/spec/webapp/factoryfinder/URLClient.java#factoryFinderConfig4Test
+
+#
+# Bug ID: 6938654
+#
+com/sun/ts/tests/jsf/api/javax_faces/component/uiinput/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectmany/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectone/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/uiselectboolean/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputhidden/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputsecret/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputtext/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlinputtextarea/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectbooleancheckbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanycheckbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanylistbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectmanymenu/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonelistbox/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectonemenu/URLClient.java#uiInputValidate3Test
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmlselectoneradio/URLClient.java#uiInputValidate3Test
+
+#
+# Bug ID:  6969488 (Tests have been removed form workspace, see Bug for more details.)
+#
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventCtorTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventGetComponentTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIAETest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerNegativeTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerPostiveTest
+com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventProcessListenerTest
+
+
+################
+# J2EETOOLS
+################
+
+#
+# Bug ID: 6422030
+#
+com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java#testStartRAR_from_standalone
+com/sun/ts/tests/j2eetools/deploy/platform/ee/depmanager1/depmanagerClient1.java#testStopRAR_from_standalone
+
+################
+# EJB30
+################
+
+#
+# Bug ID: 6987622
+#
+com/sun/ts/tests/ejb30/lite/basic/mock/Client.java#passByEmpty_from_ejbembed
+com/sun/ts/tests/ejb30/lite/basic/mock/Client.java#passByReason_from_ejbembed
+
+#
+# Bug ID: 6915860
+#
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_appmanaged
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_appmanagedNoTx
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_pmservlet
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_puservlet
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateful3
+com/sun/ts/tests/ejb30/persistence/criteriaapi/querybuilder/Client.java#nullLiteral_from_stateless3
+
+#
+# Bug ID: 7013229
+#
+com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupDataSource
+com/sun/ts/tests/ejb30/assembly/metainfandlibdir/Client.java#concurrentLookupHelloBean
+
+#
+# Bug Id: 12715556
+#
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/bean/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSum2_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/inheritance/Client.java#unlockedSum2_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors1_from_ejbliteservlet2
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/annotated/Client.java#unlockedSumFromInterceptors2_from_ejbliteservlet2
+
+#
+# Bug ID: 1280474 (https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=12804747&rptno_count=1&pos=1&report_title=&query_id=-1 )
+#
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadClassLevel_from_ejbliteservlet2
+
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadInherit_from_ejbliteservlet2
+
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbembed
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet2
+
+
+#################
+# INTEROP
+#################
+
+#
+# Bug ID: 16989 (http://java.net/jira/browse/GLASSFISH-16989)
+#
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_appclient
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_ejb
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_jsp
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#EXTest01_from_servlet
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_appclient
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_appclient_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_ejb
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_ejb_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_jsp
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_jsp_reverse
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_servlet
+com/sun/ts/tests/interop/rmiiiop/marshaltests/Client.java#OBVTest05_from_servlet_reverse
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test1
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test10
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test2
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test3
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test4
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test9
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxNS_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxNS_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxRN_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxRN_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxBM_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxBM_GlobalSingle/Client.java#test2
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxN_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxNS_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxR_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxRN_Single/Client.java#test1
+com/sun/ts/tests/interop/tx/session/stateful/cm/TxS_Single/Client.java#test1
+
+#
+# Bug ID: 16661 (http://java.net/jira/browse/GLASSFISH-16661)
+#
+com/sun/ts/tests/interop/tx/session/stateful/bm/TxN_GlobalSingle/Client.java#test1
+com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test13
+
+
+################
+# WEBSERVICES13
+################
+
+#
+# Bug ID: 6962404
+#
+com/sun/ts/tests/webservices13/ejb/annotations/WSEjbWSRefRespBindAndAddressingCombinedTest/Client.java#VerifyAddrHeadersExistForEnabledNotRequiredPort
+com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingAnnotations/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
+com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingDDs/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
+
+################
+# CONNECTOR
+################
+
+#
+# Bug ID:  7006428
+#
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/localTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/noTx/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_ejb
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_jsp
+com/sun/ts/tests/connector/xa/workmgt/workmgtClient1.java#testRAtoWorkAssociation_from_servlet
+
+
+################
+# JSP
+################
+
+#
+# Bug ID: 15161 (http://java.net/jira/browse/GLASSFISH-15161)
+#
+com/sun/ts/tests/jsp/spec/security/secform/Client.java#test12
+
+
+################
+# XA
+################
+
+#
+# Bug ID:  6992031
+#
+com/sun/ts/tests/xa/ee/tsr/TsrClient.java#testTSRFunctionality1
+
+
+################
+# SERVLET
+################
+
+#
+# Bug ID:  12680183
+#
+com/sun/ts/tests/servlet/spec/annotation/injection/URLClient.java#test1

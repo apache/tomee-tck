@@ -1,0 +1,16 @@
+#!/bin/bash
+##
+## $Revision$ $Date$
+##
+
+function _runtests_completion() {
+    COMPREPLY=()
+    
+    local sections="sections.properties"
+    local cur="${COMP_WORDS[COMP_CWORD]//\\\\/}"
+    #local options=`cat "$sections" | egrep "^.*=.*$" | awk -F= '{ print $1 }'`
+    local options=$(java Sections "$cur" sections.packages)
+    COMPREPLY=($(compgen -W "${options}" ${cur}))
+}
+
+complete -F _runtests_completion runtests

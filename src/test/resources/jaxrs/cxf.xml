@@ -1,0 +1,97 @@
+
+<project name="CXF package and deploy" default="deploy">
+
+    <!--
+    JAX-RS TCK package target: package JAX-RS TCK test application into web archive
+
+    resource.classes:  specified in individual test's build.xml,
+                       contains all resource class used in the test
+    app.name:          specified in individual test's build.xml,
+                       is used for web archive name: ${app.name}_web.war
+                       is also used in web application's context root:
+                       ${app.name}_web
+    web.xml:           located in individual test's directory.
+                       Is web application's deployment descriptor.
+    class.dir:         TCK's class directory.  Located at $TS_HOME/classes
+    servlet_adaptor:   specified in $TS_HOME/bin/ts.jte.
+                       Required by JAX-RS specification to run in servlet container,
+                       it is imeplementation specific.
+    appconfig.class:   specified in individual test's build.xml.
+                       Required by JAX-RS spec to list all resources in the test application.
+    -->
+
+    <!--
+    JAX-RS TCK deploy target: Deploy JAX-RS web archive
+
+    webapp.dir:  autodeploy directory for web application
+    -->
+    <import file="../../ts.top.import.xml"/>
+    <property name="all.jaxrs.tests.dir"
+              value="com/sun/ts/tests/jaxrs/spec/template,com/sun/ts/tests/jaxrs/spec/exposureTest,com/sun/ts/tests/jaxrs/spec/inheritanceTest,com/sun/ts/tests/jaxrs/spec/returnType,com/sun/ts/tests/jaxrs/ee/rs/deleteTest,com/sun/ts/tests/jaxrs/ee/rs/headTest,com/sun/ts/tests/jaxrs/ee/rs/matrixParamTest,com/sun/ts/tests/jaxrs/ee/rs/queryParamTest,com/sun/ts/tests/jaxrs/ee/rs/cookieParamTest,com/sun/ts/tests/jaxrs/ee/rs/getTest,com/sun/ts/tests/jaxrs/ee/rs/headerParamTest,com/sun/ts/tests/jaxrs/ee/rs/pathParamTest,com/sun/ts/tests/jaxrs/ee/rs/putTest,com/sun/ts/tests/jaxrs/ee/rs_core/headersTest,com/sun/ts/tests/jaxrs/ee/rs_core/responseCSTest,com/sun/ts/tests/jaxrs/ee/rs_core/uriInfoTest"/>
+
+    <target name="pre.deploy">
+        <foreach list="${all.jaxrs.tests.dir}"
+                 delimiter=","
+                 target="all_action"
+                 param="pkg.dir"/>
+    </target>
+
+    <target name="all_action">
+
+        <!--
+        Create implementation specific web with servlet information
+        -->
+        <copy file="${ts.home}/src/${pkg.dir}/web.xml.template" tofile="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}" overwrite="true" />
+
+        <echo message="${servlet_adaptor}"/>
+        <replace file="${ts.home}/src/${pkg.dir}/web.xml.${jaxrs_impl_name}" value="${servlet_adaptor}">
+            <replacetoken>servlet_adaptor</replacetoken>
+        </replace>
+
+        <!--
+        Create implementation specfic war files with
+            updated web.xml;
+            servlet class;
+        -->
+        <fileset id="dist.contents" dir="${ts.home}/dist/${pkg.dir}" includes="jaxrs*.war.template"/>
+        <property name="prop.dist.contents" refid="dist.contents"/>
+        <echo>${prop.dist.contents}</echo>
+        <propertyregex property="app.name.1"
+                       input="${prop.dist.contents}"
+                       regexp=" "
+                       replace=""/>
+        <propertyregex property="app.name"
+                       input="${prop.dist.contents}"
+                       regexp="_web.war.template$"
+                       replace=""/>
+        <echo>${app.name}</echo>
+
+        <echo message="${ts.home}/dist/${pkg.dir}/${app.name}_web.war.${jaxrs_impl_name}"/>
+        <copy file="${ts.home}/dist/${pkg.dir}/${app.name}_web.war.template"
+              tofile="${ts.home}/dist/${pkg.dir}/${app.name}_web.war.${jaxrs_impl_name}"/>
+
+        <jar destfile="${ts.home}/dist/${pkg.dir}/${app.name}_web.war.${jaxrs_impl_name}" update="true">
+            <zipfileset dir="${ts.home}/src/${pkg.dir}"
+                        includes="web.xml.${jaxrs_impl_name}"
+                        fullpath="WEB-INF/web.xml"/>
+        </jar>
+
+        <!--unjar src="${jaxrs_impl_lib}" dest="${ts.home}/tmp">
+            <patternset>
+                <include name="${servlet_adaptor}"/>
+            </patternset>
+        </unjar>
+
+        <jar destfile="${ts.home}/dist/${pkg.dir}/${app.name}_web.war.${jaxrs_impl_name}" update="true">
+            <zipfileset dir="${ts.home}/tmp/"
+                        includes="${servlet_adaptor}"
+                        prefix="WEB-INF/classes" />
+        </jar-->
+        
+        <copy failonerror="false"
+              file="${dist.dir}/${pkg.dir}/${app.name}_web.war.${jaxrs_impl_name}"
+              tofile="${dist.dir}/${pkg.dir}/${app.name}_web.war" />
+              <echo message="${jaxrs_impl_name}"/>
+          </target>
+
+      </project>

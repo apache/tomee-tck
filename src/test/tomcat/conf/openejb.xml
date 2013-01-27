@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<openejb>
+
+<!--
+<Container id="Default CMP Container" ctype="CMP_ENTITY">
+    CmpEngineFactory org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
+    Engine  derby
+    ConnectorName  Default JDBC Database
+</Container>
+-->
+
+<!--
+<Container id="Default BMP Container" ctype="BMP_ENTITY"/>
+-->
+
+
+<Container id="Default Stateful Container" ctype="STATEFUL">
+    Passivator   org.apache.openejb.core.stateful.SimplePassivater
+    TimeOut  20
+    BulkPassivate  50
+</Container>
+
+
+
+<Container id="Default Stateless Container" ctype="STATELESS">
+    TimeOut  0
+    PoolSize  10
+    StrictPooling  true
+</Container>
+
+<!--
+<Container id="Default MDB Container" ctype="MESSAGE">
+    ResourceAdapter Default JMS Resource Adapter
+    ActivationSpecClass org.apache.activemq.ra.ActiveMQActivationSpec
+    InstanceLimit 10
+</Container>
+-->
+
+<Connector id="Default JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
+    UserName     cts
+    Password     cts
+</Connector>
+
+<Connector id="Default Unmanaged JDBC Database">
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:data/derbydb;create=true
+    UserName     cts
+    Password     cts
+</Connector>
+
+<!--
+<Resource id="Default JMS Resource Adapter">
+    # Broker configuration
+    BrokerXmlConfig broker:(tcp://localhost:61616)
+
+    # Broker address
+    ServerUrl vm://localhost?async=true
+</Resource>
+-->
+
+<!--
+<Connector id="Default JMS Connection Factory">
+    ResourceAdapter Default JMS Resource Adapter
+</Connector>
+-->
+
+<Resource id="Default Mail Session">
+mail.smtp.class=org.apache.geronimo.mail.NullTransport
+</Resource>
+
+<Deployments dir="apps/" />
+
+</openejb>
