@@ -286,7 +286,7 @@ class JavaTestCommand
                 arg(file: "${project.build.directory}/ts.jtx")
 
                 arg(value: "-timeoutFactor")
-                arg(value: "1.0")
+                arg(value: "10.0")
 
                 arg(value: "-priorStatus")
                 arg(value: "pass,fail,error,notRun")
