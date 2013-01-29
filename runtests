@@ -35,6 +35,7 @@ options:
     -ds,--debug-server      Enable Server debug options (port 5005)
     --connector             deploy connectors for connector tests
     -j,--jaxrs              build jaxrs tck wars
+    -k,--kill               Kill any java tck process that might be running
     --reverse               Generate jaxws jws reverse artifacts
     -o,--option <option>    Enable an option
     -ol,--offline           Run maven offline
@@ -198,6 +199,10 @@ processOptions() {
                 nc=1
                 ;;
 
+            -k|--kill)
+                killPrevious=1
+                ;;
+
             --)
                 shift
                 appendArgs "$*"
@@ -265,6 +270,10 @@ fi
 
 if [ -n "$tomcatVersion" ]; then
     ant -f download.xml $tomcatVersion
+fi
+
+if [ ! -n "$killPrevious" ]; then
+    ps ax | grep "java.*$PWD" | cut -c 1-5 | xargs kill -9
 fi
 
 if [ -z $nc ]; then
