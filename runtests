@@ -272,7 +272,7 @@ if [ -n "$tomcatVersion" ]; then
     ant -f download.xml $tomcatVersion
 fi
 
-if [ ! -n "$killPrevious" ]; then
+if [ "$killPrevious" != "" ]; then
     ps ax | grep "java.*$PWD" | cut -c 1-5 | xargs kill -9
 fi
 
