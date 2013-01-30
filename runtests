@@ -54,6 +54,8 @@ if [ $# -lt 1 ]; then
     usage
 fi
 
+echo "$(basename $0) $@"
+
 JAVA_HOME=$JAVA_HOME
 PATH=$PATH
 tests=""
@@ -273,7 +275,10 @@ if [ -n "$tomcatVersion" ]; then
 fi
 
 if [ "$killPrevious" != "" ]; then
-    ps ax | grep "java.*$PWD" | cut -c 1-5 | xargs kill -9
+    echo "Killing old processes $(ps ax | grep "[j]ava.*$PWD" | cut -c 1-5 )"
+    ps ax | grep "[j]ava.*$PWD" | cut -c 1-5 | xargs kill -9
+    sleep 5
+    ps ax | grep "[j]ava.*$PWD"
 fi
 
 if [ -z $nc ]; then
