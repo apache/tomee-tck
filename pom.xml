@@ -890,6 +890,7 @@ application for TCK (ie. all but openejb and ROOT -->
     
     
     
+    
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
