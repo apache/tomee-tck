@@ -234,7 +234,7 @@ processOptions "$@"
 
 # Validate web
 case "$web" in
-    tomee-plus|tomee|tomcat|none)
+    tomee-plus|tomee-plume|tomee|tomcat|none)
         profile="full"
         true
         ;;
