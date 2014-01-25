@@ -279,6 +279,9 @@ class SetupCommand
             } else if ("tomee-plus".equals(System.getProperty("webcontainer"))) {
                 wcFiles = "${project.basedir}/src/test/tomee-plus"
 
+            } else if ("tomee-plume".equals(System.getProperty("webcontainer"))) {
+                wcFiles = "${project.basedir}/src/test/tomee-plume"
+
             } else {
                 wcFiles = "${project.basedir}/src/test/openejb"
             }

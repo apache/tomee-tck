@@ -453,6 +453,64 @@
 
     </profile>
 
+    <profile>
+      <id>tomee-plume-environment</id>
+
+      <activation>
+        <property>
+          <name>webcontainer</name>
+          <value>tomee-plume</value>
+        </property>
+      </activation>
+
+      <properties>
+        <openejb.home>target/apache-tomee-plume-${tomee.version}</openejb.home>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.1</version>
+            <executions>
+              <execution>
+                <id>unpack</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.openejb</groupId>
+                      <artifactId>apache-tomee</artifactId>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}</outputDirectory>
+                      <classifier>plume</classifier>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>org.apache.openejb</groupId>
+          <artifactId>apache-tomee</artifactId>
+          <type>zip</type>
+          <version>${tomee.version}</version>
+          <classifier>plume</classifier>
+        </dependency>
+
+      </dependencies>
+
+    </profile>
+
     <!-- ==================== -->
     <!-- Reverse Test setup   -->
     <!-- ==================== -->
