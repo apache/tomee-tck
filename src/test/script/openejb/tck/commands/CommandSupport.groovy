@@ -185,7 +185,7 @@ abstract class CommandSupport
         builder.directory = "${project.build.directory}"
         builder.append("openejb-tck-*.jar")
         builder.directory = openejbLib
-        builder.append("openejb-core-*.jar")
+        builder.appendAll("openejb-core-*.jar")
         builder.directory = "${project.build.directory}/lib"
         builder.appendAll("*.jar")
         builder.getPath("openejb.porting.classes")
