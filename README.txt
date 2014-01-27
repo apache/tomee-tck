@@ -6,8 +6,8 @@ GETTING SETUP
 
  The Java EE 6 TCK and RI can be downloaded from here:
 
-  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/javaeetck-6.0_29-Jun-2011.zip
-  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/javaee6_ri-3.0.1-b22.zip
+  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/2012-01-24/javaeetck-6.0_24-Jan-2012.zip
+  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/2012-01-24/javaee6u4_ri-3.1.2-b21.zip
 
  Both are required to run the TCK.  The TCK is 813M, beware.
 
