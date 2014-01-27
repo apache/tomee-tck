@@ -185,7 +185,7 @@ THE ROAD TO CERTIFICATION
 
 WORKING TOGETHER
  Communication:- 
- -Email:Send an email to tck-subscribe@openejb.apache.org  to subscribe to the tck discussion list
+ -Email:Send an email to tck-subscribe@tomee.apache.org  to subscribe to the tck discussion list
  -IRC: You can also jump on #tck channel at freenode
 
  We want to divide and conquer on each phase and clear it out as much
