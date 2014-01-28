@@ -25,7 +25,7 @@ GETTING SETUP
           
           <properties>
     	  <javaee6.cts.home>/Users/dblevins/work/javaeetck</javaee6.cts.home>
-    	  <javaee6.ri.home>/Users/dblevins/work/javaeetck/glassfishv3</javaee6.ri.home>
+    	  <javaee6.ri.home>/Users/dblevins/work/javaeetck/glassfishv3/glassfish</javaee6.ri.home>
           </properties>
         </profile>
       </profiles>
@@ -77,7 +77,7 @@ MISC
 
  Bottom line is you have to clear out the target directory manually.
  On occasion some bad state will get into the server install in the
- target/ directory.  If you start getting weirld maven or groovy
+ target/ directory.  If you start getting weird maven or groovy
  errors, clean out the target dir and try again.
 
 TAB COMPLETION
@@ -136,7 +136,7 @@ SELECTING TESTS
     com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#java#beanClassLevel2_from_ejbembed - FAILED
    ....
 
- For the most part, you can copy and past that test name as-is and use
+ For the most part, you can copy and paste that test name as-is and use
  it to run a test that failed... with one slight adjustment.  You need
  to delete the "#java" part and then it will work.
 
