@@ -78,7 +78,7 @@ Float_Tab_Insert=insert into Float_Tab values(3.4028235E37,1.4E-45,null)
 
 Real_Tab_Insert= insert into Real_Tab values(3.402E38,1.4E-37, null)
 
-Bit_Tab_Insert=insert into Bit_Tab values(true,false,null)
+Bit_Tab_Insert=insert into Bit_Tab values(true,false,true)
 
 Smallint_Tab_Insert= insert into Smallint_Tab values(32767,-32768,null)
 

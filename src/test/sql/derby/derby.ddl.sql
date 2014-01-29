@@ -1,3 +1,5 @@
+SET SCHEMA APP;
+
 drop table ctstable2 ;
 drop table ctstable1 ;
 create table ctstable1 (TYPE_ID int NOT NULL, TYPE_DESC varchar(32), primary key(TYPE_ID)) ;
@@ -19,7 +21,7 @@ drop table Real_Tab ;
 create table Real_Tab (MAX_VAL REAL, MIN_VAL REAL,NULL_VAL REAL) ;
 
 drop table Bit_Tab ;
-create table Bit_Tab (MAX_VAL BOOLEAN, MIN_VAL BOOLEAN, NULL_VAL SMALLINT) ;
+create table Bit_Tab (MAX_VAL BOOLEAN, MIN_VAL BOOLEAN, NULL_VAL BOOLEAN) ;
 
 drop table Smallint_Tab ;
 create table Smallint_Tab (MAX_VAL SMALLINT, MIN_VAL SMALLINT, NULL_VAL SMALLINT) ;

@@ -1,3 +1,5 @@
+SET SCHEMA APP;
+
 drop procedure Numeric_Proc ;
 create procedure Numeric_Proc(out MAX_PARAM NUMERIC(30,15), out MIN_PARAM NUMERIC(30,15), out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Numeric_Proc' parameter style java;
 
