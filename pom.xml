@@ -160,19 +160,19 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.9.1.0</version>
+      <version>10.10.1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbynet</artifactId>
-      <version>10.9.1.0</version>
+      <version>10.10.1.1</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyclient</artifactId>
-      <version>10.9.1.0</version>
+      <version>10.10.1.1</version>
     </dependency>
 
     <dependency>
@@ -575,7 +575,7 @@
               <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derbyclient</artifactId>
-                <version>10.9.1.0</version>
+                <version>10.10.1.1</version>
               </dependency>
             </dependencies>
 
@@ -857,7 +857,7 @@ application for TCK (ie. all but openejb and ROOT -->
           <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.9.1.0</version>
+            <version>10.10.1.1</version>
           </dependency>
         </dependencies>
 
@@ -889,7 +889,7 @@ application for TCK (ie. all but openejb and ROOT -->
                 <element>
                   <groupId>org.apache.derby</groupId>
                   <artifactId>derby</artifactId>
-                  <version>10.9.1.0</version>
+                  <version>10.10.1.1</version>
                 </element>
               </classpath>
             </configuration>
