@@ -14,7 +14,7 @@ drop procedure Real_Proc ;
 create procedure Real_Proc (out MAX_PARAM REAL, out MIN_PARAM REAL, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Real_Proc' parameter style java;
 
 drop procedure Bit_Proc ;
-create procedure Bit_Proc (out MAX_PARAM SMALLINT, out MIN_PARAM SMALLINT, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Proc' parameter style java;
+create procedure Bit_Proc (out MAX_PARAM BOOLEAN, out MIN_PARAM BOOLEAN, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Proc' parameter style java;
 
 drop procedure Smallint_Proc ;
 create procedure Smallint_Proc (out MAX_PARAM SMALLINT, out MIN_PARAM SMALLINT, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Smallint_Proc' parameter style java;
@@ -122,13 +122,13 @@ drop procedure Real_Io_Null  ;
 create procedure Real_Io_Null (inout NULL_PARAM REAL) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Real_Io_Null' parameter style java;
 
 drop procedure Bit_Io_Max  ;
-create procedure Bit_Io_Max (inout MAX_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Max' parameter style java;
+create procedure Bit_Io_Max (inout MAX_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Max' parameter style java;
 
 drop procedure Bit_Io_Min  ;
-create procedure Bit_Io_Min (inout MIN_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Min' parameter style java;
+create procedure Bit_Io_Min (inout MIN_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Min' parameter style java;
 
 drop procedure Bit_Io_Null  ;
-create procedure Bit_Io_Null (inout NULL_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Null' parameter style java;
+create procedure Bit_Io_Null (inout NULL_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Io_Null' parameter style java;
 
 drop procedure Smallint_Io_Max  ;
 create procedure Smallint_Io_Max (inout MAX_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Smallint_Io_Max' parameter style java;
@@ -257,13 +257,13 @@ drop procedure Real_In_Null  ;
 create procedure Real_In_Null (in NULL_PARAM REAL) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Real_In_Null' parameter style java;
 
 drop procedure Bit_In_Max  ;
-create procedure Bit_In_Max (in MAX_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Max' parameter style java;
+create procedure Bit_In_Max (in MAX_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Max' parameter style java;
 
 drop procedure Bit_In_Min  ;
-create procedure Bit_In_Min (in MIN_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Min' parameter style java;
+create procedure Bit_In_Min (in MIN_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Min' parameter style java;
 
 drop procedure Bit_In_Null  ;
-create procedure Bit_In_Null (in NULL_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Null' parameter style java;
+create procedure Bit_In_Null (in NULL_PARAM BOOLEAN) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_In_Null' parameter style java;
 
 drop procedure Smallint_In_Max  ;
 create procedure Smallint_In_Max (in MAX_PARAM SMALLINT) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Smallint_In_Max' parameter style java;
