@@ -186,6 +186,13 @@
       <artifactId>webdeployer</artifactId>
       <version>${openejb.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+
   </dependencies>
 
   <profiles>
@@ -529,7 +536,8 @@
         <plugins>
           <plugin>
             <groupId>org.codehaus.gmaven</groupId>
-            <artifactId>gmaven-plugin</artifactId>
+            <artifactId>groovy-maven-plugin</artifactId>
+            <version>2.0</version>
             <executions>
               <execution>
                 <id>generate-reverse-tests</id>
@@ -538,6 +546,7 @@
                   <goal>execute</goal>
                 </goals>
                 <configuration>
+                  <classpathScope>runtime</classpathScope>
                   <source>
                     new commands.ReverseSetupCommand(this).execute()
                   </source>
@@ -621,19 +630,20 @@
 
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
-          <artifactId>gmaven-plugin</artifactId>
-          <version>1.3</version>
+          <artifactId>groovy-maven-plugin</artifactId>
+          <version>2.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>jline</groupId>
+              <artifactId>jline</artifactId>
+              <version>1.0</version>
+            </dependency>
+          </dependencies>
           <configuration>
+            <classpathScope>runtime</classpathScope>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
             </scriptpath>
-            <classpath>
-              <element>
-                <groupId>jline</groupId>
-                <artifactId>jline</artifactId>
-                <version>0.9.94</version>
-              </element>
-            </classpath>
             <defaults>
               <testSectionsFile>${pom.basedir}/sections.properties</testSectionsFile>
               <logOutputDirectory>${project.build.directory}/logs</logOutputDirectory>
@@ -850,14 +860,24 @@ application for TCK (ie. all but openejb and ROOT -->
 
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>gmaven-plugin</artifactId>
-        <version>1.3</version>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <version>2.0</version>
 
         <dependencies>
           <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>10.10.1.1</version>
+          </dependency>
+          <dependency>
+            <groupId>jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>1.0</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.geronimo.cts</groupId>
+            <artifactId>j2eetck-maven-plugin</artifactId>
+            <version>3.0.13022011</version>
           </dependency>
         </dependencies>
 
@@ -869,6 +889,7 @@ application for TCK (ie. all but openejb and ROOT -->
               <goal>execute</goal>
             </goals>
             <configuration>
+              <classpathScope>runtime</classpathScope>
               <source>
                 new openejb.tck.commands.ValidateCommand(this).execute()
               </source>
@@ -882,16 +903,10 @@ application for TCK (ie. all but openejb and ROOT -->
               <goal>execute</goal>
             </goals>
             <configuration>
+              <classpathScope>runtime</classpathScope>
               <source>
                 new openejb.tck.commands.SetupCommand(this).execute()
               </source>
-              <classpath>
-                <element>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <version>10.10.1.1</version>
-                </element>
-              </classpath>
             </configuration>
           </execution>
 
@@ -902,20 +917,7 @@ application for TCK (ie. all but openejb and ROOT -->
               <goal>execute</goal>
             </goals>
             <configuration>
-              <classpath>
-                <element>
-                  <groupId>jline</groupId>
-                  <artifactId>jline</artifactId>
-                  <version>0.9.94</version>
-                </element>
-
-                <!-- Included to access the testsuite reporting classes -->
-                <element>
-                  <groupId>org.apache.geronimo.cts</groupId>
-                  <artifactId>j2eetck-maven-plugin</artifactId>
-                  <version>3.0.13022011</version>
-                </element>
-              </classpath>
+              <classpathScope>runtime</classpathScope>
               <defaults>
                 <logOutput>true</logOutput>
                 <logOutputDirectory>${project.build.directory}/logs</logOutputDirectory>
