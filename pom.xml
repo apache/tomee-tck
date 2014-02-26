@@ -353,6 +353,7 @@
       </activation>
 
       <properties>
+        <webcontainer>tomee</webcontainer>
         <!-- where we will unpack tomee -->
         <openejb.home>target/apache-tomee-webprofile-${tomee.version}</openejb.home>
       </properties>
@@ -413,6 +414,7 @@
       </activation>
 
       <properties>
+        <webcontainer>tomee-plus</webcontainer>
         <openejb.home>target/apache-tomee-plus-${tomee.version}</openejb.home>
       </properties>
 
@@ -471,6 +473,7 @@
       </activation>
 
       <properties>
+        <webcontainer>tomee-plume</webcontainer>
         <openejb.home>target/apache-tomee-plume-${tomee.version}</openejb.home>
       </properties>
 

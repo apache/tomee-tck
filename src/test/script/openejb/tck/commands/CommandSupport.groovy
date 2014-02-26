@@ -74,7 +74,7 @@ abstract class CommandSupport
 
         def value = project.properties.getProperty(name)
 
-        log.debug("Get property: $name=$value")
+        log.info("Get property: $name=$value")
 
         return value
     }
