@@ -40,7 +40,9 @@
     <openejb.version>4.6.1-SNAPSHOT</openejb.version>
     <tomee.version>1.6.1-SNAPSHOT</tomee.version>
 
-    <tomcat.version>7.0.37</tomcat.version>
+    <tomcat.version>7.0.52</tomcat.version>
+
+    <tests>${tests}</tests>
 
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
