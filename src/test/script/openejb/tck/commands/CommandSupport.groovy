@@ -102,7 +102,7 @@ abstract class CommandSupport
     def require(name) {
         assert name != null
 
-        log.debug("Require property: $name")
+        log.info("Require property: $name")
 
         //
         // NOTE: Need to check project and system properties, as when setting -Dprop=foo
