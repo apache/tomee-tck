@@ -1,5 +1,3 @@
-SET SCHEMA APP;
-
 drop table jstl_tab1 ;
 create table jstl_tab1(idNum INT NOT NULL, firstName VARCHAR(20) NOT NULL, lastName VARCHAR(20) NOT NULL, primary key(idNum)) ;
 
