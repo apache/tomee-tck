@@ -46,6 +46,8 @@ abstract class CommandSupport
         this.log = source.log
         this.project = source.project
 
+        this.project.properties.putAll(System.getProperties())
+
         // Drop the default listener and replace with a maven log adapter
         initAntLogging()
     }

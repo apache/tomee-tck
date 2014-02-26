@@ -42,8 +42,6 @@
 
     <tomcat.version>7.0.52</tomcat.version>
 
-    <tests>${tests}</tests>
-
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
     -->
@@ -355,7 +353,6 @@
       </activation>
 
       <properties>
-        <webcontainer>tomee</webcontainer>
         <!-- where we will unpack tomee -->
         <openejb.home>target/apache-tomee-webprofile-${tomee.version}</openejb.home>
       </properties>
@@ -416,7 +413,6 @@
       </activation>
 
       <properties>
-        <webcontainer>tomee-plus</webcontainer>
         <openejb.home>target/apache-tomee-plus-${tomee.version}</openejb.home>
       </properties>
 
@@ -475,7 +471,6 @@
       </activation>
 
       <properties>
-        <webcontainer>tomee-plume</webcontainer>
         <openejb.home>target/apache-tomee-plume-${tomee.version}</openejb.home>
       </properties>
 
