@@ -19,7 +19,8 @@ drop table Real_Tab ;
 create table Real_Tab (MAX_VAL REAL, MIN_VAL REAL,NULL_VAL REAL) ;
 
 drop table Bit_Tab ;
-create table Bit_Tab (MAX_VAL BOOLEAN, MIN_VAL BOOLEAN, NULL_VAL BOOLEAN) ;
+---create table Bit_Tab (MAX_VAL SMALLINT, MIN_VAL BOOLEAN, NULL_VAL BOOLEAN) ;
+create table Bit_Tab (MAX_VAL SMALLINT, MIN_VAL BOOLEAN, NULL_VAL SMALLINT) ;
 
 drop table Smallint_Tab ;
 create table Smallint_Tab (MAX_VAL SMALLINT, MIN_VAL SMALLINT, NULL_VAL SMALLINT) ;
