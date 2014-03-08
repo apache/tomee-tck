@@ -249,9 +249,9 @@ case "$web" in
         ;;
 esac
 
-#rm -r derbydb
-#unzip -q derbydb.zip
-#sql=skip
+rm -r derbydb
+unzip -q derbydb.zip
+sql=skip
 
 # Append options if any
 if [ "x$options" != "x" ]; then
