@@ -315,6 +315,7 @@ echo "" # just an empty line
 }
 [ ! -z $env ] && export
 
+egrep 'javaee6.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 svn info
 
 # Fire up Maven to do the real work
