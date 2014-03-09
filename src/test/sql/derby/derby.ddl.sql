@@ -19,8 +19,7 @@ drop table Real_Tab ;
 create table Real_Tab (MAX_VAL REAL, MIN_VAL REAL,NULL_VAL REAL) ;
 
 drop table Bit_Tab ;
----create table Bit_Tab (MAX_VAL SMALLINT, MIN_VAL BOOLEAN, NULL_VAL BOOLEAN) ;
-create table Bit_Tab (MAX_VAL SMALLINT, MIN_VAL BOOLEAN, NULL_VAL SMALLINT) ;
+create table Bit_Tab (MAX_VAL BOOLEAN, MIN_VAL BOOLEAN, NULL_VAL SMALLINT) ;
 
 drop table Smallint_Tab ;
 create table Smallint_Tab (MAX_VAL SMALLINT, MIN_VAL SMALLINT, NULL_VAL SMALLINT) ;
@@ -134,5 +133,6 @@ create table Coffee_FloatPK_Table (KEY_ID FLOAT NOT NULL, BRAND_NAME varchar(32)
 drop table Coffee_CompoundPK_Table ;
 create table Coffee_CompoundPK_Table (KEY_ID1 int NOT NULL, KEY_ID2 varchar(100) NOT NULL, KEY_ID3 float NOT NULL, BRAND_NAME varchar(32) NOT NULL, PRICE float NOT NULL, primary key(KEY_ID1, KEY_ID2, KEY_ID3)) ;
 
-drop table COFFEEEJBLITE;
-create table COFFEEEJBLITE (ID INT NOT NULL, BRANDNAME varchar(25), PRICE REAL, CONSTRAINT PK_COFFEEEJBLITE primary key (ID));
+DROP TABLE COFFEEEJBLITE;
+CREATE TABLE COFFEEEJBLITE (ID INT NOT NULL, BRANDNAME VARCHAR(25), PRICE REAL, CONSTRAINT PK_COFFEEEJBLITE PRIMARY KEY (ID));
+

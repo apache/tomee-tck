@@ -42,6 +42,8 @@
 
     <tomcat.version>7.0.52</tomcat.version>
 
+    <derby.version>10.8.3.0</derby.version>
+
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
     -->
@@ -124,6 +126,9 @@
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
       <version>${javaee.tck.version}</version>
+      <!-- this is for derby which supports BOOLEAN, version we were using was for derby supporting SMALLINT instead -->
+      <systemPath>${javaee6.cts.home}/lib/dbprocedures.jar</systemPath>
+      <scope>system</scope>
     </dependency>
 
     <dependency>
@@ -160,19 +165,19 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
-      <version>10.10.1.1</version>
+      <version>${derby.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbynet</artifactId>
-      <version>10.10.1.1</version>
+      <version>${derby.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbyclient</artifactId>
-      <version>10.10.1.1</version>
+      <version>${derby.version}</version>
     </dependency>
 
     <dependency>
@@ -575,7 +580,7 @@
               <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derbyclient</artifactId>
-                <version>10.10.1.1</version>
+                <version>${derby.version}</version>
               </dependency>
             </dependencies>
 
@@ -780,11 +785,13 @@
                   <artifactId>whitebox</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
+                <!-- replaced by a copy since we don't rely on mvn for it
                 <artifactItem>
                   <groupId>com.sun.javaee.tck</groupId>
                   <artifactId>dbprocedures</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
+                -->
                 <artifactItem>
                   <groupId>org.apache.geronimo.modules</groupId>
                   <artifactId>geronimo-mail</artifactId>
@@ -821,21 +828,25 @@
         </executions>
       </plugin>
 
-      <!-- TomEE embedds a lot of applications in. We should remove all not necessary web
-application for TCK (ie. all but openejb and ROOT -->
+      <!--
+      TomEE embedds a lot of applications in. We should remove all not necessary web
+      application for TCK (ie. all but openejb and ROOT
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.5</version>
         <executions>
           <execution>
-            <id>remove-apps</id>
+            <id>remove-apps-and-copy-libs-from-tck</id>
             <phase>pre-integration-test</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
               <target>
+                <copy file="${javaee6.cts.home}/lib/dbprocedures.jar" tofile="${openejb.home}/lib/dbprocedures-${javaee.tck.version}.jar" />
+
                 <delete dir="${openejb.home}/webapps/ROOT"/>
                 <delete dir="${openejb.home}/webapps/docs"/>
                 <delete dir="${openejb.home}/webapps/examples"/>
@@ -857,7 +868,7 @@ application for TCK (ie. all but openejb and ROOT -->
           <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.10.1.1</version>
+            <version>${derby.version}</version>
           </dependency>
         </dependencies>
 
