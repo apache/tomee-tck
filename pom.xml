@@ -126,9 +126,10 @@
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
       <version>${javaee.tck.version}</version>
-      <!-- this is for derby which supports BOOLEAN, version we were using was for derby supporting SMALLINT instead -->
+      <!-- this is for derby which supports BOOLEAN, version we were using was for derby supporting SMALLINT instead
       <systemPath>${javaee6.cts.home}/lib/dbprocedures.jar</systemPath>
       <scope>system</scope>
+      -->
     </dependency>
 
     <dependency>
@@ -785,13 +786,11 @@
                   <artifactId>whitebox</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
-                <!-- replaced by a copy since we don't rely on mvn for it
                 <artifactItem>
                   <groupId>com.sun.javaee.tck</groupId>
                   <artifactId>dbprocedures</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
-                -->
                 <artifactItem>
                   <groupId>org.apache.geronimo.modules</groupId>
                   <artifactId>geronimo-mail</artifactId>
@@ -845,8 +844,6 @@
             </goals>
             <configuration>
               <target>
-                <copy file="${javaee6.cts.home}/lib/dbprocedures.jar" tofile="${openejb.home}/lib/dbprocedures-${javaee.tck.version}.jar" />
-
                 <delete dir="${openejb.home}/webapps/ROOT"/>
                 <delete dir="${openejb.home}/webapps/docs"/>
                 <delete dir="${openejb.home}/webapps/examples"/>
