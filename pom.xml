@@ -395,6 +395,12 @@
           <type>zip</type>
           <version>${tomee.version}</version>
           <classifier>webprofile</classifier>
+          <exclusions>
+            <exclusion>
+              <groupId>org.apache.tomcat</groupId>
+              <artifactId>tomcat</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
 
       </dependencies>
