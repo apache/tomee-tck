@@ -353,7 +353,9 @@ class SetupCommand
         //
         // Process the dml for derby just once if it hasn't already been done
         def dmlProcessedFile = new File("${javaeeCtsHome}/dml_processed")
-        dmlProcessedFile.delete() // force regeneration for now
+        if (get("reset.persistence").equals('true')) {
+            dmlProcessedFile.delete()
+        }
         if (!dmlProcessedFile.exists()) {
             log.info("Processing DML for Derby")
 
