@@ -40,7 +40,7 @@
     <openejb.version>4.6.0.1-SNAPSHOT</openejb.version>
     <tomee.version>1.6.0.1-SNAPSHOT</tomee.version>
 
-    <tomcat.version>7.0.52</tomcat.version>
+    <tomcat.version>7.0.53</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
