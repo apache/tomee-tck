@@ -234,11 +234,11 @@ class SetupCommand
         // NOTE: This file *must* be placed in ${javaeeCtsHome.home}/bin, bin/tsant
         //       loads this automagically, and uses it to replace values.
         //
-//        ant.copy(
-//            file: "${project.build.directory}/ts.jte",
-//            tofile: "$javaeeCtsHome/bin/ts.jte",
-//            overwrite: true
-//        )
+          ant.copy(
+              file: "${project.build.directory}/ts.jte",
+              tofile: "$javaeeCtsHome/bin/ts.jte",
+              overwrite: true
+          )
 
         def jaxrs = get('jaxrs')
 
