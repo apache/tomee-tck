@@ -2,7 +2,7 @@
 # Copyright 2009 Sun Microsystems, Inc. All rights reserved.
 # SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
 #
-# $Id: ts.jtx 63334 2011-08-17 12:41:41Z dougd $
+# $Id: ts.jtx 69534 2013-01-16 13:09:35Z dougd $
 #
 
 ################
@@ -56,6 +56,14 @@ com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.ja
 com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerNegativeTest
 com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventIsApproiateListenerPostiveTest
 com/sun/ts/tests/jsf/api/javax_faces/event/postaddtoviewnonpdlevent/URLClient.java#postAddToViewNonPDLEventProcessListenerTest
+
+#
+# Bug ID: 13252880
+#
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmloutputformat/URLClient.java#uiComponentEncodeEndELTest
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmloutputformat/URLClient.java#uiComponentGetCurrentComponentNullTest
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmloutputformat/URLClient.java#uiComponentGetCurrentCompositeComponentNullTest
+com/sun/ts/tests/jsf/api/javax_faces/component/html/htmloutputformat/URLClient.java#uiComponentPopComponentFromELTest
 
 
 ################
@@ -159,6 +167,14 @@ com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client
 com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet
 com/sun/ts/tests/ejb30/lite/singleton/concurrency/container/accesstimeout/Client.java#longWritesLongReadMethodLevel_from_ejbliteservlet2
 
+#
+# Bug ID: 16171164
+#
+com/sun/ts/tests/ejb30/lite/packaging/war/enventry/Client.java#injectedIntoClient_from_ejblitejsf
+com/sun/ts/tests/ejb30/lite/packaging/war/enventry/Client.java#injectedIntoClient_from_ejblitejsp
+com/sun/ts/tests/ejb30/lite/packaging/war/enventry/Client.java#injectedIntoClient_from_ejbliteservlet
+com/sun/ts/tests/ejb30/lite/packaging/war/enventry/Client.java#injectedIntoClient_from_ejbliteservlet2
+
 
 #################
 # INTEROP
@@ -215,6 +231,21 @@ com/sun/ts/tests/webservices13/ejb/annotations/WSEjbWSRefRespBindAndAddressingCo
 com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingAnnotations/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
 com/sun/ts/tests/webservices13/servlet/WSRespBindAndAddressingTestUsingDDs/Client.java#afCltEnabledNotREQSvrEnabledREQrbfSvrEnabledCltEnabledTest
 
+
+################
+# WEBSERVICES12
+################
+
+#
+# Bug ID: 14346241, 13531665
+#
+com/sun/ts/tests/webservices12/sec/annotations/ejb/basicauth/Client.java#sayHelloDenyAll
+com/sun/ts/tests/webservices12/sec/annotations/ejb/basicauth/Client.java#sayHelloProtectedUnauthorizedUser
+com/sun/ts/tests/webservices12/sec/annotations/ejb/basicauthssl/Client.java#sayHelloDenyAll
+com/sun/ts/tests/webservices12/sec/annotations/ejb/basicauthssl/Client.java#sayHelloProtectedUnauthorizedUser
+com/sun/ts/tests/webservices12/sec/annotations/ejb/clientcert/Client.java#sayHelloDenyAll
+
+
 ################
 # CONNECTOR
 ################
@@ -258,6 +289,129 @@ com/sun/ts/tests/xa/ee/tsr/TsrClient.java#testTSRFunctionality1
 ################
 
 #
+# Bug ID:  13243978
+#
+com/sun/ts/tests/servlet/spec/security/annotations/Client.java#test3
+com/sun/ts/tests/servlet/spec/security/annotations/Client.java#test5
+
+#
 # Bug ID:  12680183
 #
 com/sun/ts/tests/servlet/spec/annotation/injection/URLClient.java#test1
+
+
+################
+# JAXWS
+################
+
+#
+# Bug ID: 13723724
+#
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsappclient
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsejb
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsservlet
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest2_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest3_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#createTest4_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getBindingTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getImplementorTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1a_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest1b_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest2_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#publishTest3_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#stopTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#isPublishedTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetPropertiesTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetExecutorTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#GetSetMetaDataTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceParamsTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#getEndpointReferenceClassTest_from_wsservlet_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsappclient_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsejb_reverse
+com/sun/ts/tests/jaxws/api/javax_xml_ws/Endpoint/Client.java#endpointContextTest_from_wsservlet_reverse

@@ -234,6 +234,7 @@
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>openejb-standalone</artifactId>
+                      <version>${openejb.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
@@ -375,6 +376,7 @@
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>apache-tomee</artifactId>
+                      <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                       <classifier>webprofile</classifier>
@@ -439,6 +441,7 @@
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>apache-tomee</artifactId>
+                      <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                       <classifier>plus</classifier>
@@ -497,6 +500,7 @@
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>apache-tomee</artifactId>
+                      <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                       <classifier>plume</classifier>
@@ -747,6 +751,7 @@
                 <artifactItem>
                   <groupId>org.apache.openejb</groupId>
                   <artifactId>openejb-standalone</artifactId>
+                  <version>${openejb.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                 </artifactItem>
