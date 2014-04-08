@@ -37,8 +37,8 @@
   </description>
 
   <properties>
-    <openejb.version>4.6.0.1-SNAPSHOT</openejb.version>
-    <tomee.version>1.6.0.1-SNAPSHOT</tomee.version>
+    <openejb.version>4.6.0.1</openejb.version>
+    <tomee.version>1.6.0.1</tomee.version>
 
     <tomcat.version>7.0.53</tomcat.version>
 
@@ -943,6 +943,19 @@
   </build>
 
   <repositories>
+    <repository>
+      <id>nexus-staging</id>
+      <name>Nexus Staging Repository</name>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1000</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </repository>
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
