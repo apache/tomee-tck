@@ -946,7 +946,7 @@
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1012</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1011</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
@@ -956,12 +956,6 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    
-    
-    
-    
-    
-    
     
     <repository>
       <id>apache-m2-snapshot</id>
