@@ -959,6 +959,7 @@
     
     
     
+    
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
