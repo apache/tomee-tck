@@ -86,6 +86,7 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>org.apache.openejb</groupId>
       <artifactId>openejb-lite</artifactId>
@@ -946,7 +947,7 @@
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1012</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1015</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
