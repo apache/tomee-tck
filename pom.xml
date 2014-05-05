@@ -37,8 +37,8 @@
   </description>
 
   <properties>
-    <openejb.version>4.6.0.2-SNAPSHOT</openejb.version>
-    <tomee.version>1.6.0.2-SNAPSHOT</tomee.version>
+    <openejb.version>4.6.0.2</openejb.version>
+    <tomee.version>1.6.0.2</tomee.version>
 
     <tomcat.version>7.0.53</tomcat.version>
 
@@ -957,6 +957,7 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
+    
 
     <repository>
       <id>apache-m2-snapshot</id>
