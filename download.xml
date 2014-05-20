@@ -21,7 +21,7 @@
 <project name="Test OpenEJB" default="download" basedir=".">
 
     <property name="maven.repo" value="${user.home}/.m2/repository"/>
-    <property name="tomcat.version" value="6.0.32"/>
+    <property name="tomcat.version" value="7.0.54"/>
 
     <target name="download">
 
