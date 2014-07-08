@@ -3,6 +3,9 @@
 ## $Revision$ $Date$
 ##
 
+# TomEE 2.0.0 is compiled with Java 7
+export JAVA_HOME=$HOME/jdk1.7.0_04
+
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
 
@@ -321,6 +324,7 @@ echo "" # just an empty line
 
 egrep 'javaee6.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 svn info
+
 
 # Fire up Maven to do the real work
 if [ -z $nc ]; then
