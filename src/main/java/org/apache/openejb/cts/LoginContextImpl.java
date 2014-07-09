@@ -27,7 +27,7 @@ public class LoginContextImpl implements TSLoginContextInterface {
     //
     // @param usr - string username
     // @param pwd - string password
-    public void login(String usr, String pwd) throws Exception {
+    public void login(final String usr, final String pwd) throws Exception {
         System.err.println("login(String usr, String pwd) " + usr + ", " + pwd);
 
         ClientSecurity.login(usr, pwd);
@@ -39,7 +39,7 @@ public class LoginContextImpl implements TSLoginContextInterface {
     //       the TS configuration file
     //
     // @param alias - alias is used to pick up the certificate from keystore
-    public void login(String alias) throws Exception {
+    public void login(final String alias) throws Exception {
         System.err.println("login(String alias) " + alias);
     }
 
@@ -48,7 +48,7 @@ public class LoginContextImpl implements TSLoginContextInterface {
     // @param alias - alias is used to pick up the certificate from keystore
     // @param keystore - keystore file
     // @param keyPass - keystore password
-    public void login(String alias, String keystore, String keyPass) throws Exception {
+    public void login(final String alias, final String keystore, final String keyPass) throws Exception {
         System.err.println("login(String alias, String keystore, String keyPass) " + alias + ", " + keystore + ", " + keyPass);
     }
 

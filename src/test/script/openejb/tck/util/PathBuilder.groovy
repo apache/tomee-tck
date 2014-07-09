@@ -24,30 +24,29 @@ package openejb.tck.util
  *
  * @version $Revision$ $Date$
  */
-class PathBuilder
-{
+class PathBuilder {
     def log
-    
+
     def ant
-    
+
     def paths = []
-    
+
     def directory
-    
+
     public PathBuilder(source) {
         assert source != null
-        
+
         this.log = source.log
         this.ant = source.ant
     }
-    
+
     def appendAll(includes, excludes) {
         assert includes != null
         assert directory != null
-        
+
         def dir = new File(directory)
-        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
-        
+        assert dir.isDirectory(): "Not a directory " + dir.getAbsolutePath();
+
         def p = ant.path() {
             fileset(dir: dir) {
                 include(name: includes)
@@ -56,7 +55,7 @@ class PathBuilder
                 }
             }
         }
-        
+
         def s = p.size()
         paths.add(p)
     }
@@ -68,10 +67,10 @@ class PathBuilder
     def append(includes, excludes) {
         assert includes != null
         assert directory != null
-        
+
         def dir = new File(directory)
-        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
-        
+        assert dir.isDirectory(): "Not a directory " + dir.getAbsolutePath();
+
         def p = ant.path() {
             fileset(dir: dir) {
                 include(name: includes)
@@ -80,7 +79,7 @@ class PathBuilder
                 }
             }
         }
-        
+
         def s = p.size()
         if (s == 0) {
             throw new Exception("Expected one file to be included into path; dir=${dir}, includes=${includes}, excludes=${excludes}")
@@ -88,7 +87,7 @@ class PathBuilder
         if (s > 1) {
             throw new Exception("Found more than one file to be included into path; dir=${dir}, includes=${includes}, excludes=${excludes}; found: ${p}")
         }
-        
+
         paths.add(p)
     }
 
@@ -96,34 +95,34 @@ class PathBuilder
         assert d != null
 
         def dir = new File(d)
-        assert dir.isDirectory() : "Not a directory " + dir.getAbsolutePath();
+        assert dir.isDirectory(): "Not a directory " + dir.getAbsolutePath();
 
-        def p = ant.path() {ant.pathelement(location: d)}
+        def p = ant.path() { ant.pathelement(location: d) }
         paths.add(p)
     }
 
-    
+
     def append(includes) {
         return append(includes, null)
     }
 
     def reference(id) {
         assert id != null
-        
+
         def p = ant.path(refid: id)
-        
+
         paths.add(p)
     }
-    
+
     def getPath(id) {
         assert id != null
-        
+
         def p = ant.path(id: id)
-        
+
         paths.each {
             p.add(it)
         }
-        
+
         return p
     }
 }

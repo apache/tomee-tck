@@ -19,42 +19,41 @@
 
 package openejb.tck.commands
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.DefaultLogger;
-
-import org.slf4j.Logger;
+import org.apache.tools.ant.DefaultLogger
+import org.apache.tools.ant.Project
+import org.slf4j.Logger
 
 public class MavenAntLoggerAdapter extends DefaultLogger {
-      protected Logger log;
+    protected Logger log;
 
-      public MavenAntLoggerAdapter(final Logger log) {
-          super();
+    public MavenAntLoggerAdapter(final Logger log) {
+        super();
 
-          assert log != null;
+        assert log != null;
 
-          this.log = log;
-      }
+        this.log = log;
+    }
 
-      protected void printMessage(final String message, final PrintStream stream, final int priority) {
-          assert message != null;
+    protected void printMessage(final String message, final PrintStream stream, final int priority) {
+        assert message != null;
 
-          switch (priority) {
-              case Project.MSG_ERR:
-                  log.error(message);
-                  break;
+        switch (priority) {
+            case Project.MSG_ERR:
+                log.error(message);
+                break;
 
-              case Project.MSG_WARN:
-                  log.warn(message);
-                  break;
+            case Project.MSG_WARN:
+                log.warn(message);
+                break;
 
-              case Project.MSG_INFO:
-                  log.info(message);
-                  break;
+            case Project.MSG_INFO:
+                log.info(message);
+                break;
 
-              case Project.MSG_VERBOSE:
-              case Project.MSG_DEBUG:
-                  log.debug(message);
-                  break;
-          }
-      }
+            case Project.MSG_VERBOSE:
+            case Project.MSG_DEBUG:
+                log.debug(message);
+                break;
+        }
+    }
 }

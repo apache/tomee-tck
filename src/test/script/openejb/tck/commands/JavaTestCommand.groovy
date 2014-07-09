@@ -19,13 +19,12 @@
 
 package openejb.tck.commands
 
-import org.apache.commons.lang.SystemUtils
-import org.apache.commons.lang.time.StopWatch
-
-import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportFileLocator
-import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportTestCaseLoader
 import openejb.tck.util.Messages
 import openejb.tck.util.OutputScanner
+import org.apache.commons.lang.SystemUtils
+import org.apache.commons.lang.time.StopWatch
+import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportFileLocator
+import org.apache.geronimo.cts.mavenplugins.j2eetck.report.ReportTestCaseLoader
 
 /**
  * Executes JavaTest to run the TCK tests.
@@ -33,48 +32,46 @@ import openejb.tck.util.OutputScanner
  * @version $Revision$ $Date$
  */
 class JavaTestCommand
-    extends CommandSupport
-{
+        extends CommandSupport {
     def JavaTestCommand(source) {
         super(source)
     }
-    
+
     def execute() {
         if (selectTests().size() == 0) {
             throw new Exception("Must specify at least one test to execute")
         }
 
         def tests = require('tests').tokenize(",")
-        
+
         def tsant = new TsAntCommand(this)
-        
+
         //
         // NOTE: Special handling for some interop tests
         //
-        
+
         if (tests.contains("interop-csiv2")) {
             if (tests.size() != 1) {
                 throw new Exception("The 'interop-csiv2' tests must be run alone")
             }
-            
+
             tsant.execute("enable.csiv2")
-            
+
             javatest()
-            
+
             tsant.execute("disable.csiv2")
-        }
-        else if (tests.contains("interop-tx")) {
+        } else if (tests.contains("interop-tx")) {
             if (tests.size() != 1) {
                 throw new Exception("The 'interop-tx' tests must be run alone")
             }
-            
+
             def workingDir = "${project.build.directory}/tck-work"
             def txDir = "${workingDir}/com/sun/ts/tests/interop/tx"
-            
+
             tsant.execute("disable.ri.tx.interop")
-            
+
             javatest()
-            
+
             ant.mkdir(dir: "${txDir}/interop")
             ant.move(todir: "${txDir}/interop", overwrite: true) {
                 fileset(dir: txDir) {
@@ -82,11 +79,11 @@ class JavaTestCommand
                     exclude(name: "nointerop/**")
                 }
             }
-            
+
             tsant.execute("enable.ri.tx.interop")
-            
+
             javatest()
-            
+
             ant.mkdir(dir: "${txDir}/nointerop")
             ant.move(todir: "${txDir}/nointerop", overwrite: true) {
                 fileset(dir: txDir) {
@@ -94,12 +91,11 @@ class JavaTestCommand
                     exclude(name: "nointerop/**")
                 }
             }
-        }
-        else {
+        } else {
             javatest()
         }
     }
-    
+
     def line() {
         println()
         println("=" * 79)
@@ -108,9 +104,9 @@ class JavaTestCommand
 
     def javatest() {
         log.info("Executing JavaTest...")
-        
+
         initPaths()
-        
+
         def tests = selectTests()
         println(tests)
 
@@ -119,15 +115,15 @@ class JavaTestCommand
         def logOutput = getBoolean('logOutput', false)
         def logOutputDirectory = get('logOutputDirectory', "${project.build.directory}/logs")
         def logFile = "${logOutputDirectory}/javatest.log"
-        
+
         def openejbHome = require('openejb.home')
         def javaeeCtsHome = require('javaee6.cts.home')
         def javaeeRiHome = require('javaee6.ri.home')
         def workingDir = "${project.build.directory}/tck-work"
-        
+
         // Define a list of options to enable
         def options = get('options', "").tokenize(',')
-        
+
         // If we are logging output then start the scanner to show progress
         def outputScanner
         if (logOutput) {
@@ -135,14 +131,14 @@ class JavaTestCommand
             // FIXME: Need to allow appending he log for special interop tests which run
             //        javatest() more than once
             //
-            
+
             // Make sure we start with an empty log
             ant.delete(file: logFile)
-            
+
             outputScanner = new OutputScanner(logFile);
             outputScanner.start()
         }
-        
+
         //
         // HACK: For some reason, need to quote JAVA_HOME on Windows...
         //
@@ -150,16 +146,16 @@ class JavaTestCommand
         if (SystemUtils.IS_OS_WINDOWS) {
             javaHome = "'${javaHome}'"
         }
-        
+
         ant.mkdir(dir: workingDir)
-        
+
         // Make sure we start out with a fresh state
         ant.delete() {
             fileset(dir: workingDir) {
                 include(name: "**")
             }
         }
-        
+
         // Track how long the run takes
         def watch = new StopWatch()
         watch.start()
@@ -277,8 +273,7 @@ class JavaTestCommand
                 arg(value: "-env")
                 if (SystemUtils.IS_OS_WINDOWS) {
                     arg(value: "ts_win32")
-                }
-                else {
+                } else {
                     arg(value: "ts_unix")
                 }
 
@@ -318,7 +313,7 @@ class JavaTestCommand
 
         // Display the test summary
         line()
-        
+
         def dir = new File(workingDir)
         def locator = new ReportFileLocator(dir);
         def loader = new ReportTestCaseLoader(dir, true, locator);
@@ -331,11 +326,9 @@ class JavaTestCommand
         testcases.each {
             if (it.failed) {
                 failed++
-            }
-            else if (it.error) {
+            } else if (it.error) {
                 errors++
-            }
-            else {
+            } else {
                 passed++
             }
 
@@ -345,11 +338,9 @@ class JavaTestCommand
 
                 if (it.error) {
                     Messages.error()
-                }
-                else if (it.failed) {
+                } else if (it.failed) {
                     Messages.failed()
-                }
-                else {
+                } else {
                     Messages.passed()
                 }
 

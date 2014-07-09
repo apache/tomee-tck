@@ -27,8 +27,7 @@ import openejb.tck.commands.CommandSupport
  * @version $Revision$ $Date$
  */
 class TestListBuilder
-    extends CommandSupport
-{
+        extends CommandSupport {
     def testList = []
 
     def testSections
@@ -63,8 +62,7 @@ class TestListBuilder
                     log.debug("    ${it.key}: ${it.value}")
                 }
             }
-        }
-        else {
+        } else {
             log.warn("Test sections were not configured")
         }
 
@@ -86,15 +84,14 @@ class TestListBuilder
             tests.each {
                 addTest(it)
             }
-        }
-        else {
+        } else {
             // Prefix package if the test is not fully qualified
             if (testname.startsWith('/')) {
                 testname = "com/sun/ts/tests${testname}"
             }
 
             // Translate "." to "/"
-            testname = testname.replace((char)'.', (char)'/')
+            testname = testname.replace((char) '.', (char) '/')
 
             testList.add(testname)
         }

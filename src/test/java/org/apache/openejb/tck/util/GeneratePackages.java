@@ -27,40 +27,40 @@ import java.util.Map;
  */
 public class GeneratePackages {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new GeneratePackages().main();
     }
 
     public void main() throws Exception {
 
-        File file = new File("/Users/dblevins/work/openejb-tck/trunk/webprofile.packages");
-        Node root = new Node(null, "");
+        final File file = new File("/Users/dblevins/work/openejb-tck/trunk/webprofile.packages");
+        final Node root = new Node(null, "");
 
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        final BufferedReader reader = new BufferedReader(new FileReader(file));
 
         String line = null;
 
         while ((line = reader.readLine()) != null) {
             Node parent = root;
-            
-            String[] packages = line.split("\\.");
-            for (String p : packages) {
+
+            final String[] packages = line.split("\\.");
+            for (final String p : packages) {
                 parent = parent.child(p);
             }
         }
 
-        String pad = "";
-        for (Node node : root.children.values()) {
+        final String pad = "";
+        for (final Node node : root.children.values()) {
             print(node, pad);
         }
     }
 
-    private void print(Node node, String pad) {
+    private void print(final Node node, String pad) {
         if (node.children.size() == 0) {
             System.out.println(pad + node.name);
         } else {
             pad += node.name + ".";
-            for (Node n : node.children.values()) {
+            for (final Node n : node.children.values()) {
                 print(n, pad);
             }
         }
@@ -71,12 +71,12 @@ public class GeneratePackages {
         final Node parent;
         final Map<String, Node> children = new LinkedHashMap<String, Node>();
 
-        Node(Node parent, String name) {
+        Node(final Node parent, final String name) {
             this.parent = parent;
             this.name = name;
         }
 
-        public Node child(String name) {
+        public Node child(final String name) {
 
             Node child = children.get(name);
 
@@ -89,11 +89,11 @@ public class GeneratePackages {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Node node = (Node) o;
+            final Node node = (Node) o;
 
             if (name != null ? !name.equals(node.name) : node.name != null) return false;
             if (parent != null ? !parent.equals(node.parent) : node.parent != null) return false;

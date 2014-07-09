@@ -32,24 +32,24 @@ import java.net.URL;
 public class HTTPSURLConnectionImpl implements TSHttpsURLConnectionInterface {
     private HttpsURLConnection httpsURLConnection = null;
 
-    public void init(URL url) throws IOException {
+    public void init(final URL url) throws IOException {
         httpsURLConnection = (HttpsURLConnection) url.openConnection();
         httpsURLConnection.setHostnameVerifier(new MyHostNameVerifier());
     }
 
-    public void setDoInput(boolean doInput) {
+    public void setDoInput(final boolean doInput) {
         httpsURLConnection.setDoInput(doInput);
     }
 
-    public void setDoOutput(boolean doOutput) {
+    public void setDoOutput(final boolean doOutput) {
         httpsURLConnection.setDoOutput(doOutput);
     }
 
-    public void setRequestProperty(String key, String value) {
+    public void setRequestProperty(final String key, final String value) {
         httpsURLConnection.setRequestProperty(key, value);
     }
 
-    public void setUseCaches(boolean usecaches) {
+    public void setUseCaches(final boolean usecaches) {
         httpsURLConnection.setUseCaches(usecaches);
     }
 
@@ -61,11 +61,11 @@ public class HTTPSURLConnectionImpl implements TSHttpsURLConnectionInterface {
         return httpsURLConnection.getOutputStream();
     }
 
-    public String getHeaderField(String name) {
+    public String getHeaderField(final String name) {
         return httpsURLConnection.getHeaderField(name);
     }
 
-    public String getHeaderField(int num) {
+    public String getHeaderField(final int num) {
         return httpsURLConnection.getHeaderField(num);
     }
 
@@ -74,11 +74,11 @@ public class HTTPSURLConnectionImpl implements TSHttpsURLConnectionInterface {
     }
 
     public static class MyHostNameVerifier implements HostnameVerifier {
-        public boolean verify(String urlhostname, String certHostName) {
+        public boolean verify(final String urlhostname, final String certHostName) {
             return true;
         }
 
-        public boolean verify(String urlhostName, SSLSession sslSession) {
+        public boolean verify(final String urlhostName, final SSLSession sslSession) {
             return true;
         }
     }

@@ -26,8 +26,7 @@ import jline.Terminal
  *
  * @version $Rev: 1772 $ $Date: 2007-01-10 11:04:11 -0800 (Wed, 10 Jan 2007) $
  */
-class AnsiColors
-{
+class AnsiColors {
     // Ask Jline to see if ANSI is supported
     static def isSupported() {
         // Hack seems like setting jline.terminal (as documented) to unsupported is not
@@ -40,8 +39,7 @@ class AnsiColors
         def ttype = System.getProperty("jline.terminal")
         if (ttype == "jline.UnsupportedTerminal") {
             return false
-        }
-        else {
+        } else {
             return Terminal.getTerminal().isANSISupported()
         }
     }
@@ -49,35 +47,35 @@ class AnsiColors
     static def SUPPORTED = isSupported()
 
     static def BACKGROUND = [
-        black: "\033[40m",
-        red: "\033[41m",
-        green: "\033[42m",
-        yellow: "\033[43m",
-        blue: "\033[44m",
-        magenta: "\033[45m",
-        cyan: "\033[46m",
-        white: "\033[47m"
+            black  : "\033[40m",
+            red    : "\033[41m",
+            green  : "\033[42m",
+            yellow : "\033[43m",
+            blue   : "\033[44m",
+            magenta: "\033[45m",
+            cyan   : "\033[46m",
+            white  : "\033[47m"
     ]
 
     static def FOREGROUND = [
-        black: "\033[30m",
-        red: "\033[31m",
-        green: "\033[32m",
-        yellow: "\033[33m",
-        blue: "\033[34m",
-        magenta: "\033[35m",
-        cyan: "\033[36m",
-        white: "\033[37m"
+            black  : "\033[30m",
+            red    : "\033[31m",
+            green  : "\033[32m",
+            yellow : "\033[33m",
+            blue   : "\033[34m",
+            magenta: "\033[35m",
+            cyan   : "\033[36m",
+            white  : "\033[37m"
     ]
 
     static def SPECIAL = [
-        reset: "\033[0m",
-        bright: "\033[1m",
-        dim: "\033[2m",
-        underline: "\033[4m",
-        blink: "\033[5m",
-        reverse: "\033[7m",
-        hidden: "\033[8m"
+            reset    : "\033[0m",
+            bright   : "\033[1m",
+            dim      : "\033[2m",
+            underline: "\033[4m",
+            blink    : "\033[5m",
+            reverse  : "\033[7m",
+            hidden   : "\033[8m"
     ]
 
     static def CLEAR = SPECIAL['reset']

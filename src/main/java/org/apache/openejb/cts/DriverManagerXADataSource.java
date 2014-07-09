@@ -18,10 +18,9 @@
 package org.apache.openejb.cts;
 
 import javax.sql.ConnectionEventListener;
-//import javax.sql.StatementEventListener;
+import javax.sql.StatementEventListener;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
-import javax.sql.StatementEventListener;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
@@ -32,6 +31,8 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
+//import javax.sql.StatementEventListener;
+
 public class DriverManagerXADataSource implements XADataSource {
     private String jdbcUrl;
     private PrintWriter logWriter;
@@ -41,7 +42,7 @@ public class DriverManagerXADataSource implements XADataSource {
         return jdbcUrl;
     }
 
-    public void setJdbcUrl(String jdbcUrl) {
+    public void setJdbcUrl(final String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
     }
 
@@ -49,7 +50,7 @@ public class DriverManagerXADataSource implements XADataSource {
         return new DriverManagerXAConnection(jdbcUrl);
     }
 
-    public XAConnection getXAConnection(String user, String password) throws SQLException {
+    public XAConnection getXAConnection(final String user, final String password) throws SQLException {
         return new DriverManagerXAConnection(jdbcUrl, user, password);
     }
 
@@ -57,7 +58,7 @@ public class DriverManagerXADataSource implements XADataSource {
         return logWriter;
     }
 
-    public void setLogWriter(PrintWriter logWriter) {
+    public void setLogWriter(final PrintWriter logWriter) {
         this.logWriter = logWriter;
     }
 
@@ -66,7 +67,7 @@ public class DriverManagerXADataSource implements XADataSource {
         return loginTimeout;
     }
 
-    public void setLoginTimeout(int loginTimeout) {
+    public void setLoginTimeout(final int loginTimeout) {
         this.loginTimeout = loginTimeout;
     }
 
@@ -78,11 +79,11 @@ public class DriverManagerXADataSource implements XADataSource {
         protected Connection connection;
         protected LocalXAResource xaResource;
 
-        public DriverManagerXAConnection(String jdbcUrl) throws SQLException {
+        public DriverManagerXAConnection(final String jdbcUrl) throws SQLException {
             this(jdbcUrl, null, null);
         }
 
-        public DriverManagerXAConnection(String jdbcUrl, String user, String password) throws SQLException {
+        public DriverManagerXAConnection(final String jdbcUrl, final String user, final String password) throws SQLException {
             connection = null;
             if (user == null) {
                 connection = DriverManager.getConnection(jdbcUrl);
@@ -104,16 +105,16 @@ public class DriverManagerXADataSource implements XADataSource {
             connection.close();
         }
 
-        public void addConnectionEventListener(ConnectionEventListener listener) {
+        public void addConnectionEventListener(final ConnectionEventListener listener) {
         }
 
-        public void removeConnectionEventListener(ConnectionEventListener listener) {
+        public void removeConnectionEventListener(final ConnectionEventListener listener) {
         }
 
-        public void addStatementEventListener(StatementEventListener listener) {
+        public void addStatementEventListener(final StatementEventListener listener) {
         }
 
-        public void removeStatementEventListener(StatementEventListener listener) {
+        public void removeStatementEventListener(final StatementEventListener listener) {
         }
     }
 
@@ -125,7 +126,7 @@ public class DriverManagerXADataSource implements XADataSource {
         private Xid xid;
         private boolean originalAutoCommit;
 
-        public LocalXAResource(Connection localTransaction) {
+        public LocalXAResource(final Connection localTransaction) {
             this.connection = localTransaction;
         }
 
@@ -133,7 +134,7 @@ public class DriverManagerXADataSource implements XADataSource {
             return xid;
         }
 
-        public synchronized void start(Xid xid, int flag) throws XAException {
+        public synchronized void start(final Xid xid, final int flag) throws XAException {
             if (flag == XAResource.TMNOFLAGS) {
                 // first time in this transaction
 
@@ -145,7 +146,7 @@ public class DriverManagerXADataSource implements XADataSource {
                 // save off the current auto commit flag so it can be restored after the transaction completes
                 try {
                     originalAutoCommit = connection.getAutoCommit();
-                } catch (SQLException ignored) {
+                } catch (final SQLException ignored) {
                     // no big deal, just assume it was off
                     originalAutoCommit = true;
                 }
@@ -153,7 +154,7 @@ public class DriverManagerXADataSource implements XADataSource {
                 // update the auto commit flag
                 try {
                     connection.setAutoCommit(false);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     throw (XAException) new XAException("Count not turn off auto commit for a XA transaction").initCause(e);
                 }
 
@@ -167,7 +168,7 @@ public class DriverManagerXADataSource implements XADataSource {
             }
         }
 
-        public synchronized void end(Xid xid, int flag) throws XAException {
+        public synchronized void end(final Xid xid, final int flag) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.xid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.xid + ", but was " + xid);
 
@@ -176,7 +177,7 @@ public class DriverManagerXADataSource implements XADataSource {
             // open transaction, so we must still wait for the commit or rollback method
         }
 
-        public synchronized int prepare(Xid xid) {
+        public synchronized int prepare(final Xid xid) {
             // if the connection is read-only, then the resource is read-only
             // NOTE: this assumes that the outer proxy throws an exception when application code
             // attempts to set this in a transaction
@@ -188,7 +189,7 @@ public class DriverManagerXADataSource implements XADataSource {
                     // tell the transaction manager we are read only
                     return XAResource.XA_RDONLY;
                 }
-            } catch (SQLException ignored) {
+            } catch (final SQLException ignored) {
                 // no big deal
             }
 
@@ -196,7 +197,7 @@ public class DriverManagerXADataSource implements XADataSource {
             return XAResource.XA_OK;
         }
 
-        public synchronized void commit(Xid xid, boolean flag) throws XAException {
+        public synchronized void commit(final Xid xid, final boolean flag) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.xid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.xid + ", but was " + xid);
 
@@ -210,45 +211,45 @@ public class DriverManagerXADataSource implements XADataSource {
                 if (!connection.isReadOnly()) {
                     connection.commit();
                 }
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 throw (XAException) new XAException().initCause(e);
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                 }
                 this.xid = null;
             }
         }
 
-        public synchronized void rollback(Xid xid) throws XAException {
+        public synchronized void rollback(final Xid xid) throws XAException {
             if (xid == null) throw new NullPointerException("xid is null");
             if (!this.xid.equals(xid)) throw new XAException("Invalid Xid: expected " + this.xid + ", but was " + xid);
 
             try {
                 connection.rollback();
-            } catch (SQLException e) {
+            } catch (final SQLException e) {
                 throw (XAException) new XAException().initCause(e);
             } finally {
                 try {
                     connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                 }
                 this.xid = null;
             }
         }
 
-        public boolean isSameRM(XAResource xaResource) {
+        public boolean isSameRM(final XAResource xaResource) {
             return this == xaResource;
         }
 
-        public synchronized void forget(Xid xid) {
+        public synchronized void forget(final Xid xid) {
             if (xid != null && this.xid.equals(xid)) {
                 this.xid = null;
             }
         }
 
-        public Xid[] recover(int flag) {
+        public Xid[] recover(final int flag) {
             return new Xid[0];
         }
 
@@ -256,7 +257,7 @@ public class DriverManagerXADataSource implements XADataSource {
             return 0;
         }
 
-        public boolean setTransactionTimeout(int transactionTimeout) {
+        public boolean setTransactionTimeout(final int transactionTimeout) {
             return false;
         }
     }

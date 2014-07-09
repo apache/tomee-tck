@@ -25,19 +25,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class URLImpl implements TSURLInterface {
-    public URL getURL(String protocol, String host, int port, String file) throws MalformedURLException {
+    public URL getURL(final String protocol, final String host, final int port, final String file) throws MalformedURLException {
         return new URL(protocol, host, port, file);
     }
 
-    public String getURLString(String protocol, String host, int port, String file) {
+    public String getURLString(final String protocol, final String host, final int port, final String file) {
         try {
             return new URL(protocol, host, port, file).toString();
-        } catch (MalformedURLException e) {
+        } catch (final MalformedURLException e) {
             throw new AssertionError();
         }
     }
 
-    public String getRequest(String request) {
+    public String getRequest(final String request) {
         return request;
     }
 }

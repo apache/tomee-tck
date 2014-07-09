@@ -26,8 +26,7 @@ package openejb.tck.util
  * @version $Rev: 1883 $ $Date: 2007-02-10 17:37:01 -0800 (Sat, 10 Feb 2007) $
  */
 class OutputScanner
-    implements Runnable
-{
+        implements Runnable {
     def File file
 
     def running = false
@@ -90,17 +89,15 @@ class OutputScanner
             if (reader == null) {
                 if (!file.exists()) {
                     sleep(1000)
-                }
-                else {
+                } else {
                     reader = file.newReader()
                 }
-            }
-            else {
+            } else {
                 def line = reader.readLine()
 
                 if (line != null) {
                     if (line.startsWith('Beginning Test:')) {
-                        def testname = "${line.substring(17,line.length())}"
+                        def testname = "${line.substring(17, line.length())}"
 
                         // Replace last "." with "#"
                         def tmp = testname.reverse()
@@ -108,8 +105,7 @@ class OutputScanner
                         testname = tmp.reverse()
 
                         testStr = " - ${testname} - "
-                    }
-                    else if (line.startsWith('Finished Test:')) {
+                    } else if (line.startsWith('Finished Test:')) {
                         def passfail = 'UNKNOWN'
 
                         if (line.contains('PASSED.')) {
@@ -117,25 +113,21 @@ class OutputScanner
                             print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.passed()
                             println()
-                        }
-                        else if (line.contains('FAILED.')) {
+                        } else if (line.contains('FAILED.')) {
                             failed++
                             print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.failed()
                             println()
-                        }
-                        else if (line.contains('ERROR.')) {
+                        } else if (line.contains('ERROR.')) {
                             errors++
                             print("    ${passed}/-${failed}/?${errors}${testStr}")
                             Messages.error()
                             println()
-                        }
-                        else {
+                        } else {
                             println('????')
                         }
                     }
-                }
-                else {
+                } else {
                     hasInput = false
 
                     sleep(1000);

@@ -25,8 +25,7 @@ import org.apache.commons.lang.SystemUtils
  * Executes the TCK's Ant script (tsant).
  */
 class TsAntCommand
-    extends CommandSupport
-{
+        extends CommandSupport {
     def buildFile
 
     def workingDirectory
@@ -44,7 +43,7 @@ class TsAntCommand
     }
 
     def execute(String goal) {
-        execute([ goal ])
+        execute([goal])
     }
 
     def execute(List goals) {
@@ -56,8 +55,7 @@ class TsAntCommand
 
         if (SystemUtils.IS_OS_WINDOWS) {
             script = "${script}.bat"
-        }
-        else if (SystemUtils.IS_OS_UNIX) {
+        } else if (SystemUtils.IS_OS_UNIX) {
             // Make sure the file is executable
             ant.chmod(file: script, perm: 'a+rx')
 

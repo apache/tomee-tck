@@ -24,8 +24,7 @@ package openejb.tck.util
  *
  * @version $Rev: 1772 $ $Date: 2007-01-10 11:04:11 -0800 (Wed, 10 Jan 2007) $
  */
-class Messages
-{
+class Messages {
     static def passed() {
         if (AnsiColors.SUPPORTED) {
             print(AnsiColors.SPECIAL['bright'])

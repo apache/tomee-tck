@@ -20,48 +20,49 @@
 
 <!-- $Rev: 2749 $ $Date: 2010-01-26 02:25:39 +0000 (Tue, 26 Jan 2010) $ -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <artifactId>j2eetck-maven-plugin</artifactId>
-    <version>3.0.13022011</version>
-    <name>Geronimo CTS Maven2 Plugins :: J2EE TCK</name>
-    <packaging>maven-plugin</packaging>
-    
-    <description>
-        Provides support for running the J2EE TCK.
-    </description>
+  <modelVersion>4.0.0</modelVersion>
 
-    <dependencies>
-        <dependency>
-            <groupId>axis</groupId>
-            <artifactId>axis</artifactId>
-            <version>1.4</version>
-        </dependency>
+  <artifactId>j2eetck-maven-plugin</artifactId>
+  <version>3.0.13022011</version>
+  <name>Geronimo CTS Maven2 Plugins :: J2EE TCK</name>
+  <packaging>maven-plugin</packaging>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.4</version>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <configuration>
-                    <goalPrefix>j2eetck</goalPrefix>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <description>
+    Provides support for running the J2EE TCK.
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>axis</groupId>
+      <artifactId>axis</artifactId>
+      <version>1.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.4</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <configuration>
+          <goalPrefix>j2eetck</goalPrefix>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
 

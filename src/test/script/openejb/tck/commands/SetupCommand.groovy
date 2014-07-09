@@ -20,7 +20,6 @@
 package openejb.tck.commands
 
 import org.apache.commons.lang.SystemUtils
-import java.sql.DriverManager
 
 /**
  * Setup the environment for running the TCK.
@@ -28,12 +27,11 @@ import java.sql.DriverManager
  * @version $Revision$ $Date$
  */
 class SetupCommand
-    extends CommandSupport
-{
+        extends CommandSupport {
     def SetupCommand(source) {
         super(source)
     }
-    
+
     def generateTsJte() {
         def javaeeCtsHome = requireDirectory('javaee.cts.home')
 
@@ -48,23 +46,22 @@ class SetupCommand
                 def map = [:]
 
                 def paths = [
-                    'ts.run.classpath',
-                    'ts.run.classpath.ri.suffix',
-                    'ts.harness.classpath',
-                    'openejb.embedded.classpath',
-                    'geronimo.specs.classpath',
-                    'geronimo.porting.classes'
+                        'ts.run.classpath',
+                        'ts.run.classpath.ri.suffix',
+                        'ts.harness.classpath',
+                        'openejb.embedded.classpath',
+                        'geronimo.specs.classpath',
+                        'geronimo.porting.classes'
                 ]
 
-                paths.each{ name ->
+                paths.each { name ->
                     map[name] = getReferenceAsString(name)
                 }
 
                 map.putAll(System.properties)
                 map.putAll(project.properties)
 
-
-        		// Set the profile to test. Options are:  web, full
+                // Set the profile to test. Options are:  web, full
                 def options = get('options', '').tokenize(',')
                 boolean javaeeFullProfile = true
                 if (options.contains('web-profile')) {
@@ -88,15 +85,15 @@ class SetupCommand
                 // Need to sanatize some properties which reference files or paths when running Windows... :-(
                 if (SystemUtils.IS_OS_WINDOWS) {
                     def vars = [
-                        'basedir',
-                        'openejb.home',
-                        'openejb.embedded.classpath',
-                        'javaee.home',
-                        'javaee.ri.home',
-                        'javaee.home.ri',
-                        'ts.run.classpath',
-                        'ts.run.classpath.ri.suffix',
-                        'ts.harness.classpath',
+                            'basedir',
+                            'openejb.home',
+                            'openejb.embedded.classpath',
+                            'javaee.home',
+                            'javaee.ri.home',
+                            'javaee.home.ri',
+                            'ts.run.classpath',
+                            'ts.run.classpath.ri.suffix',
+                            'ts.harness.classpath',
                     ]
 
                     vars.each {
@@ -166,7 +163,7 @@ class SetupCommand
 
         if (!originalFile.exists()) {
             def file = new File(oldFileName)
-            assert file.exists() : "Missing original file: $oldFileName"
+            assert file.exists(): "Missing original file: $oldFileName"
             ant.copy(file: file, tofile: originalFile)
 
             // Make it harder to alter the original
@@ -205,10 +202,10 @@ class SetupCommand
     def getReferenceAsString(name) {
         return ant.getAntProject().getReference(name).toString()
     }
-    
+
     def execute() {
         log.info("Setting up TCK environment...")
-        
+
         // Esnure that openejb.home is now set to a directory
         def openejbHome = requireDirectory('openejb.home')
 
@@ -234,22 +231,22 @@ class SetupCommand
         // NOTE: This file *must* be placed in ${javaeeCtsHome.home}/bin, bin/tsant
         //       loads this automagically, and uses it to replace values.
         //
-          ant.copy(
-              file: "${project.build.directory}/ts.jte",
-              tofile: "$javaeeCtsHome/bin/ts.jte",
-              overwrite: true
-          )
+        ant.copy(
+                file: "${project.build.directory}/ts.jte",
+                tofile: "$javaeeCtsHome/bin/ts.jte",
+                overwrite: true
+        )
 
         def jaxrs = get('jaxrs')
 
-        if(jaxrs.equals('true')){
+        if (jaxrs.equals('true')) {
 
             ant.mkdir(dir: "$javaeeCtsHome/bin/xml/impl/openejb")
             ant.copy(todir: "$javaeeCtsHome/bin/xml/impl/openejb") {
-            fileset(dir: "${project.basedir}/src/test/resources/jaxrs") {
-                include(name: 'cxf.xml')
+                fileset(dir: "${project.basedir}/src/test/resources/jaxrs") {
+                    include(name: 'cxf.xml')
+                }
             }
-          }
 
             log.info("generating jaxrs tck dist artifacts based on vi setting")
             TsAntCommand command = new TsAntCommand(this)
@@ -257,7 +254,6 @@ class SetupCommand
             command.execute('update.jaxrs.wars')
 
         }
-
 
         //
         // Copy openejb configuration files into server
@@ -308,17 +304,17 @@ class SetupCommand
         // Copy the clientcert.jks keystore to the conf dir
         //
         ant.copy(
-            file: "${project.basedir}/src/test/keystores/clientcert.jks",
-            todir: "${openejbHome}/conf"
+                file: "${project.basedir}/src/test/keystores/clientcert.jks",
+                todir: "${openejbHome}/conf"
         )
         ant.copy(
-            file: "${project.basedir}/src/test/keystores/ssl-truststore",
-            todir: "${openejbHome}/conf"
+                file: "${project.basedir}/src/test/keystores/ssl-truststore",
+                todir: "${openejbHome}/conf"
         )
-		
+
         def connector = get('connector')
 
-        if(connector.equals('true')){
+        if (connector.equals('true')) {
             //
             // deploy the connectors
             //
@@ -361,7 +357,7 @@ class SetupCommand
 
             // Ant task only works if sql file is in the correct place
             ant.mkdir(dir: "${javaeeCtsHome}/sql/derby")
-            ant.copy( toDir: "${javaeeCtsHome}/sql/derby", overwrite: true ) {
+            ant.copy(toDir: "${javaeeCtsHome}/sql/derby", overwrite: true) {
                 fileset(dir: "${project.basedir}/src/test/sql/derby") {
                     include(name: "derby.dml*.sql")
                 }
@@ -384,7 +380,7 @@ class SetupCommand
         //
         // Backup previous logs (maybe)
         //
-        
+
         def logOutputDirectory = get('logOutputDirectory', "${project.build.directory}/logs")
         def backupLogs = get('backupLogs', true)
         if (backupLogs) {
@@ -393,7 +389,7 @@ class SetupCommand
                 def timestamp = System.currentTimeMillis()
                 def logBackupDir = "${logOutputDirectory}-${timestamp}"
                 log.info("Backing up previous logs to: ${logBackupDir}")
-                
+
                 ant.mkdir(dir: logBackupDir)
                 ant.move(todir: logBackupDir) {
                     fileset(dir: logOutputDirectory) {
@@ -403,13 +399,13 @@ class SetupCommand
             }
         }
         ant.mkdir(dir: logOutputDirectory)
-		
-		//
-		// Stop any previous running copy of Derby, from SQL setup
-		//
-		//log.info("Attempting to stop Derby embedded database...")
-		//Class.forName("org.apache.derby.jdbc.EmbeddedDriver")
-		//DriverManager.getConnection("jdbc:derby:${openejbHome}/data/derbydb;user=cts;password=cts;shutdown=true")
-		//log.info("Derby embedded database stopped.")
+
+        //
+        // Stop any previous running copy of Derby, from SQL setup
+        //
+        //log.info("Attempting to stop Derby embedded database...")
+        //Class.forName("org.apache.derby.jdbc.EmbeddedDriver")
+        //DriverManager.getConnection("jdbc:derby:${openejbHome}/data/derbydb;user=cts;password=cts;shutdown=true")
+        //log.info("Derby embedded database stopped.")
     }
 }

@@ -25,8 +25,7 @@ package openejb.tck.commands
  * @version $Rev: 3415 $ $Date: 2011-07-24 21:14:49 -0700 (Sun, 24 Jul 2011) $
  */
 class ReverseSetupCommand
-    extends CommandSupport
-{
+        extends CommandSupport {
     def ReverseSetupCommand(source) {
         super(source)
     }
@@ -57,19 +56,18 @@ class ReverseSetupCommand
 
                 // Create flag to indicate processing is complete
                 ant.touch(file: reverseGeneratedFile)
-            }
-            else {
+            } else {
                 log.info("Reverse tests already created for: $section")
             }
         }
 
         // Default to both jaxws and jws generation
-        def sections = [ 'jaxws', 'jws' ]
+        def sections = ['jaxws', 'jws']
 
         // If -Dsection was given, then use that instead
         def section = get('section')
         if (section) {
-            sections = [ section ]
+            sections = [section]
         }
 
         // Setup the rerverse tests for each section

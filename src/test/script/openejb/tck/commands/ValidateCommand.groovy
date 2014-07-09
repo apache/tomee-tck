@@ -27,12 +27,11 @@ import org.apache.commons.lang.SystemUtils
  * @version $Revision$ $Date$
  */
 class ValidateCommand
-    extends CommandSupport
-{
+        extends CommandSupport {
     def ValidateCommand(source) {
         super(source)
     }
-    
+
     def logProperties(props, header) {
         assert props
         assert header
@@ -45,20 +44,20 @@ class ValidateCommand
             }
         }
     }
-    
+
     def execute() {
         log.info("Validating TCK environment...")
-        
+
         if (SystemUtils.IS_OS_WINDOWS) {
             log.warn("Detected evil operating system; beware of failures caused by your operating system\'s stupidity")
         }
-        
+
         // Spit out some debug information
         if (log.isDebugEnabled()) {
             logProperties(System.properties, "System")
             logProperties(project.properties, "Project")
         }
-        
+
         // Ensure that javaee.cts.home and javaee.ri.home are set to valid directories
         ['javaee.cts.home', 'javaee.ri.home'].each {
             def dir = requireDirectory(it)
@@ -69,7 +68,7 @@ class ValidateCommand
 
             log.info("Using $it: $dir")
         }
-        
+
     }
 }
 

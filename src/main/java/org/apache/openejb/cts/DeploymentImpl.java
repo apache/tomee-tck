@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
+@SuppressWarnings("unchecked")
 public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String HEAD = "OpenEJB - ";
     private static final String FILENAME = "filename";
@@ -53,7 +54,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
 //        System.setProperty("java.opts", "-XX:MaxPermSize=64m");
 //        System.setProperty("openejb.server.profile", "true");
-    	System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote");
+        System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote");
         final RemoteServer remoteServer = new RemoteServer(250, true);
         // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
         // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
@@ -67,85 +68,87 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
     }
 
     private PrintWriter log;
-    private File appsDir;
     private File libDir;
+    private File appsDir;
 
-    public void init(PrintWriter log) {
+    public void init(final PrintWriter log) {
         this.log = log;
 
-        PropertyManagerInterface propMgr = null;
+        final PropertyManagerInterface propMgr;
         try {
             propMgr = DeliverableFactory.getDeliverableInstance().getPropertyManager();
 
-            String openejbHomeName = propMgr.getProperty("openejb.home");
+            final String openejbHomeName = propMgr.getProperty("openejb.home");
             if (openejbHomeName == null) {
                 throw new IllegalStateException("Not initialized; missing property: geronimo.porting.planDir");
             }
-            File openejbHome = new File(openejbHomeName).getCanonicalFile();
+            final File openejbHome = new File(openejbHomeName).getCanonicalFile();
             System.setProperty("openejb.home", openejbHome.getAbsolutePath());
             appsDir = new File(openejbHome, "apps");
             libDir = new File(openejbHome, "lib");
 
             try {
-                String openejbUri = propMgr.getProperty("openejb.server.uri");
+                final String openejbUri = propMgr.getProperty("openejb.server.uri");
                 System.setProperty("openejb.uri", openejbUri);
-            } catch (PropertyNotSetException e) {
+            } catch (final PropertyNotSetException e) {
+                //Ignore
             }
 
             try {
-                String value = propMgr.getProperty("ts.run.classpath");
+                final String value = propMgr.getProperty("ts.run.classpath");
                 System.setProperty("ts.run.classpath", value);
-            } catch (PropertyNotSetException e) {
+            } catch (final PropertyNotSetException e) {
+                //Ignore
             }
 
             this.log.println(HEAD + "Initialized Deployment helper");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             this.log.println(HEAD + "ERROR initializing DeploymentImpl");
             e.printStackTrace(this.log);
             throw new AssertionError(e);
         }
     }
 
-    public Hashtable getDependentValues(DeploymentInfo[] infoArray) {
+    public Hashtable getDependentValues(final DeploymentInfo[] infoArray) {
         return new Hashtable();
     }
 
-    public InputStream getDeploymentPlan(DeploymentInfo info) throws TSDeploymentException {
-        String earPath = info.getEarFile();
+    public InputStream getDeploymentPlan(final DeploymentInfo info) throws TSDeploymentException {
+        final String earPath = info.getEarFile();
         if (earPath == null) {
             throw new TSDeploymentException("EarFile is null");
         }
         log.println(HEAD + "module: " + earPath);
 
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.put(FILENAME, earPath);
 
-        Set<String> moduleIds = new TreeSet<String>();
+        final Set<String> moduleIds = new TreeSet<String>();
         moduleIds.addAll(info.getWebRuntimeData().keySet());
         moduleIds.addAll(info.getEjbRuntimeData().keySet());
         moduleIds.addAll(info.getAppRuntimeData().keySet());
         moduleIds.addAll(info.getAppClientRuntimeData().keySet());
 
-        for (String path : info.getRuntimeFiles()) {
-            String earName = earName(path, earPath);
+        for (final String path : info.getRuntimeFiles()) {
+            final String earName = earName(path, earPath);
             if (earName != null && path.contains(earName)) {
-                String name = path.substring(path.indexOf(earName) + earName.length() + 1);
+                final String name = path.substring(path.indexOf(earName) + earName.length() + 1);
                 properties.put(ALT_DD + "/" + name, path);
             } else {
-                String fileName = new File(path).getName();
-                for (String moduleId : moduleIds) {
+                final String fileName = new File(path).getName();
+                for (final String moduleId : moduleIds) {
                     if (fileName.startsWith(moduleId)) {
-                        String name = fileName.substring(moduleId.length() + 1);
+                        final String name = fileName.substring(moduleId.length() + 1);
                         properties.put(ALT_DD + "/" + moduleId + "/" + name, path);
                     }
                 }
             }
         }
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        final ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             properties.store(out, "Auto Generated Deployment Plan");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new TSDeploymentException("Unable to create deployment plan", e);
         }
         return new ByteArrayInputStream(out.toByteArray());
@@ -170,20 +173,20 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         return null;
     }
 
-    public Target[] getTargetsToUse(Target[] targets, DeploymentInfo info) {
+    public Target[] getTargetsToUse(final Target[] targets, final DeploymentInfo info) {
         return new Target[]{targets[0]};
     }
 
-    public String getAppClientArgs(Properties p) {
-        String executeArgs = p.getProperty("executeArgs");
-        String clientname = p.getProperty("client_name");
+    public String getAppClientArgs(final Properties p) {
+        final String executeArgs = p.getProperty("executeArgs");
+        final String clientname = p.getProperty("client_name");
         String earFile = p.getProperty("ear_file");
         earFile = new File(earFile).getName();
         earFile = earFile.substring(0, earFile.lastIndexOf('.'));
-        File appClientJar = new File(new File(appsDir, earFile), clientname + ".jar");
+        final File appClientJar = new File(new File(appsDir, earFile), clientname + ".jar");
         String classPath = appClientJar.getAbsolutePath();
 
-        String property = System.getProperty("ts.run.classpath");
+        final String property = System.getProperty("ts.run.classpath");
         classPath += PATH_SEP + property;
 
 //        for (int i = 0; i < libDir.listFiles().length; i++) {
@@ -241,27 +244,27 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         return "-cp " + classPath + " -Dopenejb.client.moduleId=" + clientname + " " + CLIENT_MAIN + " " + executeArgs;
     }
 
-    public String getClientClassPath(TargetModuleID[] targetIDs, DeploymentInfo info, DeploymentManager manager) throws TSDeploymentException {
+    public String getClientClassPath(final TargetModuleID[] targetIDs, final DeploymentInfo info, final DeploymentManager manager) throws TSDeploymentException {
         return "";
     }
 
-    public void createConnectionFactory(TargetModuleID[] targetIDs, Properties p) throws TSDeploymentException {
+    public void createConnectionFactory(final TargetModuleID[] targetIDs, final Properties p) throws TSDeploymentException {
     }
 
-    public void removeConnectionFactory(TargetModuleID[] targetIDs, Properties p) throws TSDeploymentException {
+    public void removeConnectionFactory(final TargetModuleID[] targetIDs, final Properties p) throws TSDeploymentException {
     }
 
-    public void postDistribute(ProgressObject po) {
-        TargetModuleID moduleID = po.getResultTargetModuleIDs()[0];
+    public void postDistribute(final ProgressObject po) {
+        final TargetModuleID moduleID = po.getResultTargetModuleIDs()[0];
         log.println(HEAD + "Distribute returned moduleID " + moduleID.getModuleID());
     }
 
-    public void postStart(ProgressObject po) {
+    public void postStart(final ProgressObject po) {
     }
 
-    public void postStop(ProgressObject po) {
+    public void postStop(final ProgressObject po) {
     }
 
-    public void postUndeploy(ProgressObject po) {
+    public void postUndeploy(final ProgressObject po) {
     }
 }

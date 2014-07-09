@@ -27,8 +27,7 @@ import openejb.tck.util.TestListBuilder
  *
  * @version $Revision$ $Date$
  */
-abstract class CommandSupport
-{
+abstract class CommandSupport {
     def source
 
     def log
@@ -63,8 +62,7 @@ abstract class CommandSupport
         adapter.emacsMode = true
         if (log.debugEnabled) {
             adapter.messageOutputLevel = p.MSG_VERBOSE
-        }
-        else {
+        } else {
             adapter.messageOutputLevel = p.MSG_INFO
         }
         p.addBuildListener(adapter)
@@ -208,14 +206,14 @@ abstract class CommandSupport
         builder.appendAll("commons-logging-*.jar")
         builder.appendAll("openjpa-*.jar")
 //        builder.append("hsqldb-*.jar")
-		builder.append("derby-*.jar")
-		builder.append("derbyclient-*.jar")
+        builder.append("derby-*.jar")
+        builder.append("derbyclient-*.jar")
         builder.append("openejb-client*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")
         builder.append("cts.jar")
-		builder.append("dbprocedures.jar")
+        builder.append("dbprocedures.jar")
         builder.append("commons-httpclient*.jar")
         builder.append("jdom.jar")
         builder.append("dom4j.jar")
@@ -258,8 +256,8 @@ abstract class CommandSupport
         builder.append("jaxb-impl.jar")
         builder.append("jaxb-xjc.jar")
         builder.directory = openejbLib
-		builder.append("derby-*.jar")
-		builder.append("derbyclient-*.jar")
+        builder.append("derby-*.jar")
+        builder.append("derbyclient-*.jar")
         builder.getPath("openejb.embedded.classpath")
     }
 
@@ -276,7 +274,7 @@ abstract class CommandSupport
         log.info("TCK pom version: " + require('javaee.tck.version'))
         log.info("Start - Container libraries")
         if (lib.exists() && lib.isDirectory()) {
-            lib.listFiles().grep(~/.*.jar/).sort{ it.name }.each  {
+            lib.listFiles().grep(~/.*.jar/).sort { it.name }.each {
                 log.info(" - $it.name")
             }
         }
