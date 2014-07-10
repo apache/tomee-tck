@@ -40,7 +40,7 @@
     <openejb.version>5.0.0-SNAPSHOT</openejb.version>
     <tomee.version>2.0.0-SNAPSHOT</tomee.version>
 
-    <tomcat.version>7.0.54</tomcat.version>
+    <tomcat.version>7.0.52</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -94,20 +94,8 @@
 
     <dependency>
       <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-broker</artifactId>
-      <version>5.10.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-client</artifactId>
-      <version>5.10.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-openwire-legacy</artifactId>
-      <version>5.10.0</version>
+      <artifactId>activemq-core</artifactId>
+      <version>5.4.1</version>
     </dependency>
 
     <dependency>
