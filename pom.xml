@@ -99,6 +99,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>5.10.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
