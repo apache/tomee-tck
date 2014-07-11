@@ -99,12 +99,6 @@
     </dependency>
 
     <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.6</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
@@ -768,7 +762,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.activemq</groupId>
-                  <artifactId>activemq-broker</artifactId>
+                  <artifactId>activemq-core</artifactId>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
