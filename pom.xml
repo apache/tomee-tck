@@ -762,7 +762,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.activemq</groupId>
-                  <artifactId>activemq-broker</artifactId>
+                  <artifactId>activemq-core</artifactId>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
