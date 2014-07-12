@@ -935,7 +935,7 @@
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1028</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1031</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
@@ -974,6 +974,19 @@
   </repositories>
 
   <pluginRepositories>
+    <pluginRepository>
+      <id>nexus-staging-plugin</id>
+      <name>Nexus Staging Repository</name>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1031</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </pluginRepository>
     <pluginRepository>
       <id>codehaus-snapshots</id>
       <name>Codehaus Snapshot</name>
