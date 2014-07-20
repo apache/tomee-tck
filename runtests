@@ -4,11 +4,8 @@
 ##
 
 # TomEE 2.0.0 is compiled with Java 7
-# locally do export JAVA_TCK=$JAVA_HOME to run it
-if [ -z "$JAVA_TCK" ] ; then
-	export JAVA_HOME=$HOME/jdk1.7.0_04
-else
-	export JAVA_HOME="$JAVA_TCK"
+if [ -d $HOME/jdk1.7.0_04 ]; then
+    export JAVA_HOME=$HOME/jdk1.7.0_04
 fi
 
 PROGNAME=`basename $0`
