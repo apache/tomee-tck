@@ -40,7 +40,7 @@
     <openejb.version>4.7.0</openejb.version>
     <tomee.version>1.7.0</tomee.version>
 
-    <tomcat.version>7.0.52</tomcat.version>
+    <tomcat.version>7.0.54</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -945,11 +945,7 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    
-    
-    
-    
-    
+
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
@@ -980,7 +976,7 @@
     <pluginRepository>
       <id>nexus-staging-plugin</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1031</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1032</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
