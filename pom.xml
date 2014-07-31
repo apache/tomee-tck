@@ -299,12 +299,14 @@
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>tomee-webapp</artifactId>
+                      <version>${tomee.version}</version>
                       <type>war</type>
                       <outputDirectory>${openejb.home}/webapps/tomee</outputDirectory>
                     </artifactItem>
                     <artifactItem>
                       <groupId>org.apache.openejb</groupId>
                       <artifactId>tomee-loader</artifactId>
+                      <version>${tomee.version}</version>
                       <type>jar</type>
                       <outputDirectory>${openejb.home}/lib</outputDirectory>
                     </artifactItem>
@@ -322,15 +324,15 @@
           <groupId>org.apache.openejb</groupId>
           <artifactId>tomee-webapp</artifactId>
           <type>war</type>
-          <version>${openejb.version}</version>
+          <version>${tomee.version}</version>
         </dependency>
 
-        <dependency>
-          <groupId>org.apache.openejb</groupId>
-          <artifactId>apache-tomcat</artifactId>
-          <type>war</type>
-          <version>${tomcat.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.openejb</groupId>-->
+        <!--<artifactId>apache-tomcat</artifactId>-->
+        <!--<type>war</type>-->
+        <!--<version>${tomcat.version}</version>-->
+        <!--</dependency>-->
 
       </dependencies>
 
@@ -945,14 +947,6 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    
-    
-    
-    
-    
-    
-    
-    
 
     <repository>
       <id>apache-m2-snapshot</id>
@@ -984,7 +978,7 @@
     <pluginRepository>
       <id>nexus-staging-plugin</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1032</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1034</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
