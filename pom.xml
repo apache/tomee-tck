@@ -635,7 +635,7 @@
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
           <artifactId>gmaven-plugin</artifactId>
-          <version>1.3</version>
+          <version>1.4</version>
           <configuration>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
@@ -866,7 +866,7 @@
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
 
         <dependencies>
           <dependency>
