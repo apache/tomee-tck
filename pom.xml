@@ -953,7 +953,6 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    
 
     <repository>
       <id>apache-m2-snapshot</id>
@@ -985,7 +984,7 @@
     <pluginRepository>
       <id>nexus-staging-plugin</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1034</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1035</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
