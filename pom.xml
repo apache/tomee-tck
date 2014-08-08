@@ -40,7 +40,7 @@
     <openejb.version>4.7.0</openejb.version>
     <tomee.version>1.7.0</tomee.version>
 
-    <tomcat.version>7.0.54</tomcat.version>
+    <tomcat.version>7.0.55</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -328,13 +328,6 @@
           <type>war</type>
           <version>${tomee.version}</version>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.apache.openejb</groupId>-->
-        <!--<artifactId>apache-tomcat</artifactId>-->
-        <!--<type>war</type>-->
-        <!--<version>${tomcat.version}</version>-->
-        <!--</dependency>-->
 
       </dependencies>
 
@@ -953,8 +946,6 @@
         <checksumPolicy>ignore</checksumPolicy>
       </releases>
     </repository>
-    
-
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
