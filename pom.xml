@@ -92,11 +92,11 @@
       <version>${openejb.version}</version>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>org.apache.activemq</groupId>-->
-      <!--<artifactId>activemq-core</artifactId>-->
-      <!--<version>5.4.3</version>-->
-    <!--</dependency>-->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <version>5.10.0</version>
+    </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -764,7 +764,7 @@
                 </artifactItem>
                 <artifactItem>
                   <groupId>org.apache.activemq</groupId>
-                  <artifactId>activemq-core</artifactId>
+                  <artifactId>activemq-client</artifactId>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
