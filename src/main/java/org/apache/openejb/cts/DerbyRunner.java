@@ -25,52 +25,52 @@ import java.net.InetAddress;
 
 public class DerbyRunner {
 
-	private static class DerbyThread extends Thread {
-		private static Logger log = Logger.getLogger(DerbyRunner.class);
-		private static final int SLEEP_INTERVAL = 60000;
-		private NetworkServerControl serverControl;
+    private static class DerbyThread extends Thread {
+        private static final Logger log = Logger.getLogger(DerbyRunner.class);
+        private static final int SLEEP_INTERVAL = 60000;
+        private NetworkServerControl serverControl;
         private int port = NetworkServerControl.DEFAULT_PORTNUMBER;
 
-        public DerbyThread (int derbyPort) {
+        public DerbyThread(final int derbyPort) {
             port = derbyPort;
         }
 
-		public void run() {
-			System.out.println("Starting embedded Derby database on port " + port);
-			try {
-	            serverControl = new NetworkServerControl(InetAddress.getByAddress(new byte[] {127, 0, 0, 1}), port);
-	            serverControl.start(new Log4jPrintWriter("Derby", Level.INFO));
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
-	        
-	        while(true) {
-	        	try {
-					Thread.sleep(SLEEP_INTERVAL);
-				} catch (InterruptedException e) {
-					break;
-				}
-	        }
-	        
-	        System.out.println("Embedded database thread stopping");
-		}
-		
-	}
-	
-	
-	public static void main(String[] args) {
+        public void run() {
+            System.out.println("Starting embedded Derby database on port " + port);
+            try {
+                serverControl = new NetworkServerControl(InetAddress.getByAddress(new byte[]{127, 0, 0, 1}), port);
+                serverControl.start(new Log4jPrintWriter("Derby", Level.INFO));
+            } catch (final Exception e) {
+                e.printStackTrace();
+            }
+
+            while (true) {
+                try {
+                    Thread.sleep(SLEEP_INTERVAL);
+                } catch (final InterruptedException e) {
+                    break;
+                }
+            }
+
+            System.out.println("Embedded database thread stopping");
+        }
+
+    }
+
+
+    public static void main(final String[] args) {
         int port = NetworkServerControl.DEFAULT_PORTNUMBER;
         if (args.length == 1) {
             try {
                 port = Integer.parseInt(args[0]);
                 //System.setProperty("derby.drda.portNumber", Integer.toString(port));
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 System.out.println("Could not convert port " + args[0] + ". Using the default " + port);
             }
         }
-        DerbyThread thread = new DerbyThread(port);
+        final DerbyThread thread = new DerbyThread(port);
         thread.setDaemon(true);
-		thread.setName("DerbyServerDaemon");
-		thread.start();
-	}
+        thread.setName("DerbyServerDaemon");
+        thread.start();
+    }
 }
