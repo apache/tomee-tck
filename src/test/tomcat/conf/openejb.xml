@@ -20,75 +20,74 @@
 
 <openejb>
 
-<!--
-<Container id="Default CMP Container" ctype="CMP_ENTITY">
-    CmpEngineFactory org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
-    Engine  derby
-    ConnectorName  Default JDBC Database
-</Container>
--->
+  <!--
+  <Container id="Default CMP Container" ctype="CMP_ENTITY">
+      CmpEngineFactory org.apache.openejb.core.cmp.jpa.JpaCmpEngineFactory
+      Engine  derby
+      ConnectorName  Default JDBC Database
+  </Container>
+  -->
 
-<!--
-<Container id="Default BMP Container" ctype="BMP_ENTITY"/>
--->
-
-
-<Container id="Default Stateful Container" ctype="STATEFUL">
-    Passivator   org.apache.openejb.core.stateful.SimplePassivater
-    TimeOut  20
-    BulkPassivate  50
-</Container>
+  <!--
+  <Container id="Default BMP Container" ctype="BMP_ENTITY"/>
+  -->
 
 
+  <Container id="Default Stateful Container" ctype="STATEFUL">
+    Passivator org.apache.openejb.core.stateful.SimplePassivater
+    TimeOut 20
+    BulkPassivate 50
+  </Container>
 
-<Container id="Default Stateless Container" ctype="STATELESS">
-    TimeOut  0
-    PoolSize  10
-    StrictPooling  true
-</Container>
 
-<!--
-<Container id="Default MDB Container" ctype="MESSAGE">
-    ResourceAdapter Default JMS Resource Adapter
-    ActivationSpecClass org.apache.activemq.ra.ActiveMQActivationSpec
-    InstanceLimit 10
-</Container>
--->
+  <Container id="Default Stateless Container" ctype="STATELESS">
+    TimeOut 0
+    PoolSize 10
+    StrictPooling true
+  </Container>
 
-<Connector id="Default JDBC Database">
+  <!--
+  <Container id="Default MDB Container" ctype="MESSAGE">
+      ResourceAdapter Default JMS Resource Adapter
+      ActivationSpecClass org.apache.activemq.ra.ActiveMQActivationSpec
+      InstanceLimit 10
+  </Container>
+  -->
+
+  <Connector id="Default JDBC Database">
     JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
     JdbcUrl jdbc:derby:data/derbydb;create=true
-    UserName     cts
-    Password     cts
-</Connector>
+    UserName cts
+    Password cts
+  </Connector>
 
-<Connector id="Default Unmanaged JDBC Database">
+  <Connector id="Default Unmanaged JDBC Database">
     JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
     JdbcUrl jdbc:derby:data/derbydb;create=true
-    UserName     cts
-    Password     cts
-</Connector>
+    UserName cts
+    Password cts
+  </Connector>
 
-<!--
-<Resource id="Default JMS Resource Adapter">
-    # Broker configuration
-    BrokerXmlConfig broker:(tcp://localhost:61616)
+  <!--
+  <Resource id="Default JMS Resource Adapter">
+      # Broker configuration
+      BrokerXmlConfig broker:(tcp://localhost:61616)
 
-    # Broker address
-    ServerUrl vm://localhost?async=true
-</Resource>
--->
+      # Broker address
+      ServerUrl vm://localhost?async=true
+  </Resource>
+  -->
 
-<!--
-<Connector id="Default JMS Connection Factory">
-    ResourceAdapter Default JMS Resource Adapter
-</Connector>
--->
+  <!--
+  <Connector id="Default JMS Connection Factory">
+      ResourceAdapter Default JMS Resource Adapter
+  </Connector>
+  -->
 
-<Resource id="Default Mail Session">
-mail.smtp.class=org.apache.geronimo.mail.NullTransport
-</Resource>
+  <Resource id="Default Mail Session">
+    mail.smtp.class=org.apache.geronimo.mail.NullTransport
+  </Resource>
 
-<Deployments dir="apps/" />
+  <Deployments dir="apps/"/>
 
 </openejb>
