@@ -138,7 +138,7 @@
     <dependency>
       <groupId>backport-util-concurrent</groupId>
       <artifactId>backport-util-concurrent</artifactId>
-      <version>2.2</version>
+      <version>3.1</version>
     </dependency>
 
     <dependency>
@@ -938,20 +938,6 @@
 
   <repositories>
     <repository>
-      <id>nexus-staging</id>
-      <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1036</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-    </repository>
-
-    <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
       <url>http://repository.apache.org/snapshots/</url>
@@ -978,19 +964,6 @@
   </repositories>
 
   <pluginRepositories>
-    <pluginRepository>
-      <id>nexus-staging-plugin</id>
-      <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1036</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-        <checksumPolicy>ignore</checksumPolicy>
-      </releases>
-    </pluginRepository>
     <pluginRepository>
       <id>codehaus-snapshots</id>
       <name>Codehaus Snapshot</name>
