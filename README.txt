@@ -24,8 +24,8 @@ GETTING SETUP
           </activation>
           
           <properties>
-    	  <javaee6.cts.home>/Users/dblevins/work/javaeetck</javaee6.cts.home>
-    	  <javaee6.ri.home>/Users/dblevins/work/javaeetck/glassfishv3/glassfish</javaee6.ri.home>
+    	  <javaee6.cts.home>/home/[user]/javaeetck</javaee6.cts.home>
+    	  <javaee6.ri.home>/home/[user]/javaeetck/glassfish3/glassfish</javaee6.ri.home>
           </properties>
         </profile>
       </profiles>
