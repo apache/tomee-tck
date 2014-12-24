@@ -308,7 +308,7 @@ if [ -z $nc ]; then
     export RESET_FORMATTING=`tput sgr0`
 fi
 
-CONFIG=" -DassemblyId=$web -Dtests=$tests -Djavaee.level=$profile -Dwebcontainer=$web -Dsql=$sql"
+CONFIG=" -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2" -DassemblyId=$web -Dtests=$tests -Djavaee.level=$profile -Dwebcontainer=$web -Dsql=$sql"
 
 echo ">>> config => $( echo "$CONFIG" | sed 's/ /\n/g')"
 echo "" # just an empty line
