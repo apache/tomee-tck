@@ -328,8 +328,8 @@ exec mvn -V --file "$DIRNAME/pom.xml" \
       --batch-mode \
       --errors \
       $CONFIG \
-      -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2" \
-      -Dhttps.protocols="TLSv1,TLSv1.1,TLSv1.2" \
+      -Djdk.tls.client.protocols="TLSv1" \
+      -Dhttps.protocols="TLSv1" \
       $tomcatVersion \
       $args | sed -e "s/\(\[INFO\]\ \-.*\)/${TEXT_BLUE}${BOLD}\1${RESET_FORMATTING}/g" \
                -e "s/\(\[INFO\]\ BUILD SUCCESS.*\)/${BOLD}${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
