@@ -1,0 +1,352 @@
+#!/bin/bash -l
+##
+## $Revision$ $Date$
+##
+
+PROGNAME=`basename $0`
+DIRNAME=`dirname $0`
+
+DEFAULT_WEB="none"
+DEFAULT_SQL="active"
+
+warn() {
+    echo "${PROGNAME}: $*"
+}
+
+die() {
+    warn "$*"
+    exit 1
+}
+
+usage() {
+    cat <<EOF
+usage: $PROGNAME [options] <test> [<test> ...] [mvn options]
+
+options:
+    -h,--help               Display help information
+    -w,--web <container>    Specify the container to test with (default: $DEFAULT_WEB)
+    -sql <skip|active>      Wether sql databases should be created or not (default: $DEFAULT_SQL)
+    -tv,--tomcat-version    Specify the tomcat version (implies -w tomcat)
+    -d,--debug              Enable Server and TCK appclient debug options (5005 and 5003)
+    -de,--debug-embedded    Enable TCK embedded ejb debug options (port 5001)
+    -dh,--debug-harness     Enable TCK harness debug options (port 5002)
+    -da,--debug-appclient   Enable TCK appclient debug options (port 5003)
+    -dj,--debug-javatest    Enable TCK javatest debug options (port 5004)
+    -ds,--debug-server      Enable Server debug options (port 5005)
+    --connector             deploy connectors for connector tests
+    -j,--jaxrs              build jaxrs tck wars
+    -k,--kill               Kill any java tck process that might be running
+    --reverse               Generate jaxws jws reverse artifacts
+    -o,--option <option>    Enable an option
+    -ol,--offline           Run maven offline
+    -c,--clean              Mvn clean
+    -tr,--temp-repo         Mvn -Dmaven.repo.local=temp
+    -U,--update             Mvn update snapshots
+    --source                Source a script to change environment settings such as jdk version
+    --env                   Print the environment prior to running mvn
+    -nc,--no-colors             Do not print in colors
+    --                      Stop option processing
+EOF
+    exit 1
+}
+
+if [ $# -lt 1 ]; then
+    usage
+fi
+
+echo "$(basename $0) $@"
+
+JAVA_HOME=$JAVA_HOME
+PATH=$PATH
+tests=""
+web="$DEFAULT_WEB"
+sql="$DEFAULT_SQL"
+profile="$DEFAULT_PROFILE"
+args=""
+options=""
+env=""
+nc=""
+src=""
+
+#tomcatVersion="-Dtomcat.version=6.0.32"
+
+assertOptionArg() {
+    if [ "x$2" = "x" ]; then
+        die "Option '$1' requires an argument"
+    fi
+}
+
+appendOption() {
+    echo "Including options=$1"
+    if [ "x$options" = "x" ]; then
+        options="$1"
+    else
+        options="${options},$1"
+    fi
+}
+
+appendArgs() {
+    if [ "x$args" = "x" ]; then
+        args="$*"
+    else
+        args="$args $*"
+    fi
+}
+
+appendTests() {
+    if [ "x$tests" = "x" ]; then
+        tests="$1"
+    else
+        tests="${tests},$1"
+    fi
+}
+
+processOptions() {
+    while [ "x$1" != "x" ]; do
+        case "$1" in
+            -sql)
+                assertOptionArg $1 $2
+                sql=$2
+                shift
+                ;;
+
+            -h|--help)
+                usage
+                ;;
+
+            -w|--web)
+                assertOptionArg $1 $2
+                web="$2"; shift
+                ;;
+
+            -tv|--tomcat-version)
+		web="tomcat"
+                assertOptionArg $1 $2
+                tomcatVersion="-Dtomcat.version=$2"; shift
+                ;;
+
+            -o|--option)
+                assertOptionArg $1 $2
+                appendOption "$2"; shift
+                ;;
+
+            -d|--debug)
+                appendOption "debug"
+                appendOption "appclient-debug"
+                ;;
+
+            -da|--debug-appclient)
+                appendOption "appclient-debug"
+                ;;
+
+            -de|--debug-embedded)
+                appendOption "embedded-debug"
+                ;;
+
+            -dh|--debug-harness)
+                appendOption "harness-debug"
+                ;;
+
+            -dj|--debug-javatest)
+                appendOption "javatest-debug"
+                ;;
+
+            -ds|--debug-server)
+                appendOption "debug"
+                ;;
+
+            --connector)
+                appendArgs "-Dconnector=true"
+                ;;
+
+            -j|--jaxrs)
+                appendArgs "-Djaxrs=true"
+                ;;
+
+            --reset-persistence)
+                appendArgs "-Dreset.persistence=true"
+                ;;
+
+            --interop)
+                appendArgs "-Dinterop=true"
+                ;;
+
+            --reverse)
+                appendArgs "-Dreverse=true"
+                ;;
+
+            -ol|--offline)
+                appendArgs "-o"
+                ;;
+
+            -U|--update)
+                appendArgs "-U"
+                ;;
+
+            -c|--clean)
+                appendArgs "clean install"
+                ;;
+
+            -tr|--temp-repo)
+                appendArgs "-Dmaven.repo.local=repo"
+                ;;
+
+            --source)
+                assertOptionArg "$1" "$2"
+                src="$(readlink -f "$2")"
+                shift
+                ;;
+
+            --env)
+                env=1
+                ;;
+
+            -nc|--no-colors)
+                nc=1
+                ;;
+
+            -k|--kill)
+                killPrevious=1
+                ;;
+
+            --)
+                shift
+                appendArgs "$*"
+                break
+                ;;
+
+            # Collect extra options to pass on to mvn
+            -*)
+                appendArgs "$1"
+                ;;
+
+            # Non-option args are tests
+            *)
+                appendTests "$1"
+                ;;
+        esac
+        shift
+    done
+}
+
+if [ "x$RUNTESTS_OPTIONS" != "x" ]; then
+    echo "Including options from environment: $RUNTESTS_OPTIONS"
+    processOptions $RUNTESTS_OPTIONS
+fi
+
+processOptions "$@"
+
+# Validate web
+case "$web" in
+    tomee-plus|tomee-plume|tomee|tomcat|none)
+        profile="full"
+        true
+        ;;
+    tomcat-web)
+        profile="web"
+        appendOption "web-profile"
+        true
+        ;;
+    *)
+        echo "Unknown web container: $web"
+        exit 3
+        ;;
+esac
+
+rm -fr derbydb
+unzip -q derbydb.zip
+sql=skip
+
+# Append options if any
+if [ "x$options" != "x" ]; then
+   appendArgs "-Doptions=$options"
+fi
+
+# Make sure a test was selected
+if [ "x$tests" = "x" ]; then
+    usage
+fi
+
+# Pick the mvn executable to use
+if [ "x$M2_HOME" = "x" ]; then
+     mvn="mvn"
+else
+    mvn="$M2_HOME/bin/mvn"
+fi
+
+if [ -n "$tomcatVersion" ]; then
+    ant -f download.xml $tomcatVersion
+fi
+
+if [ "$killPrevious" != "" ]; then
+    echo "Killing old processes $(ps ax | grep "[j]ava.*$PWD" | cut -c 1-5 )"
+    ps ax | grep "[j]ava.*$PWD" | cut -c 1-5 | xargs kill -9
+    sleep 5
+    ps ax | grep "[j]ava.*$PWD"
+fi
+
+if [ -z $nc ]; then
+    export BOLD=`tput bold`
+    export UNDERLINE_ON=`tput smul`
+    export UNDERLINE_OFF=`tput rmul`
+    export TEXT_BLACK=`tput setaf 0`
+    export TEXT_RED=`tput setaf 1`
+    export TEXT_GREEN=`tput setaf 2`
+    export TEXT_YELLOW=`tput setaf 3`
+    export TEXT_BLUE=`tput setaf 4`
+    export TEXT_MAGENTA=`tput setaf 5`
+    export TEXT_CYAN=`tput setaf 6`
+    export TEXT_WHITE=`tput setaf 7`
+    export BACKGROUND_BLACK=`tput setab 0`
+    export BACKGROUND_RED=`tput setab 1`
+    export BACKGROUND_GREEN=`tput setab 2`
+    export BACKGROUND_YELLOW=`tput setab 3`
+    export BACKGROUND_BLUE=`tput setab 4`
+    export BACKGROUND_MAGENTA=`tput setab 5`
+    export BACKGROUND_CYAN=`tput setab 6`
+    export BACKGROUND_WHITE=`tput setab 7`
+    export RESET_FORMATTING=`tput sgr0`
+fi
+
+CONFIG=" -DassemblyId=$web -Dtests=$tests -Djavaee.level=$profile -Dwebcontainer=$web -Dsql=$sql"
+
+echo ">>> config => $( echo "$CONFIG" | sed 's/ /\n/g')"
+echo "" # just an empty line
+
+[ ! -z "$src" ] && {
+    ls "$src"
+    source "$src"
+}
+[ ! -z $env ] && export
+
+egrep 'javaee6.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
+svn info
+
+# Fire up Maven to do the real work
+if [ -z $nc ]; then
+exec mvn -V --file "$DIRNAME/pom.xml" \
+      --batch-mode \
+      --errors \
+      $CONFIG \
+      $tomcatVersion \
+      $args | sed -e "s/\(\[INFO\]\ \-.*\)/${TEXT_BLUE}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ BUILD SUCCESS.*\)/${BOLD}${TEXT_GREEN}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ BUILD FAILURE\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ FAILURE\ \[.*s]\)/${TEXT_RED}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ SUCCESS\ \[.*s]\)/${TEXT_GREEN}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ .*\ SKIPPED\)/${TEXT_YELLOW}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[INFO\]\ Building .*\)/${TEXT_CYAN}${BOLD}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[WARNING\].*\)/${BOLD}${TEXT_YELLOW}\1${RESET_FORMATTING}/g" \
+               -e "s/\(\[ERROR\].*\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
+               -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${BOLD}${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${BOLD}${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${BOLD}${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${BOLD}${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
+else
+exec mvn -V --file "$DIRNAME/pom.xml" \
+      --batch-mode \
+      --errors \
+      $CONFIG \
+      $tomcatVersion \
+      $args 
+fi
+
+# Make sure formatting is reset
+echo -ne ${RESET_FORMATTING}
