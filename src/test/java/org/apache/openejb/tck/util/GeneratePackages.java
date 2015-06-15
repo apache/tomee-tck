@@ -33,7 +33,7 @@ public class GeneratePackages {
 
     public void main() throws Exception {
 
-        final File file = new File("/Users/dblevins/work/openejb-tck/trunk/webprofile.packages");
+        final File file = new File(System.getProperty("user.dir"), "webprofile.packages");
         final Node root = new Node(null, "");
 
         final BufferedReader reader = new BufferedReader(new FileReader(file));
