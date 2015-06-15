@@ -1,5 +1,3 @@
-Support the following configurations
-
 tomee-webprofile-1.7.x-linux-jdk-6
 tomee-webprofile-1.7.x-linux-jdk-7
 tomee-webprofile-1.7.x-linux-jdk-8
