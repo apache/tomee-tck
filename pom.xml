@@ -37,8 +37,8 @@
   </description>
 
   <properties>
-    <openejb.version>5.0.0-SNAPSHOT</openejb.version>
-    <tomee.version>2.0.0-SNAPSHOT</tomee.version>
+    <openejb.version>7.0.0-M1</openejb.version>
+    <tomee.version>7.0.0-M1</tomee.version>
 
     <tomcat.version>8.0.14</tomcat.version>
 
