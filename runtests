@@ -4,9 +4,9 @@
 ##
 
 # TomEE 2.0.0 is compiled with Java 7
-if [ -d $HOME/jdk7 ]; then
-    export JAVA_HOME=$HOME/jdk7
-fi
+#if [ -d $HOME/jdk7 ]; then
+#    export JAVA_HOME=$HOME/jdk7
+#fi
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
