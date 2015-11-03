@@ -950,7 +950,7 @@
     <repository>
       <id>nexus-staging</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1066</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1068</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
@@ -991,7 +991,7 @@
     <pluginRepository>
       <id>nexus-staging-plugin</id>
       <name>Nexus Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1066</url>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1068</url>
       <layout>default</layout>
       <snapshots>
         <enabled>false</enabled>
