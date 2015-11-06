@@ -37,13 +37,13 @@
   </description>
 
   <properties>
-    <!--openejb.version>7.0.0-M1</openejb.version-->
-    <!--tomee.version>7.0.0-M1</tomee.version-->
+    <openejb.groupId>org.apache.tomee</openejb.groupId>
+    <openejb.version>7.0.0-M1</openejb.version>
+    <tomee.version>7.0.0-M1</tomee.version>
 
-    <openejb.groupId>org.apache.openejb</openejb.groupId>
-
-    <openejb.version>4.7.3-SNAPSHOT</openejb.version>
-    <tomee.version>1.7.3-SNAPSHOT</tomee.version>
+    <!--<openejb.groupId>org.apache.openejb</openejb.groupId>-->
+    <!--<openejb.version>4.7.3-SNAPSHOT</openejb.version>-->
+    <!--<tomee.version>1.7.3-SNAPSHOT</tomee.version>-->
 
 
     <tomcat.version>8.0.26</tomcat.version>
