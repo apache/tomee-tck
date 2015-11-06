@@ -37,8 +37,14 @@
   </description>
 
   <properties>
-    <openejb.version>7.0.0-M1</openejb.version>
-    <tomee.version>7.0.0-M1</tomee.version>
+    <!--openejb.version>7.0.0-M1</openejb.version-->
+    <!--tomee.version>7.0.0-M1</tomee.version-->
+
+    <openejb.groupId>org.apache.openejb</openejb.groupId>
+
+    <openejb.version>4.7.3-SNAPSHOT</openejb.version>
+    <tomee.version>1.7.3-SNAPSHOT</tomee.version>
+
 
     <tomcat.version>8.0.26</tomcat.version>
 
@@ -87,9 +93,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-lite</artifactId>
-      <version>${tomee.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
@@ -145,9 +151,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-core</artifactId>
-      <version>${tomee.version}</version>
+      <version>${openejb.version}</version>
       <exclusions>
         <exclusion>
           <artifactId>junit</artifactId>
@@ -157,13 +163,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-client</artifactId>
-      <version>${tomee.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-loader</artifactId>
       <type>jar</type>
       <version>${tomee.version}</version>
@@ -194,15 +200,15 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-derbynet</artifactId>
-      <version>${tomee.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.tomee</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>webdeployer</artifactId>
-      <version>${tomee.version}</version>
+      <version>${openejb.version}</version>
     </dependency>
   </dependencies>
 
@@ -224,7 +230,7 @@
 
       <properties>
         <!-- where we will unpack openejb -->
-        <openejb.home>${project.build.directory}/apache-openejb-${tomee.version}</openejb.home>
+        <openejb.home>${project.build.directory}/apache-openejb-${openejb.version}</openejb.home>
       </properties>
 
       <build>
@@ -243,9 +249,9 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>openejb-standalone</artifactId>
-                      <version>${tomee.version}</version>
+                      <version>${openejb.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
@@ -259,10 +265,10 @@
 
       <dependencies>
         <dependency>
-          <groupId>org.apache.tomee</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>openejb-standalone</artifactId>
           <type>zip</type>
-          <version>${tomee.version}</version>
+          <version>${openejb.version}</version>
         </dependency>
       </dependencies>
     </profile>
@@ -316,7 +322,7 @@
                       <outputDirectory>${openejb.home}/webapps/tomee</outputDirectory>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>tomee-loader</artifactId>
                       <version>${tomee.version}</version>
                       <type>jar</type>
@@ -333,7 +339,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.tomee</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>tomee-webapp</artifactId>
           <type>war</type>
           <version>${tomee.version}</version>
@@ -379,7 +385,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -397,7 +403,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.tomee</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -437,7 +443,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -455,7 +461,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.tomee</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -495,7 +501,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -513,7 +519,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.tomee</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -633,9 +639,11 @@
     <pluginManagement>
       <plugins>
 
-        <plugin><groupId>org.apache.maven.plugins</groupId>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.10</version></plugin>
+          <version>2.10</version>
+        </plugin>
 
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
@@ -752,9 +760,9 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.apache.tomee</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-standalone</artifactId>
-                  <version>${tomee.version}</version>
+                  <version>${openejb.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                 </artifactItem>
@@ -770,7 +778,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.apache.tomee</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-lite</artifactId>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
@@ -810,7 +818,7 @@
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.apache.tomee</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-derbynet</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
@@ -830,7 +838,7 @@
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.apache.tomee</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>webdeployer</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
