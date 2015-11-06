@@ -1,0 +1,1 @@
+./runtests --source ec2jdk7 --env -nc -c -U -w tomee com/sun/ts/tests/ejb30/lite/appexception/singleton/annotated/Client#atCheckedAppExceptionTest_from_ejblitejsf

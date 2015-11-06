@@ -37,10 +37,16 @@
   </description>
 
   <properties>
-    <openejb.version>5.0.0-SNAPSHOT</openejb.version>
-    <tomee.version>2.0.0-SNAPSHOT</tomee.version>
+    <!--openejb.version>7.0.0-M1</openejb.version-->
+    <!--tomee.version>7.0.0-M1</tomee.version-->
 
-    <tomcat.version>8.0.14</tomcat.version>
+    <openejb.groupId>org.apache.openejb</openejb.groupId>
+
+    <openejb.version>4.7.3-SNAPSHOT</openejb.version>
+    <tomee.version>1.7.3-SNAPSHOT</tomee.version>
+
+
+    <tomcat.version>8.0.26</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -83,12 +89,11 @@
     <maven.test.skip>true</maven.test.skip>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-lite</artifactId>
       <version>${openejb.version}</version>
     </dependency>
@@ -96,7 +101,7 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
-      <version>5.10.0</version>
+      <version>5.12.0</version>
       <exclusions>
         <exclusion>
           <artifactId>slf4j-api</artifactId>
@@ -146,7 +151,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-core</artifactId>
       <version>${openejb.version}</version>
       <exclusions>
@@ -158,13 +163,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-client</artifactId>
       <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-loader</artifactId>
       <type>jar</type>
       <version>${tomee.version}</version>
@@ -195,13 +200,13 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-derbynet</artifactId>
       <version>${openejb.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.openejb</groupId>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>webdeployer</artifactId>
       <version>${openejb.version}</version>
     </dependency>
@@ -233,7 +238,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
 
             <executions>
               <execution>
@@ -245,7 +249,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>openejb-standalone</artifactId>
                       <version>${openejb.version}</version>
                       <type>zip</type>
@@ -261,7 +265,7 @@
 
       <dependencies>
         <dependency>
-          <groupId>org.apache.openejb</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>openejb-standalone</artifactId>
           <type>zip</type>
           <version>${openejb.version}</version>
@@ -293,7 +297,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
 
             <executions>
               <execution>
@@ -312,14 +315,14 @@
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>org.apache.tomee</groupId>
                       <artifactId>tomee-webapp</artifactId>
                       <version>${tomee.version}</version>
                       <type>war</type>
                       <outputDirectory>${openejb.home}/webapps/tomee</outputDirectory>
                     </artifactItem>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>tomee-loader</artifactId>
                       <version>${tomee.version}</version>
                       <type>jar</type>
@@ -336,7 +339,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.openejb</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>tomee-webapp</artifactId>
           <type>war</type>
           <version>${tomee.version}</version>
@@ -371,7 +374,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
 
             <executions>
               <execution>
@@ -383,7 +385,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -401,7 +403,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.openejb</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -431,7 +433,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
             <executions>
               <execution>
                 <id>unpack</id>
@@ -442,7 +443,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -460,7 +461,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.openejb</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -490,7 +491,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
             <executions>
               <execution>
                 <id>unpack</id>
@@ -501,7 +501,7 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.apache.openejb</groupId>
+                      <groupId>${openejb.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.version}</version>
                       <type>zip</type>
@@ -519,7 +519,7 @@
       <dependencies>
 
         <dependency>
-          <groupId>org.apache.openejb</groupId>
+          <groupId>${openejb.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
@@ -640,9 +640,15 @@
       <plugins>
 
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.10</version>
+        </plugin>
+
+        <plugin>
           <groupId>org.codehaus.gmaven</groupId>
           <artifactId>gmaven-plugin</artifactId>
-          <version>1.4</version>
+          <version>1.5</version>
           <configuration>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
@@ -674,7 +680,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>3.2</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
@@ -720,7 +726,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
+        <version>1.4.0</version>
         <executions>
           <execution>
             <id>start-database</id>
@@ -731,6 +737,8 @@
           </execution>
         </executions>
         <configuration>
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
+          <killAfter>-1</killAfter>
           <arguments>
             <argument>${derby.server.port}</argument>
           </arguments>
@@ -741,7 +749,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>${version.maven-dependency-plugin}</version>
 
         <executions>
           <execution>
@@ -753,7 +760,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.apache.openejb</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-standalone</artifactId>
                   <version>${openejb.version}</version>
                   <type>zip</type>
@@ -771,7 +778,7 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>org.apache.openejb</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-lite</artifactId>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
                 </artifactItem>
@@ -811,7 +818,7 @@
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.apache.openejb</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-derbynet</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
@@ -831,7 +838,7 @@
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
                 <artifactItem>
-                  <groupId>org.apache.openejb</groupId>
+                  <groupId>${openejb.groupId}</groupId>
                   <artifactId>webdeployer</artifactId>
                   <outputDirectory>${openejb.home}/lib</outputDirectory>
                 </artifactItem>
@@ -842,13 +849,13 @@
       </plugin>
 
       <!--
-      TomEE embedds a lot of applications in. We should remove all not necessary web
+      TomEE embeds a lot of applications in. We should remove all not necessary web
       application for TCK (ie. all but openejb and ROOT
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <executions>
           <execution>
             <id>remove-apps-and-copy-libs-from-tck</id>
@@ -947,19 +954,19 @@
   </build>
 
   <repositories>
-    <!--<repository>-->
-    <!--<id>nexus-staging</id>-->
-    <!--<name>Nexus Staging Repository</name>-->
-    <!--<url>https://repository.apache.org/content/repositories/orgapachetomee-1036</url>-->
-    <!--<layout>default</layout>-->
-    <!--<snapshots>-->
-    <!--<enabled>false</enabled>-->
-    <!--</snapshots>-->
-    <!--<releases>-->
-    <!--<enabled>true</enabled>-->
-    <!--<checksumPolicy>ignore</checksumPolicy>-->
-    <!--</releases>-->
-    <!--</repository>-->
+    <repository>
+      <id>nexus-staging</id>
+      <name>Nexus Staging Repository</name>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1068</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </repository>
 
     <repository>
       <id>apache-m2-snapshot</id>
@@ -988,19 +995,19 @@
   </repositories>
 
   <pluginRepositories>
-    <!--<pluginRepository>-->
-    <!--<id>nexus-staging-plugin</id>-->
-    <!--<name>Nexus Staging Repository</name>-->
-    <!--<url>https://repository.apache.org/content/repositories/orgapachetomee-1036</url>-->
-    <!--<layout>default</layout>-->
-    <!--<snapshots>-->
-    <!--<enabled>false</enabled>-->
-    <!--</snapshots>-->
-    <!--<releases>-->
-    <!--<enabled>true</enabled>-->
-    <!--<checksumPolicy>ignore</checksumPolicy>-->
-    <!--</releases>-->
-    <!--</pluginRepository>-->
+    <pluginRepository>
+      <id>nexus-staging-plugin</id>
+      <name>Nexus Staging Repository</name>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1068</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+    </pluginRepository>
     <pluginRepository>
       <id>codehaus-snapshots</id>
       <name>Codehaus Snapshot</name>
