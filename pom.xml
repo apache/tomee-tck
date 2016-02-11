@@ -42,8 +42,8 @@
 
     <openejb.groupId>org.apache.openejb</openejb.groupId>
 
-    <openejb.version>4.7.3-SNAPSHOT</openejb.version>
-    <tomee.version>1.7.3-SNAPSHOT</tomee.version>
+    <openejb.version>4.7.3</openejb.version>
+    <tomee.version>1.7.3</tomee.version>
 
 
     <tomcat.version>7.0.65</tomcat.version>
