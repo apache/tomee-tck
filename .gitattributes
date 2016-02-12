@@ -47,3 +47,6 @@
 
 #Unix/Linux
 *.sh text eol=lf
+ec2jdk8 text eol=lf
+ec2jdk6 text eol=lf
+ec2jdk7 text eol=lf

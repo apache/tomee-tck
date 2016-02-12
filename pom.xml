@@ -46,7 +46,7 @@
     <tomee.version>1.7.3</tomee.version>
 
 
-    <tomcat.version>7.0.65</tomcat.version>
+    <tomcat.version>7.0.67</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
