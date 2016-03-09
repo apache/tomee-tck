@@ -38,8 +38,8 @@
 
   <properties>
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>7.0.0-SNAPSHOT</openejb.version>
-    <tomee.version>7.0.0-SNAPSHOT</tomee.version>
+    <openejb.version>7.0.0-M3</openejb.version>
+    <tomee.version>7.0.0-M3</tomee.version>
 
     <!--<openejb.groupId>org.apache.openejb</openejb.groupId>-->
     <!--<openejb.version>4.7.3-SNAPSHOT</openejb.version>-->
