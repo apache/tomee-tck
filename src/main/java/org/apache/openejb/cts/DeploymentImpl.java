@@ -53,17 +53,36 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
 //        System.setProperty("java.opts", "-XX:MaxPermSize=64m");
 //        System.setProperty("openejb.server.profile", "true");
-        System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote");
-        final RemoteServer remoteServer = new RemoteServer(250, true);
-        // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
-        // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
-        remoteServer.start();
+        System.setProperty("java.opts", System.getProperty("tck.java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote"));
+        final String tckJavaHome = System.getProperty("tck.java.home");
+        final String tckJavaVersion = System.getProperty("tck.java.version");
+        final String oldJavaHome = System.getProperty("java.home");
+        final String oldJavaVersion = System.getProperty("java.version");
+        if (tckJavaHome != null) {
+            System.setProperty("java.home", tckJavaHome);
+        }
+        if (tckJavaVersion != null) {
+            System.setProperty("java.version", tckJavaVersion);
+        }
+        try {
+            final RemoteServer remoteServer = new RemoteServer(250, true);
+            // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
+            // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
+            remoteServer.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                remoteServer.destroy();
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    remoteServer.destroy();
+                }
+            });
+        } finally {
+            if (tckJavaHome != null) {
+                System.setProperty("java.home", oldJavaHome);
             }
-        });
+            if (tckJavaVersion != null) {
+                System.setProperty("java.version", oldJavaVersion);
+            }
+        }
     }
 
     private PrintWriter log;

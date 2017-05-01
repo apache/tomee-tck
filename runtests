@@ -330,7 +330,7 @@ svn info
 
 # Fire up Maven to do the real work
 if [ -z $nc ]; then
-exec mvn -V --file "$DIRNAME/pom.xml" \
+exec mvn $MAVEN_OPTS -V --file "$DIRNAME/pom.xml" \
       --batch-mode \
       --errors \
       $CONFIG \
@@ -346,7 +346,7 @@ exec mvn -V --file "$DIRNAME/pom.xml" \
                -e "s/\(\[ERROR\].*\)/${BOLD}${TEXT_RED}\1${RESET_FORMATTING}/g" \
                -e "s/Tests run: \([^,]*\), Failures: \([^,]*\), Errors: \([^,]*\), Skipped: \([^,]*\)/${BOLD}${TEXT_GREEN}Tests run: \1${RESET_FORMATTING}, Failures: ${BOLD}${TEXT_RED}\2${RESET_FORMATTING}, Errors: ${BOLD}${TEXT_RED}\3${RESET_FORMATTING}, Skipped: ${BOLD}${TEXT_YELLOW}\4${RESET_FORMATTING}/g"
 else
-exec mvn -V --file "$DIRNAME/pom.xml" \
+exec mvn $MAVEN_OPTS -V --file "$DIRNAME/pom.xml" \
       --batch-mode \
       --errors \
       $CONFIG \

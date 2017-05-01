@@ -1,0 +1,20 @@
+#! /bin/bash
+
+#
+# to test against java 9 TCKs we run the TCK themself with java 7/8 and the container with java 9
+#
+# You can validate it with `tomeeTckCheckJavaRunVersion` once you ran some TCK.
+#
+# Note: this is mainly to not have to migrate this project yet to java 9 (upgrading groovy plugin and groovy itself).
+#
+
+tomee_version=7.0.4-SNAPSHOT
+
+# we run tck with java 7 for the runner (javatest jvm) but java 9 for the server
+export MAVEN_OPTS="-Dtck.java.home=$JAVA9_HOME -Dtck.java.version=1.9 -Dopenejb.groupId=org.apache.tomee -Dopenejb.version=$tomee_version -Dtomee.version=$tomee_version"
+echo "MAVEN_OPTS set for java 9"
+
+function tomeeTckCheckJavaRunVersion() {
+    grep 'JVM Version' target/logs/javatest.log | sed 's/.*JVM Version/JVM Version/'
+}
+

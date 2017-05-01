@@ -200,6 +200,23 @@ class JavaTestCommand
                     jvmarg(value: '-Dopenejb.server.debug=true')
                 }
 
+                def tckJavaHome = get('tck.java.home')
+                if (tckJavaHome != null) {
+                    log.info("Using java home ${tckJavaHome}")
+                    jvmarg(value: "-Dtck.java.home=${tckJavaHome}")
+                }
+
+                def tckJavaVersion = get('tck.java.version')
+                if (tckJavaVersion != null) {
+                    log.info("Using java version ${tckJavaVersion}")
+                    jvmarg(value: "-Dtck.java.version=${tckJavaVersion}")
+                }
+
+                def opts = get('tck.java.opts')
+                if (tckJavaVersion != null && (tckJavaVersion.startsWith("9") || tckJavaVersion.startsWith("1.9"))) {
+                    jvmarg(value: "-Dtck.java.opts=-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote --add-opens java.base/java.net=ALL-UNNAMED --add-modules java.xml.bind,java.corba")
+                }
+
                 sysproperty(key: "user.language", value: 'en')
                 sysproperty(key: "user.country", value: 'US')
 
@@ -219,7 +236,9 @@ class JavaTestCommand
                 sysproperty(key: "java.security.policy", file: "${javaeeRiHome}/bin/harness.policy")
                 sysproperty(key: "J2EE_HOME_RI", file: javaeeRiHome)
                 sysproperty(key: "deliverable.class", value: require('deliverable.class'))
-                sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
+                if (tckJavaHome == null || !new File(tckJavaHome, 'jmods').exists()/*j9 doesnt support it*/) {
+                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
+                }
                 sysproperty(key: "com.sun.enterprise.home", file: javaeeRiHome)
                 sysproperty(key: "com.sun.aas.installRoot", file: javaeeRiHome)
                 sysproperty(key: "DEPLOY_DELAY_IN_MINUTES", value: require('deploy_delay_in_minutes'))
@@ -304,6 +323,9 @@ class JavaTestCommand
                 // HACK: Some pre-running feedback (have to include this in the java closure)
                 //
                 log.info("Running tests...")
+                log.info("> Container Java Home: ${tckJavaHome}")
+                log.info("> Container Java Version: ${tckJavaVersion}")
+                log.info("> Container Java Opts: ${opts}")
 
                 line()
             }
