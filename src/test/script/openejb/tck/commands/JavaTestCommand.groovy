@@ -214,7 +214,11 @@ class JavaTestCommand
 
                 def opts = get('tck.java.opts')
                 if (tckJavaVersion != null && (tckJavaVersion.startsWith("9") || tckJavaVersion.startsWith("1.9"))) {
-                    jvmarg(value: "-Dtck.java.opts=-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote --add-opens java.base/java.net=ALL-UNNAMED --add-modules java.xml.bind,java.corba")
+                    jvmarg(value: "-Dtck.java.opts=" +
+                            "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote " +
+                            "--add-opens java.base/java.net=ALL-UNNAMED " +
+                            "--add-opens java.base/java.lang=ALL-UNNAMED " +
+                            "--add-modules java.xml.bind,java.corba")
                 }
 
                 sysproperty(key: "user.language", value: 'en')
@@ -323,9 +327,8 @@ class JavaTestCommand
                 // HACK: Some pre-running feedback (have to include this in the java closure)
                 //
                 log.info("Running tests...")
-                log.info("> Container Java Home: ${tckJavaHome}")
                 log.info("> Container Java Version: ${tckJavaVersion}")
-                log.info("> Container Java Opts: ${opts}")
+                log.info("> Container Java Home: ${tckJavaHome}")
 
                 line()
             }

@@ -546,10 +546,10 @@
 
       <build>
         <plugins>
-          <plugin>
+          <plugin> <!-- not used by tomee yet -->
             <groupId>org.codehaus.gmaven</groupId>
             <artifactId>gmaven-plugin</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <executions>
               <execution>
                 <id>generate-reverse-tests</id>
@@ -559,7 +559,7 @@
                 </goals>
                 <configuration>
                   <source>
-                    new commands.ReverseSetupCommand(this).execute()
+                    new openejb.tck.commands.ReverseSetupCommand(this).execute()
                   </source>
                 </configuration>
               </execution>
