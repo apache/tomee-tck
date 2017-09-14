@@ -42,13 +42,13 @@
 
     <openejb.groupId>org.apache.openejb</openejb.groupId>
 
-    <openejb.version>4.7.3</openejb.version>
-    <tomee.version>1.7.3</tomee.version>
+    <openejb.version>4.7.4</openejb.version>
+    <tomee.version>1.7.4</tomee.version>
 
 
-    <tomcat.version>7.0.67</tomcat.version>
+    <tomcat.version>7.0.81</tomcat.version>
 
-    <derby.version>10.7.1.1</derby.version>
+    <derby.version>10.13.1.1</derby.version>
 
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
@@ -101,7 +101,7 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
-      <version>5.12.0</version>
+      <version>5.14.5</version>
       <exclusions>
         <exclusion>
           <artifactId>slf4j-api</artifactId>
@@ -726,7 +726,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.4.0</version>
+        <version>1.6.0</version>
         <executions>
           <execution>
             <id>start-database</id>
@@ -749,7 +749,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-
+        <version>3.0.1</version>
         <executions>
           <execution>
             <id>unpack</id>
