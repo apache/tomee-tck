@@ -30,7 +30,6 @@
   <name>OpenEJB TCK Harness</name>
 
   <version>7.0.4-SNAPSHOT</version>
-  <!--openejb.version-->
 
   <description>
     OpenEJB TCK Harness
