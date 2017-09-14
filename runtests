@@ -3,7 +3,7 @@
 ## $Revision$ $Date$
 ##
 
-# TomEE 2.0.0 is compiled with Java 7
+# TomEE 7.x is compiled with Java 7
 #if [ -d $HOME/jdk7 ]; then
 #    export JAVA_HOME=$HOME/jdk7
 #fi
