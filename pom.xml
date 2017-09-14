@@ -48,7 +48,7 @@
 
     <tomcat.version>7.0.81</tomcat.version>
 
-    <derby.version>10.13.1.1</derby.version>
+    <derby.version>10.12.1.1</derby.version>
 
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
