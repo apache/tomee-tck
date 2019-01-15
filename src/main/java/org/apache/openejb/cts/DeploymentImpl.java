@@ -37,11 +37,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
+@SuppressWarnings("unchecked")
 public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String HEAD = "OpenEJB - ";
     private static final String FILENAME = "filename";
@@ -53,46 +57,28 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
 //        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
 //        System.setProperty("java.opts", "-XX:MaxPermSize=64m");
 //        System.setProperty("openejb.server.profile", "true");
-        System.setProperty("java.opts", System.getProperty("tck.java.opts", "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote"));
-        final String tckJavaHome = System.getProperty("tck.java.home");
-        final String tckJavaVersion = System.getProperty("tck.java.version");
-        final String oldJavaHome = System.getProperty("java.home");
-        final String oldJavaVersion = System.getProperty("java.version");
-        if (tckJavaHome != null) {
-            System.setProperty("java.home", tckJavaHome);
-        }
-        if (tckJavaVersion != null) {
-            System.setProperty("java.version", tckJavaVersion);
-        }
-        try {
-            final RemoteServer remoteServer = new RemoteServer(250, true);
-            // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
-            // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
-            remoteServer.start();
+        System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
+        final RemoteServer remoteServer = new RemoteServer(250, true);
+        // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
+        // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
+        remoteServer.start();
 
-            Runtime.getRuntime().addShutdownHook(new Thread() {
-                public void run() {
-                    remoteServer.destroy();
-                }
-            });
-        } finally {
-            if (tckJavaHome != null) {
-                System.setProperty("java.home", oldJavaHome);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                remoteServer.destroy();
             }
-            if (tckJavaVersion != null) {
-                System.setProperty("java.version", oldJavaVersion);
-            }
-        }
+        });
     }
 
     private PrintWriter log;
-    private File appsDir;
     private File libDir;
+    private File appsDir;
+    private StringBuilder classpathBuilder = new StringBuilder();
 
     public void init(final PrintWriter log) {
         this.log = log;
 
-        PropertyManagerInterface propMgr = null;
+        final PropertyManagerInterface propMgr;
         try {
             propMgr = DeliverableFactory.getDeliverableInstance().getPropertyManager();
 
@@ -109,12 +95,14 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
                 final String openejbUri = propMgr.getProperty("openejb.server.uri");
                 System.setProperty("openejb.uri", openejbUri);
             } catch (final PropertyNotSetException e) {
+                //Ignore
             }
 
             try {
                 final String value = propMgr.getProperty("ts.run.classpath");
                 System.setProperty("ts.run.classpath", value);
             } catch (final PropertyNotSetException e) {
+                //Ignore
             }
 
             this.log.println(HEAD + "Initialized Deployment helper");
@@ -130,7 +118,28 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
     }
 
     public InputStream getDeploymentPlan(final DeploymentInfo info) throws TSDeploymentException {
+        classpathBuilder = new StringBuilder();
         final String earPath = info.getEarFile();
+        final String earDir = earPath.substring(0, earPath.lastIndexOf('.'));
+        try {
+            JarFile jarFile = new JarFile(earPath);
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry jarEntry = entries.nextElement();
+                if (jarEntry.getName().startsWith("lib") && jarEntry.getName().endsWith(".jar")) {
+                    if (classpathBuilder.toString().isEmpty()) {
+                        classpathBuilder.append(String.format("%s%s", earDir, File.separator + jarEntry.getName()));
+                        continue;
+                    }
+
+                    if (!classpathBuilder.toString().contains(jarEntry.getName())) {
+                        classpathBuilder.append(String.format("%s%s%s", PATH_SEP, earDir, jarEntry.getName()));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // do nop
+        }
         if (earPath == null) {
             throw new TSDeploymentException("EarFile is null");
         }
@@ -200,11 +209,15 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         earFile = new File(earFile).getName();
         earFile = earFile.substring(0, earFile.lastIndexOf('.'));
         final File appClientJar = new File(new File(appsDir, earFile), clientname + ".jar");
-        String classPath = appClientJar.getAbsolutePath();
+
+        if (!classpathBuilder.toString().contains(appClientJar.getAbsolutePath())) {
+            classpathBuilder.append(String.format("%s%s", PATH_SEP, appClientJar.getAbsolutePath()));
+        }
 
         final String property = System.getProperty("ts.run.classpath");
-        classPath += PATH_SEP + property;
-
+        if (!classpathBuilder.toString().contains(property)) {
+            classpathBuilder.append(String.format("%s%s", PATH_SEP, property));
+        }
 //        for (int i = 0; i < libDir.listFiles().length; i++) {
 //            File file = libDir.listFiles()[i];
 //            if (file.getName().endsWith(".jar")) {
@@ -257,7 +270,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
             }
         }*/
 
-        return "-cp " + classPath + " -Dopenejb.client.moduleId=" + clientname + " " + CLIENT_MAIN + " " + executeArgs;
+        return "-cp " + classpathBuilder.toString() + " -Dopenejb.client.moduleId=" + clientname + " " + CLIENT_MAIN + " " + executeArgs;
     }
 
     public String getClientClassPath(final TargetModuleID[] targetIDs, final DeploymentInfo info, final DeploymentManager manager) throws TSDeploymentException {

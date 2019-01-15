@@ -143,21 +143,21 @@ class SetupCommand
         // Create backups first.
         def javaeeCtsHome = requireDirectory('javaee.cts.home')
 
-        // Backup the original sig-test_se6.map, load in the new props, and create
+        // Backup the original sig-test_se8.map, load in the new props, and create
         // the modified file
-        def originalSe6File = createOriginalFile("${javaeeCtsHome}/bin/sig-test_se6.map.orig", "${javaeeCtsHome}/bin/sig-test_se6.map")
+        def originalSe8File = createOriginalFile("${javaeeCtsHome}/bin/sig-test_se8.map.orig", "${javaeeCtsHome}/bin/sig-test_se8.map")
 
         // Load original properties
-        def props = loadProps(originalSe6File)
+        def props = loadProps(originalSe8File)
 
         // Load custom properties
-        def customProps = loadProps("${project.basedir}/src/test/resources/signature_se6.properties")
+        def customProps = loadProps("${project.basedir}/src/test/resources/signature_se8.properties")
 
         // Merge the differences
         props.putAll(customProps)
 
         // Save the new properties file
-        storeProps(props, "${javaeeCtsHome}/bin/sig-test_se6.map")
+        storeProps(props, "${javaeeCtsHome}/bin/sig-test_se8.map")
     }
 
     def createOriginalFile(newFileName, oldFileName) {

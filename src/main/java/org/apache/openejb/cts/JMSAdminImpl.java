@@ -39,7 +39,7 @@ public class JMSAdminImpl implements TSJMSAdminInterface {
     }
 
     public void createQueueConnectionFactories(final String[] queueConnectionFactories, final String[] props)
-            throws TSJMSAdminException {
+        throws TSJMSAdminException {
     }
 
     public void createQueues(final String[] queues) throws TSJMSAdminException {
@@ -51,24 +51,26 @@ public class JMSAdminImpl implements TSJMSAdminInterface {
             final ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             connection = (ActiveMQConnection) factory.createConnection();
             connection.start();
-            for (final String queue : queues) {
-                log.println(HEAD + "Destroying Queue: " + queue);
-                connection.destroyDestination(new ActiveMQQueue(queue));
+            for (int i = 0; i < queues.length; i++) {
+                log.println(HEAD + "Destroying Queue: " + queues[i]);
+                connection.destroyDestination(new ActiveMQQueue(queues[i]));
             }
         } catch (final JMSException e) {
             e.printStackTrace();
         } finally {
-            if (null != connection) {
-                try {
-                    connection.close();
-                } catch (final Exception ignore) {
-                }
+            try {
+                connection.close();
+            } catch (final Throwable ignore) {
             }
         }
     }
 
     public void createTopicConnectionFactories(final String[] topicConnectionFactories, final String[] props)
-            throws TSJMSAdminException {
+        throws TSJMSAdminException {
+    }
+
+    public void createConnectionFactories(String[] strings, String[] strings1) throws TSJMSAdminException {
+
     }
 
     public void createTopics(final String[] topics) throws TSJMSAdminException {
@@ -80,18 +82,16 @@ public class JMSAdminImpl implements TSJMSAdminInterface {
             final ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             connection = (ActiveMQConnection) factory.createConnection();
             connection.start();
-            for (final String topic : topics) {
-                log.println(HEAD + "Destroying Topic: " + topic);
-                connection.destroyDestination(new ActiveMQTopic(topic));
+            for (int i = 0; i < topics.length; i++) {
+                log.println(HEAD + "Destroying Topic: " + topics[i]);
+                connection.destroyDestination(new ActiveMQTopic(topics[i]));
             }
         } catch (final JMSException e) {
             e.printStackTrace();
         } finally {
-            if (null != connection) {
-                try {
-                    connection.close();
-                } catch (final Exception ignore) {
-                }
+            try {
+                connection.close();
+            } catch (final Throwable ignore) {
             }
         }
     }

@@ -27,8 +27,7 @@ import openejb.tck.util.TestListBuilder
  *
  * @version $Revision$ $Date$
  */
-abstract class CommandSupport
-{
+abstract class CommandSupport {
     def source
 
     def log
@@ -63,8 +62,7 @@ abstract class CommandSupport
         adapter.emacsMode = true
         if (log.debugEnabled) {
             adapter.messageOutputLevel = p.MSG_VERBOSE
-        }
-        else {
+        } else {
             adapter.messageOutputLevel = p.MSG_INFO
         }
         p.addBuildListener(adapter)
@@ -187,6 +185,9 @@ abstract class CommandSupport
         builder.directory = "${project.build.directory}"
         builder.append("openejb-tck-*.jar")
         builder.directory = openejbLib
+
+
+
         builder.appendAll("openejb-core-*.jar")
         builder.directory = "${project.build.directory}/lib"
         builder.appendAll("*.jar")
@@ -206,26 +207,44 @@ abstract class CommandSupport
         builder.reference("openejb.porting.classes")
         builder.directory = openejbLib
         builder.appendAll("commons-logging-*.jar")
-        builder.appendAll("openjpa-*.jar")
+
+        if (get("webcontainer").equals("tomee-plume")) {
+            builder.appendAll("eclipselink-*.jar")
+        } else {
+            builder.appendAll("openjpa-*.jar")
+        }
+
 //        builder.append("hsqldb-*.jar")
-		builder.append("derby-*.jar")
-		builder.append("derbyclient-*.jar")
+        builder.append("derby-*.jar")
+        builder.append("derbyclient-*.jar")
         builder.append("openejb-client*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")
         builder.append("cts.jar")
-		builder.append("dbprocedures.jar")
+        builder.append("dbprocedures.jar")
         builder.append("commons-httpclient*.jar")
-        builder.append("jdom.jar")
-        builder.append("dom4j.jar")
+        builder.append("jdom-1.1.3.jar")
+        //builder.append("dom4j.jar")
         builder.append("jaxb-api.jar")
         builder.append("jaxb-impl.jar")
         builder.append("jaxb-xjc.jar")
         builder.directory = "${openejbHome}/lib"
         builder.append("jasper-el.jar")
-        builder.getPath("ts.run.classpath")
+        
+        // for CXF JAX-RS client
+        builder.append("cxf-rt-rs-client-*.jar")
+        builder.append("cxf-rt-transports-http-*.jar")
+        builder.append("cxf-core-*.jar")
+        builder.append("woodstox-core-*.jar")
+        builder.append("stax2-api-*.jar")
+        builder.append("xmlschema-core-*.jar")
+        builder.append("cxf-rt-frontend-jaxrs-*.jar")
 
+        // for jonzon
+        builder.appendAll("johnzon-*.jar")
+
+        builder.getPath("ts.run.classpath")
         // ts.harness.classpath
         builder = new PathBuilder(this)
         builder.reference('ts.run.classpath')
@@ -235,7 +254,7 @@ abstract class CommandSupport
         builder.directory = "$javaeetckHome/tools/ant/lib"
         builder.append("ant.jar")
         builder.append("ant-launcher.jar")
-        builder.append("ant-nodeps.jar")
+        // builder.append("ant-nodeps.jar") - this seems to have disappeared with EE7
         builder.directory = "$javaeeRiHome/lib"
         builder.append("appserv-rt.jar")
         builder.getPath('ts.harness.classpath')
@@ -252,14 +271,18 @@ abstract class CommandSupport
         builder.append("tsharness.jar")
         builder.append("cts.jar")
         builder.append("commons-httpclient*.jar")
-        builder.append("jdom.jar")
-        builder.append("dom4j.jar")
+        builder.append("jdom-*.jar")
+        //builder.append("dom4j.jar")
         builder.append("jaxb-api.jar")
         builder.append("jaxb-impl.jar")
         builder.append("jaxb-xjc.jar")
         builder.directory = openejbLib
-		builder.append("derby-*.jar")
-		builder.append("derbyclient-*.jar")
+        builder.append("derby-*.jar")
+        builder.append("derbyclient-*.jar")
+        if (get("webcontainer").equals("tomee-plume")) {
+            builder.appendAll("eclipselink-*.jar")
+        }
+
         builder.getPath("openejb.embedded.classpath")
     }
 
@@ -276,7 +299,7 @@ abstract class CommandSupport
         log.info("TCK pom version: " + require('javaee.tck.version'))
         log.info("Start - Container libraries")
         if (lib.exists() && lib.isDirectory()) {
-            lib.listFiles().grep(~/.*.jar/).sort{ it.name }.each  {
+            lib.listFiles().grep(~/.*.jar/).sort { it.name }.each {
                 log.info(" - $it.name")
             }
         }
