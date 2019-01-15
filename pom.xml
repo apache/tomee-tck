@@ -29,7 +29,7 @@
   <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>7.0.4-SNAPSHOT</version>
+  <version>8.0.0-SNAPSHOT</version>
 
   <description>
     OpenEJB TCK Harness
@@ -38,27 +38,22 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>7.0.4-SNAPSHOT</openejb.version>
-    <tomee.version>7.0.4-SNAPSHOT</tomee.version>
-    <tomcat.version>8.5.20</tomcat.version>
+    <openejb.version>8.0.0-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.0-SNAPSHOT</tomee.version>
 
+    <tomcat.version>9.0.12</tomcat.version>
 
-    <!--<openejb.groupId>org.apache.openejb</openejb.groupId>-->
-    <!--<openejb.version>4.7.4</openejb.version>-->
-    <!--<tomee.version>1.7.4</tomee.version>-->
-    <!--<tomcat.version>7.0.81</tomcat.version>-->
-
-    <derby.version>10.12.1.1</derby.version>
+    <derby.version>10.7.1.1</derby.version>
 
     <!--
-    NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
+    NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
     -->
-    <javaee.cts.home>${javaee6.cts.home}</javaee.cts.home>
-    <javaee.ri.home>${javaee6.ri.home}</javaee.ri.home>
-    <javaee.tck.version>6.0a</javaee.tck.version>
+    <javaee.cts.home>${javaee8.cts.home}</javaee.cts.home>
+    <javaee.ri.home>${javaee8.ri.home}</javaee.ri.home>
+    <javaee.tck.version>8.0a</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
-    <examples.version>1.1.0-SNAPSHOT</examples.version>
+    <examples.version>1.1-SNAPSHOT</examples.version>
     <http.proxy.host>${settings.activeProxy.host}</http.proxy.host>
     <http.proxy.port>${settings.activeProxy.port}</http.proxy.port>
     <http.proxy.username>${settings.activeProxy.username}</http.proxy.username>
@@ -89,6 +84,9 @@
     <maven.test.skip>true</maven.test.skip>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
+    <version.activemq>5.15.8</version.activemq>
+    <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
   <dependencies>
@@ -101,7 +99,7 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
-      <version>5.14.5</version>
+      <version>${version.activemq}</version>
       <exclusions>
         <exclusion>
           <artifactId>slf4j-api</artifactId>
@@ -114,40 +112,46 @@
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>javatest</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/javatest.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>cts</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/cts.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>whitebox</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
       <version>${javaee.tck.version}</version>
-      <!-- this is for derby which supports BOOLEAN, version we were using was for derby supporting SMALLINT instead
-      <systemPath>${javaee6.cts.home}/lib/dbprocedures.jar</systemPath>
       <scope>system</scope>
-      -->
+      <systemPath>${javaee.cts.home}/lib/dbprocedures.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>backport-util-concurrent</groupId>
       <artifactId>backport-util-concurrent</artifactId>
-      <version>2.2</version>
+      <version>3.1</version>
     </dependency>
 
     <dependency>
@@ -297,6 +301,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
+            <version>${version.maven-dependency-plugin}</version>
 
             <executions>
               <execution>
@@ -615,9 +620,16 @@
                   <onError>continue</onError>
                   <srcFiles>
                     <srcFile>src/test/sql/derby/derby.ddl.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.cmp.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.interop.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.jacc.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.jbatch-tck.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.jstl.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.persistence.sprocs.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.persistence.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.sprocs.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.dml.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.dml.jstl.sql</srcFile>
                   </srcFiles>
                 </configuration>
               </execution>
@@ -773,76 +785,14 @@
             <id>copy-dependencies</id>
             <phase>pre-integration-test</phase>
             <goals>
-              <goal>copy</goal>
+              <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>openejb-lite</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.activemq</groupId>
-                  <artifactId>activemq-client</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>backport-util-concurrent</groupId>
-                  <artifactId>backport-util-concurrent</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>tsharness</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>cts</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>whitebox</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>dbprocedures</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.geronimo.modules</groupId>
-                  <artifactId>geronimo-mail</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>openejb-derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derbyclient</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>webdeployer</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-              </artifactItems>
+              <outputDirectory>${openejb.home}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <excludeTransitive>true</excludeTransitive>
+              <includeArtifactIds>openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -880,7 +830,7 @@
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>
-        <version>1.5</version>
+        <version>${version.gmaven-plugin}</version>
 
         <dependencies>
           <dependency>
