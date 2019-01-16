@@ -1,17 +1,39 @@
 GETTING SETUP
 
- This document and the OpenEJB TCK setup can be checked out from here:
+ This document and the OpenEJB TCK setup can be cloned from Git:
 
-  svn co https://svn.apache.org/repos/tck/openejb-tck
+  git clone git clone https://gitbox.apache.org/repos/asf/tomee-tck
 
- The Java EE 6 TCK and RI can be downloaded from here:
+In order to run the TCK, you will need both the TCK binary itself, and the Eclipse Glassfish RI.
 
-  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/2012-01-24/javaeetck-6.0_24-Jan-2012.zip
-  svn export https://svn.apache.org/repos/tck/sun-tcks/javaee/6/2012-01-24/javaee6u4_ri-3.1.2-b21.zip
+At present, we are building the TCK binary from source, following these steps:
 
- Both are required to run the TCK.  The TCK is 813M, beware.
+  git clone https://github.com/eclipse-ee4j/jakartaee-tck
+  cd jakaratee-tck
+  export WORKSPACE=$(pwd)
+  export GF_BUNDLE_URL=https://jenkins.eclipse.org/glassfish/job/glassfish/job/EE4J_8/85/artifact/bundles/glassfish.zip
+  export GF_HOME=$WORKSPACE
+  export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
+  export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+  export PATH=$JAVA_HOME/bin:$ANT_HOME/bin/:$PATH
+  $WORKSPACE/docker/build_jakartaeetck.sh
 
- Once unpacked, they can be "hooked" up via the maven settings.xml
+Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes around an hour to build.
+
+Once that is complete, unzip the TCK zip file somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK
+and Glassfish in this folder:
+
+TCK_HOME => /Users/jgallimore/ee8tck/javaeetck
+RI_HOME  => /Users/jgallimore/ee8tck/glassfish5
+
+You'll then need to add Apache Ant to the TCK:
+
+mkdir -p $TCK_HOME/tools/ant
+cp -R $ANT_HOME $TCK_HOME/tools/ant
+
+NOTE: I'm hoping we can eliminate this step (copying Ant) in the coming days.
+
+Once unpacked, they can be "hooked" up via the maven settings.xml
  file like so:
 
     <settings>
@@ -24,48 +46,18 @@ GETTING SETUP
           </activation>
           
           <properties>
-    	  <javaee6.cts.home>/Users/dblevins/work/javaeetck</javaee6.cts.home>
-    	  <javaee6.ri.home>/Users/dblevins/work/javaeetck/glassfishv3/glassfish</javaee6.ri.home>
+    	      <javaee8.cts.home>/Users/jgallimore/ee8tck/javaeetck</javaee8.cts.home>
+    	      <javaee6.ri.home>/Users/jgallimore/ee8tck/glassfish5</javaee6.ri.home>
           </properties>
         </profile>
       </profiles>
     </settings>
 
- The TCK will unzip into a directory called 'javaeetck/'.  The RI will
- unzip into a directory called 'glassfishv3'.  As you can see above
- we've unzipped the RI inside the javaeetck directory just to keep
- things tidy.  This is not required for the TCK to function properly.
-
 TEST RUN
 
- From inside the openejb-tck/trunk/ directory, a command like this
- will get you a little taste of running the TCK:
+To complete a test run against the latest TomEE 8.0.0-SNAPSHOT, from the tomee-tck folder, run
 
-  ./runtests --web tomee com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
-
- We don't yet pass all of the TCK, but the above tests should be among
- the passing sections and are a good way to validate all is setup
- properly.
-
-TOMCAT
-
- By default the `runtests` command will execute the tests against an
- OpenEJB standalone server.
-
- To run in Tomcat, a command like the following will work:
-
-  ./runtests --tomcat-version 7.0.8 com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
-
- Any Tomcat version can be specfified and it will be downloaded prior
- to running the tck.  The are stored in the $HOME/.m2/repository, but
- with the group id org.apache.openejb.tck as to discourage accidental
- dependence in other projects.
-
-TOMEE
-
- To run in Tomee, specify the webcontainer is "tomee".
-
-  ./runtests --web tomee com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
+  ./runtests --web tomee-plume com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
 MISC
 
@@ -105,8 +97,8 @@ LOGS
 
  The server logs are in the usual place:
 
-   target/openejb-4.0.0-SNAPSHOT/logs/openejb.log
-   target/apache-tomcat-7.0.8/logs/openejb.log
+   target/apache-tomee-plume-8.0.0-SNAPSHOT/logs
+   target/apache-tomee-plume-8.0.0-SNAPSHOT/logs
 
 SELECTING TESTS
 
@@ -114,10 +106,10 @@ SELECTING TESTS
  tests.  The following are all valid ways to select which tests you'd
  like to run.
 
-   ./runtests -tv 7.0.8 -c com.sun.ts.tests.ejb30 com.sun.ts.tests.ejb
-   ./runtests -tv 7.0.8 -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout
-   ./runtests -tv 7.0.8 -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout.annotated
-   ./runtests -tv 7.0.8 -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout.annotated.Client#beanClassLevel_from_ejbembed
+   ./runtests --web tomee-plume -c com.sun.ts.tests.ejb30 com.sun.ts.tests.ejb
+   ./runtests --web tomee-plume -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout
+   ./runtests --web tomee-plume -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout.annotated
+   ./runtests --web tomee-plume -c com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout.annotated.Client#beanClassLevel_from_ejbembed
 
  The first command runs of the ejb30 and ejb sections of the TCK
  illustrating that it is possble to run many sections or tests at
@@ -142,13 +134,13 @@ SELECTING TESTS
 
  BAD
 
-   ./runtests -tv 7.0.8 com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#java#beanClassLevel_from_ejbembed
+   ./runtests --web tomee-plume com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#java#beanClassLevel_from_ejbembed
 
  GOOD
 
-   ./runtests -tv 7.0.8 com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#beanClassLevel_from_ejbembed
+   ./runtests --web tomee-plume com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#beanClassLevel_from_ejbembed
 
-THE ROAD TO CERTIFICATION
+WHAT NEXT
 
  Getting from zero to passing is a long road.  Failures and the
  overall progress tends to go in three stages:
@@ -185,8 +177,7 @@ THE ROAD TO CERTIFICATION
 
 WORKING TOGETHER
  Communication:- 
- -Email:Send an email to tck-subscribe@tomee.apache.org  to subscribe to the tck discussion list
- -IRC: You can also jump on #tck channel at freenode
+ -Email:Make use of dev@tomee.apache.org
 
  We want to divide and conquer on each phase and clear it out as much
  as possible before moving to the next one.  We could possibly get up
@@ -210,29 +201,3 @@ WORKING TOGETHER
  is somewhat like sifting through a pile of legos looking for that
  perfect piece.  It doesn't always fit -- chuck it back and look for
  another one.
-
-LEGAL CONSTRAINTS
-
- We are not allowed to publicly give specific information about the
- TCK and our status.  When referring publicly to the TCK we can only
- give essentially "binary" information, do we pass or not.  Publicly
- saying which sections we pass and how much is generally not allowed.
-
- Talking publicly about the specific details of a compliance issue is
- fine as long as the TCK and any TCK identifying information is not
- mentioned.  Publicly mentioning TCK test names, class names or
- sharing stack traces is not allowed.  That information should be
- posted to the TCK list.  All other information can be discussed
- publicly.
-
- For example, saying "I noticed we have an issue with X part of the
- specification under Y conditions" is OK.  Saying "Test X fails" is
- not.  When in doubt, be a little generic.
-
- All that said, we are an open source project and we should strive to
- be as public as possible and communicate as much as we can on the dev
- list, in our JIRA and in our commit messages.  It is an uncomfortable
- reality that the driver of much development (the TCK) is private yet
- the development itself is public.  The more we share publicly, the
- less the project seems driven by an invisible force.
-
