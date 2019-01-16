@@ -23,8 +23,8 @@ Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes
 Once that is complete, unzip the TCK zip file somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK
 and Glassfish in this folder:
 
-TCK_HOME => /Users/jgallimore/ee8tck/javaeetck
-RI_HOME  => /Users/jgallimore/ee8tck/glassfish5
+TCK_HOME => /Users/jgallimore/dev/ee8tck/javaeetck
+RI_HOME  => /Users/jgallimore/dev/ee8tck/glassfish5
 
 You'll then need to add Apache Ant to the TCK:
 
