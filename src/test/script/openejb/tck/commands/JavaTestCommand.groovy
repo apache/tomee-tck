@@ -121,8 +121,8 @@ class JavaTestCommand
         def logFile = "${logOutputDirectory}/javatest.log"
         
         def openejbHome = require('openejb.home')
-        def javaeeCtsHome = require('javaee6.cts.home')
-        def javaeeRiHome = require('javaee6.ri.home')
+        def javaeeCtsHome = require('javaee8.cts.home')
+        def javaeeRiHome = require('javaee8.ri.home')
         def workingDir = "${project.build.directory}/tck-work"
         
         // Define a list of options to enable
