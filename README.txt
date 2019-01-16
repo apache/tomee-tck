@@ -46,8 +46,8 @@ Once unpacked, they can be "hooked" up via the maven settings.xml
           </activation>
           
           <properties>
-    	      <javaee8.cts.home>/Users/jgallimore/ee8tck/javaeetck</javaee8.cts.home>
-    	      <javaee8.ri.home>/Users/jgallimore/ee8tck/glassfish5</javaee8.ri.home>
+             <javaee8.cts.home>/Users/jgallimore/dev/ee8tck/javaeetck</javaee8.cts.home>
+             <javaee8.ri.home>/Users/jgallimore/dev/ee8tck/glassfish5/glassfish</javaee8.ri.home>
           </properties>
         </profile>
       </profiles>
