@@ -2,7 +2,7 @@ GETTING SETUP
 
  This document and the OpenEJB TCK setup can be cloned from Git:
 
-  git clone git clone https://gitbox.apache.org/repos/asf/tomee-tck
+  git clone https://gitbox.apache.org/repos/asf/tomee-tck
 
 In order to run the TCK, you will need both the TCK binary itself, and the Eclipse Glassfish RI.
 
