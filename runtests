@@ -324,8 +324,8 @@ echo "" # just an empty line
 }
 [ ! -z $env ] && export
 
-egrep 'javaee6.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
-svn info
+# printing the content of the 2 main directories
+egrep 'javaee.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 
 
 # Fire up Maven to do the real work
@@ -351,7 +351,7 @@ exec mvn $MAVEN_OPTS -U -V --file "$DIRNAME/pom.xml" \
       --errors \
       $CONFIG \
       $tomcatVersion \
-      $args 
+      $args
 fi
 
 # Make sure formatting is reset
