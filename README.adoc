@@ -108,6 +108,16 @@ time-saver when trying to navigate to run a specific test.
 In bash just source the file like so:
 
   source runtests.completer
+  
+### ZSH
+
+If you are using ZSH, you need to execute the follows commands:
+
+      autoload -U +X compinit && compinit 
+      autoload -U +X bashcompinit && bashcompinit
+      source runtests.completer
+
+Then you will be able to have the completer working fine for you ZSH as well. :)
 
 ## LOGS
 
