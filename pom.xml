@@ -48,8 +48,8 @@
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
     -->
-    <javaee.cts.home>${javaee6.cts.home}</javaee.cts.home>
-    <javaee.ri.home>${javaee6.ri.home}</javaee.ri.home>
+    <javaee.cts.home>${javaee8.cts.home}</javaee.cts.home>
+    <javaee.ri.home>${javaee8.ri.home}</javaee.ri.home>
     <javaee.tck.version>8.0a</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
