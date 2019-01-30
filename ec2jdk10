@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# for the runner
+source "$(dirname $(readlink -f $0))/ec2jdk7"
+
+tomee_version=7.0.4
+
+# for the standalone tomee
+export MAVEN_OPTS="-Dtck.java.home=$HOME/jdk10 -Dtck.java.version=10 -Dopenejb.groupId=org.apache.tomee -Dopenejb.version=$tomee_version -Dtomee.version=$tomee_version"
