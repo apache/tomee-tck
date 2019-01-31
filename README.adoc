@@ -177,6 +177,34 @@ to delete the "#java" part and then it will work.
 
    ./runtests --web tomee-plume com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#beanClassLevel_from_ejbembed
 
+## TEST DEBUG
+
+The following are the flags the scrip `runtests` accept for debuggin purposes:
+
+
+    -d,--debug              Enable Server and TCK appclient debug options (5005 and 5003)
+    -de,--debug-embedded    Enable TCK embedded ejb debug options (port 5001)
+    -dh,--debug-harness     Enable TCK harness debug options (port 5002)
+    -da,--debug-appclient   Enable TCK appclient debug options (port 5003)
+    -dj,--debug-javatest    Enable TCK javatest debug options (port 5004)
+    -ds,--debug-server      Enable Server debug options (port 5005)
+    --connector             deploy connectors for connector tests
+
+You can attach to the ports via your IDE remote debugger options.
+Example:
+
+    ./runtests --web tomee-plume -c -d com.sun.ts.tests.ejb30.lite.stateful.concurrency.accesstimeout.annotated.Client#beanClassLevel_from_ejbembed
+
+Depending on the IDE, you will need to attempt twice to connect to the exposed port.
+
+## WHAT TO TEST
+
+The test that needs to be tested are the one having the following `keywords`:
+
+    javaee_web_profile, ejb_web_profile, jacc_web_profile, jaspic_web_profile, javamail_web_profile, jaxr_web_profile, xa_web_profile, jaxrpc_web_profile, jaxws_web_profile
+
+For more information about TCK structure and tests attributes check the link:about_tck{outfilesuffix}[about_tck] documentation.
+
 ## WHAT NEXT
 
 Getting from zero to passing is a long road.  Failures and the
