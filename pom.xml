@@ -53,9 +53,9 @@
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
     -->
-    <javaee.cts.home>${javaee6.cts.home}</javaee.cts.home>
-    <javaee.ri.home>${javaee6.ri.home}</javaee.ri.home>
-    <javaee.tck.version>6.0a</javaee.tck.version>
+    <javaee.cts.home>${javaee7.cts.home}</javaee.cts.home>
+    <javaee.ri.home>${javaee7.ri.home}</javaee.ri.home>
+    <javaee.tck.version>7.0a</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1.0-SNAPSHOT</examples.version>
