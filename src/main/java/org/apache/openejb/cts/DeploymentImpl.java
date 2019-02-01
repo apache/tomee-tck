@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
+@SuppressWarnings("unchecked")
 public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String HEAD = "OpenEJB - ";
     private static final String FILENAME = "filename";
