@@ -38,8 +38,8 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>7.0.4-SNAPSHOT</openejb.version>
-    <tomee.version>7.0.4-SNAPSHOT</tomee.version>
+    <openejb.version>7.0.4</openejb.version>
+    <tomee.version>7.0.4</tomee.version>
     <tomcat.version>8.5.20</tomcat.version>
 
 
@@ -89,6 +89,9 @@
     <maven.test.skip>true</maven.test.skip>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
+    <version.activemq>5.15.8</version.activemq>
+    <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
   <dependencies>
@@ -101,7 +104,7 @@
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
-      <version>5.14.5</version>
+      <version>${version.activemq}</version>
       <exclusions>
         <exclusion>
           <artifactId>slf4j-api</artifactId>
@@ -114,34 +117,40 @@
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>javatest</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/javatest.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>cts</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/cts.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>whitebox</artifactId>
       <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
       <version>${javaee.tck.version}</version>
-      <!-- this is for derby which supports BOOLEAN, version we were using was for derby supporting SMALLINT instead
-      <systemPath>${javaee6.cts.home}/lib/dbprocedures.jar</systemPath>
       <scope>system</scope>
-      -->
+      <systemPath>${javaee.cts.home}/lib/dbprocedures.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -297,6 +306,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
+            <version>${version.maven-dependency-plugin}</version>
 
             <executions>
               <execution>
@@ -773,76 +783,28 @@
             <id>copy-dependencies</id>
             <phase>pre-integration-test</phase>
             <goals>
-              <goal>copy</goal>
+              <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>openejb-lite</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.activemq</groupId>
-                  <artifactId>activemq-client</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>backport-util-concurrent</groupId>
-                  <artifactId>backport-util-concurrent</artifactId>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>tsharness</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>cts</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>whitebox</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>com.sun.javaee.tck</groupId>
-                  <artifactId>dbprocedures</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.geronimo.modules</groupId>
-                  <artifactId>geronimo-mail</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>openejb-derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derbynet</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derbyclient</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>${openejb.groupId}</groupId>
-                  <artifactId>webdeployer</artifactId>
-                  <outputDirectory>${openejb.home}/lib</outputDirectory>
-                </artifactItem>
-              </artifactItems>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <excludeTransitive>true</excludeTransitive>
+              <includeArtifactIds>openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-dependencies-tomee-lib</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${openejb.home}/lib</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+              <excludeTransitive>true</excludeTransitive>
+              <includeArtifactIds>openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -880,7 +842,7 @@
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
         <artifactId>gmaven-plugin</artifactId>
-        <version>1.5</version>
+        <version>${version.gmaven-plugin}</version>
 
         <dependencies>
           <dependency>
