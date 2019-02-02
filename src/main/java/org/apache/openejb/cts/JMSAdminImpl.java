@@ -71,6 +71,10 @@ public class JMSAdminImpl implements TSJMSAdminInterface {
             throws TSJMSAdminException {
     }
 
+    public void createConnectionFactories(String[] strings, String[] strings1) throws TSJMSAdminException {
+
+    }
+
     public void createTopics(final String[] topics) throws TSJMSAdminException {
     }
 
