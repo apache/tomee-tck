@@ -29,7 +29,7 @@
   <artifactId>openejb-tck</artifactId>
   <name>OpenEJB TCK Harness</name>
 
-  <version>1.7.6-SNAPSHOT</version>
+  <version>7.0.5-SNAPSHOT</version>
 
   <description>
     OpenEJB TCK Harness
@@ -38,8 +38,8 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>4.7.5</openejb.version>
-    <tomee.version>1.7.5</tomee.version>
+    <openejb.version>7.0.4</openejb.version>
+    <tomee.version>7.0.4</tomee.version>
     <tomcat.version>8.5.20</tomcat.version>
 
 
@@ -53,9 +53,9 @@
     <!--
     NOTE: User must define "javaee6.cts.home" and "javaee6.ri.home" in ~/.m2/settings.xml
     -->
-    <javaee.cts.home>${javaee6.cts.home}</javaee.cts.home>
-    <javaee.ri.home>${javaee6.ri.home}</javaee.ri.home>
-    <javaee.tck.version>6.0a</javaee.tck.version>
+    <javaee.cts.home>${javaee7.cts.home}</javaee.cts.home>
+    <javaee.ri.home>${javaee7.ri.home}</javaee.ri.home>
+    <javaee.tck.version>7.0a</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1.0-SNAPSHOT</examples.version>
