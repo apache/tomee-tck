@@ -242,7 +242,7 @@ abstract class CommandSupport {
         builder.directory = "$javaeetckHome/tools/ant/lib"
         builder.append("ant.jar")
         builder.append("ant-launcher.jar")
-        builder.append("ant-nodeps.jar")
+        // builder.append("ant-nodeps.jar") - this seems to have disappeared with EE7
         builder.directory = "$javaeeRiHome/lib"
         builder.append("appserv-rt.jar")
         builder.getPath('ts.harness.classpath')
