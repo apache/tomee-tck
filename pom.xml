@@ -38,8 +38,8 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.0.M2</openejb.version>
-    <tomee.version>8.0.0.M2</tomee.version>
+    <openejb.version>8.0.0-M2</openejb.version>
+    <tomee.version>8.0.0-M2</tomee.version>
 
     <tomcat.version>9.0.12</tomcat.version>
 
