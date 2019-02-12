@@ -38,8 +38,8 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.0-M2</openejb.version>
-    <tomee.version>8.0.0-M2</tomee.version>
+    <openejb.version>8.0.0-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.0-SNAPSHOT</tomee.version>
 
     <tomcat.version>9.0.12</tomcat.version>
 
@@ -50,7 +50,7 @@
     -->
     <javaee.cts.home>${javaee8.cts.home}</javaee.cts.home>
     <javaee.ri.home>${javaee8.ri.home}</javaee.ri.home>
-    <javaee.tck.version>8.0a</javaee.tck.version>
+    <javaee.tck.version>8.0</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1-SNAPSHOT</examples.version>
