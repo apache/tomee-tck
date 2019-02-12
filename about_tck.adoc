@@ -1,0 +1,37 @@
+# About JakartaEE TCK
+
+## CTS
+
+The JakartaEE Test Compatibility Kit (TCK) is conformed by a Compatibility Test Suite (CTS).
+
+CTS is a set of tools and tests used to verify that a licensee's implementation of Java EE 8 technology conforms to the applicable specification.
+
+Java EE 8 CTS includes version 5.0 of the JT harness.
+
+## Tests organization
+
+The JakartaEE TCK is conformed by a total of 47,219 tests that can be divided in two subset: one set for Web Profile and other for Full Profile.
+
+Each test has a set of attributes like id, keyword, testName, test_directory and classname among others.
+The `keyword` attribute can be used to differentiate the test that belong to a Web and/or Full Profile, and if they are optional base on the type of profile.
+
+The following are the `keywords` related with Web Profile:
+
+    javaee_web_profile, ejb_web_profile, jacc_web_profile, jaspic_web_profile, javamail_web_profile, jaxr_web_profile, xa_web_profile, jaxrpc_web_profile, jaxws_web_profile
+
+## JT Harness UI
+This is a useful UI tool that comes in handy when one needs to know if a specific test is or not part of a specific profile.
+
+## start JT Harness UI
+From the `$TCK_HOME` execute:
+
+    cd bin
+    ant gui
+
+The UI shows all the TCK test and you can navigate to an specific test and view the Test Description tab that contains the test attributes described above.
+
+
+
+
+
+
