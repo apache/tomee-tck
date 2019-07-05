@@ -244,7 +244,7 @@ processOptions "$@"
 # Validate web
 case "$web" in
     tomee-plus|tomee-plume|tomee|tomcat|none)
-        profile="full"
+        profile="web-profile"
         true
         ;;
     tomcat-web)
@@ -260,7 +260,7 @@ esac
 
 rm -fr derbydb
 unzip -q derbydb.zip
-sql=skip
+#sql=skip
 
 # Append options if any
 if [ "x$options" != "x" ]; then

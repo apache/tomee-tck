@@ -623,9 +623,9 @@
                     <srcFile>src/test/sql/derby/derby.ddl.cmp.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.interop.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.jacc.sql</srcFile>
-                    <srcFile>src/test/sql/derby/derby.ddl.jbatch-tck.sql</srcFile>
+                    <!--<srcFile>src/test/sql/derby/derby.ddl.jbatch-tck.sql</srcFile>-->
                     <srcFile>src/test/sql/derby/derby.ddl.jstl.sql</srcFile>
-                    <srcFile>src/test/sql/derby/derby.ddl.persistence.sprocs.sql</srcFile>
+                    <!--<srcFile>src/test/sql/derby/derby.ddl.persistence.sprocs.sql</srcFile>-->
                     <srcFile>src/test/sql/derby/derby.ddl.persistence.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.sprocs.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.dml.sql</srcFile>

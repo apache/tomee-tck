@@ -213,7 +213,7 @@ class JavaTestCommand
                 }
 
                 def opts = get('tck.java.opts')
-                if (tckJavaVersion != null && (tckJavaVersion.startsWith("9") || tckJavaVersion.startsWith("1.9"))) {
+                if (tckJavaVersion != null && (tckJavaVersion.startsWith("9") || tckJavaVersion.startsWith("1.9") || tckJavaVersion.startsWith("10")  || tckJavaVersion.startsWith("11") )) {
                     jvmarg(value: "-Dtck.java.opts=" +
                             "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote " +
                             "--add-opens java.base/java.net=ALL-UNNAMED " +
