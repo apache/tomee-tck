@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # for the runner
-source "$(dirname $(readlink -f $0))/ec2jdk7"
+source "$(dirname $(readlink -f $0))/ec2jdk8"
 
 # for the standalone tomee
 export MAVEN_OPTS="-Dtck.java.home=$HOME/jdk11 -Dtck.java.version=11.0 $MAVEN_OPTS"
