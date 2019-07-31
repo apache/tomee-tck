@@ -236,9 +236,10 @@ class JavaTestCommand
                     jvmarg(value: "-Dcontainer.java.opts=${containerJavaOpts}")
                 }
 
+                /*
                 if (containerJavaOpts != null &&
-                        (containerJavaOpts.startsWith("9") || containerJavaOpts.startsWith("1.9")
-                                || containerJavaOpts.startsWith("10")  || containerJavaOpts.startsWith("11") )) {
+                        (containerJavaVersion.startsWith("9") || containerJavaVersion.startsWith("1.9")
+                                || containerJavaVersion.startsWith("10")  || containerJavaVersion.startsWith("11") )) {
 
                     def modulesOptions = "-Dcontainer.java.opts=" +
                             "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote " +
@@ -246,9 +247,10 @@ class JavaTestCommand
                             "--add-opens java.base/java.lang=ALL-UNNAMED " +
                             "--add-modules java.xml.bind,java.corba"
 
-                    log.info("Java modules detected - overridding java options for container with ${modulesOptions}.")
+                    log.info("Java modules detected - overriding java options for container with ${modulesOptions}.")
                     jvmarg(value: modulesOptions)
                 }
+                */
 
                 sysproperty(key: "user.language", value: 'en')
                 sysproperty(key: "user.country", value: 'US')
