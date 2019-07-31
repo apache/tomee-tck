@@ -4,4 +4,4 @@
 source "$(dirname $(readlink -f $0))/ec2jdk7"
 
 # for the standalone tomee
-export MAVEN_OPTS="-Dtck.java.home=$HOME/jdk10 -Dtck.java.version=10.0 $MAVEN_OPTS"
+export MAVEN_OPTS="-Dcontainer.java.home=$HOME/jdk10 -Dcontainer.java.version=10.0 $MAVEN_OPTS"

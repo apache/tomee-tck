@@ -202,23 +202,52 @@ class JavaTestCommand
 
                 def tckJavaHome = get('tck.java.home')
                 if (tckJavaHome != null) {
-                    log.info("Using java home ${tckJavaHome}")
+                    log.info("Using java home (javatest) ${tckJavaHome}")
                     jvmarg(value: "-Dtck.java.home=${tckJavaHome}")
                 }
 
                 def tckJavaVersion = get('tck.java.version')
                 if (tckJavaVersion != null) {
-                    log.info("Using java version ${tckJavaVersion}")
+                    log.info("Using java version (javatest) ${tckJavaVersion}")
                     jvmarg(value: "-Dtck.java.version=${tckJavaVersion}")
                 }
 
-                def opts = get('tck.java.opts')
-                if (tckJavaVersion != null && (tckJavaVersion.startsWith("9") || tckJavaVersion.startsWith("1.9") || tckJavaVersion.startsWith("10")  || tckJavaVersion.startsWith("11") )) {
-                    jvmarg(value: "-Dtck.java.opts=" +
-                            "-Dopenejb.deployer.jndiname=openejb/WebappDeployerRemote " +
+                def tckJavaOpts = get('tck.java.opts')
+                if (tckJavaOpts != null) {
+                    log.info("Using java home (javatest) ${tckJavaOpts}")
+                    jvmarg(value: "-Dtck.java.opts=${tckJavaOpts}")
+                }
+
+                def containerJavaHome = get('container.java.home')
+                if (containerJavaHome != null) {
+                    log.info("Using java home (container) ${containerJavaHome}")
+                    jvmarg(value: "-Dcontainer.java.home=${containerJavaHome}")
+                }
+
+                def containerJavaVersion = get('container.java.version')
+                if (containerJavaVersion != null) {
+                    log.info("Using java version (container) ${containerJavaVersion}")
+                    jvmarg(value: "-Dcontainer.java.version=${containerJavaVersion}")
+                }
+
+                def containerJavaOpts = get('container.java.opts')
+                if (containerJavaOpts != null) {
+                    log.info("Using java opts (container) ${containerJavaOpts}")
+                    jvmarg(value: "-Dcontainer.java.opts=${containerJavaOpts}")
+                }
+
+                if (containerJavaOpts != null &&
+                        (containerJavaOpts.startsWith("9") || containerJavaOpts.startsWith("1.9")
+                                || containerJavaOpts.startsWith("10")  || containerJavaOpts.startsWith("11") )) {
+
+                    def modulesOptions = "-Dcontainer.java.opts=" +
+                            "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote " +
                             "--add-opens java.base/java.net=ALL-UNNAMED " +
                             "--add-opens java.base/java.lang=ALL-UNNAMED " +
-                            "--add-modules java.xml.bind,java.corba")
+                            "--add-modules java.xml.bind,java.corba"
+
+                    log.info("Java modules detected - overridding java options for container with ${modulesOptions}.")
+                    jvmarg(value: modulesOptions)
                 }
 
                 sysproperty(key: "user.language", value: 'en')
@@ -327,8 +356,10 @@ class JavaTestCommand
                 // HACK: Some pre-running feedback (have to include this in the java closure)
                 //
                 log.info("Running tests...")
-                log.info("> Container Java Version: ${tckJavaVersion}")
-                log.info("> Container Java Home: ${tckJavaHome}")
+                log.info("> JavaTest Java Version: ${tckJavaVersion}")
+                log.info("> JavaTest Java Home: ${tckJavaHome}")
+                log.info("> Container Java Version: ${containerJavaVersion}")
+                log.info("> Container Java Home: ${containerJavaHome}")
 
                 line()
             }

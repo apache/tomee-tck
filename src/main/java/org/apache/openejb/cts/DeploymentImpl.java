@@ -26,6 +26,7 @@ import com.sun.ts.lib.porting.DeploymentInfo;
 import com.sun.ts.lib.porting.TSDeploymentException;
 import com.sun.ts.lib.porting.TSDeploymentInterface2;
 import org.apache.openejb.config.RemoteServer;
+import org.apache.openejb.testng.PropertiesBuilder;
 
 import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.Target;
@@ -54,13 +55,24 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String CLIENT_MAIN = "org.apache.openejb.client.Main";
 
     static {
-//        System.setProperty("java.opts", "-Xmx128m -XX:MaxPermSize=128m");
-//        System.setProperty("java.opts", "-XX:MaxPermSize=64m");
-//        System.setProperty("openejb.server.profile", "true");
-        System.setProperty("java.opts", "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
-        final RemoteServer remoteServer = new RemoteServer(250, true);
-        // remoteServer.start(Arrays.asList("-Xmx128m", "-XX:MaxPermSize=128m"), "start", true);
-        // remoteServer.start(Arrays.asList("-Djava.util.logging.config.file=/logging.properties"), "start", true);
+
+        Properties overrides = new Properties();
+        String containerJavaHome = System.getProperty("container.java.home");
+        String containerJavaVersion = System.getProperty("container.java.version");
+        String containerJavaOpts = System.getProperty("container.java.opts", "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
+        if (containerJavaVersion != null) {
+            overrides.put("java.version", containerJavaVersion);
+        }
+
+        if (containerJavaHome != null) {
+            overrides.put("java.home", containerJavaHome);
+        }
+
+        if (containerJavaOpts != null) {
+            overrides.put("java.opts", containerJavaOpts);
+        }
+
+        final RemoteServer remoteServer = new RemoteServer(overrides, 250, true);
         remoteServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
