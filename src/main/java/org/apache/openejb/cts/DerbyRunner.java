@@ -26,10 +26,9 @@ import java.net.InetAddress;
 public class DerbyRunner {
 
     private static class DerbyThread extends Thread {
-        private static final Logger log = Logger.getLogger(DerbyRunner.class);
         private static final int SLEEP_INTERVAL = 60000;
+        private final int port;
         private NetworkServerControl serverControl;
-        private int port = NetworkServerControl.DEFAULT_PORTNUMBER;
 
         public DerbyThread(final int derbyPort) {
             port = derbyPort;
@@ -40,6 +39,7 @@ public class DerbyRunner {
             try {
                 serverControl = new NetworkServerControl(InetAddress.getByAddress(new byte[]{127, 0, 0, 1}), port);
                 serverControl.start(new Log4jPrintWriter("Derby", Level.INFO));
+
             } catch (final Exception e) {
                 e.printStackTrace();
             }

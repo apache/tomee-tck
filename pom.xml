@@ -109,6 +109,20 @@
     </dependency>
 
     <dependency>
+      <groupId>com.icegreen</groupId>
+      <artifactId>greenmail-standalone</artifactId>
+      <version>1.5.10</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>javamail</artifactId>
+      <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/javamail/ee/internetaddress/internetaddress_appclient_vehicle_client.jar</systemPath>
+    </dependency>
+
+    <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
@@ -746,16 +760,27 @@
             <goals>
               <goal>java</goal>
             </goals>
+            <configuration>
+              <cleanupDaemonThreads>false</cleanupDaemonThreads>
+              <killAfter>-1</killAfter>
+              <arguments>
+                <argument>${derby.server.port}</argument>
+              </arguments>
+              <mainClass>org.apache.openejb.cts.DerbyRunner</mainClass>
+            </configuration>
+          </execution>
+          <execution>
+            <id>start-greenmail</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <cleanupDaemonThreads>false</cleanupDaemonThreads>
+              <mainClass>org.apache.openejb.cts.GreenmailRunner</mainClass>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <cleanupDaemonThreads>false</cleanupDaemonThreads>
-          <killAfter>-1</killAfter>
-          <arguments>
-            <argument>${derby.server.port}</argument>
-          </arguments>
-          <mainClass>org.apache.openejb.cts.DerbyRunner</mainClass>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -806,7 +831,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
