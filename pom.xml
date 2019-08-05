@@ -114,13 +114,15 @@
       <version>1.5.10</version>
     </dependency>
 
+    <!--
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
-      <artifactId>javamail</artifactId>
+      <artifactId>jar-to-test</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/javamail/ee/internetaddress/internetaddress_appclient_vehicle_client.jar</systemPath>
+      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/jdbc/ee/callStmt/callStmt1/callStmt1_appclient_vehicle_client.jar</systemPath>
     </dependency>
+    -->
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -766,6 +768,7 @@
               <arguments>
                 <argument>${derby.server.port}</argument>
               </arguments>
+              <classpathScope>compile</classpathScope>
               <mainClass>org.apache.openejb.cts.DerbyRunner</mainClass>
             </configuration>
           </execution>
