@@ -114,15 +114,14 @@
       <version>1.5.10</version>
     </dependency>
 
-    <!--
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>jar-to-test</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/jdbc/ee/callStmt/callStmt1/callStmt1_appclient_vehicle_client.jar</systemPath>
+      <type>war</type>
+      <systemPath>/Users/jlmonteiro/devs/jeanouii/eclipse/jakartaee-tck/release/JAKARTAEE_BUILD/build_15-Jul-2019/bundle/jakartaeetck/dist/com/sun/ts/tests/jaxrs/ee/resource/webappexception/nomapper/jaxrs_resource_webappexception_nomapper_web.war</systemPath>
     </dependency>
-    -->
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -641,10 +640,12 @@
                     <srcFile>src/test/sql/derby/derby.ddl.jacc.sql</srcFile>
                     <!--<srcFile>src/test/sql/derby/derby.ddl.jbatch-tck.sql</srcFile>-->
                     <srcFile>src/test/sql/derby/derby.ddl.jstl.sql</srcFile>
-                    <!--<srcFile>src/test/sql/derby/derby.ddl.persistence.sprocs.sql</srcFile>-->
+                    <srcFile>src/test/sql/derby/derby.ddl.persistence.sprocs.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.persistence.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.ddl.securityapi.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.ddl.sprocs.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.dml.sql</srcFile>
+                    <srcFile>src/test/sql/derby/derby.dml.jpa.sql</srcFile>
                     <srcFile>src/test/sql/derby/derby.dml.jstl.sql</srcFile>
                   </srcFiles>
                 </configuration>

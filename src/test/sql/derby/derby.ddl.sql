@@ -3,6 +3,9 @@ drop table ctstable1 ;
 create table ctstable1 (TYPE_ID int NOT NULL, TYPE_DESC varchar(32), primary key(TYPE_ID)) ;
 create table ctstable2 (KEY_ID int NOT NULL, COF_NAME varchar(32), PRICE float, TYPE_ID int, primary key(KEY_ID), foreign key(TYPE_ID) references ctstable1) ;
 
+drop table concurrencetable ;
+create table concurrencetable (TYPE_ID int NOT NULL, TYPE_DESC varchar(32), primary key(TYPE_ID)) ;
+
 drop table Numeric_Tab ;
 create table Numeric_Tab (MAX_VAL NUMERIC(30,15), MIN_VAL NUMERIC(30,15), NULL_VAL NUMERIC(30,15)) ;
 
@@ -19,7 +22,7 @@ drop table Real_Tab ;
 create table Real_Tab (MAX_VAL REAL, MIN_VAL REAL,NULL_VAL REAL) ;
 
 drop table Bit_Tab ;
-create table Bit_Tab (MAX_VAL SMALLINT, MIN_VAL SMALLINT, NULL_VAL SMALLINT) ;
+create table Bit_Tab (MAX_VAL BOOLEAN, MIN_VAL BOOLEAN, NULL_VAL SMALLINT) ;
 
 drop table Smallint_Tab ;
 create table Smallint_Tab (MAX_VAL SMALLINT, MIN_VAL SMALLINT, NULL_VAL SMALLINT) ;
@@ -133,5 +136,41 @@ create table Coffee_FloatPK_Table (KEY_ID FLOAT NOT NULL, BRAND_NAME varchar(32)
 drop table Coffee_CompoundPK_Table ;
 create table Coffee_CompoundPK_Table (KEY_ID1 int NOT NULL, KEY_ID2 varchar(100) NOT NULL, KEY_ID3 float NOT NULL, BRAND_NAME varchar(32) NOT NULL, PRICE float NOT NULL, primary key(KEY_ID1, KEY_ID2, KEY_ID3)) ;
 
-drop table COFFEEEJBLITE;
-create table COFFEEEJBLITE (ID INT NOT NULL, BRANDNAME varchar(25), PRICE REAL, CONSTRAINT PK_COFFEEEJBLITE primary key (ID));
+DROP TABLE COFFEEEJBLITE;
+CREATE TABLE COFFEEEJBLITE (ID INT NOT NULL, BRANDNAME VARCHAR(25), PRICE REAL, CONSTRAINT PK_COFFEEEJBLITE PRIMARY KEY (ID));
+
+
+DROP TABLE EJB_AUTOCLOSE_TAB ;
+CREATE TABLE EJB_AUTOCLOSE_TAB (NAME VARCHAR(25) NOT NULL, MESSAGE VARCHAR(25) NOT NULL);
+
+
+DROP TABLE caller ;
+DROP TABLE caller_groups ;
+
+CREATE TABLE caller(name VARCHAR(64) PRIMARY KEY, password VARCHAR(1024)) ;
+CREATE TABLE caller_groups(caller_name VARCHAR(64), group_name VARCHAR(64)) ;
+
+INSERT INTO caller VALUES('tom', 'secret1') ;
+INSERT INTO caller VALUES('emma', 'secret2') ;
+INSERT INTO caller VALUES('bob', 'secret3') ;
+
+INSERT INTO caller_groups VALUES('tom', 'Administrator') ;
+INSERT INTO caller_groups VALUES('tom', 'Manager') ;
+
+INSERT INTO caller_groups VALUES('emma', 'Administrator') ;
+INSERT INTO caller_groups VALUES('emma', 'Employee') ;
+
+INSERT INTO caller_groups VALUES('bob', 'Administrator') ;
+
+ INSERT INTO caller VALUES('tom_hash512_saltsize16', 'PBKDF2WithHmacSHA512:1024:DbjXqT9p8VhJ7OtU6DrqDw==:p/qihG8IZKkz03JzKd6XXA==') ;
+ INSERT INTO caller VALUES('tom_hash256_saltsize32', 'PBKDF2WithHmacSHA256:2048:suVayUIJMQMc6wCgckvAIgKRlo1UkxyFXhXbTxX6C7s=:cvdHkBXVUCN2WL3LRAYodeCdNZxEM4RLlNCCYP68Kmg=') ;
+ INSERT INTO caller VALUES('tom_hash512_saltsize32', 'PBKDF2WithHmacSHA512:2048:dPTjUfiklfyg2bas/KOQKqEfdtoXK8YvbBscIxA8tNg=:ixBg0wr3ySBI86y8HP7+Yw==') ;
+
+ INSERT INTO caller_groups VALUES('tom_hash512_saltsize16', 'Administrator') ;
+ INSERT INTO caller_groups VALUES('tom_hash512_saltsize16', 'Manager') ;
+
+ INSERT INTO caller_groups VALUES('tom_hash256_saltsize32', 'Administrator') ;
+ INSERT INTO caller_groups VALUES('tom_hash256_saltsize32', 'Manager') ;
+
+ INSERT INTO caller_groups VALUES('tom_hash512_saltsize32', 'Administrator') ;
+ INSERT INTO caller_groups VALUES('tom_hash512_saltsize32', 'Manager') ;
