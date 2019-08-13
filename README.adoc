@@ -13,14 +13,17 @@ At present, we are building the TCK binary from source, following these steps:
     git clone https://github.com/eclipse-ee4j/jakartaee-tck
     cd jakaratee-tck
     export WORKSPACE=$(pwd)
-    export GF_BUNDLE_URL=https://jenkins.eclipse.org/glassfish/job/glassfish/job/EE4J_8/85/artifact/bundles/glassfish.zip
+    export GF_BUNDLE_URL=https://jenkins.eclipse.org/glassfish/job/glassfish/job/master/59/artifact/bundles/glassfish.zip
     export GF_HOME=$WORKSPACE
     export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
     export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
     export PATH=$JAVA_HOME/bin:$ANT_HOME/bin/:$PATH
     $WORKSPACE/docker/build_jakartaeetck.sh
 
-Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes around an hour to build.
+NOTE: Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes around an hour to build.
+
+NOTE: The GF_BUNDLE_URL value can change, for latest releases please visit: https://jenkins.eclipse.org/glassfish/job/glassfish/job/master/lastSuccessfulBuild/artifact/bundles/
+
 
 Once that is complete, unzip the TCK zip file somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK
 and Glassfish in this folder:
@@ -108,12 +111,12 @@ time-saver when trying to navigate to run a specific test.
 In bash just source the file like so:
 
   source runtests.completer
-  
+
 ### ZSH
 
 If you are using ZSH, you need to execute the follows commands:
 
-      autoload -U +X compinit && compinit 
+      autoload -U +X compinit && compinit
       autoload -U +X bashcompinit && bashcompinit
       source runtests.completer
 
