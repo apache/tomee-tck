@@ -41,7 +41,7 @@
     <openejb.version>8.0.0-SNAPSHOT</openejb.version>
     <tomee.version>8.0.0-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.12</tomcat.version>
+    <tomcat.version>9.0.22</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -114,16 +114,14 @@
       <version>1.5.10</version>
     </dependency>
 
-    <!--
-    <dependency>
-      <groupId>com.sun.javaee.tck</groupId>
-      <artifactId>jar-to-test</artifactId>
-      <version>${javaee.tck.version}</version>
-      <scope>system</scope>
-      <type>war</type>
-      <systemPath>/Users/jlmonteiro/devs/jeanouii/eclipse/jakartaee-tck/release/JAKARTAEE_BUILD/build_15-Jul-2019/bundle/jakartaeetck/dist/com/sun/ts/tests/jaspic/spi/servlet/spitests_servlet_web.war</systemPath>
-    </dependency>
-    -->
+    <!--<dependency>-->
+      <!--<groupId>com.test</groupId>-->
+      <!--<artifactId>jar-to-test</artifactId>-->
+      <!--<version>${javaee.tck.version}</version>-->
+      <!--<scope>system</scope>-->
+      <!--<type>jar</type>-->
+      <!--<systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -231,6 +229,28 @@
       <artifactId>webdeployer</artifactId>
       <version>${openejb.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-util</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-juli</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-api</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
   </dependencies>
 
   <profiles>
@@ -823,7 +843,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
