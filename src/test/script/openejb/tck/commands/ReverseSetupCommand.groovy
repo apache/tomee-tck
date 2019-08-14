@@ -33,16 +33,9 @@ class ReverseSetupCommand
 
     def execute() {
         def javaeeCtsHome = requireDirectory('javaee.cts.home')
-        def geronimoHome = requireDirectory('geronimo.home')
-        def javaHome = requireDirectory('java.home')
 
         def tsant = new TsAntCommand(this)
         tsant.props['build.vi'] = true
-
-        // TODO Update for TomEE
-        tsant.props['endorsed.dirs'] = "${geronimoHome}/repository/org/apache/geronimo/specs/geronimo-jaxb_2.2_spec/1.0.1" + File.pathSeparator + "${geronimoHome}/repository/org/apache/geronimo/specs/geronimo-jaxws_2.2_spec/1.1" + File.pathSeparator + "${javaHome}/lib/endorsed"
-
-        tsant.envs['ANT_OPTS'] = "-Djava.endorsed.dirs='${geronimoHome}/repository/org/apache/geronimo/specs/geronimo-jaxb_2.2_spec/1.0.1" + File.pathSeparator + "${geronimoHome}/repository/org/apache/geronimo/specs/geronimo-jaxws_2.2_spec/1.1" + File.pathSeparator + "${javaHome}/lib/endorsed'"
 
         def setupReverseTests = { section ->
 
