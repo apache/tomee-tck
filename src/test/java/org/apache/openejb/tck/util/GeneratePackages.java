@@ -57,7 +57,8 @@ public class GeneratePackages {
 
     private void print(final Node node, String pad) {
         if (node.children.size() == 0) {
-            System.out.println(pad + node.name);
+            final String value = pad + node.name;
+            System.out.println("build." + value + " = -Dhttps.protocols=TLSv1.1,TLSv1.2 --env -nc -c -U -w " + value);
         } else {
             pad += node.name + ".";
             for (final Node n : node.children.values()) {
