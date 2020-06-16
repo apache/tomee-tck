@@ -10,10 +10,12 @@ In order to run the TCK, you will need both the TCK binary itself, and the Eclip
 
 At present, we are building the TCK binary from source, following these steps:
 
-    git clone https://github.com/eclipse-ee4j/jakartaee-tck
-    cd jakaratee-tck
+    wget https://download.eclipse.org/jakartaee/platform/8/jakarta-jakartaeetck-8.0.2.zip
+    unzip jakarta-jakartaeetck-8.0.2.zip
+    rm jakarta-jakartaeetck-8.0.2.zip
+    cd jakartaeetck
     export WORKSPACE=$(pwd)
-    export GF_BUNDLE_URL=https://jenkins.eclipse.org/glassfish/job/glassfish/job/master/59/artifact/bundles/glassfish.zip
+    export GF_BUNDLE_URL=https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip
     export GF_HOME=$WORKSPACE
     export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
     export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
@@ -21,9 +23,6 @@ At present, we are building the TCK binary from source, following these steps:
     $WORKSPACE/docker/build_jakartaeetck.sh
 
 NOTE: Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes around an hour to build.
-
-NOTE: The GF_BUNDLE_URL value can change, for latest releases please visit: https://jenkins.eclipse.org/glassfish/job/glassfish/job/master/lastSuccessfulBuild/artifact/bundles/
-
 
 Once that is complete, unzip the TCK zip file somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK
 and Glassfish in this folder:
