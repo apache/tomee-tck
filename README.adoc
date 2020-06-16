@@ -10,10 +10,12 @@ In order to run the TCK, you will need both the TCK binary itself, and the Eclip
 
 At present, we are building the TCK binary from source, following these steps:
 
-    git clone https://github.com/eclipse-ee4j/jakartaee-tck
-    cd jakaratee-tck
+    wget https://download.eclipse.org/jakartaee/platform/8/jakarta-jakartaeetck-8.0.2.zip
+    unzip jakarta-jakartaeetck-8.0.2.zip
+    rm jakarta-jakartaeetck-8.0.2.zip
+    cd jakartaeetck
     export WORKSPACE=$(pwd)
-    export GF_BUNDLE_URL=https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip
+    export GF_BUNDLE_URL=https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip
     export GF_HOME=$WORKSPACE
     export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
     export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
