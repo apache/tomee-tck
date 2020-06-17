@@ -82,7 +82,7 @@
   <!--</Resource>-->
 
 
-  <Resource id="MailSession" type="javax.mail.Session">
+  <Resource id="MailSession" type="jakarta.mail.Session">
     mail.smtp.class=org.apache.geronimo.mail.NullTransport
   </Resource>
 
