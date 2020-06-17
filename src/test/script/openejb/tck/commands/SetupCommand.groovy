@@ -35,7 +35,7 @@ class SetupCommand
     }
     
     def generateTsJte() {
-        def javaeeCtsHome = requireDirectory('javaee.cts.home')
+        def javaeeCtsHome = requireDirectory('jakartaee.cts.home')
 
         // Install the Javatest testsuite environment configuration, first filter our custom properties
         // then merge those properties with the javaee ts.jte
@@ -92,7 +92,7 @@ class SetupCommand
                         'openejb.home',
                         'openejb.embedded.classpath',
                         'javaee.home',
-                        'javaee.ri.home',
+                        'jakartaee.ri.home',
                         'javaee.home.ri',
                         'ts.run.classpath',
                         'ts.run.classpath.ri.suffix',
@@ -141,7 +141,7 @@ class SetupCommand
 
         // Modify the sig-test_se6.map file to use the proper signature files.
         // Create backups first.
-        def javaeeCtsHome = requireDirectory('javaee.cts.home')
+        def javaeeCtsHome = requireDirectory('jakartaee.cts.home')
 
         // Backup the original sig-test_se8.map, load in the new props, and create
         // the modified file
@@ -214,7 +214,7 @@ class SetupCommand
 
         initPaths()
 
-        def javaeeCtsHome = get('javaee.cts.home')
+        def javaeeCtsHome = get('jakartaee.cts.home')
 
         ant.mkdir(dir: "${openejbHome}/logs")
         ant.mkdir(dir: "${openejbHome}/apps")

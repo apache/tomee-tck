@@ -154,8 +154,8 @@ abstract class CommandSupport {
 
     def initPaths() {
         def openejbHome = get('openejb.home')
-        def javaeetckHome = get('javaee.cts.home')
-        def javaeeRiHome = get('javaee.ri.home')
+        def javaeetckHome = get('jakartaee.cts.home')
+        def javaeeRiHome = get('jakartaee.ri.home')
         def webcontainer = get('webcontainer')
         def tomeeHttpPort = get('webcontainer.default.port')
 
@@ -296,7 +296,7 @@ abstract class CommandSupport {
             return;
         }
 
-        log.info("TCK pom version: " + require('javaee.tck.version'))
+        log.info("TCK pom version: " + require('jakartaee.tck.version'))
         log.info("Start - Container libraries")
         if (lib.exists() && lib.isDirectory()) {
             lib.listFiles().grep(~/.*.jar/).sort { it.name }.each {
