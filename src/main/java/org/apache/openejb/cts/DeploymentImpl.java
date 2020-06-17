@@ -24,9 +24,8 @@ import com.sun.ts.lib.deliverable.PropertyManagerInterface;
 import com.sun.ts.lib.deliverable.PropertyNotSetException;
 import com.sun.ts.lib.porting.DeploymentInfo;
 import com.sun.ts.lib.porting.TSDeploymentException;
-import com.sun.ts.lib.porting.TSDeploymentInterface2;
 import org.apache.openejb.config.RemoteServer;
-import org.apache.openejb.testng.PropertiesBuilder;
+import org.apache.openejb.cts.deploy.TSDeploymentInterface2;
 
 import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.Target;
