@@ -1,0 +1,103 @@
+# Running Jakarta EE 9 TCK
+
+# One-time setup
+
+## Download
+
+Use the following commands to download and unpack the Jakarta EE 9 TCK and GlassFish 6 nightly build.
+
+If you already have a `jakartaeetck` directory, rename it to `jakartaeetck8`
+
+----
+curl -O http://download.eclipse.org/ee4j/jakartaee-tck/master/nightly/jakartaeetck-9.0.0.zip
+curl https://ci.eclipse.org/jakartaee-tck/job/build-glassfish/lastSuccessfulBuild/artifact/appserver/distributions/glassfish/target/glassfish.zip > glassfish6.zip
+
+unzip jakartaeetck-9.0.0.zip && mv jakartaeetck jakartaeetck9
+unzip glassfish6.zip
+----
+
+## Copy the "tools" directory from the Jakarta EE 8 TCK (hack)
+
+The Jakarta EE 8 and prior TCKs used to come with Ant included.  This was deleted from the Jakarta EE 9 TCK.  We should update our harness, but as a short-term hack just copy the `tools` directory from the Jakarta EE 8 TCK.
+
+----
+cp -r jakartaeetck8/tools jakartaeetck9/
+----
+
+You can https://download.eclipse.org/jakartaee/platform/8/jakarta-jakartaeetck-8.0.2.zip[download the Jakarta EE 8 TCK here] if you don't already have it.
+
+## Add to your ~/.m2/settings.xml
+
+Add the `jakartaee9.cts.home` and `jakartaee9.ri.home` to your `~/.m2/settings.xml`.
+
+----
+<profile>
+  <id>jakartaee-tck</id>
+  <activation>
+    <activeByDefault>true</activeByDefault>
+  </activation>
+  <properties>
+    <jakartaee9.cts.home>/Users/dblevins/work/tckfun/jakartaeetck9</jakartaee9.cts.home>
+    <jakartaee9.ri.home>/Users/dblevins/work/tckfun/glassfish6/glassfish</jakartaee9.ri.home>
+  </properties>
+</profile>
+----
+
+If you have that profile in your ``~/.m2/settings.xml` already due to Jakarta EE 8 TCK setup, just expand it like so:
+
+----
+<profile>
+  <id>jakartaee-tck</id>
+  <activation>
+    <activeByDefault>true</activeByDefault>
+  </activation>
+  <properties>
+    <javaee8.cts.home>/Users/dblevins/work/tckfun/jakartaeetck8</javaee8.cts.home>
+    <javaee8.ri.home>/Users/dblevins/work/tckfun/glassfish5/glassfish</javaee8.ri.home>
+    <jakartaee9.cts.home>/Users/dblevins/work/tckfun/jakartaeetck9</jakartaee9.cts.home>
+    <jakartaee9.ri.home>/Users/dblevins/work/tckfun/glassfish6/glassfish</jakartaee9.ri.home>
+  </properties>
+</profile>
+----
+
+# Develop/test loop
+
+## Overwrite TomEE Distributions (hack)
+
+After a successful TomEE build you need to overwrite the regular distributions with the Jakarta EE modified distributions.
+
+INFO: Long-term our modified binaries will hopefully live at `org.apache.tomee:apache-tomee:apache-tomee-plume:zip:9.0.0-SNAPSHOT` without a "jakartaee9" classifier and this hack won't be necessary
+
+In `tomee/apache-tomee/` of the main TomEE repo, create a file called `install.sh` with these contents and run it.
+
+[source,bash]
+----
+#!/bin/bash
+
+for n in target/*jakarta*.zip; do
+    classifier=${n/-jakartaee*/}
+    classifier=${classifier/*apache-tomee-/}
+
+    mvn install:install-file -Dfile=$n \
+                         -DgroupId=org.apache.tomee \
+                         -DartifactId=apache-tomee \
+                         -Dversion=8.0.3-SNAPSHOT \
+                         -Dpackaging=zip \
+                         -Dclassifier=$classifier \
+                         -DgeneratePom=true
+done
+----
+
+## Run your favorite test
+
+----
+./runtests -w tomee-plume -c com.sun.ts.tests.ejb30.lite.basic.stateless
+----
+
+## Check the test log
+
+If you got some failures, check this file:
+
+----
+less target/logs/javatest.log
+----
