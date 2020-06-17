@@ -1,0 +1,21 @@
+# Design Notes to Help Maintainers
+
+# Compiling against libs in the TCK
+
+There are several dependencies that do not point to Maven Central, but actually to jars inside the TCK distribution itself.  These dependencies use `<scope>system</scope>` and `<systemPath>` as follows to point to individual jars:
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.sun.javaee.tck</groupId>
+  <artifactId>tsharness</artifactId>
+  <version>${jakartaee.tck.version}</version>
+  <scope>system</scope>
+  <systemPath>${jakartaee.cts.home}/lib/tsharness.jar</systemPath>
+</dependency>
+----
+
+In the above the most critical setting is `<systemPath>` which must point to an actual jar on your system.  The `<groupId>`, `<artifactId>` and `<version>` are invented and could actually be anything.
+
+As the TCK evolves jars may be renamed, removed or added and it may be necessary to adjust these dependencies.
+
