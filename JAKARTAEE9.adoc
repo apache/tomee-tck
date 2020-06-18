@@ -64,29 +64,7 @@ If you have that profile in your ``~/.m2/settings.xml` already due to Jakarta EE
 
 ## Overwrite TomEE Distributions (hack)
 
-After a successful TomEE build you need to overwrite the regular distributions with the Jakarta EE modified distributions.
-
-INFO: Long-term our modified binaries will hopefully live at `org.apache.tomee:apache-tomee:apache-tomee-plume:zip:9.0.0-SNAPSHOT` without a "jakartaee9" classifier and this hack won't be necessary
-
-In `tomee/apache-tomee/` of the main TomEE repo, create a file called `install.sh` with these contents and run it.
-
-[source,bash]
-----
-#!/bin/bash
-
-for n in target/*jakarta*.zip; do
-    classifier=${n/-jakartaee*/}
-    classifier=${classifier/*apache-tomee-/}
-
-    mvn install:install-file -Dfile=$n \
-                         -DgroupId=org.apache.tomee \
-                         -DartifactId=apache-tomee \
-                         -Dversion=8.0.3-SNAPSHOT \
-                         -Dpackaging=zip \
-                         -Dclassifier=$classifier \
-                         -DgeneratePom=true
-done
-----
+No longer necessary.
 
 ## Run your favorite test
 

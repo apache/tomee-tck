@@ -438,7 +438,7 @@
                       <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>webprofile</classifier>
+                      <classifier>webprofile-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -455,7 +455,7 @@
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
-          <classifier>webprofile</classifier>
+          <classifier>webprofile-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
@@ -496,7 +496,7 @@
                       <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>plus</classifier>
+                      <classifier>plus-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -513,7 +513,7 @@
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
-          <classifier>plus</classifier>
+          <classifier>plus-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
@@ -554,7 +554,7 @@
                       <version>${tomee.version}</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>plume</classifier>
+                      <classifier>plume-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -571,7 +571,7 @@
           <artifactId>apache-tomee</artifactId>
           <type>zip</type>
           <version>${tomee.version}</version>
-          <classifier>plume</classifier>
+          <classifier>plume-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
