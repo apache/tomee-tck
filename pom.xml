@@ -262,65 +262,6 @@
   <profiles>
 
     <!-- =================== -->
-    <!-- Standalone Environment -->
-    <!-- =================== -->
-
-    <profile>
-      <id>standalone-environment</id>
-
-      <activation>
-        <property>
-          <name>webcontainer</name>
-          <value>none</value>
-        </property>
-      </activation>
-
-      <properties>
-        <!-- where we will unpack openejb -->
-        <openejb.home>${project.build.directory}/apache-openejb-${openejb.version}</openejb.home>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
-                      <artifactId>openejb-standalone</artifactId>
-                      <version>${openejb.version}</version>
-                      <type>zip</type>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-
-      <dependencies>
-        <dependency>
-          <groupId>${openejb.groupId}</groupId>
-          <artifactId>openejb-standalone</artifactId>
-          <type>zip</type>
-          <version>${openejb.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!-- =================== -->
     <!-- TomEE Environment -->
     <!-- =================== -->
 
