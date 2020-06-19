@@ -38,8 +38,10 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.3-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.3-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.3</openejb.version>
+    <tomee.version>8.0.3</tomee.version>
+    <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
+    <tomee.zip.version>9.0.0-M1</tomee.zip.version>
 
     <tomcat.version>9.0.30</tomcat.version>
 
@@ -277,7 +279,7 @@
 
       <properties>
         <!-- where we will unpack tomee -->
-        <openejb.home>target/apache-tomee-webprofile-${tomee.version}</openejb.home>
+        <openejb.home>target/apache-tomee-webprofile-${tomee.zip.version}</openejb.home>
       </properties>
 
       <build>
@@ -296,12 +298,12 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
+                      <groupId>${tomee.zip.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
-                      <version>${tomee.version}</version>
+                      <version>${tomee.zip.version}</version>
+                      <classifier>webprofile</classifier>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>webprofile-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -314,11 +316,11 @@
       <dependencies>
 
         <dependency>
-          <groupId>${openejb.groupId}</groupId>
+          <groupId>${tomee.zip.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
+          <version>${tomee.zip.version}</version>
+          <classifier>webprofile</classifier>
           <type>zip</type>
-          <version>${tomee.version}</version>
-          <classifier>webprofile-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
@@ -336,7 +338,7 @@
       </activation>
 
       <properties>
-        <openejb.home>target/apache-tomee-plus-${tomee.version}</openejb.home>
+        <openejb.home>target/apache-tomee-plus-${tomee.zip.version}</openejb.home>
       </properties>
 
       <build>
@@ -354,12 +356,12 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
+                      <groupId>${tomee.zip.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
-                      <version>${tomee.version}</version>
+                      <version>${tomee.zip.version}</version>
+                      <classifier>plus</classifier>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>plus-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -372,11 +374,11 @@
       <dependencies>
 
         <dependency>
-          <groupId>${openejb.groupId}</groupId>
+          <groupId>${tomee.zip.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
+          <version>${tomee.zip.version}</version>
+          <classifier>plus</classifier>
           <type>zip</type>
-          <version>${tomee.version}</version>
-          <classifier>plus-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
@@ -394,7 +396,7 @@
       </activation>
 
       <properties>
-        <openejb.home>target/apache-tomee-plume-${tomee.version}</openejb.home>
+        <openejb.home>target/apache-tomee-plume-${tomee.zip.version}</openejb.home>
       </properties>
 
       <build>
@@ -412,12 +414,12 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
+                      <groupId>${tomee.zip.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
-                      <version>${tomee.version}</version>
+                      <version>${tomee.zip.version}</version>
+                      <classifier>plume</classifier>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
-                      <classifier>plume-jakartaee9</classifier>
                     </artifactItem>
                   </artifactItems>
                 </configuration>
@@ -430,11 +432,11 @@
       <dependencies>
 
         <dependency>
-          <groupId>${openejb.groupId}</groupId>
+          <groupId>${tomee.zip.groupId}</groupId>
           <artifactId>apache-tomee</artifactId>
+          <version>${tomee.zip.version}</version>
+          <classifier>plume</classifier>
           <type>zip</type>
-          <version>${tomee.version}</version>
-          <classifier>plume-jakartaee9</classifier>
         </dependency>
 
       </dependencies>
