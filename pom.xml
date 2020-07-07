@@ -38,10 +38,10 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.3-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.3-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.4-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.4-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.30</tomcat.version>
+    <tomcat.version>9.0.35</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -118,6 +118,11 @@
       <groupId>com.icegreen</groupId>
       <artifactId>greenmail-standalone</artifactId>
       <version>1.5.10</version>
+    </dependency>
+    <dependency>
+      <groupId>com.unboundid</groupId>
+      <artifactId>unboundid-ldapsdk</artifactId>
+      <version>5.1.0</version>
     </dependency>
 
     <!--<dependency>-->
@@ -196,6 +201,12 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-loader</artifactId>
+      <type>jar</type>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${openejb.groupId}</groupId>
+      <artifactId>tomee-security</artifactId>
       <type>jar</type>
       <version>${tomee.version}</version>
     </dependency>
@@ -773,6 +784,7 @@
                 <portName>webcontainer.default.clientcert.port</portName>
                 <portName>webcontainer.default.shutdown.port</portName>
                 <portName>derby.server.port</portName>
+                <portName>ldap.server.port</portName>
                 <portName>harness.log.port</portName>
               </portNames>
             </configuration>
@@ -812,6 +824,18 @@
               <mainClass>org.apache.openejb.cts.GreenmailRunner</mainClass>
             </configuration>
           </execution>
+          <execution>
+            <id>start-ldap</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <cleanupDaemonThreads>false</cleanupDaemonThreads>
+              <mainClass>org.apache.openejb.cts.UnboundIdLdapRunner</mainClass>
+              <arguments>src/test/ldap/ldap.ldif</arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -849,7 +873,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>tomee-security,hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -863,7 +887,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>tomee-security,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>

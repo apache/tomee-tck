@@ -80,6 +80,7 @@ public class GreenmailRunner {
             try {
                 smtp = Integer.parseInt(args[0]);
                 imap = Integer.parseInt(args[1]);
+
             } catch (final NumberFormatException e) {
                 System.out.println(String.format("Could not convert ports %s. Using the default smtp %s and imap %s",
                         Join.join(", ", args), smtp, imap));
