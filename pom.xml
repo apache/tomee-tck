@@ -204,12 +204,6 @@
       <type>jar</type>
       <version>${tomee.version}</version>
     </dependency>
-    <dependency>
-      <groupId>${openejb.groupId}</groupId>
-      <artifactId>tomee-security</artifactId>
-      <type>jar</type>
-      <version>${tomee.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
@@ -873,7 +867,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tomee-security,hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -887,7 +881,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tomee-security,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
