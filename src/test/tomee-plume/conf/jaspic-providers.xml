@@ -417,6 +417,21 @@
             appContext="Catalina/localhost /securityapi_securitycontext_getprincipalsbytype_web"
             description="any">
   </provider>
+
+
+  <provider name="any"
+            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider"
+            layer="HttpServlet"
+            appContext="Catalina/localhost /spitests_servlet_web"
+            description="any">
+  </provider>
+  <provider name="any"
+            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider"
+            layer="HttpServlet"
+            appContext="Catalina/localhost /spitests_baseline_jaspicservlet_vehicle_web"
+            description="any">
+  </provider>
+
 </jaspic-providers>
 
 

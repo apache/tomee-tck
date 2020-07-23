@@ -41,7 +41,7 @@
     <openejb.version>8.0.4-SNAPSHOT</openejb.version>
     <tomee.version>8.0.4-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.35</tomcat.version>
+    <tomcat.version>9.0.37</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -157,6 +157,20 @@
       <scope>system</scope>
       <systemPath>${javaee.cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>tssv</artifactId>
+      <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tssv.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>tsprovider</artifactId>
+      <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tsprovider.jar</systemPath>
+    </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
@@ -220,6 +234,12 @@
       <type>jar</type>
       <version>${tomee.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${openejb.groupId}</groupId>
+      <artifactId>tomee-security</artifactId>
+      <type>jar</type>
+      <version>${tomee.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
@@ -265,6 +285,16 @@
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-util</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-util-scan</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
       <version>${tomcat.version}</version>
     </dependency>
     <dependency>
@@ -897,7 +927,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-util-scan,tomcat-juli,tomcat-api,openejb-lite,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -911,7 +941,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
