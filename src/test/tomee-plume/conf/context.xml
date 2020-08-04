@@ -28,4 +28,8 @@
     <!--
     <Manager pathname="" />
     -->
+
+    <!-- this is for Jaspic so we can override the default CallbackHandler until we discuss on Tomcat Mailing list -->
+    <Valve className="org.apache.catalina.authenticator.BasicAuthenticator"
+           jaspicCallbackHandlerClass="org.apache.tomee.security.provider.CallbackHandlerImpl"/>
 </Context>

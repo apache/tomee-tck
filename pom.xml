@@ -85,7 +85,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.15.8</version.activemq>
+    <version.activemq>5.15.12</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
@@ -96,6 +96,22 @@
       <version>${openejb.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-ra</artifactId>
+      <version>${version.activemq}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.components</groupId>
+      <artifactId>geronimo-connector</artifactId>
+      <version>3.1.4</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
@@ -140,6 +156,20 @@
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
       <systemPath>${javaee.cts.home}/lib/tsharness.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>tssv</artifactId>
+      <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tssv.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.javaee.tck</groupId>
+      <artifactId>tsprovider</artifactId>
+      <version>${javaee.tck.version}</version>
+      <scope>system</scope>
+      <systemPath>${javaee.cts.home}/lib/tsprovider.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -204,6 +234,12 @@
       <type>jar</type>
       <version>${tomee.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${openejb.groupId}</groupId>
+      <artifactId>tomee-security</artifactId>
+      <type>jar</type>
+      <version>${tomee.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.geronimo.modules</groupId>
@@ -249,6 +285,16 @@
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-util</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-util-scan</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
       <version>${tomcat.version}</version>
     </dependency>
     <dependency>
@@ -446,6 +492,20 @@
                       <classifier>webprofile</classifier>
                     </artifactItem>
                   </artifactItems>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-activemq</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${openejb.home}/lib</outputDirectory>
+                  <overWriteReleases>false</overWriteReleases>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                  <excludeTransitive>false</excludeTransitive>
+                  <includeArtifactIds>hawtbuf,activemq-ra,activemq-broker,activemq-kahadb-store,geronimo-connector</includeArtifactIds>
                 </configuration>
               </execution>
             </executions>
@@ -867,7 +927,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-juli,tomcat-api,openejb-lite,activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-util-scan,tomcat-juli,tomcat-catalina,tomee-security,tomcat-api,openejb-lite,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -881,7 +941,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>activemq-client,activemq-client,tsharness,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>

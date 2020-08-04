@@ -21,7 +21,7 @@
                   version="1.0">
 
 
-<!--  <provider name="any"
+  <provider name="any"
             className="org.apache.tomee.security.provider.TomEESecurityAuthConfigProvider"
             layer="HttpServlet"
             appContext="Catalina/localhost /securityapi_ham_autoapplysession_web"
@@ -416,7 +416,7 @@
             layer="HttpServlet"
             appContext="Catalina/localhost /securityapi_securitycontext_getprincipalsbytype_web"
             description="any">
-</provider>-->
+  </provider>
 </jaspic-providers>
 
 
