@@ -38,9 +38,12 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.5-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.5-SNAPSHOT</tomee.version>
 
+    <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
+    upgraded to 9.x, lib jars are still in the same old package and still using the base version
+    For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
+    <openejb.version>8.0.4</openejb.version>
+    <tomee.version>8.0.4</tomee.version>
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-M2</tomee.zip.version>
 
