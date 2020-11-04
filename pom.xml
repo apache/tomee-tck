@@ -862,6 +862,11 @@
                     <exclude name="openejb-core-eclipselink*.jar" />
                   </fileset>
                 </copy>
+                <copy todir="${project.build.directory}/lib">
+                  <fileset dir="${openejb.home}/bin">
+                    <include name="tomcat-juli.jar"/>
+                  </fileset>
+                </copy>
               </target>
             </configuration>
           </execution>
