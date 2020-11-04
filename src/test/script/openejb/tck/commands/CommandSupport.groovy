@@ -244,6 +244,9 @@ abstract class CommandSupport {
         // for jonzon
         builder.appendAll("johnzon-*.jar")
 
+        // tomcat for jaspic auth provider and factory
+        builder.appendAll("tomcat-*.jar")
+
         builder.getPath("ts.run.classpath")
         // ts.harness.classpath
         builder = new PathBuilder(this)
