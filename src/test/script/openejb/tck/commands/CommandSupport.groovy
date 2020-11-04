@@ -268,7 +268,8 @@ abstract class CommandSupport {
         builder.directory = "${project.build.directory}"
         builder.append("openejb-tck-*.jar")
         builder.directory = "${project.build.directory}/lib"
-        builder.append("openejb-lite*.jar")
+        builder.append("javaee-api*.jar")
+        builder.append("openejb-core*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")

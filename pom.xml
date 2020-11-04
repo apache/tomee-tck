@@ -47,7 +47,7 @@
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-M3-SNAPSHOT</tomee.zip.version>
 
-    <tomcat.version>9.0.30</tomcat.version>
+    <tomcat.version>9.0.39</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -96,12 +96,13 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>${openejb.groupId}</groupId>
-      <artifactId>openejb-lite</artifactId>
-      <version>${openejb.version}</version>
-    </dependency>
 
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jms_1.1_spec</artifactId>
+      <version>1.1.1</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-ra</artifactId>
@@ -767,6 +768,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.0.1</version>
         <executions>
+          <!-- this gets overridden based on the profile with whatever distribution pulled -->
           <execution>
             <id>unpack</id>
             <phase>pre-integration-test</phase>
@@ -785,6 +787,13 @@
               </artifactItems>
             </configuration>
           </execution>
+
+          <!--
+            This basically adds into the lib directory for the client the necessary jars
+            Do not add any TomEE, Tomcat jar because they have to come from the lib above.
+            Otherwise, they won't be jakartized
+            ActiveMQ is a bit special because it's old and still requires Geronimo Spec for JMS 1.1 which is not Jakarta compliant
+          -->
           <execution>
             <id>copy-dependencies</id>
             <phase>pre-integration-test</phase>
@@ -796,9 +805,11 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-util-scan,tomcat-juli,tomcat-catalina,tomee-security,tomcat-api,openejb-lite,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
+
+          <!-- This has extra libraries required to run the TCK -->
           <execution>
             <id>copy-dependencies-tomee-lib</id>
             <phase>pre-integration-test</phase>
@@ -825,6 +836,35 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
+          <execution>
+            <id>copy-tomee-libs-to-tck-javatest</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <copy todir="${project.build.directory}/lib">
+                  <fileset dir="${openejb.home}/lib">
+                    <include name="tomcat-websocket*.jar"/>
+                    <include name="tomcat-util*.jar"/>
+                    <include name="tomcat-juli*.jar"/>
+                    <include name="tomcat-catalina*.jar"/>
+                    <include name="jaspic-api*.jar"/>
+                    <include name="tomcat-api*.jar"/>
+                    <include name="websocket-api*.jar"/>
+                    <include name="jsp-api*.jar"/>
+                    <include name="el-api*.jar"/>
+                    <include name="javaee-api*.jar"/>
+                    <include name="tomee-security*.jar"/>
+                    <include name="openejb-core*.jar"/>
+                    <include name="openejb-derbynet*.jar"/>
+                    <exclude name="openejb-core-eclipselink*.jar" />
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
           <execution>
             <id>remove-apps-and-copy-libs-from-tck</id>
             <phase>pre-integration-test</phase>
