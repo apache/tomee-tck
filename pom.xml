@@ -91,11 +91,21 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.15.12</version.activemq>
+    <version.activemq>5.16.0</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
   <dependencies>
+
+    <!-- This is just so we can compile the WebappDeployer in this project
+      This jar is not required in tomee because we pull the transformed version and therefor
+      the api is already converted - but we can't reference it in Maven
+    -->
+    <dependency>
+      <groupId>jakarta.ejb</groupId>
+      <artifactId>jakarta.ejb-api</artifactId>
+      <version>4.0.0-RC2</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
@@ -243,6 +253,12 @@
     </dependency>
     <dependency>
       <groupId>${openejb.groupId}</groupId>
+      <artifactId>tomee-catalina</artifactId>
+      <type>jar</type>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-security</artifactId>
       <type>jar</type>
       <version>${tomee.version}</version>
@@ -275,12 +291,6 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-derbynet</artifactId>
-      <version>${openejb.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${openejb.groupId}</groupId>
-      <artifactId>webdeployer</artifactId>
       <version>${openejb.version}</version>
     </dependency>
 
@@ -805,7 +815,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -821,7 +831,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -846,6 +856,63 @@
               <target>
                 <copy todir="${project.build.directory}/lib">
                   <fileset dir="${openejb.home}/lib">
+
+                    <!-- we essentially take everything from openejb-lite dependency tree - probably too much but fine to start -->
+
+                    <include name="javaee-api*.jar"/>
+
+                    <include name="openejb-core*.jar"/>
+                    <include name="mbean-annotation-api*.jar"/>
+                    <include name="openejb-jpa-integration*.jar"/>
+                    <include name="commons-lang3*.jar"/>
+                    <include name="openejb-api*.jar"/>
+                    <include name="openejb-loader*.jar"/>
+                    <include name="openejb-javaagent*.jar"/>
+                    <include name="openejb-jee*.jar"/>
+                    <include name="jaxb-runtime*.jar"/>
+                    <include name="jakarta.xml.bind-api*.jar"/>
+                    <include name="jakarta.activation*.jar"/>
+                    <include name="txw2*.jar"/>
+                    <include name="istack-commons*.jar"/>
+                    <include name="stax-ex*.jar"/>
+                    <include name="FastInfoset*.jar"/>
+                    <include name="openejb-jee-accessors*.jar"/>
+                    <include name="sxc-jaxb*.jar"/>
+                    <include name="sxc-runtime*.jar"/>
+                    <include name="commons-cli*.jar"/>
+                    <include name="commons-collections*.jar"/>
+                    <include name="activemq-jdbc*.jar"/>
+                    <include name="geronimo-connector*.jar"/>
+                    <include name="geronimo-j2ee*.jar"/>
+                    <include name="geronimo-transaction*.jar"/>
+                    <include name="howl*.jar"/>
+                    <include name="jackson-databind*.jar"/>
+                    <include name="jackson-annotations*.jar"/>
+                    <include name="jackson-core*.jar"/>
+                    <include name="geronimo-javamail*.jar"/>
+                    <include name="xbean-asm*.jar"/>
+                    <include name="xbean-finder*.jar"/>
+                    <include name="xbean-reflect*.jar"/>
+                    <include name="xbean-naming*.jar"/>
+                    <include name="xbean-bundleutils*.jar"/>
+                    <include name="hsqldb*.jar"/>
+                    <include name="commons-dbcp2*.jar"/>
+                    <include name="commons-pool2*.jar"/>
+                    <include name="swizzle*.jar"/>
+                    <include name="commons-logging*.jar"/>
+                    <include name="quartz-openejb*.jar"/>
+                    <include name="slf4j-api*.jar"/>
+                    <include name="openwebbeans-impl*.jar"/>
+                    <include name="openwebbeans-spi*.jar"/>
+                    <include name="openwebbeans-ejb*.jar"/>
+                    <include name="openwebbeans-ee*.jar"/>
+                    <include name="openwebbeans-ee-common*.jar"/>
+                    <include name="openwebbeans-web*.jar"/>
+                    <include name="openwebbeans-el22*.jar"/>
+                    <include name="openjpa*.jar"/>
+                    <include name="serp*.jar"/>
+                    <include name="bval-jsr*.jar"/>
+
                     <include name="tomcat-websocket*.jar"/>
                     <include name="tomcat-util*.jar"/>
                     <include name="tomcat-juli*.jar"/>
@@ -855,10 +922,11 @@
                     <include name="websocket-api*.jar"/>
                     <include name="jsp-api*.jar"/>
                     <include name="el-api*.jar"/>
-                    <include name="javaee-api*.jar"/>
+                    <include name="servlet-api*.jar"/>
                     <include name="tomee-security*.jar"/>
-                    <include name="openejb-core*.jar"/>
-                    <include name="openejb-derbynet*.jar"/>
+
+                    <include name="geronimo-mail-*.jar"/>
+
                     <exclude name="openejb-core-eclipselink*.jar" />
                   </fileset>
                 </copy>
