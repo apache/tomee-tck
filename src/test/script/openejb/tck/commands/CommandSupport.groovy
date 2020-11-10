@@ -154,8 +154,8 @@ abstract class CommandSupport {
 
     def initPaths() {
         def openejbHome = get('openejb.home')
-        def javaeetckHome = get('javaee.cts.home')
-        def javaeeRiHome = get('javaee.ri.home')
+        def javaeetckHome = get('cts.home')
+        def javaeeRiHome = get('ri.home')
         def webcontainer = get('webcontainer')
         def tomeeHttpPort = get('webcontainer.default.port')
 
@@ -268,7 +268,7 @@ abstract class CommandSupport {
         builder.directory = "${project.build.directory}"
         builder.append("openejb-tck-*.jar")
         builder.directory = "${project.build.directory}/lib"
-        builder.append("openejb-lite*.jar")
+        builder.appendAll("*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
         builder.append("tsharness.jar")
