@@ -41,15 +41,16 @@
     <openejb.version>8.0.5-SNAPSHOT</openejb.version>
     <tomee.version>8.0.5-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.37</tomcat.version>
+    <tomcat.version>9.0.39</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
+    NOTE: Same for the Jakarta version "jakartaee9.cts.home" and "jakartaee9.ri.home" in ~/.m2/settings.xml
     -->
-    <javaee.cts.home>${javaee8.cts.home}</javaee.cts.home>
-    <javaee.ri.home>${javaee8.ri.home}</javaee.ri.home>
+    <cts.home>${javaee8.cts.home}</cts.home>
+    <ri.home>${javaee8.ri.home}</ri.home>
     <javaee.tck.version>8.0</javaee.tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
@@ -85,7 +86,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.15.12</version.activemq>
+    <version.activemq>5.16.0</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
@@ -147,7 +148,7 @@
       <!--<version>${javaee.tck.version}</version>-->
       <!--<scope>system</scope>-->
       <!--<type>jar</type>-->
-      <!--<systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
+      <!--<systemPath>${cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
     <!--</dependency>-->
 
     <dependency>
@@ -155,21 +156,21 @@
       <artifactId>tsharness</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/tsharness.jar</systemPath>
+      <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tssv</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/tssv.jar</systemPath>
+      <systemPath>${cts.home}/lib/tssv.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsprovider</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/tsprovider.jar</systemPath>
+      <systemPath>${cts.home}/lib/tsprovider.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -177,7 +178,7 @@
       <artifactId>javatest</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/javatest.jar</systemPath>
+      <systemPath>${cts.home}/lib/javatest.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -185,7 +186,7 @@
       <artifactId>cts</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/cts.jar</systemPath>
+      <systemPath>${cts.home}/lib/cts.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -193,7 +194,7 @@
       <artifactId>whitebox</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
+      <systemPath>${cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -201,7 +202,7 @@
       <artifactId>dbprocedures</artifactId>
       <version>${javaee.tck.version}</version>
       <scope>system</scope>
-      <systemPath>${javaee.cts.home}/lib/dbprocedures.jar</systemPath>
+      <systemPath>${cts.home}/lib/dbprocedures.jar</systemPath>
     </dependency>
 
     <dependency>
@@ -231,6 +232,12 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-loader</artifactId>
+      <type>jar</type>
+      <version>${tomee.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${openejb.groupId}</groupId>
+      <artifactId>tomee-catalina</artifactId>
       <type>jar</type>
       <version>${tomee.version}</version>
     </dependency>
@@ -311,143 +318,6 @@
   </dependencies>
 
   <profiles>
-
-    <!-- =================== -->
-    <!-- Standalone Environment -->
-    <!-- =================== -->
-
-    <profile>
-      <id>standalone-environment</id>
-
-      <activation>
-        <property>
-          <name>webcontainer</name>
-          <value>none</value>
-        </property>
-      </activation>
-
-      <properties>
-        <!-- where we will unpack openejb -->
-        <openejb.home>${project.build.directory}/apache-openejb-${openejb.version}</openejb.home>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
-                      <artifactId>openejb-standalone</artifactId>
-                      <version>${openejb.version}</version>
-                      <type>zip</type>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-
-      <dependencies>
-        <dependency>
-          <groupId>${openejb.groupId}</groupId>
-          <artifactId>openejb-standalone</artifactId>
-          <type>zip</type>
-          <version>${openejb.version}</version>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!-- =================== -->
-    <!-- Tomcat Environment -->
-    <!-- =================== -->
-
-    <profile>
-      <id>tomcat-environment</id>
-
-      <activation>
-        <property>
-          <name>webcontainer</name>
-          <value>tomcat</value>
-        </property>
-      </activation>
-
-      <properties>
-        <!-- where we will unpack tomcat -->
-        <openejb.home>${project.build.directory}/apache-tomcat-${tomcat.version}</openejb.home>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>${version.maven-dependency-plugin}</version>
-
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.apache.openejb.tck</groupId>
-                      <artifactId>tomcat</artifactId>
-                      <version>${tomcat.version}</version>
-                      <type>zip</type>
-                      <outputDirectory>${project.build.directory}</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>org.apache.tomee</groupId>
-                      <artifactId>tomee-webapp</artifactId>
-                      <version>${tomee.version}</version>
-                      <type>war</type>
-                      <outputDirectory>${openejb.home}/webapps/tomee</outputDirectory>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>${openejb.groupId}</groupId>
-                      <artifactId>tomee-loader</artifactId>
-                      <version>${tomee.version}</version>
-                      <type>jar</type>
-                      <outputDirectory>${openejb.home}/lib</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-
-      <dependencies>
-
-        <dependency>
-          <groupId>${openejb.groupId}</groupId>
-          <artifactId>tomee-webapp</artifactId>
-          <type>war</type>
-          <version>${tomee.version}</version>
-        </dependency>
-
-      </dependencies>
-
-    </profile>
-
 
     <!-- =================== -->
     <!-- TomEE Environment -->
@@ -898,6 +768,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.0.1</version>
         <executions>
+          <!-- this gets overridden based on the profile with whatever distribution pulled -->
           <execution>
             <id>unpack</id>
             <phase>pre-integration-test</phase>
@@ -916,6 +787,13 @@
               </artifactItems>
             </configuration>
           </execution>
+
+          <!--
+            This basically adds into the lib directory for the client the necessary jars
+            Do not add any TomEE, Tomcat jar because they have to come from the lib above.
+            Otherwise, they won't be jakartized
+            ActiveMQ is a bit special because it's old and still requires Geronimo Spec for JMS 1.1 which is not Jakarta compliant
+          -->
           <execution>
             <id>copy-dependencies</id>
             <phase>pre-integration-test</phase>
@@ -927,9 +805,11 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,tomcat-websocket,tomcat-util,tomcat-util-scan,tomcat-juli,tomcat-catalina,tomee-security,tomcat-api,openejb-lite,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
+
+          <!-- This has extra libraries required to run the TCK -->
           <execution>
             <id>copy-dependencies-tomee-lib</id>
             <phase>pre-integration-test</phase>
@@ -941,7 +821,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -956,6 +836,98 @@
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
+          <execution>
+            <id>copy-tomee-libs-to-tck-javatest</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <copy todir="${project.build.directory}/lib">
+                  <fileset dir="${openejb.home}/lib">
+
+                    <!-- we essentially take everything from openejb-lite dependency tree - probably too much but fine to start -->
+
+                    <include name="javaee-api*.jar"/>
+
+                    <include name="openejb-core*.jar"/>
+                    <include name="mbean-annotation-api*.jar"/>
+                    <include name="openejb-jpa-integration*.jar"/>
+                    <include name="commons-lang3*.jar"/>
+                    <include name="openejb-api*.jar"/>
+                    <include name="openejb-loader*.jar"/>
+                    <include name="openejb-javaagent*.jar"/>
+                    <include name="openejb-jee*.jar"/>
+                    <include name="jaxb-runtime*.jar"/>
+                    <include name="jakarta.xml.bind-api*.jar"/>
+                    <include name="jakarta.activation*.jar"/>
+                    <include name="txw2*.jar"/>
+                    <include name="istack-commons*.jar"/>
+                    <include name="stax-ex*.jar"/>
+                    <include name="FastInfoset*.jar"/>
+                    <include name="openejb-jee-accessors*.jar"/>
+                    <include name="sxc-jaxb*.jar"/>
+                    <include name="sxc-runtime*.jar"/>
+                    <include name="commons-cli*.jar"/>
+                    <include name="commons-collections*.jar"/>
+                    <include name="activemq-jdbc*.jar"/>
+                    <include name="geronimo-connector*.jar"/>
+                    <include name="geronimo-j2ee*.jar"/>
+                    <include name="geronimo-transaction*.jar"/>
+                    <include name="howl*.jar"/>
+                    <include name="jackson-databind*.jar"/>
+                    <include name="jackson-annotations*.jar"/>
+                    <include name="jackson-core*.jar"/>
+                    <include name="geronimo-javamail*.jar"/>
+                    <include name="xbean-asm*.jar"/>
+                    <include name="xbean-finder*.jar"/>
+                    <include name="xbean-reflect*.jar"/>
+                    <include name="xbean-naming*.jar"/>
+                    <include name="xbean-bundleutils*.jar"/>
+                    <include name="hsqldb*.jar"/>
+                    <include name="commons-dbcp2*.jar"/>
+                    <include name="commons-pool2*.jar"/>
+                    <include name="swizzle*.jar"/>
+                    <include name="commons-logging*.jar"/>
+                    <include name="quartz-openejb*.jar"/>
+                    <include name="slf4j-api*.jar"/>
+                    <include name="openwebbeans-impl*.jar"/>
+                    <include name="openwebbeans-spi*.jar"/>
+                    <include name="openwebbeans-ejb*.jar"/>
+                    <include name="openwebbeans-ee*.jar"/>
+                    <include name="openwebbeans-ee-common*.jar"/>
+                    <include name="openwebbeans-web*.jar"/>
+                    <include name="openwebbeans-el22*.jar"/>
+                    <include name="openjpa*.jar"/>
+                    <include name="serp*.jar"/>
+                    <include name="bval-jsr*.jar"/>
+
+                    <include name="tomcat-websocket*.jar"/>
+                    <include name="tomcat-util*.jar"/>
+                    <include name="tomcat-juli*.jar"/>
+                    <include name="catalina.jar"/>
+                    <include name="jaspic-api*.jar"/>
+                    <include name="tomcat-api*.jar"/>
+                    <include name="websocket-api*.jar"/>
+                    <include name="jsp-api*.jar"/>
+                    <include name="el-api*.jar"/>
+                    <include name="servlet-api*.jar"/>
+                    <include name="tomee-security*.jar"/>
+
+                    <include name="geronimo-mail-*.jar"/>
+
+                    <exclude name="openejb-core-eclipselink*.jar" />
+                  </fileset>
+                </copy>
+                <copy todir="${project.build.directory}/lib">
+                  <fileset dir="${openejb.home}/bin">
+                    <include name="tomcat-juli.jar"/>
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
           <execution>
             <id>remove-apps-and-copy-libs-from-tck</id>
             <phase>pre-integration-test</phase>
