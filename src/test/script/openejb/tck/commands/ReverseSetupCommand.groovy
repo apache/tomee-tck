@@ -32,7 +32,7 @@ class ReverseSetupCommand
     }
 
     def execute() {
-        def javaeeCtsHome = requireDirectory('javaee.cts.home')
+        def javaeeCtsHome = requireDirectory('cts.home')
 
         def tsant = new TsAntCommand(this)
         tsant.props['build.vi'] = true

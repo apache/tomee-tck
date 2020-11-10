@@ -48,7 +48,7 @@ class TsAntCommand
     }
 
     def execute(List goals) {
-        def javaeeCtsHome = requireDirectory('javaee.cts.home')
+        def javaeeCtsHome = requireDirectory('cts.home')
 
         log.info("Executing 'tsant' goals: $goals")
 
