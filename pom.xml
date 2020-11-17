@@ -914,6 +914,7 @@
                     <include name="el-api*.jar"/>
                     <include name="servlet-api*.jar"/>
                     <include name="tomee-security*.jar"/>
+                    <include name="tomee-catalina*.jar"/>
 
                     <include name="geronimo-mail-*.jar"/>
 
