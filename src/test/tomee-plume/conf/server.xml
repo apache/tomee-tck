@@ -70,6 +70,7 @@
     -->
     <Connector port="%webcontainer.default.port%" protocol="HTTP/1.1"
                connectionTimeout="20000"
+               allowedTrailerHeaders="myTrailer, myTrailer2"
                redirectPort="%webcontainer.default.ssl.port%">
       <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
     </Connector>
@@ -116,14 +117,14 @@
 
       <!-- Use the LockOutRealm to prevent attempts to guess user passwords
            via a brute-force attack -->
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
+      <!--Realm className="org.apache.catalina.realm.LockOutRealm"-->
         <!-- This Realm uses the UserDatabase configured in the global JNDI
              resources under the key "UserDatabase".  Any edits
              that are performed against this UserDatabase are immediately
              available for use by the Realm.  -->
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                resourceName="UserDatabase"/>
-      </Realm>
+      <!--/Realm-->
 
       <Host name="localhost" appBase="webapps"
             unpackWARs="true" autoDeploy="true">
