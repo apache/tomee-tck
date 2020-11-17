@@ -6,7 +6,6 @@ import org.apache.catalina.valves.ValveBase;
 
 import javax.naming.InitialContext;
 import javax.servlet.ServletException;
-import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 import java.io.IOException;
 
@@ -17,7 +16,7 @@ import java.io.IOException;
 public class TransactionalWorkaroundLeakGuardValve extends ValveBase {
 
     public TransactionalWorkaroundLeakGuardValve() {
-        this(false);
+        this(true);
     }
 
     public TransactionalWorkaroundLeakGuardValve(final boolean asyncSupported) {
@@ -26,14 +25,11 @@ public class TransactionalWorkaroundLeakGuardValve extends ValveBase {
 
     @Override
     public void invoke(final Request request, final Response response) throws IOException, ServletException {
-        if (isAsyncSupported()) {
-            getNext().invoke(request, response);
-            return;
-        }
 
-        // attemps to cleanup the thread if any transaction is started.
+        // attempt to cleanup the thread if any transaction is started.
         try {
-            final UserTransaction userTransaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+            final UserTransaction userTransaction =
+                (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
             userTransaction.rollback();
 
         } catch (final Exception e) {
@@ -42,7 +38,6 @@ public class TransactionalWorkaroundLeakGuardValve extends ValveBase {
         } finally {
             getNext().invoke(request, response);
         }
-
 
     }
 }
