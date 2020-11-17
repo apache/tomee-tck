@@ -29,7 +29,8 @@
     <Manager pathname="" />
     -->
 
+    <Valve className="org.apache.openejb.cts.TransactionalWorkaroundLeakGuardValve"/>
     <Valve className="org.apache.catalina.authenticator.BasicAuthenticator"
-           jaspicCallbackHandlerClass="org.apache.tomee.security.provider.CallbackHandlerImpl"
+           jaspicCallbackHandlerClass="org.apache.openejb.cts.CallbackHandlerImpl"
     />
 </Context>
