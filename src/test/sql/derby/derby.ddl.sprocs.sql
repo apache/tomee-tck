@@ -14,7 +14,7 @@ drop procedure Real_Proc ;
 create procedure Real_Proc (out MAX_PARAM REAL, out MIN_PARAM REAL, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Real_Proc' parameter style java;
 
 drop procedure Bit_Proc ;
-create procedure Bit_Proc (out MAX_PARAM SMALLINT, out MIN_PARAM SMALLINT, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Proc' parameter style java;
+create procedure Bit_Proc (out MAX_PARAM BOOLEAN, out MIN_PARAM BOOLEAN, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Bit_Proc' parameter style java;
 
 drop procedure Smallint_Proc ;
 create procedure Smallint_Proc (out MAX_PARAM SMALLINT, out MIN_PARAM SMALLINT, out NULL_PARAM DECIMAL(30,15)) language java external name 'com.sun.ts.lib.tests.jdbc.CS_Procs.Smallint_Proc' parameter style java;
