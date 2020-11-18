@@ -154,8 +154,8 @@ abstract class CommandSupport {
 
     def initPaths() {
         def openejbHome = get('openejb.home')
-        def javaeetckHome = get('jakartaee.cts.home')
-        def javaeeRiHome = get('jakartaee.ri.home')
+        def javaeetckHome = get('cts.home')
+        def javaeeRiHome = get('ri.home')
         def webcontainer = get('webcontainer')
         def tomeeHttpPort = get('webcontainer.default.port')
 
@@ -240,6 +240,7 @@ abstract class CommandSupport {
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
         builder.append("cxf-rt-frontend-jaxrs-*.jar")
+        builder.append("cxf-rt-rs-sse-*.jar")
 
         // for jonzon
         builder.appendAll("johnzon-*.jar")
@@ -299,7 +300,7 @@ abstract class CommandSupport {
             return;
         }
 
-        log.info("TCK pom version: " + require('jakartaee.tck.version'))
+        log.info("TCK pom version: " + require('javaee.tck.version'))
         log.info("Start - Container libraries")
         if (lib.exists() && lib.isDirectory()) {
             lib.listFiles().grep(~/.*.jar/).sort { it.name }.each {
