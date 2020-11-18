@@ -300,7 +300,7 @@ abstract class CommandSupport {
             return;
         }
 
-        log.info("TCK pom version: " + require('javaee.tck.version'))
+        log.info("TCK pom version: " + require('jakartaee.tck.version'))
         log.info("Start - Container libraries")
         if (lib.exists() && lib.isDirectory()) {
             lib.listFiles().grep(~/.*.jar/).sort { it.name }.each {
