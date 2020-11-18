@@ -325,7 +325,7 @@ echo "" # just an empty line
 [ ! -z $env ] && export
 
 # printing the content of the 2 main directories
-egrep 'javaee.(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
+egrep '(javaee|jakarta).(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 
 
 # Fire up Maven to do the real work

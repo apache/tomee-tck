@@ -38,7 +38,7 @@
       <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
     </properties>
     <message-layer>SOAP</message-layer>
-    <app-context-id>localhost /Hello_web/Hello</app-context-id>
+    <app-context-id>Catalina/localhost /Hello_web/Hello</app-context-id>
     <reg-description>TestSuite JSR 196 Config Provider</reg-description>
   </provider-config-entry>
   <provider-config-entry>

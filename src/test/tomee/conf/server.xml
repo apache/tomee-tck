@@ -70,7 +70,10 @@
     -->
     <Connector port="%webcontainer.default.port%" protocol="HTTP/1.1"
                connectionTimeout="20000"
-               redirectPort="%webcontainer.default.ssl.port%"/>
+               allowedTrailerHeaders="myTrailer, myTrailer2"
+               redirectPort="%webcontainer.default.ssl.port%">
+      <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+    </Connector>
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
@@ -82,11 +85,13 @@
          This connector uses the JSSE configuration, when using APR, the
          connector should be using the OpenSSL style configuration
          described in the APR documentation -->
-    <Connector port="%webcontainer.default.ssl.port%" protocol="HTTP/1.1" SSLEnabled="true"
-               maxThreads="150" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS"
-               keystoreFile="conf/clientcert.jks" keystorePass="changeit" keyAlias="cts"
-               truststoreFile="conf/ssl-truststore" truststorePass="changeit"/>
+    <Connector port="%webcontainer.default.ssl.port%" protocol="HTTP/1.1" SSLEnabled="true">
+      <SSLHostConfig truststoreFile="conf/ssl-truststore">
+        <Certificate certificateKeystoreFile="conf/clientcert.jks"
+                     certificateKeystorePassword="changeit"
+                     type="RSA" />
+      </SSLHostConfig>
+    </Connector>
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <!-- <Connector port="%tomee.ajp.port%" protocol="AJP/1.3" redirectPort="%tomee.ssl.port%" /> -->
@@ -112,14 +117,14 @@
 
       <!-- Use the LockOutRealm to prevent attempts to guess user passwords
            via a brute-force attack -->
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
+      <!--Realm className="org.apache.catalina.realm.LockOutRealm"-->
         <!-- This Realm uses the UserDatabase configured in the global JNDI
              resources under the key "UserDatabase".  Any edits
              that are performed against this UserDatabase are immediately
              available for use by the Realm.  -->
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                resourceName="UserDatabase"/>
-      </Realm>
+      <!--/Realm-->
 
       <Host name="localhost" appBase="webapps"
             unpackWARs="true" autoDeploy="true">
