@@ -240,6 +240,7 @@ abstract class CommandSupport {
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
         builder.append("cxf-rt-frontend-jaxrs-*.jar")
+        builder.append("cxf-rt-rs-sse-*.jar")
 
         // for jonzon
         builder.appendAll("johnzon-*.jar")
