@@ -42,12 +42,12 @@
     <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
     upgraded to 9.x, lib jars are still in the same old package and still using the base version
     For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
-    <openejb.version>8.0.6-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.6-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.5</openejb.version>
+    <tomee.version>8.0.5</tomee.version>
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-M3</tomee.zip.version>
 
-    <tomcat.version>9.0.40</tomcat.version>
+    <tomcat.version>10.0.0-M10</tomcat.version>
 
     <derby.version>10.7.1.1</derby.version>
 
@@ -104,7 +104,17 @@
     <dependency>
       <groupId>jakarta.ejb</groupId>
       <artifactId>jakarta.ejb-api</artifactId>
-      <version>4.0.0-RC2</version>
+      <version>4.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.transaction</groupId>
+      <artifactId>jakarta.transaction-api</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
@@ -1046,6 +1056,14 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </repository>
+    <repository>
+      <id>8.0.5</id>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1177/</url>
+    </repository>
+    <repository>
+      <id>M3-staging</id>
+      <url>https://repository.apache.org/content/repositories/orgapachetomee-1178/</url>
     </repository>
     <repository>
       <id>openejb-cts-file</id>

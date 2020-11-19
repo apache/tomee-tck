@@ -5,8 +5,8 @@ import org.apache.catalina.connector.Response;
 import org.apache.catalina.valves.ValveBase;
 
 import javax.naming.InitialContext;
-import javax.servlet.ServletException;
-import javax.transaction.UserTransaction;
+import jakarta.servlet.ServletException;
+import jakarta.transaction.UserTransaction;
 import java.io.IOException;
 
 /**
