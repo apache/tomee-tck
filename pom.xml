@@ -918,7 +918,8 @@
 
                     <include name="geronimo-mail-*.jar"/>
 
-                    <exclude name="openejb-core-eclipselink*.jar" />
+                    <include name="eclipselink*.jar"/>
+
                   </fileset>
                 </copy>
                 <copy todir="${project.build.directory}/lib">
