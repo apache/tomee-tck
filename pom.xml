@@ -51,7 +51,7 @@
     -->
     <cts.home>${javaee8.cts.home}</cts.home>
     <ri.home>${javaee8.ri.home}</ri.home>
-    <javaee.tck.version>8.0</javaee.tck.version>
+    <tck.version>8.0</tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1-SNAPSHOT</examples.version>
@@ -145,7 +145,7 @@
     <!--<dependency>-->
       <!--<groupId>com.test</groupId>-->
       <!--<artifactId>jar-to-test</artifactId>-->
-      <!--<version>${javaee.tck.version}</version>-->
+      <!--<version>${tck.version}</version>-->
       <!--<scope>system</scope>-->
       <!--<type>jar</type>-->
       <!--<systemPath>${cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
@@ -154,21 +154,21 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tssv</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/tssv.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsprovider</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/tsprovider.jar</systemPath>
     </dependency>
@@ -176,7 +176,7 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>javatest</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/javatest.jar</systemPath>
     </dependency>
@@ -184,7 +184,7 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>cts</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/cts.jar</systemPath>
     </dependency>
@@ -192,7 +192,7 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>whitebox</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
     </dependency>
@@ -200,7 +200,7 @@
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
-      <version>${javaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
       <systemPath>${cts.home}/lib/dbprocedures.jar</systemPath>
     </dependency>
