@@ -9,9 +9,9 @@ There are several dependencies that do not point to Maven Central, but actually 
 <dependency>
   <groupId>com.sun.javaee.tck</groupId>
   <artifactId>tsharness</artifactId>
-  <version>${jakartaee.tck.version}</version>
+  <version>${tck.version}</version>
   <scope>system</scope>
-  <systemPath>${jakartaee.cts.home}/lib/tsharness.jar</systemPath>
+  <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
 </dependency>
 ----
 

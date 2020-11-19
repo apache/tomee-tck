@@ -59,8 +59,8 @@ class ValidateCommand
             logProperties(project.properties, "Project")
         }
         
-        // Ensure that jakartaee.cts.home and jakartaee.ri.home are set to valid directories
-        ['jakartaee.cts.home', 'jakartaee.ri.home'].each {
+        // Ensure that cts.home and ri.home are set to valid directories
+        ['cts.home', 'ri.home'].each {
             def dir = requireDirectory(it)
 
             //

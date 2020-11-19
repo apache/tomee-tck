@@ -54,9 +54,9 @@
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
     -->
-    <jakartaee.cts.home>${jakartaee9.cts.home}</jakartaee.cts.home>
-    <jakartaee.ri.home>${jakartaee9.ri.home}</jakartaee.ri.home>
-    <jakartaee.tck.version>9.0</jakartaee.tck.version>
+    <cts.home>${jakartaee9.cts.home}</cts.home>
+    <ri.home>${jakartaee9.ri.home}</ri.home>
+    <tck.version>9.0</tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
     <examples.version>1.1-SNAPSHOT</examples.version>
@@ -161,64 +161,64 @@
     <!--<dependency>-->
       <!--<groupId>com.test</groupId>-->
       <!--<artifactId>jar-to-test</artifactId>-->
-      <!--<version>${jakartaee.tck.version}</version>-->
+      <!--<version>${tck.version}</version>-->
       <!--<scope>system</scope>-->
       <!--<type>jar</type>-->
-      <!--<systemPath>${jakartaee.cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
+      <!--<systemPath>${cts.home}/dist/com/sun/ts/tests/websocket/ee/javax/websocket/clientendpoint/wsc_ee_clientendpoint_Client_nodeploy.jar_client</systemPath>-->
     <!--</dependency>-->
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsharness</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/tsharness.jar</systemPath>
+      <systemPath>${cts.home}/lib/tsharness.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tssv</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/tssv.jar</systemPath>
+      <systemPath>${cts.home}/lib/tssv.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsprovider</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/tsprovider.jar</systemPath>
+      <systemPath>${cts.home}/lib/tsprovider.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>javatest</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/javatest.jar</systemPath>
+      <systemPath>${cts.home}/lib/javatest.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>cts</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/cts.jar</systemPath>
+      <systemPath>${cts.home}/lib/cts.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>whitebox</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
+      <systemPath>${cts.home}/dist/com/sun/ts/tests/common/connector/whitebox/whitebox.jar</systemPath>
     </dependency>
 
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
       <artifactId>dbprocedures</artifactId>
-      <version>${jakartaee.tck.version}</version>
+      <version>${tck.version}</version>
       <scope>system</scope>
-      <systemPath>${jakartaee.cts.home}/lib/dbprocedures.jar</systemPath>
+      <systemPath>${cts.home}/lib/dbprocedures.jar</systemPath>
     </dependency>
 
     <dependency>
