@@ -42,7 +42,7 @@
     <tomee.version>8.0.6-SNAPSHOT</tomee.version>
 
     <tomcat.version>9.0.40</tomcat.version>
-
+    <johnzon.version>1.2.9-SNAPSHOT</johnzon.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -95,6 +95,12 @@
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-lite</artifactId>
       <version>${openejb.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-jsonp-strict</artifactId>
+      <version>${johnzon.version}</version>
     </dependency>
 
     <dependency>
@@ -375,7 +381,7 @@
                   <overWriteReleases>false</overWriteReleases>
                   <overWriteSnapshots>true</overWriteSnapshots>
                   <excludeTransitive>false</excludeTransitive>
-                  <includeArtifactIds>hawtbuf,activemq-ra,activemq-broker,activemq-kahadb-store,geronimo-connector</includeArtifactIds>
+                  <includeArtifactIds>hawtbuf,activemq-ra,activemq-broker,activemq-kahadb-store,geronimo-connector,johnzon-jsonp-strict</includeArtifactIds>
                 </configuration>
               </execution>
             </executions>
@@ -674,8 +680,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 
