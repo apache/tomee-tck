@@ -516,7 +516,7 @@
                       <groupId>${tomee.zip.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.zip.version}</version>
-                      <classifier>plume</classifier>
+                      <classifier>plume-transformed</classifier>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
