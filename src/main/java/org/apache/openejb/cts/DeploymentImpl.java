@@ -22,6 +22,7 @@ package org.apache.openejb.cts;
 import com.sun.ts.lib.deliverable.DeliverableFactory;
 import com.sun.ts.lib.deliverable.PropertyManagerInterface;
 import com.sun.ts.lib.deliverable.PropertyNotSetException;
+import com.sun.ts.lib.implementation.sun.javaee.runtime.web.SunWebApp;
 import com.sun.ts.lib.porting.DeploymentInfo;
 import com.sun.ts.lib.porting.TSDeploymentException;
 import org.apache.openejb.config.RemoteServer;
@@ -45,11 +46,12 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static org.apache.openejb.assembler.Deployer.ALT_DD;
+
 @SuppressWarnings("unchecked")
 public class DeploymentImpl implements TSDeploymentInterface2 {
     private static final String HEAD = "OpenEJB - ";
     private static final String FILENAME = "filename";
-    private static final String ALT_DD = "altDD";
     private static final String PATH_SEP = System.getProperty("path.separator", ":");
     private static final String CLIENT_MAIN = "org.apache.openejb.client.Main";
 
@@ -59,6 +61,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         String containerJavaHome = System.getProperty("container.java.home");
         String containerJavaVersion = System.getProperty("container.java.version");
         String containerJavaOpts = System.getProperty("container.java.opts", "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
+        // String containerJavaOpts = System.getProperty("container.java.opts", "-Djava.security.properties=conf/security.properties -Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
         if (containerJavaVersion != null) {
             overrides.put("java.version", containerJavaVersion);
         }
@@ -176,6 +179,14 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
                     if (fileName.startsWith(moduleId)) {
                         final String name = fileName.substring(moduleId.length() + 1);
                         properties.put(ALT_DD + "/" + moduleId + "/" + name, path);
+
+                        // hack when deployer is used to deploy war in a standalone manner and not within an ear file
+                        // in that case, the altDD above are not read and webapp context is not overridden by the sun web.xml
+                        final Object webAppObject = info.getWebRuntimeData().get(moduleId);
+                        if (webAppObject != null) {
+                            final SunWebApp sunWebApp = SunWebApp.class.cast(webAppObject);
+                            properties.put("webapp." + moduleId + ".context-root", sunWebApp.getContextRoot());
+                        }
                     }
                 }
             }

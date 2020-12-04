@@ -19,8 +19,8 @@
 
 package openejb.tck.commands
 
+import org.apache.commons.collections4.properties.SortedProperties
 import org.apache.commons.lang.SystemUtils
-import java.sql.DriverManager
 
 /**
  * Setup the environment for running the TCK.
@@ -179,7 +179,7 @@ class SetupCommand
     def loadProps(file) {
         file = new File("$file")
 
-        def props = new Properties()
+        def props = new SortedProperties()
         def input = file.newInputStream()
         try {
             props.load(input)

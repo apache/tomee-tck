@@ -42,17 +42,19 @@
     <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
     upgraded to 9.x, lib jars are still in the same old package and still using the base version
     For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
-    <openejb.version>8.0.5</openejb.version>
-    <tomee.version>8.0.5</tomee.version>
+    <openejb.version>8.0.6-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.6-SNAPSHOT</tomee.version>
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
-    <tomee.zip.version>9.0.0-M3</tomee.zip.version>
+    <tomee.zip.version>9.0.0-M4-SNAPSHOT</tomee.zip.version>
 
     <tomcat.version>10.0.0-M10</tomcat.version>
 
-    <derby.version>10.7.1.1</derby.version>
+    <johnzon.version>1.2.9-SNAPSHOT</johnzon.version>
+    <derby.version>10.14.2.0</derby.version>
 
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
+    NOTE: Same for the Jakarta version "jakartaee9.cts.home" and "jakartaee9.ri.home" in ~/.m2/settings.xml
     -->
     <cts.home>${jakartaee9.cts.home}</cts.home>
     <ri.home>${jakartaee9.ri.home}</ri.home>
@@ -139,6 +141,13 @@
       <artifactId>geronimo-connector</artifactId>
       <version>3.1.4</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-jsonp-strict</artifactId>
+      <version>${johnzon.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
@@ -694,8 +703,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 
@@ -938,7 +947,8 @@
 
                     <include name="geronimo-mail-*.jar"/>
 
-                    <exclude name="openejb-core-eclipselink*.jar" />
+                    <include name="eclipselink*.jar"/>
+
                   </fileset>
                 </copy>
                 <copy todir="${project.build.directory}/lib">
@@ -1056,14 +1066,6 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </repository>
-    <repository>
-      <id>8.0.5</id>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1177/</url>
-    </repository>
-    <repository>
-      <id>M3-staging</id>
-      <url>https://repository.apache.org/content/repositories/orgapachetomee-1178/</url>
     </repository>
     <repository>
       <id>openejb-cts-file</id>

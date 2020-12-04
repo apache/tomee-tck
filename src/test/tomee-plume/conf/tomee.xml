@@ -72,6 +72,21 @@
     JtaManaged false
   </Resource>
 
+  <Resource id="jdbc/DB" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
+    UserName cts
+    Password cts
+  </Resource>
+
+  <Resource id="jdbc/DB_no_tx" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
+    UserName cts
+    Password cts
+    JtaManaged false
+  </Resource>
+
 
   <!--<Resource id="JmsResourceAdapter" type="ActiveMQResourceAdapter">-->
   <!--# Broker configuration-->
