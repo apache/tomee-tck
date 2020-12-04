@@ -42,8 +42,8 @@
     <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
     upgraded to 9.x, lib jars are still in the same old package and still using the base version
     For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
-    <openejb.version>8.0.6-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.6-SNAPSHOT</tomee.version>
+    <openejb.inzip.version>8.0.6-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>8.0.6-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-M4-SNAPSHOT</tomee.zip.version>
 
@@ -249,7 +249,7 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-core</artifactId>
-      <version>${openejb.version}</version>
+      <version>${openejb.inzip.version}</version>
       <exclusions>
         <exclusion>
           <artifactId>junit</artifactId>
@@ -261,26 +261,26 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-client</artifactId>
-      <version>${openejb.version}</version>
+      <version>${openejb.inzip.version}</version>
     </dependency>
 
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-loader</artifactId>
       <type>jar</type>
-      <version>${tomee.version}</version>
+      <version>${tomee.inzip.version}</version>
     </dependency>
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-catalina</artifactId>
       <type>jar</type>
-      <version>${tomee.version}</version>
+      <version>${tomee.inzip.version}</version>
     </dependency>
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>tomee-security</artifactId>
       <type>jar</type>
-      <version>${tomee.version}</version>
+      <version>${tomee.inzip.version}</version>
     </dependency>
 
     <dependency>
@@ -310,7 +310,7 @@
     <dependency>
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-derbynet</artifactId>
-      <version>${openejb.version}</version>
+      <version>${openejb.inzip.version}</version>
     </dependency>
 
     <dependency>
@@ -404,7 +404,7 @@
                   <overWriteReleases>false</overWriteReleases>
                   <overWriteSnapshots>true</overWriteSnapshots>
                   <excludeTransitive>false</excludeTransitive>
-                  <includeArtifactIds>hawtbuf,activemq-ra,activemq-broker,activemq-kahadb-store,geronimo-connector</includeArtifactIds>
+                  <includeArtifactIds>hawtbuf,activemq-ra,activemq-broker,activemq-kahadb-store,geronimo-connector,johnzon-jsonp-strict</includeArtifactIds>
                 </configuration>
               </execution>
             </executions>
@@ -809,7 +809,7 @@
                 <artifactItem>
                   <groupId>${openejb.groupId}</groupId>
                   <artifactId>openejb-standalone</artifactId>
-                  <version>${openejb.version}</version>
+                  <version>${openejb.inzip.version}</version>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                 </artifactItem>
