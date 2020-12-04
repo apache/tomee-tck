@@ -185,7 +185,9 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
                         final Object webAppObject = info.getWebRuntimeData().get(moduleId);
                         if (webAppObject != null) {
                             final SunWebApp sunWebApp = SunWebApp.class.cast(webAppObject);
-                            properties.put("webapp." + moduleId + ".context-root", sunWebApp.getContextRoot());
+                            if (sunWebApp.getContextRoot() != null) {
+                                properties.put("webapp." + moduleId + ".context-root", sunWebApp.getContextRoot());
+                            }
                         }
                     }
                 }

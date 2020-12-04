@@ -146,6 +146,7 @@
       <groupId>org.apache.johnzon</groupId>
       <artifactId>johnzon-jsonp-strict</artifactId>
       <version>${johnzon.version}</version>
+      <classifier>jakarta</classifier>
     </dependency>
 
     <dependency>
