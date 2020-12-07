@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <!-- The contents of this file will be loaded for each web application -->
-<Context crossContext="true" resourceOnlyServlets="jsp">
+<Context crossContext="true" resourceOnlyServlets="jsp" jndiExceptionOnFailedWrite="false">
     <CookieProcessor className="org.apache.tomcat.util.http.LegacyCookieProcessor" alwaysAddExpires="true" forwardSlashIsSeparator="false" />
     <!-- Default set of monitored resources. If one of these changes, the    -->
     <!-- web application will be reloaded.                                   -->
