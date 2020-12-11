@@ -14,6 +14,46 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
+########################################################################################################################
+#
+# Apache TomEE excludes
+#
+# This complements what's already provided in the CTS by default when challenges are accepted.
+
+################
+# Servlet
+################
+
+# TCK has a bug when formatting the HTTP request
+# It's been fixed in Jakarta EE 9 with https://github.com/eclipse-ee4j/jakartaee-tck/commit/ae4c10127a41b08e51969e25d6bffe7ace753981
+# The following 2 tests won't pass unless we force at the JVM level -Dline.separator=\r\n
+# They already pass on Jakarta EE 9 with TomEE 9
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getHeadersTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getHeaderTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getInputStreamTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartsTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartsTest1
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartTest1
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getHeadersTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getHeaderTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getInputStreamTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartsTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartsTest1
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartTest
+com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartTest1
+
+# TCK has a bug with the context path
+# It's been fixed already in Jakarta EE 9 with https://github.com/eclipse-ee4j/jakartaee-tck/pull/126
+com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testAccessToMethodAllowed
+com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testAllMethodsAllowedAnno
+com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testDenySomeUncovered
+com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testExcludeAuthConstraint
+com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testPartialDDServlet
+
+# End Apache TomEE excludes
+########################################################################################################################
+
 # Exclude list for CTS 8
 
 ################
