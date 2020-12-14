@@ -342,6 +342,9 @@ class SetupCommand
                 fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/multianno") {
                     include(name: "whitebox*.rar")
                 }
+                fileset(dir: "${javaeeCtsHome}/dist/com/sun/ts/tests/common/connector/whitebox/permissiondd") {
+                    include(name: "whitebox*.rar")
+                }
             }
         }
 

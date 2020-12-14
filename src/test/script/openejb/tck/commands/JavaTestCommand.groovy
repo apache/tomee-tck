@@ -119,7 +119,7 @@ class JavaTestCommand
         def logOutput = getBoolean('logOutput', false)
         def logOutputDirectory = get('logOutputDirectory', "${project.build.directory}/logs")
         def logFile = "${logOutputDirectory}/javatest.log"
-        
+
         def openejbHome = require('openejb.home')
         def javaeeCtsHome = require('javaee8.cts.home')
         def javaeeRiHome = require('javaee8.ri.home')
@@ -227,10 +227,16 @@ class JavaTestCommand
                 def containerJavaVersion = get('container.java.version')
                 if (containerJavaVersion != null) {
                     log.info("Using java version (container) ${containerJavaVersion}")
-                    jvmarg(value: "-Dcontainer.java.version=${containerJavaVersion}")
                 }
 
-                def containerJavaOpts = get('container.java.opts')
+                def containerJavaOpts = get('container.java.opts', "")
+                if (options.contains('security')) {
+                    log.info("Enabling server security manager")
+
+                    // -Djava.security.properties=conf/security.properties
+                    containerJavaOpts += "-Djava.security.manager -Djava.security.policy==${project.basedir}/${openejbHome}/conf/catalina.policy"
+                    log.info("Using java opts (container) ${containerJavaOpts}")
+                }
                 if (containerJavaOpts != null) {
                     log.info("Using java opts (container) ${containerJavaOpts}")
                     jvmarg(value: "-Dcontainer.java.opts=${containerJavaOpts}")
