@@ -235,7 +235,13 @@ class JavaTestCommand
 
                     // -Djava.security.properties=conf/security.properties
                     containerJavaOpts += "-Djava.security.manager -Djava.security.policy==${project.basedir}/${openejbHome}/conf/catalina.policy"
-                    log.info("Using java opts (container) ${containerJavaOpts}")
+                }
+                if (options.contains('websocket')) {
+                    log.info("Enabling Tomcat WebSockets configuration")
+                    containerJavaOpts += "-Dorg.apache.tomcat.websocket.DISABLE_BUILTIN_EXTENSIONS=true " +
+                            "-Dorg.apache.tomcat.websocket.ALLOW_UNSUPPORTED_EXTENSIONS=true " +
+                            "-Dorg.apache.tomcat.websocket.STRICT_SPEC_COMPLIANCE=true " +
+                            "-Dorg.apache.tomcat.websocket.DEFAULT_PROCESS_PERIOD=0"
                 }
                 if (containerJavaOpts != null) {
                     log.info("Using java opts (container) ${containerJavaOpts}")
