@@ -42,7 +42,6 @@
     <tomee.version>8.0.6-SNAPSHOT</tomee.version>
 
     <tomcat.version>9.0.40</tomcat.version>
-    <johnzon.version>1.2.9-SNAPSHOT</johnzon.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -95,12 +94,6 @@
       <groupId>${openejb.groupId}</groupId>
       <artifactId>openejb-lite</artifactId>
       <version>${openejb.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.johnzon</groupId>
-      <artifactId>johnzon-jsonp-strict</artifactId>
-      <version>${johnzon.version}</version>
     </dependency>
 
     <dependency>
@@ -827,7 +820,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer,johnzon-jsonp-strict</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
