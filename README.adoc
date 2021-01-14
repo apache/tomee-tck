@@ -6,36 +6,61 @@ This document and the OpenEJB TCK setup can be cloned from Git:
 
       git clone https://github.com/apache/tomee-tck.git
 
+### TCK Setup
+
 In order to run the TCK, you will need both the TCK binary itself, and the Eclipse Glassfish RI.
 
-At present, we are building the TCK binary from source, following these steps:
+To do so, you have two options to acquire the related TCK binary.
+
+#### Use a pre-built binary (recommended)
 
     wget https://download.eclipse.org/jakartaee/platform/8/jakarta-jakartaeetck-8.0.2.zip
     unzip jakarta-jakartaeetck-8.0.2.zip
-    rm jakarta-jakartaeetck-8.0.2.zip
-    cd jakartaeetck
+    # Please note: Direct download is not working here. You need to select a mirror!
+    wget https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip
+    unzip glassfish-5.1.0.zip
+
+#### Built the TCK by yourself
+
+At present, we are building the TCK binary from source, following these steps:
+
+    git clone https://github.com/eclipse-ee4j/jakartaee-tck
+    cd jakaratee-tck
+    git checkout 8.0.2
     export WORKSPACE=$(pwd)
+    # Please note: Direct download is not working here. You need to select a mirror!
     export GF_BUNDLE_URL=https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip
     export GF_HOME=$WORKSPACE
     export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
     export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
     export PATH=$JAVA_HOME/bin:$ANT_HOME/bin/:$PATH
+    # Might be required, if you downloaded a ZIP rather than to use a git checkout
+    chmod +x $WORKSPACE/docker/build_jakartaeetck.sh
     $WORKSPACE/docker/build_jakartaeetck.sh
 
-NOTE: Substitute in your path for JAVA_HOME and ANT_HOME as appropriate. The TCK takes around an hour to build.
+NOTE: Substitute in your path for `JAVA_HOME` and `$ANT_HOME` as appropriate. The TCK takes around an hour to build.
 
-Once that is complete, unzip the TCK zip file somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK
-and Glassfish in this folder:
+#### Next Steps
 
+Unzip the TCK zip file (if you have built the TCK by yourself, it is contained in `$WORKSPACE/jakartaeetck-bundles`) somewhere on your file system. Where and how you set this up is all down to personal preference, but I like to create a ee8tck folder under ~/dev and have both the TCK and Glassfish in this folder:
+
+    export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
     export TCK_HOME=/Users/jgallimore/dev/ee8tck/javaeetck
-    export RI_HOME =/Users/jgallimore/dev/ee8tck/glassfish5
+    export RI_HOME=/Users/jgallimore/dev/ee8tck/glassfish5
 
-You'll then need to add Apache Ant to the TCK:
+NOTE: This environment variables are required for every test run and need to be set again, if you didn't configured them permanently.
+
+In addition, you'll then need to add Apache Ant to the TCK:
 
     mkdir -p $TCK_HOME/tools/ant
     cp -R $ANT_HOME $TCK_HOME/tools/
 
 NOTE: I'm hoping we can eliminate this step (copying Ant) in the coming days.
+
+**Alternative:** Provide a symlink to `$ANT_HOME`
+
+    mkdir -p $TCK_HOME/tools/
+    ln -s $ANT_HOME $TCK_HOME/tools/ant
 
 Once unpacked, they can be "hooked" up via your maven settings.xml file like so:
 
@@ -57,7 +82,7 @@ Once unpacked, they can be "hooked" up via your maven settings.xml file like so:
 
 ## TEST RUN
 
-To complete a test run against the latest TomEE 8.0.0-SNAPSHOT, from the tomee-tck folder, run
+To complete a test run against the latest TomEE 8.0.X-SNAPSHOT, from the tomee-tck folder, run
 
     ./runtests --web tomee-plume com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
@@ -246,7 +271,7 @@ done, but it is risky.
  -Email:Make use of dev@tomee.apache.org
 
 We want to divide and conquer on each phase and clear it out as much
-as possible before moving to the next one.  We could possibly get up
+as possible before moving to the next one. We could possibly get up
 to 80% passing before reaching phase 3.
 
 So the name of the game is "call your shot" or "name it and claim
