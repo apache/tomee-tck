@@ -70,6 +70,7 @@
     -->
     <Connector port="%webcontainer.default.port%" protocol="HTTP/1.1"
                connectionTimeout="20000"
+               allowTrace="true"
                redirectPort="%webcontainer.default.ssl.port%"/>
     <!-- A "Connector" using the shared thread pool-->
     <!--

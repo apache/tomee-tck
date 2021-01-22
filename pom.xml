@@ -49,7 +49,7 @@
 
     <tomcat.version>10.0.0-M10</tomcat.version>
 
-    <johnzon.version>1.2.9-SNAPSHOT</johnzon.version>
+    <johnzon.version>1.2.9</johnzon.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
@@ -106,7 +106,7 @@
     <dependency>
       <groupId>jakarta.ejb</groupId>
       <artifactId>jakarta.ejb-api</artifactId>
-      <version>4.0.0-RC2</version>
+      <version>4.0.0</version>
     </dependency>
     <dependency>
       <groupId>jakarta.servlet</groupId>
@@ -141,14 +141,6 @@
       <artifactId>geronimo-connector</artifactId>
       <version>3.1.4</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.apache.johnzon</groupId>
-      <artifactId>johnzon-jsonp-strict</artifactId>
-      <version>${johnzon.version}</version>
-      <classifier>jakarta</classifier>
-    </dependency>
-
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-client</artifactId>
@@ -851,7 +843,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient,johnzon-jsonp-strict</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
             </configuration>
           </execution>
         </executions>

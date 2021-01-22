@@ -60,8 +60,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         Properties overrides = new Properties();
         String containerJavaHome = System.getProperty("container.java.home");
         String containerJavaVersion = System.getProperty("container.java.version");
-        String containerJavaOpts = System.getProperty("container.java.opts", "-Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
-        // String containerJavaOpts = System.getProperty("container.java.opts", "-Djava.security.properties=conf/security.properties -Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
+        String containerJavaOpts = System.getProperty("container.java.opts");
         if (containerJavaVersion != null) {
             overrides.put("java.version", containerJavaVersion);
         }
@@ -71,7 +70,7 @@ public class DeploymentImpl implements TSDeploymentInterface2 {
         }
 
         if (containerJavaOpts != null) {
-            overrides.put("java.opts", containerJavaOpts);
+            overrides.put("java.opts", containerJavaOpts + " -Dopenejb.deployer.jndiname=openejb/DeployerBusinessRemote");
         }
 
         final RemoteServer remoteServer = new RemoteServer(overrides, 250, true);

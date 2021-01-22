@@ -419,44 +419,10 @@
   </provider>
 
   <provider name="any"
-            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider"
-            layer="SOAP"
-            appContext="null"
-            description="TestSuite JSR 196 Config Provider">
-    <property name="AuthStatus_SEND_SUCCESS"
-              value="false" />
-    <property name="requestPolicy"
-              value="USER_NAME_PASSWORD" />
-  </provider>
-  <provider name="any"
-            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider"
-            layer="SOAP"
-            appContext="Catalina/localhost /Hello_web/Hello"
-            description="TestSuite JSR 196 Config Provider">
-    <property name="AuthStatus_SEND_SUCCESS"
-              value="false" />
-    <property name="requestPolicy"
-              value="USER_NAME_PASSWORD" />
-  </provider>
-  <provider name="any"
-            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet"
+            className="org.apache.tomee.security.provider.TomEESecurityAuthConfigProvider"
             layer="HttpServlet"
             appContext="Catalina/localhost /spitests_servlet_web"
-            description="Registration for TSAuthConfigProviderServlet using spitests_servlet_web">
-    <property name="AuthStatus_SEND_SUCCESS"
-              value="true" />
-    <property name="requestPolicy"
-              value="USER_NAME_PASSWORD" />
-  </provider>
-  <provider name="any"
-            className="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet"
-            layer="HttpServlet"
-            appContext="Catalina/localhost /spitests_servlet_web/WrapperServlet"
-            description="Registration for TSAuthConfigProviderServlet using spitests_servlet_web">
-    <property name="AuthStatus_SEND_SUCCESS"
-              value="true" />
-    <property name="requestPolicy"
-              value="USER_NAME_PASSWORD" />
+            description="any">
   </provider>
 
 </jaspic-providers>
