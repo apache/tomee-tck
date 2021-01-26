@@ -55,6 +55,7 @@
     JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
     UserName cts
     Password cts
+    testOnBorrow=true
   </Resource>
 
   <Resource id="jdbc/DB1" type="DataSource">
@@ -62,6 +63,7 @@
     JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
     UserName cts
     Password cts
+    testOnBorrow=true
   </Resource>
 
   <Resource id="jdbc/DB1Unmanaged" type="DataSource">
@@ -70,6 +72,7 @@
     UserName cts
     Password cts
     JtaManaged false
+    testOnBorrow=true
   </Resource>
 
   <Resource id="jdbc/DB" type="DataSource">
@@ -77,6 +80,7 @@
     JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
     UserName cts
     Password cts
+    testOnBorrow=true
   </Resource>
 
   <Resource id="jdbc/DB_no_tx" type="DataSource">
@@ -85,6 +89,7 @@
     UserName cts
     Password cts
     JtaManaged false
+    testOnBorrow=true
   </Resource>
 
 
