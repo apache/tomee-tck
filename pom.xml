@@ -45,7 +45,7 @@
     <openejb.inzip.version>8.0.7-SNAPSHOT</openejb.inzip.version>
     <tomee.inzip.version>8.0.7-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
-    <tomee.zip.version>9.0.0-M4-SNAPSHOT</tomee.zip.version>
+    <tomee.zip.version>9.0.0-M5-SNAPSHOT</tomee.zip.version>
 
     <tomcat.version>10.0.0</tomcat.version>
 
