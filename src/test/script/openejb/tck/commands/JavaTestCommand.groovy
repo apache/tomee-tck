@@ -230,6 +230,11 @@ class JavaTestCommand
                 }
 
                 def containerJavaOpts = get('container.java.opts', "")
+
+                // force memory on tasks because with JDK 8 it's computed with a bit too much
+                containerJavaOpts += "-Xmx256m"
+
+
                 if (options.contains('security')) {
                     log.info("Enabling server security manager")
 
