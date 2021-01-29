@@ -329,7 +329,7 @@ egrep '(javaee|jakarta).(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>
 
 
 # attempt to limit the memory for Maven
-export MAVEN_OPTS="-Xmx128m"
+# export MAVEN_OPTS="-Xmx128m"
 
 # Fire up Maven to do the real work
 if [ -z $nc ]; then
