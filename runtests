@@ -328,6 +328,9 @@ echo "" # just an empty line
 egrep '(javaee|jakarta).(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 
 
+# attempt to limit the memory for Maven
+export MAVEN_OPTS="-Xmx128m"
+
 # Fire up Maven to do the real work
 if [ -z $nc ]; then
 exec mvn -V --file "$DIRNAME/pom.xml" \
