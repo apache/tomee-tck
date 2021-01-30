@@ -28,7 +28,9 @@
 
   <Container id="StatefulContainer" ctype="STATEFUL">
     Passivator org.apache.openejb.core.stateful.SimplePassivater
-    TimeOut 20
+    #TimeOut 20
+    TimeOut 4
+    Frequency 10
     BulkPassivate 50
   </Container>
 

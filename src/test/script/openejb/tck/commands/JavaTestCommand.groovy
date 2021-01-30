@@ -232,7 +232,7 @@ class JavaTestCommand
                 def containerJavaOpts = get('container.java.opts', "")
 
                 // force memory on tasks because with JDK 8 it's computed with a bit too much
-                containerJavaOpts += " -Xmx512m"
+                containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
 
 
                 if (options.contains('security')) {
