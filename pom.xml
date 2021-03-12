@@ -25,14 +25,14 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.apache.openejb.cts</groupId>
-  <artifactId>openejb-tck</artifactId>
-  <name>OpenEJB TCK Harness</name>
+  <groupId>org.apache.tomee.cts</groupId>
+  <artifactId>tomee-tck</artifactId>
+  <name>TomEE TCK Harness</name>
 
   <version>8.0.7-SNAPSHOT</version>
 
   <description>
-    OpenEJB TCK Harness
+    TomEE TCK Harness
   </description>
 
   <properties>
