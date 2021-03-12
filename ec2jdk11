@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# for the runner
-source "$(dirname $(readlink -f $0))/ec2jdk8"
-
-# for the standalone tomee
-export MAVEN_OPTS="-Dcontainer.java.home=$HOME/jdk11 -Dcontainer.java.version=11.0 $MAVEN_OPTS"
