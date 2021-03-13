@@ -183,7 +183,7 @@ abstract class CommandSupport {
         // openejb.porting.classes -- porting impl and deps
         builder = new PathBuilder(this)
         builder.directory = "${project.build.directory}"
-        builder.append("openejb-tck-*.jar")
+        builder.append("tomee-tck-*.jar")
         builder.directory = openejbLib
 
 
@@ -267,7 +267,7 @@ abstract class CommandSupport {
         builder = new PathBuilder(this)
         builder.reference("openejb.jee.classes")
         builder.directory = "${project.build.directory}"
-        builder.append("openejb-tck-*.jar")
+        builder.append("tomee-tck-*.jar")
         builder.directory = "${project.build.directory}/lib"
         builder.appendAll("*.jar")
         builder.directory = "${javaeetckHome}/lib"
