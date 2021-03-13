@@ -295,12 +295,12 @@ class SetupCommand
         }
 
         //
-        // Copy openejb-tck jar to server lib
+        // Copy tomee-tck jar to server lib
         // this jar contains the DriverXADataSource needed for the xa tests
         //
         ant.copy(todir: "${openejbHome}/lib", overwrite: true) {
             fileset(dir: "${project.basedir}/target") {
-                include(name: "openejb-tck-*.jar")
+                include(name: "tomee-tck-*.jar")
             }
         }
 
