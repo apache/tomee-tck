@@ -176,6 +176,10 @@ processOptions() {
                 appendArgs "-Dinterop=true"
                 ;;
 
+            --ee91)
+                appendArgs "-Djakartaee=9.1"
+                ;;
+
             --reverse)
                 appendArgs "-Dreverse=true"
                 ;;

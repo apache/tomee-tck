@@ -640,6 +640,25 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>jakartaee-9.1</id>
+
+      <activation>
+        <property>
+          <name>jakartaee</name>
+          <value>9.1</value>
+        </property>
+      </activation>
+
+      <properties>
+        <cts.home>${jakartaee91.cts.home}</cts.home>
+        <ri.home>${jakartaee91.ri.home}</ri.home>
+        <tck.version>9.1</tck.version>
+      </properties>
+
+    </profile>
+
   </profiles>
 
   <build>
