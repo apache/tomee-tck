@@ -44,8 +44,8 @@
     For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
     <openejb.inzip.version>8.0.7-SNAPSHOT</openejb.inzip.version>
     <tomee.inzip.version>8.0.7-SNAPSHOT</tomee.inzip.version>
-    <tomee.zip.groupId>org.apache.tomee.jakarta</tomee.zip.groupId>
-    <tomee.zip.version>9.0.0-M5-SNAPSHOT</tomee.zip.version>
+    <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
+    <tomee.zip.version>9.0.0-M7-SNAPSHOT</tomee.zip.version>
 
     <tomcat.version>10.0.0</tomcat.version>
 
@@ -509,7 +509,7 @@
                       <groupId>${tomee.zip.groupId}</groupId>
                       <artifactId>apache-tomee</artifactId>
                       <version>${tomee.zip.version}</version>
-                      <classifier>plume-transformed</classifier>
+                      <classifier>plume</classifier>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                     </artifactItem>
