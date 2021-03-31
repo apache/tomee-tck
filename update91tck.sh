@@ -78,3 +78,7 @@ perl -i -pe "s,(<jakartaee91.cts.home>)[^<]+<,\$1$TCKDIR/$TCK<," ~/.m2/settings.
 
 echo "Updated ~/.m2/settings.xml"
 
+## Add info.txt and sha256 files into the extracted TCK
+## so that we have the full details on what we've installed
+echo "$TCKINFO" > "$TCKDIR/$TCK/info.txt"
+echo "$SHA" > "$TCKDIR/$TCK/sha256"

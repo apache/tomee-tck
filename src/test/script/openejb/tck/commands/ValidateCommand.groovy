@@ -20,6 +20,7 @@
 package openejb.tck.commands
 
 import org.apache.commons.lang.SystemUtils
+import org.apache.openejb.loader.IO
 
 /**
  * Validate the TCK environment.
@@ -32,7 +33,7 @@ class ValidateCommand
     def ValidateCommand(source) {
         super(source)
     }
-    
+
     def logProperties(props, header) {
         assert props
         assert header
@@ -45,20 +46,20 @@ class ValidateCommand
             }
         }
     }
-    
+
     def execute() {
         log.info("Validating TCK environment...")
-        
+
         if (SystemUtils.IS_OS_WINDOWS) {
             log.warn("Detected evil operating system; beware of failures caused by your operating system\'s stupidity")
         }
-        
+
         // Spit out some debug information
         if (log.isDebugEnabled()) {
             logProperties(System.properties, "System")
             logProperties(project.properties, "Project")
         }
-        
+
         // Ensure that cts.home and ri.home are set to valid directories
         ['cts.home', 'ri.home'].each {
             def dir = requireDirectory(it)
@@ -69,7 +70,19 @@ class ValidateCommand
 
             log.info("Using $it: $dir")
         }
+
+        def tckHome = new File(project.properties.getProperty('cts.home'))
+        def infoTxt = new File(tckHome, "info.txt")
+        if (infoTxt.exists()) {
+            def content = IO.slurp(infoTxt)
+            log.info(content)
+        }
         
+        def sha = new File(tckHome, "sha256")
+        if (sha.exists()) {
+            def content = IO.slurp(sha)
+            log.info("TCK SHA-256 " + content)
+        }
     }
 }
 
