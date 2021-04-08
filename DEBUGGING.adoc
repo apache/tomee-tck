@@ -1,0 +1,54 @@
+## Opening the TCK in your IDE
+
+The primary thing you need to debug through TCK tests is the source setup.  Here's a pom.xml I use that you can add to the root directory of an unzipped Jakarta EE TCK.  This is just enough pom.xml to get the TCK imported as a project in Intellij and sources appear without compile errors.  It does not actually build the TCK.
+
+- https://gist.github.com/dblevins/43eda499b820a2539a3d88c0e61d65a2
+
+
+## Getting a fresh TCK install after modifications
+
+A critical thing to be aware of is that 1) running the TCK will in fact modify your install in a handful of ways and 2) some of these process happen exactly once and will not repeat unless you unpack a completely fresh TCK install.
+
+I got tired of repeatedly deleting and unpacking fresh TCK installs and also wanted a way to see exactly what had been changed after running tests, so I created a git project from a completely fresh TCK install.  Here it is for those who want to use it:
+
+- https://github.com/dblevins/jakartaeetck-8.0.2
+
+The only changes post-unzip are to add Ant, and my pom.xml and a .gitignore.  With that I can do a `git clean -fd` at any time to restore my TCK install to a fresh state.  I can also do a `git status` and `git diff` to see exactly what has been modified.
+
+
+## Setup TomEE, TomEE TCK and TCK in Intellij as one project
+
+In most debugging scenarios you will need to step into both the test sources and the server sources.  You can't do that easily if they are setup in separate IDE windows.  They really need to be in the same project.  Here's how you can easily do that in Intellij.
+
+
+1.  Open your project settings, select `modules` and click the + button in the upper right.  https://pasteboard.co/JWgsOiJ.png
+2.  Select `Import Module` https://pasteboard.co/JWgtGXt.png
+3.  Navigate to the `pom.xml` file at the root of your clone of https://github.com/apache/tomee-tck and select `Open`.  https://pasteboard.co/JWguhKA.png
+4.  Repeat steps 1-3, but this time Navigate to the `pom.xml` of your Jakarta EE 8.0.2 TCK and select `Open`.  https://pasteboard.co/JWgw6Ze.png
+
+When this is done you should now see all three projects side-by-side in Intellij.  https://pasteboard.co/JWgxmQl.png
+
+
+## Opening a debug port 5005 to the TomEE server
+
+Now that the IDE is all setup, you can run a test with debug enabled and connect using Remote debugging in Intellij.  For this to work, you need to tell the tomee-tck `runtests` script to start the server with the debug port 5005 enabled via the `-ds` flag as follows:
+
+   ./runtests -ds -c -w tomee-plume com/sun/ts/tests/jaxrs/spec/provider/visibility
+
+
+## Running just one failing test in a group
+
+There will be situations where there is just one test failing in a group and you don't want to run the whole group, just the one failing test.  The TCK output will print the test names like follows:
+
+   1/-0/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#clientErrorExceptionTest_from_standalone - PASSED
+   2/-0/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#exceptionTest_from_standalone - PASSED
+   3/-0/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#filterChainTest_from_standalone - PASSED
+   3/-1/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#mappedExceptionTest_from_standalone - FAILED
+   4/-1/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#runtimeExceptionTest_from_standalone - PASSED
+   5/-1/?0 - com/sun/ts/tests/jaxrs/spec/provider/exceptionmapper/JAXRSClient#java#throwableTest_from_standalone - PASSED
+
+To run just that failing test in the middle you just need to yank the "#java" portion and feed that to `./runtests` like so:
+
+   ./runtests -ds -c -w tomee-plume com/sun/ts/tests/jaxrs/spec/provider/visibility
+
+
