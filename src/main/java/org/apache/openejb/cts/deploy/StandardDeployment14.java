@@ -293,8 +293,14 @@ public class StandardDeployment14 implements TSDeploymentInterface {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      throw (TSDeploymentException) new TSDeploymentException(
-          "Deployment Failed.").initCause(e);
+
+      // just print the details of the failure but don't interrupt the tests
+      // leave the test eventually fail if deployment is not available
+      // some tests like in WebSocket are explicitly testing deployment failures
+
+//      throw (TSDeploymentException) new TSDeploymentException(
+//          "Deployment Failed.").initCause(e);
+      return "";
     }
   }
 
