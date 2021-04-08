@@ -224,6 +224,8 @@ Example:
 
 Depending on the IDE, you will need to attempt twice to connect to the exposed port.
 
+TIP: See the link:DEBUGGING.adoc[debugging guide] on how to setup your IDE and other tips for happy debugging.
+
 ## WHAT TO TEST
 
 The test that needs to be tested are the one having the following `keywords`:
