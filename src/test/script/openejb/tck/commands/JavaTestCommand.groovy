@@ -242,7 +242,6 @@ class JavaTestCommand
                     log.info("Enabling Tomcat WebSockets configuration")
                     containerJavaOpts += "-Dorg.apache.tomcat.websocket.DISABLE_BUILTIN_EXTENSIONS=true " +
                             "-Dorg.apache.tomcat.websocket.ALLOW_UNSUPPORTED_EXTENSIONS=true " +
-                            "-Dorg.apache.tomcat.websocket.STRICT_SPEC_COMPLIANCE=true " +
                             "-Dorg.apache.tomcat.websocket.DEFAULT_PROCESS_PERIOD=0"
                 }
                 if (containerJavaOpts != null) {
