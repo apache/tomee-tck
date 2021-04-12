@@ -110,7 +110,7 @@ echo "Extracted ant"
 perl -i -pe "s,(<jakartaee91.cts.home>)[^<]+<,\$1$TCKDIR/$TCK<," ~/.m2/settings.xml
 
 ## Update jakartaee91.ri.home in ~/.m2/settings.xml
-perl -i -pe "s,(<jakartaee91.ri.home>)[^<]+<,\$1$RIDIR/$RI<," ~/.m2/settings.xml
+perl -i -pe "s,(<jakartaee91.ri.home>)[^<]+<,\$1$RIDIR/$RI/glassfish<," ~/.m2/settings.xml
 
 echo "Updated ~/.m2/settings.xml"
 
