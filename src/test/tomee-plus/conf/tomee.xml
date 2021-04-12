@@ -50,6 +50,13 @@
   <!--</Container>-->
 
   <!-- That should be also specified in the system.properties file of the target environment -->
+  <Resource id="jdbc/securityAPIDB" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true
+    UserName cts
+    Password cts
+  </Resource>
+
   <Resource id="jdbc/DB1" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
     JdbcUrl jdbc:derby://localhost:%derby.server.port%/derbydb;create=true

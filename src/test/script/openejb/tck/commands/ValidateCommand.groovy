@@ -70,6 +70,18 @@ class ValidateCommand
             log.info("Using $it: $dir")
         }
         
+        def tckHome = new File(project.properties.getProperty('cts.home'))
+        def infoTxt = new File(tckHome, "info.txt")
+        if (infoTxt.exists()) {
+            def content = IO.slurp(infoTxt)
+            log.info(content)
+        }
+
+        def sha = new File(tckHome, "sha256")
+        if (sha.exists()) {
+            def content = IO.slurp(sha)
+            log.info("TCK SHA-256 " + content)
+        }
     }
 }
 

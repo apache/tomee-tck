@@ -58,7 +58,7 @@ public class CallbackHandlerImpl implements CallbackHandler, Contained {
 
 
     @Override
-    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+    public void handle(final Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 
         String name = null;
         Principal principal = null;
