@@ -14,6 +14,13 @@ grep -q -m 1 jakartaee91.cts.home ~/.m2/settings.xml || {
     exit 1
 }
 
+grep -q -m 1 jakartaee91.ri.home ~/.m2/settings.xml || {
+    echo "No <jakartaee91.ti.home> variable found in ~/.m2/settings.xml"
+    echo "This script requires you to have setup the EE 9.1 TCK at least once manually"
+    echo "See the README.adoc for further instructions"
+    exit 1
+}
+
 ## Download the jakarta-jakartaeetckinfo.txt from Eclipse and get basic meta data
 TCKINFO="$(curl -s https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-910/jakarta-jakartaeetckinfo.txt)"
 DATESTAMP="$(echo "$TCKINFO" | grep 'date:' | perl -pe 's,.*date: (\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d).*,$1.$2$3,')"
@@ -25,7 +32,14 @@ NAME="$(echo "$TCKINFO" | grep 'Name:' | perl -pe 's,.*Name: *jakarta-([^ ]+)\.z
 OLDTCK="$(grep jakartaee91.cts.home ~/.m2/settings.xml | perl -pe 's,.*home>([^<]+)<.*,$1,')"
 TCKDIR="$(dirname "$OLDTCK")"
 
+## Look at our existing tck setup to see where GlassFish should be installed
+OLDRI="$(grep jakartaee91.ri.home ~/.m2/settings.xml | perl -pe 's,.*home>([^<]+)<.*,$1,')"
+RIDIR="$(dirname "$OLDRI")"
+
 TCK="$NAME-$DATESTAMP"
+
+RI="glassfish-6.0.0"
+RIURL="https://download.eclipse.org/ee4j/glassfish/$RI.zip"
 
 echo "Latest TCK
 NAME: $NAME
@@ -34,7 +48,7 @@ URL:  $URL
 SHA:  $SHA
 DIR:  $TCKDIR
 "
-
+#https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0.zip
 ## Download the TCK if we have not
 [ -f "$TCKDIR/$TCK.zip" ] || (
     echo "Downloading $TCK.zip"
@@ -53,6 +67,25 @@ echo "Downloaded $TCK.zip"
 )
 
 echo "Extracted $TCK"
+
+## Download the RI if we have not                                                                                                                      
+[ -f "$RIDIR/$RI.zip" ] || (
+    echo "Downloading $RI.zip"
+    cd "$RIDIR" &&
+    curl "$RIURL" > "$RI.zip"
+)
+
+echo "Downloaded $RI.zip"
+
+## Extract the RI if we have not                                                                                                                       
+[ -d "$RIDIR/$RI" ] || (
+    echo "Extracting to $RIDIR/$RI"
+    mkdir "$RIDIR/$RI" &&
+        cd "$RIDIR/$RI" &&
+        bsdtar --strip-components=1 -xf "../$RI.zip"
+)
+
+echo "Extracted $RI"
 
 ## Download ant if we have not
 [ -f "$TCKDIR/apache-ant-1.10.9-bin.zip" ] || (
@@ -75,6 +108,9 @@ echo "Extracted ant"
 
 ## Update jakartaee91.cts.home in ~/.m2/settings.xml
 perl -i -pe "s,(<jakartaee91.cts.home>)[^<]+<,\$1$TCKDIR/$TCK<," ~/.m2/settings.xml
+
+## Update jakartaee91.ri.home in ~/.m2/settings.xml
+perl -i -pe "s,(<jakartaee91.ri.home>)[^<]+<,\$1$RIDIR/$RI<," ~/.m2/settings.xml
 
 echo "Updated ~/.m2/settings.xml"
 
