@@ -15,7 +15,7 @@ grep -q -m 1 jakartaee91.cts.home ~/.m2/settings.xml || {
 }
 
 grep -q -m 1 jakartaee91.ri.home ~/.m2/settings.xml || {
-    echo "No <jakartaee91.ti.home> variable found in ~/.m2/settings.xml"
+    echo "No <jakartaee91.ri.home> variable found in ~/.m2/settings.xml"
     echo "This script requires you to have setup the EE 9.1 TCK at least once manually"
     echo "See the README.adoc for further instructions"
     exit 1
