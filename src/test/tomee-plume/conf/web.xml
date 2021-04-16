@@ -114,6 +114,10 @@
             <param-name>listings</param-name>
             <param-value>false</param-value>
         </init-param>
+        <init-param>
+            <param-name>useBomIfPresent</param-name>
+            <param-value>pass-through</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <!--  The JSP page compiler and execution servlet, which is the mechanism   -->
