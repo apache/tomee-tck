@@ -327,6 +327,9 @@ echo "" # just an empty line
 # printing the content of the 2 main directories
 egrep '(javaee|jakarta).(ri|cts).home' ~/.m2/settings.xml | perl -pe 's,^ *|<[^>]+>,,g' | while read n; do echo $n; ls -l $n; done
 
+# print system information
+uname -a
+ifconfig | egrep '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'
 
 # attempt to limit the memory for Maven
 # export MAVEN_OPTS="-Xmx128m"
