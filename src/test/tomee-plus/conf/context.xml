@@ -30,12 +30,5 @@
     -->
 
     <Valve className="org.apache.openejb.cts.TransactionalWorkaroundLeakGuardValve"/>
-    <!-- Rollback this because it causes some other tests to fail because they test the Form authentication and Tomcat
-    Does not allow multiple authenticator valve
-    We need to hear back or to find a way to only add this for jaspic webapp or tests
-    
-    <Valve className="org.apache.catalina.authenticator.BasicAuthenticator"
-           jaspicCallbackHandlerClass="org.apache.openejb.cts.CallbackHandlerImpl"
-    />
-    -->
+
 </Context>
