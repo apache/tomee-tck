@@ -23,7 +23,7 @@
   <user name="javee_vi" password="javaee_vi" roles="staff"/>
   <user name="javajoe" password="javajoe" roles="Manager,Employee,guest"/>
   <user name="javaee" password="javaee" roles="Administrator,Employee,mgr,asadmin"/>
-  <user name="j2ee" password="j2ee" roles="Administrator,Employee,mgr,asadmin"/>
+  <user name="j2ee" password="j2ee" roles="Administrator,Employee,mgr,asadmin,staff"/>
 
   <user name="CN=CTS, OU=Java Software, O=Sun Microsystems Inc., L=Burlington, ST=MA, C=US" roles="Administrator"/>
 </tomcat-users>
