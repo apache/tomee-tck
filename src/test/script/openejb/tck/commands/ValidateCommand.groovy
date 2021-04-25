@@ -77,11 +77,16 @@ class ValidateCommand
             log.info(content)
         }
 
+        /*
+        DOES NOT YET EXIST FOR EE 8
+         */
+        /*
         def sha = new File(tckHome, "sha256")
         if (sha.exists()) {
             def content = IO.slurp(sha)
             log.info("TCK SHA-256 " + content)
         }
+        */
     }
 }
 
