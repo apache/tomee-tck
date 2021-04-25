@@ -900,6 +900,7 @@
                     <include name="openejb-loader*.jar"/>
                     <include name="openejb-javaagent*.jar"/>
                     <include name="openejb-jee*.jar"/>
+                    <include name="openejb-cxf*.jar"/>
                     <include name="jaxb-runtime*.jar"/>
                     <include name="jakarta.xml.bind-api*.jar"/>
                     <include name="jakarta.activation*.jar"/>
@@ -920,6 +921,7 @@
                     <include name="jackson-databind*.jar"/>
                     <include name="jackson-annotations*.jar"/>
                     <include name="jackson-core*.jar"/>
+                    <include name="johnzon*.jar"/>
                     <include name="geronimo-javamail*.jar"/>
                     <include name="xbean-asm*.jar"/>
                     <include name="xbean-finder*.jar"/>
