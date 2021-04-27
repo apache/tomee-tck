@@ -197,8 +197,7 @@ grant {
     // Precompiled JSPs need access to these packages.
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.el";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime";
-    permission java.lang.RuntimePermission
-     "accessClassInPackage.org.apache.jasper.runtime.*";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime.*";
 
     // Applications using WebSocket need to be able to access these packages
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket";
