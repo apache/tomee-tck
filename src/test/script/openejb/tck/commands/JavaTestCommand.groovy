@@ -230,12 +230,17 @@ class JavaTestCommand
                 }
 
                 def containerJavaOpts = get('container.java.opts', "")
+
+                // force memory on tasks because with JDK 8 it's computed with a bit too much
+                // containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
+
+
                 if (options.contains('security')) {
                     log.info("Enabling server security manager")
 
                     // -Djava.security.properties=conf/security.properties
-                    containerJavaOpts += " -Djava.security.manager " +
-                            "-Djava.security.policy==${project.basedir}/${openejbHome}/conf/catalina.policy " +
+                    containerJavaOpts += " -Djava.security.manager -Dcts.home=${javaeeCtsHome} -Djava.security.debug=none " +
+                            "-Djava.security.policy=${project.basedir}/${openejbHome}/conf/catalina.policy " +
                             "-Djava.security.properties=${project.basedir}/${openejbHome}/conf/security.properties"
                 }
                 if (options.contains('websocket')) {
