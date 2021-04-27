@@ -303,6 +303,7 @@ grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/jaspic/-" {
     permission java.security.SecurityPermission "setProperty.authconfigprovider.factory";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.authenticator.jaspic";
     permission java.util.logging.LoggingPermission "control";
+    permission java.net.SocketPermission "*", "connect,resolve"; // logger
 };
 grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/servlet/ee/spec/security/permissiondd/servlet_ee_spec_security_permissiondd_web/-" {
     permission java.util.PropertyPermission "cts.*", "read";
