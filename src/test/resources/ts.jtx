@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2009, 2019 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,69 +14,43 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 #
 
-########################################################################################################################
-#
-# Apache TomEE excludes
-#
-# This complements what's already provided in the CTS by default when challenges are accepted.
-
-################
-# Servlet
-################
-
-# TCK has a bug when formatting the HTTP request
-# It's been fixed in Jakarta EE 9 with https://github.com/eclipse-ee4j/jakartaee-tck/commit/ae4c10127a41b08e51969e25d6bffe7ace753981
-# The following 2 tests won't pass unless we force at the JVM level -Dline.separator=\r\n
-# They already pass on Jakarta EE 9 with TomEE 9
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getHeadersTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getHeaderTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getInputStreamTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartsTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartsTest1
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part/URLClient.java#getPartTest1
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getHeadersTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getHeaderTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getInputStreamTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartsTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartsTest1
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartTest
-com/sun/ts/tests/servlet/api/javax_servlet_http/part1/URLClient.java#getPartTest1
-
-# TCK has a bug with the context path
-# It's been fixed already in Jakarta EE 9 with https://github.com/eclipse-ee4j/jakartaee-tck/pull/126
-com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testAccessToMethodAllowed
-com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testAllMethodsAllowedAnno
-com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testDenySomeUncovered
-com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testExcludeAuthConstraint
-com/sun/ts/tests/servlet/spec/security/denyUncovered/Client.java#testPartialDDServlet
-
-# End Apache TomEE excludes
-########################################################################################################################
-
-# Exclude list for CTS 8
+# Exclude list for Jakarta EE TCK 9
 
 ################
 # Servlet
 ################
 
 #
-# Bug ID: 19815625
 #
-com/sun/ts/tests/servlet/api/javax_servlet_http/httpupgradehandler/URLClient.java#upgradeTest
+com/sun/ts/tests/servlet/api/jakarta_servlet_http/httpupgradehandler/URLClient.java#upgradeTest
 
+#
+# Excluding this test until we can merge https://github.com/eclipse-ee4j/jakartaee-tck/pull/558
+# TODO: In the next release after Jakarta EE 9 (perhaps Jakarta EE 9.1 or 10) the pull request will be merged and this exclude removed.
+com/sun/ts/tests/servlet/spec/security/secbasic/Client.java#test7
+com/sun/ts/tests/servlet/spec/security/secbasic/Client.java#test7_anno
+
+#
+# In response to accepted Platform TCK challenge servlet-api/issues/385 + https://github.com/eclipse-ee4j/jakartaee-tck/issues/594, exclude the following tests:
+#    com/sun/ts/tests/servlet/api/jakarta_servlet_http/httpservletrequest40/Client.java#httpServletMappingDispatchTest
+com/sun/ts/tests/servlet/api/jakarta_servlet_http/httpservletrequest40/Client.java#httpServletMappingDispatchTest
+
+#
+# In response to accepted challenge eclipse-ee4j/servlet-api#378 + https://github.com/eclipse-ee4j/jakartaee-tck/issues/593, exclude the following tests:
+#    com.sun.ts.tests.servlet.api.jakarta_servlet_http.cookie.URLClient#setMaxAgePositiveTest
+#    com.sun.ts.tests.servlet.pluggability.api.jakarta_servlet_http.cookie.URLClient#setMaxAgePositiveTest
+com/sun/ts/tests/servlet/api/jakarta_servlet_http/cookie/URLClient.java#setMaxAgePositiveTest
+com/sun/ts/tests/servlet/pluggability/api/jakarta_servlet_http/cookie/URLClient.java#setMaxAgePositiveTest
 
 ################
 # JSF
 ################
 
 #
-# Bug ID: 18117763
 #
 com/sun/ts/tests/jsf/spec/render/messages/URLClient.java#messagesRenderEncodeTest
 
 #
-# Bug ID: 21033845
 #
 com/sun/ts/tests/jsf/spec/flows/multipagewebinf/URLClient.java#facesFlowWebInfEntryExitTest
 com/sun/ts/tests/jsf/spec/flows/multipagewebinf/URLClient.java#facesFlowWebInfScopeTest
@@ -86,7 +60,6 @@ com/sun/ts/tests/jsf/spec/flows/multipagewebinf/URLClient.java#facesFlowWebInfSc
 ################
 
 #
-# Bug ID: 27645077
 #
 com/sun/ts/tests/jaxrs/jaxrs21/ee/client/executor/async/JAXRSClient.java#deleteTest_from_standalone
 com/sun/ts/tests/jaxrs/jaxrs21/ee/client/executor/async/JAXRSClient.java#deleteWithCallbackStringWhileServerWaitTest_from_standalone
@@ -147,23 +120,25 @@ com/sun/ts/tests/jaxrs/jaxrs21/ee/client/executor/async/JAXRSClient.java#traceWi
 com/sun/ts/tests/jaxrs/jaxrs21/ee/client/executor/async/JAXRSClient.java#traceWithStringClassWhileServerWaitTest_from_standalone
 
 #
-# Bug ID: 27869044
 #
 com/sun/ts/tests/jaxrs/jaxrs21/ee/sse/sseeventsource/JAXRSClient.java#connectionLostForDefault500msTest_from_standalone
 
 #
-# Bug ID: 27941277
 #
 com/sun/ts/tests/jaxrs/api/rs/core/linkbuilder/JAXRSClient.java#buildNoArgsThrowsUriBuilderExceptionTest_from_servlet
 com/sun/ts/tests/jaxrs/api/rs/core/linkbuilder/JAXRSClient.java#buildObjectsThrowsUriBuilderExceptionTest_from_servlet
 com/sun/ts/tests/jaxrs/api/rs/core/linkbuilder/JAXRSClient.java#buildRelativizedThrowsUriBuilderExceptionTest_from_servlet
+
+#
+# In response to accepted Platform TCK challenge jaxrs-api/issues/937, exclude the following test:
+#    com/sun/ts/tests/jaxrs/ee/rs/ext/providers/JAXRSProvidersClient.java#isRegisteredRuntimeExceptionExceptionMapperTest
+com/sun/ts/tests/jaxrs/ee/rs/ext/providers/JAXRSProvidersClient.java#isRegisteredRuntimeExceptionExceptionMapperTest_from_standalone
 
 ################
 # JPA
 ################
 
 #
-# Bug ID: 17503702
 #
 com/sun/ts/tests/jpa/core/metamodelapi/identifiabletype/Client.java#getDeclaredSingularAttributes_from_appmanaged
 com/sun/ts/tests/jpa/core/metamodelapi/identifiabletype/Client.java#getDeclaredSingularAttributes_from_appmanagedNoTx
@@ -173,7 +148,6 @@ com/sun/ts/tests/jpa/core/metamodelapi/identifiabletype/Client.java#getDeclaredS
 com/sun/ts/tests/jpa/core/metamodelapi/identifiabletype/Client.java#getDeclaredSingularAttributes_from_stateless3
 
 #
-# Bug ID: 17483472
 #
 com/sun/ts/tests/jpa/core/entityManagerFactory/Client.java#createEntityManagerFactoryStringTest_from_appmanaged
 com/sun/ts/tests/jpa/core/entityManagerFactory/Client.java#createEntityManagerFactoryStringTest_from_appmanagedNoTx
@@ -183,7 +157,6 @@ com/sun/ts/tests/jpa/core/entityManagerFactory/Client.java#createEntityManagerFa
 com/sun/ts/tests/jpa/core/entityManagerFactory/Client.java#createEntityManagerFactoryStringTest_from_stateless3
 
 #
-# Bug ID: 27377406
 #
 com/sun/ts/tests/jpa/core/query/language/Client.java#resultContainsFetchReference_from_appmanaged
 com/sun/ts/tests/jpa/core/query/language/Client.java#resultContainsFetchReference_from_appmanagedNoTx
@@ -193,7 +166,6 @@ com/sun/ts/tests/jpa/core/query/language/Client.java#resultContainsFetchReferenc
 com/sun/ts/tests/jpa/core/query/language/Client.java#resultContainsFetchReference_from_stateless3
 
 #
-# Bug ID: 27961853
 #
 com/sun/ts/tests/jpa/core/annotations/mapkeyenumerated/Client.java#elementCollectionTest_from_pmservlet
 com/sun/ts/tests/jpa/core/annotations/mapkeyenumerated/Client.java#elementCollectionTest_from_stateless3
@@ -205,7 +177,6 @@ com/sun/ts/tests/jpa/core/annotations/mapkeytemporal/Client.java#elementCollecti
 ################
 
 #
-# Bug ID: 27961884
 #
 com/sun/ts/tests/jsonb/customizedmapping/visibility/VisibilityCustomizationTest.java#testCustomVisibilityConfig_from_appclient
 com/sun/ts/tests/jsonb/customizedmapping/visibility/VisibilityCustomizationTest.java#testCustomVisibilityConfig_from_ejb
@@ -244,72 +215,21 @@ com/sun/ts/tests/jsonb/defaultmapping/collections/CollectionsMappingTest.java#te
 com/sun/ts/tests/jsonb/defaultmapping/collections/CollectionsMappingTest.java#testEnumSet_from_jsp
 com/sun/ts/tests/jsonb/defaultmapping/collections/CollectionsMappingTest.java#testEnumSet_from_servlet
 
-################
-# Interop
-################
-
-#
-# Bug ID : 27950931
-#
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_ccid/reverse/Client.java#ew_ssl_ssln_upn_ccid_sb_sb_testid3b_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_ccid/reverse/Client.java#ew_ssl_sslr_upn_ccid_sb_sb_testid7a_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_upid/reverse/Client.java#ew_ssln_ssln_upn_upid_wb_sb_testid6_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_upid/reverse/Client.java#ew_ssln_ssln_upn_upid_sb_sb_testid6_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_anonid/reverse/Client.java#ew_ssl_ssln_upn_anonid_wb_sb_testid3_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_anonid/reverse/Client.java#ew_ssl_ssln_upn_anonid_sb_sb_testid3_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_ccid/reverse/Client.java#ew_ssln_ssln_upn_ccid_sb_sb_testid4a_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_upid/reverse/Client.java#ew_ssl_ssln_upn_upid_sb_sb_testid3a_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_upid/reverse/Client.java#ew_ssl_ssln_upn_upid_wb_sb_testid3a_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_anonid/reverse/Client.java#ew_ssl_sslr_upn_anonid_sb_sb_testid8_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_anonid/reverse/Client.java#ew_ssl_sslr_upn_anonid_wb_sb_testid8_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_anonid/reverse/Client.java#ew_ssln_ssln_upn_anonid_sb_sb_testid4_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_anonid/reverse/Client.java#ew_ssln_ssln_upn_anonid_wb_sb_testid4_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_upid/reverse/Client.java#ew_ssl_sslr_upn_upid_wb_sb_testid7_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_upid/reverse/Client.java#ew_ssl_sslr_upn_upid_sb_sb_testid7_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_ssln_upn_ccid/reverse/Client.java#ew_ssl_ssln_upn_ccid_wb_sb_testid3b_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssl_sslr_upn_ccid/reverse/Client.java#ew_ssl_sslr_upn_ccid_wb_sb_testid7a_reverse
-com/sun/ts/tests/interop/csiv2/ew_ssln_ssln_upn_ccid/reverse/Client.java#ew_ssln_ssln_upn_ccid_wb_sb_testid4a_reverse
-
-#
-# Issue : 16661 (https://github.com/javaee/glassfish/issues/16661)
-#
-com/sun/ts/tests/interop/tx/session/stateful/bm/TxN_GlobalSingle/Client.java#test1
-com/sun/ts/tests/interop/tx/webclient/jsp/URLClient.java#test13
-
-#
-# Tests excluded for challenge 251826
-#
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test1_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test2_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test3_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test4_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test5_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test6_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test7_reverse
-com/sun/ts/tests/interop/security/appclient/stateful/Client.java#test8_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test1_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test2_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test3_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test4_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test5_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test6_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test7_reverse
-com/sun/ts/tests/interop/security/appclient/stateless/Client.java#test8_reverse
-com/sun/ts/tests/interop/security/ejbclient/sfrunas/Client.java#test5_reverse
-com/sun/ts/tests/interop/security/ejbclient/slrunas/Client.java#test5_reverse
-com/sun/ts/tests/interop/security/ejbclient/stateful/Client.java#test5_reverse
-com/sun/ts/tests/interop/security/ejbclient/stateless/Client.java#test5_reverse
 
 ################
 # Security API
 ################
 
 #
-# Tests excluded for challenges 253074 and 250907
 #
 com/sun/ts/tests/securityapi/idstore/noidstore/Client.java#testIdentityStoreValidate_noIDStore
 com/sun/ts/tests/securityapi/ham/sam/delegation/Client.java#testSAMDelegatesHAM
 
+
 #
-# Tests excluded for https://github.com/eclipse-ee4j/jakartaee-platform/issues/139
-com/sun/ts/tests/securityapi/ham/sam/obtainbean/Client.java#testSAMObtainBean
+# Web Socket 1.0 TCK Exclude List
+#
+
+# Issue https://github.com/eclipse-ee4j/websocket-api/issues/228
+com/sun/ts/tests/websocket/ee/jakarta/websocket/session/WSClient.java#getRequestURITest_from_standalone
+com/sun/ts/tests/websocket/spec/servercontainer/addendpoint/WSClient.java#getRequestURITest_from_standalone
