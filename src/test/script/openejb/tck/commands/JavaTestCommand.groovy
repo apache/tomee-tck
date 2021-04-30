@@ -235,9 +235,17 @@ class JavaTestCommand
 
                 def containerJavaOpts = get('container.java.opts', "")
 
+                // not sure about this ....
+                if (tckJavaHome == null || !new File(tckJavaHome, 'jmods').exists()/*j9 doesnt support it*/) {
+                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
+                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome.home}/endorsedlib")
+                    sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
+
+                    containerJavaOpts += " -Djava.locale.providers=COMPAT"
+                }
+
                 // force memory on tasks because with JDK 8 it's computed with a bit too much
                 // containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
-
 
                 if (options.contains('security')) {
                     log.info("Enabling server security manager")
@@ -293,9 +301,6 @@ class JavaTestCommand
                 sysproperty(key: "java.security.policy", file: "${javaeeRiHome}/bin/harness.policy")
                 sysproperty(key: "J2EE_HOME_RI", file: javaeeRiHome)
                 sysproperty(key: "deliverable.class", value: require('deliverable.class'))
-                if (tckJavaHome == null || !new File(tckJavaHome, 'jmods').exists()/*j9 doesnt support it*/) {
-                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
-                }
                 sysproperty(key: "com.sun.enterprise.home", file: javaeeRiHome)
                 sysproperty(key: "com.sun.aas.installRoot", file: javaeeRiHome)
                 sysproperty(key: "DEPLOY_DELAY_IN_MINUTES", value: require('deploy_delay_in_minutes'))
