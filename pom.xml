@@ -963,6 +963,8 @@
 
                     <include name="eclipselink*.jar"/>
 
+                    <include name="yoko*.jar"/>
+
                   </fileset>
                 </copy>
                 <copy todir="${project.build.directory}/lib">
