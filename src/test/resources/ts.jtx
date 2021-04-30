@@ -231,5 +231,5 @@ com/sun/ts/tests/securityapi/ham/sam/delegation/Client.java#testSAMDelegatesHAM
 #
 
 # Issue https://github.com/eclipse-ee4j/websocket-api/issues/228
-com/sun/ts/tests/websocket/ee/jakarta/websocket/session/WSClient.java#getRequestURITest_from_standalone
-com/sun/ts/tests/websocket/spec/servercontainer/addendpoint/WSClient.java#getRequestURITest_from_standalone
+com/sun/ts/tests/websocket/ee/jakarta/websocket/session/WSClient.java#getRequestURITest
+com/sun/ts/tests/websocket/spec/servercontainer/addendpoint/WSClient.java#getRequestURITest
