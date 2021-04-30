@@ -62,8 +62,8 @@ grant codeBase "file:${catalina.home}/bin/commons-daemon.jar" {
 // These permissions apply to the logging API
 // Note: If tomcat-juli.jar is in ${catalina.base} and not in ${catalina.home},
 // update this section accordingly.
-//  grant codeBase "file:${catalina.base}/bin/tomcat-juli.jar" {..}
-grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
+grant codeBase "file:${catalina.base}/bin/tomcat-juli.jar" {
+// grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
         permission java.io.FilePermission
          "${java.home}${file.separator}lib${file.separator}logging.properties", "read";
 
@@ -90,6 +90,10 @@ grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
         permission java.util.PropertyPermission "org.apache.juli.ClassLoaderLogManager.debug", "read";
         permission java.util.PropertyPermission "catalina.base", "read";
 
+        // TomEE specific
+        permission java.util.PropertyPermission "tomee.*", "read";
+
+
         // Note: To enable per context logging configuration, permit read access to
         // the appropriate file. Be sure that the logging configuration is
         // secure before enabling such access.
@@ -115,9 +119,14 @@ grant codeBase "file:${catalina.home}/lib/-" {
 
 // If using a per instance lib directory, i.e. ${catalina.base}/lib,
 // then the following permission will need to be uncommented
-// grant codeBase "file:${catalina.base}/lib/-" {
-//         permission java.security.AllPermission;
-// };
+grant codeBase "file:${catalina.base}/lib/-" {
+        permission java.security.AllPermission;
+};
+
+// TomEE webapp for deployment
+grant codeBase "file:${catalina.base}/webapps/tomee/-" {
+    permission java.security.AllPermission;
+};
 
 
 // ========== WEB APPLICATION PERMISSIONS =====================================
@@ -157,6 +166,27 @@ grant {
     permission java.util.PropertyPermission "java.vm.vendor", "read";
     permission java.util.PropertyPermission "java.vm.name", "read";
 
+    // TomEE
+    permission java.util.PropertyPermission "tomee.*", "read";
+    permission java.util.PropertyPermission "openejb.*", "read";
+    permission java.util.PropertyPermission "user.name", "read";
+    permission java.util.PropertyPermission "java.io.tmpdir", "read";
+    permission java.io.FilePermission "${catalina.base}/lib/-", "read"; // java ee api class, slf4j, owb, etc
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.loader"; // tomee
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.core"; // tomee
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.realm"; // tomee
+    permission java.lang.RuntimePermission "setContextClassLoader"; // tomee
+    permission java.lang.RuntimePermission "accessDeclaredMembers"; // owb
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks"; // owb
+    permission java.net.SocketPermission "localhost", "connect,resolve"; // jndi
+    permission java.net.SocketPermission "127.0.0.1", "connect,resolve"; // jndi
+    permission javax.security.auth.AuthPermission "doAsPrivileged"; // tomee security
+    permission javax.security.auth.AuthPermission "modifyPrincipals"; // tomee security
+    permission javax.security.auth.AuthPermission "modifyPrivateCredentials"; // tomee security
+
+    // TomEE for CTS classes in webapps
+    permission java.io.FilePermission "${cts.home}/dist/-", "read";
+
     // Required for OpenJMX
     permission java.lang.RuntimePermission "getAttribute";
 
@@ -169,12 +199,14 @@ grant {
     // Precompiled JSPs need access to these packages.
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.el";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime";
-    permission java.lang.RuntimePermission
-     "accessClassInPackage.org.apache.jasper.runtime.*";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.jasper.runtime.*";
 
     // Applications using WebSocket need to be able to access these packages
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket.server";
+
+    // TomEE for CTS classes
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.ts.*";
 };
 
 
@@ -259,17 +291,36 @@ grant codeBase "file:${catalina.home}/webapps/host-manager/-" {
 // grant codeBase "war:file:${catalina.base}/webapps/examples.war*/WEB-INF/lib/foo.jar" {
 // };
 
-// ================ Apache TomEE ============== (To be refined)
-grant codeBase "jar:file:${catalina.home}/lib/*!/-" {
-    permission java.security.AllPermission;
+// TomEE for CTS configuration
+grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/jaspic/-" {
+    permission java.io.FilePermission "${catalina.base}/conf/-", "read";
+    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml", "read,write,delete"; // Tomcat ACF
+    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml.new", "read,write,delete"; // Tomcat ACF
+    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml.old", "read,write,delete"; // Tomcat ACF
+    permission java.io.FilePermission "${catalina.base}/temp/-", "read,write";
+    permission java.io.FilePermission "${catalina.base}/logs/-", "read,write";
+    permission java.io.FilePermission "${catalina.base}/work/-", "read,write";
+    permission java.util.PropertyPermission "*", "read,write"; // the log file
+    permission java.security.SecurityPermission "getProperty.authconfigprovider.factory";
+    permission java.security.SecurityPermission "setProperty.authconfigprovider.factory";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.authenticator.jaspic";
+    permission java.util.logging.LoggingPermission "control";
 };
-grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
-    permission java.security.AllPermission;
+grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/servlet/ee/spec/security/permissiondd/servlet_ee_spec_security_permissiondd_web/-" {
+    permission java.util.PropertyPermission "cts.*", "read";
+
+    permission java.security.SecurityPermission "CTSPermission1_name";
+    permission java.security.SecurityPermission "CTSPermission1_name2";
+    permission java.security.SecurityPermission "CTSPermission2_name";
+    permission java.security.SecurityPermission "CTSPermission_second_name";
+
+    permission java.lang.RuntimePermission "loadLibrary.*";
+    permission java.lang.RuntimePermission "queuePrintJob";
+
+    permission java.net.SocketPermission "*", "connect";
+
+    permission java.io.FilePermission "*", "read";
+
+    permission java.util.PropertyPermission "*", "read";
 };
-grant codeBase "file:${catalina.base}/lib/-" {
-    permission java.security.AllPermission;
-};
-grant {
-        // "standard" properties that can be read by anyone
-        permission java.security.AllPermission ;
-};
+
