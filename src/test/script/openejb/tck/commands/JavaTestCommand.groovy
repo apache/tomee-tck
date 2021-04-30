@@ -204,6 +204,8 @@ class JavaTestCommand
                 if (tckJavaHome != null) {
                     log.info("Using java home (javatest) ${tckJavaHome}")
                     jvmarg(value: "-Dtck.java.home=${tckJavaHome}")
+                } else {
+                    tckJavaHome = javaHome
                 }
 
                 def tckJavaVersion = get('tck.java.version')
@@ -222,6 +224,8 @@ class JavaTestCommand
                 if (containerJavaHome != null) {
                     log.info("Using java home (container) ${containerJavaHome}")
                     jvmarg(value: "-Dcontainer.java.home=${containerJavaHome}")
+                } else {
+                    containerJavaHome = javaHome
                 }
 
                 def containerJavaVersion = get('container.java.version')
