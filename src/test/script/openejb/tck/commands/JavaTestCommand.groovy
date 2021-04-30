@@ -238,7 +238,7 @@ class JavaTestCommand
                 // not sure about this ....
                 if (tckJavaHome == null || !new File(tckJavaHome, 'jmods').exists()/*j9 doesnt support it*/) {
                     sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
-                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome.home}/endorsedlib")
+                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
                     sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
 
                     containerJavaOpts += " -Djava.locale.providers=COMPAT"
