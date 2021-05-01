@@ -51,6 +51,7 @@ class SetupCommand
                     'ts.run.classpath',
                     'ts.run.classpath.ri.suffix',
                     'ts.harness.classpath',
+                    'openejb.jee.classes',
                     'openejb.embedded.classpath',
                     'geronimo.specs.classpath',
                     'geronimo.porting.classes'
