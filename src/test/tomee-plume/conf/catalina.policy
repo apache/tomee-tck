@@ -298,6 +298,7 @@ grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/jaspic/-" {
     permission java.io.FilePermission "${catalina.base}/temp/-", "read,write";
     permission java.io.FilePermission "${catalina.base}/logs/-", "read,write";
     permission java.io.FilePermission "${catalina.base}/work/-", "read,write";
+    permission java.io.FilePermission "${cts.home}/-", "read,write"; // owb
     permission java.util.PropertyPermission "*", "read,write"; // the log file
     permission java.security.SecurityPermission "getProperty.authconfigprovider.factory";
     permission java.security.SecurityPermission "setProperty.authconfigprovider.factory";
