@@ -79,6 +79,9 @@ class SetupCommand
                     map['javaee.level'] = 'web'
                 }
 
+                log.info("Setting bin.dir to " + javaeeCtsHome.getAbsolutePath() + "/bin")
+                map['bin_dir'] = javaeeCtsHome.getAbsolutePath() + "/bin"
+
                 // map['servlet_adaptor'] = 'org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet'
                 map['servlet_adaptor'] = 'org.apache.openejb.server.rest.OpenEJBRestServlet'
                 map['jaxrs_impl_name'] = 'cxf'

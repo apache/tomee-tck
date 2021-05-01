@@ -341,6 +341,8 @@ class JavaTestCommand
                     sysproperty(key: "SYSTEMROOT", value: System.getenv('SystemRoot'))
                 }
 
+                sysproperty(key: "bin.dir", value: "${javaeeCtsHome}/bin")
+
                 // Include system properties
                 arg(value: "-EsysProps")
 
