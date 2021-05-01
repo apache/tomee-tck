@@ -946,6 +946,11 @@
                     <include name="serp*.jar"/>
                     <include name="bval-jsr*.jar"/>
 
+                    <!-- Hibernate Validator -->
+                    <include name="classmate-*.jar"/>
+                    <include name="hibernate-validator-*.jar"/>
+                    <include name="jboss-logging-*.jar"/>
+
                     <include name="tomcat-websocket*.jar"/>
                     <include name="tomcat-util*.jar"/>
                     <include name="tomcat-juli*.jar"/>
