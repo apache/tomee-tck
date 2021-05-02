@@ -205,7 +205,6 @@ abstract class CommandSupport {
         builder.append("jakarta.validation-api-*.jar")
         builder.append("jakarta.xml.bind-api-*.jar")
         builder.append("jaspic-api.jar")
-        builder.append("jakartaee-api-*.jar")
         builder.append("jsp-api.jar")
         builder.append("servlet-api.jar")
         builder.append("taglibs-shade-*.jar")
