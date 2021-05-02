@@ -185,6 +185,11 @@ grant {
     // TomEE for CTS classes in webapps
     permission java.io.FilePermission "${cts.home}/dist/-", "read";
 
+    // weird on ec2, it does not seem to work well for security api
+    // try a small hard coded version
+    permission java.io.FilePermission "/home/ec2-user/-", "read";
+    permission java.io.FilePermission "/home/ec2-user/jakartaeetck-9.1.0-2021-04-20.1739/dist/com/sun/ts/tests/securityapi/idstore/idstorepermission/securityapi_idstore_idstorepermission/securityapi_idstore_idstorepermission_web/-", "read";
+
     // Required for OpenJMX
     permission java.lang.RuntimePermission "getAttribute";
 
@@ -298,6 +303,12 @@ grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/jaspic/-" {
     permission java.io.FilePermission "${catalina.base}/temp/-", "read,write";
     permission java.io.FilePermission "${catalina.base}/logs/-", "read,write";
     permission java.io.FilePermission "${catalina.base}/work/-", "read,write";
+
+    // weird on ec2, it does not seem to work well for security api
+    // try a small hard coded version
+    permission java.io.FilePermission "/home/ec2-user/-", "read";
+    permission java.io.FilePermission "/home/ec2-user/jakartaeetck-9.1.0-2021-04-20.1739/dist/com/sun/ts/tests/securityapi/idstore/idstorepermission/securityapi_idstore_idstorepermission/securityapi_idstore_idstorepermission_web/-", "read";
+
     permission java.util.PropertyPermission "*", "read,write"; // the log file
     permission java.security.SecurityPermission "getProperty.authconfigprovider.factory";
     permission java.security.SecurityPermission "setProperty.authconfigprovider.factory";
