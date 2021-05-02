@@ -210,7 +210,7 @@ abstract class CommandSupport {
         builder.append("servlet-api.jar")
         builder.append("taglibs-shade-*.jar")
         builder.append("websocket-api.jar")
-        builder.directory = "/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents//Home/jre/lib/"
+        builder.directory = javaHome() +"/lib/"
         builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
@@ -301,6 +301,11 @@ abstract class CommandSupport {
         }
 
         builder.getPath("openejb.embedded.classpath")
+    }
+
+    private String javaHome() {
+        def file = new File(System.getProperty("java.home"))
+        return file.getAbsolutePath();
     }
 
     def selectTests() {
