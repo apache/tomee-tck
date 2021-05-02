@@ -210,6 +210,8 @@ abstract class CommandSupport {
         builder.append("servlet-api.jar")
         builder.append("taglibs-shade-*.jar")
         builder.append("websocket-api.jar")
+        builder.directory = "/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents//Home/jre/lib/"
+        builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
