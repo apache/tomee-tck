@@ -890,7 +890,7 @@
 
                     <!-- we essentially take everything from openejb-lite dependency tree - probably too much but fine to start -->
 
-                    <include name="javaee-api*.jar"/>
+                    <include name="jakartaee-api*.jar"/>
 
                     <include name="openejb-core*.jar"/>
                     <include name="mbean-annotation-api*.jar"/>

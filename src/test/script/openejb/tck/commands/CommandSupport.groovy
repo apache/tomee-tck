@@ -200,7 +200,7 @@ abstract class CommandSupport {
         builder.appendAll("geronimo-*_spec-*.jar")
         builder.append("el-api.jar")
         builder.append("jakarta.activation-*.jar")
-        builder.append("jakarta.annotation-api-*.jar")
+        builder.append("jakartaee-api-*.jar")
         builder.append("jakarta.faces-*.jar")
         builder.append("jakarta.validation-api-*.jar")
         builder.append("jakarta.xml.bind-api-*.jar")
