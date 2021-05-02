@@ -202,6 +202,7 @@ abstract class CommandSupport {
         builder.append("servlet-api.jar")
         builder.append("websocket-api.jar")
         builder.append("jakarta.faces-*.jar")
+        builder.append("taglibs-shade-*.jar")
         builder.append("el-api.jar")
         builder.append("jakarta.annotation-api-*.jar")
         builder.append("jakarta.validation-api-*.jar")
