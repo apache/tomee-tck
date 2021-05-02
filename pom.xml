@@ -86,7 +86,7 @@
     <!-- Random CTS properties that have been externalized -->
     <deliverable.class>com.sun.ts.lib.deliverable.cts.CTSDeliverable</deliverable.class>
     <deploy_delay_in_minutes>5</deploy_delay_in_minutes>
-    <cts.harness.debug>false</cts.harness.debug>
+    <cts.harness.debug>true</cts.harness.debug>
 
     <!-- Disable Surefire, we are using Javatest to execute integration tests -->
     <maven.test.skip>true</maven.test.skip>
