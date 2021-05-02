@@ -198,17 +198,17 @@ abstract class CommandSupport {
         builder = new PathBuilder(this)
         builder.directory = openejbLib
         builder.appendAll("geronimo-*_spec-*.jar")
-        builder.append("javaee-api-*.jar")
-        builder.append("servlet-api.jar")
-        builder.append("websocket-api.jar")
-        builder.append("jakarta.faces-*.jar")
-        builder.append("taglibs-shade-*.jar")
         builder.append("el-api.jar")
         builder.append("jakarta.annotation-api-*.jar")
+        builder.append("jakarta.faces-*.jar")
         builder.append("jakarta.validation-api-*.jar")
         builder.append("jakarta.xml.bind-api-*.jar")
         builder.append("jaspic-api.jar")
+        builder.append("javaee-api-*.jar")
         builder.append("jsp-api.jar")
+        builder.append("servlet-api.jar")
+        builder.append("taglibs-shade-*.jar")
+        builder.append("websocket-api.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
