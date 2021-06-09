@@ -199,6 +199,8 @@ abstract class CommandSupport {
         builder.directory = openejbLib
         builder.appendAll("geronimo-*_spec-*.jar")
         builder.append("javaee-api-*.jar")
+        builder.directory = javaHome() +"/lib/"
+        builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
@@ -289,6 +291,11 @@ abstract class CommandSupport {
         }
 
         builder.getPath("openejb.embedded.classpath")
+    }
+
+    private String javaHome() {
+        def file = new File(System.getProperty("java.home"))
+        return file.getAbsolutePath();
     }
 
     def selectTests() {

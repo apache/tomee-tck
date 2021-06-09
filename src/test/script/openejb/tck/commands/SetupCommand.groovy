@@ -51,6 +51,7 @@ class SetupCommand
                     'ts.run.classpath',
                     'ts.run.classpath.ri.suffix',
                     'ts.harness.classpath',
+                    'openejb.jee.classes',
                     'openejb.embedded.classpath',
                     'geronimo.specs.classpath',
                     'geronimo.porting.classes'
@@ -78,6 +79,9 @@ class SetupCommand
                     log.info("Setting javaee.level=web")
                     map['javaee.level'] = 'web'
                 }
+
+                log.info("Setting bin.dir to " + javaeeCtsHome.getAbsolutePath() + "/bin")
+                map['bin_dir'] = javaeeCtsHome.getAbsolutePath() + "/bin"
 
                 // map['servlet_adaptor'] = 'org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet'
                 map['servlet_adaptor'] = 'org.apache.openejb.server.rest.OpenEJBRestServlet'
