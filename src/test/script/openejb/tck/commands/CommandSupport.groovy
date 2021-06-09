@@ -233,13 +233,14 @@ abstract class CommandSupport {
         builder.append("jasper-el.jar")
         
         // for CXF JAX-RS client
-        builder.append("cxf-rt-rs-client-*.jar")
-        builder.append("cxf-rt-transports-http-*.jar")
-        builder.append("cxf-core-*.jar")
+        builder.append("cxf-shade-*.jar")
+        // builder.append("cxf-rt-rs-client-*.jar")
+        // builder.append("cxf-rt-transports-http-*.jar")
+        // builder.append("cxf-core-*.jar")
+        // builder.append("cxf-rt-frontend-jaxrs-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
-        builder.append("cxf-rt-frontend-jaxrs-*.jar")
         builder.append("cxf-rt-rs-sse-*.jar")
 
         // for jonzon
