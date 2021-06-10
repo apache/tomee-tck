@@ -202,7 +202,12 @@ abstract class CommandSupport {
         builder.append("jakarta.mail*.jar")
         builder.append("jakarta.activation-*.jar")
         builder.append("jakartaee-api-*.jar")
-        builder.append("jakarta.faces-*.jar")
+
+        // only for plume
+        if (webcontainer.contains("plume")) {
+            builder.append("jakarta.faces-*.jar")
+        }
+
         builder.append("jakarta.xml.bind-api-*.jar")
         builder.append("jaspic-api.jar")
         builder.append("jsp-api.jar")
