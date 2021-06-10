@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>8.0.7-SNAPSHOT</version>
+  <version>8.0.8-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -38,8 +38,8 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.7-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.7-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.8-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.8-SNAPSHOT</tomee.version>
 
     <tomcat.version>9.0.41</tomcat.version>
     <derby.version>10.14.2.0</derby.version>
