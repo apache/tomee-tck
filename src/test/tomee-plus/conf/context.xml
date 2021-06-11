@@ -31,4 +31,7 @@
 
     <Valve className="org.apache.openejb.cts.TransactionalWorkaroundLeakGuardValve"/>
 
+    <Environment name="myUrl" value="http://google.com"
+                 type="java.net.URL" override="false"/>
+
 </Context>
