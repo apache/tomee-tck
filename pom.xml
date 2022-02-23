@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>8.0.10-SNAPSHOT</version>
+  <version>8.0.11-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -42,8 +42,8 @@
     <!-- A bit tricky because of the nature we create the 9.x version. Even if the zip is
     upgraded to 9.x, lib jars are still in the same old package and still using the base version
     For example, for 9.0.0-M2, we are using 8.0.4 as a base line, so it must be aligned -->
-    <openejb.inzip.version>8.0.10-SNAPSHOT</openejb.inzip.version>
-    <tomee.inzip.version>8.0.10-SNAPSHOT</tomee.inzip.version>
+    <openejb.inzip.version>8.0.11-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>8.0.11-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-M8-SNAPSHOT</tomee.zip.version>
 
