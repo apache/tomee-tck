@@ -197,7 +197,6 @@ abstract class CommandSupport {
         // signature tests
         builder = new PathBuilder(this)
         builder.directory = openejbLib
-        builder.appendAll("geronimo-*_spec-*.jar")
         builder.append("el-api.jar")
         builder.append("jakarta.mail*.jar")
         builder.append("jakarta.activation-*.jar")
@@ -208,14 +207,13 @@ abstract class CommandSupport {
             builder.append("jakarta.faces-*.jar")
         }
 
-        builder.append("jakarta.xml.bind-api-*.jar")
         builder.append("jaspic-api.jar")
         builder.append("jsp-api.jar")
         builder.append("servlet-api.jar")
         builder.append("taglibs-shade-*.jar")
         builder.append("websocket-api.jar")
         builder.directory = javaHome() +"/lib/"
-        builder.append("rt.jar")
+        // builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
@@ -255,12 +253,12 @@ abstract class CommandSupport {
         // builder.append("cxf-rt-transports-http-*.jar")
         // builder.append("cxf-core-*.jar")
         // builder.append("cxf-rt-frontend-jaxrs-*.jar")
+        // builder.append("cxf-rt-rs-sse-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
-        builder.append("cxf-rt-rs-sse-*.jar")
 
-        // for jonzon
+        // for johnzon
         builder.appendAll("johnzon-*.jar")
 
         // tomcat for jaspic auth provider and factory
