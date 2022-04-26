@@ -30,6 +30,22 @@ Ensure, that you have a `profile` in your maven settings.xml like
 You can copy & paste from `settings.xml.template`. Ensure, that the directories exist. Then just run `./setup-tck91.sh`.
 It will conduct the initial TCK setup.
 
+==== Getting a fresh TCK install after modifications
+
+A critical thing to be aware of is that
+
+- 1.) Running the TCK will in fact modify your install in a handful of ways
+- 2.) Some of these processes happen exactly once and will not repeat unless you unpack a completely fresh TCK install.
+
+Just go to the location of the unzipped TCK and run
+
+    git init
+    git add *
+    git commit -m "initial"
+
+With that you can do a `git clean -fd` / `git reset --hard HEAD` at any time to restore the TCK install to a fresh state.
+You can also do a `git status` and `git diff` to see exactly what has been modified.
+
 === Semi Automated Way of Building the TCK from Source
 
 This is interesting, if you need to modify TCK source. To build from source, following these steps:
