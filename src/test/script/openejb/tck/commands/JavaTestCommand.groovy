@@ -171,6 +171,9 @@ class JavaTestCommand
                 //
                 def node = current.wrapper
 
+                // Force a higher stack size to avoid StackOverflowError for classpath building if run with Java 11 (default: 256kb)
+                jvmarg(value: '-Xss4m');
+
                 // Maybe set timeout
                 if (timeout > 0) {
                     log.info("Timeout after: ${timeout} seconds");
