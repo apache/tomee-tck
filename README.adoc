@@ -1,6 +1,6 @@
-# TomEE-TCK
+= TomEE-TCK
 
-## GETTING SETUP
+== GETTING SETUP
 
 This document and the OpenEJB TCK setup can be cloned from Git:
 
@@ -8,17 +8,41 @@ This document and the OpenEJB TCK setup can be cloned from Git:
 
 In order to run the TCK, you will need both the TCK binary itself, and the Eclipse Glassfish RI.
 
-At present, we are building the TCK binary from source, following these steps:
+=== Use setup-tck9.sh
 
-    wget https://download.eclipse.org/jakartaee/platform/8/jakarta-jakartaeetck-8.0.2.zip
-    unzip jakarta-jakartaeetck-8.0.2.zip
-    rm jakarta-jakartaeetck-8.0.2.zip
+Ensure, that you have a `profile` in your maven settings.xml like
+
+      <settings>
+        <profiles>
+          <profile>
+            <id>jakarta-tck-environment</id>
+            <activation>
+      	    <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jakartaee91.cts.home>/opt/dev/tcks/jakartaee91-tck</jakartaee91.cts.home>
+                <jakartaee91.ri.home>/opt/dev/tcks/glassfish6/glassfish</jakartaee91.ri.home>
+            </properties>
+          </profile>
+        </profiles>
+      </settings>
+
+You can copy & paste from `settings.xml.template`. Ensure, that the directories exist. Then just run `./setup-tck91.sh`.
+It will conduct the initial TCK setup.
+
+=== Semi Automated Way of Building the TCK from Source
+
+This is interesting, if you need to modify TCK source. To build from source, following these steps:
+
+    wget https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaeetck-9.1.0.zip
+    unzip jakarta-jakartaeetck-9.1.0.zip
+    rm jakarta-jakartaeetck-9.1.0.zip
     cd jakartaeetck
     export WORKSPACE=$(pwd)
-    export GF_BUNDLE_URL=https://www.eclipse.org/downloads/download.php?file=/glassfish/glassfish-5.1.0.zip
+    export GF_BUNDLE_URL=https://download.eclipse.org/ee4j/glassfish/glassfish-6.2.5.zip
     export GF_HOME=$WORKSPACE
     export ANT_HOME=/home/jgallimore/Apps/apache-ant-1.10.5
-    export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+    export JAVA_HOME=/usr/lib/jvm/java-1.11.0-openjdk-amd64/
     export PATH=$JAVA_HOME/bin:$ANT_HOME/bin/:$PATH
     $WORKSPACE/docker/build_jakartaeetck.sh
 
@@ -42,26 +66,26 @@ Once unpacked, they can be "hooked" up via your maven settings.xml file like so:
       <settings>
         <profiles>
           <profile>
-            <id>javaee-tck-environment</id>
+            <id>jakarta-tck-environment</id>
             <activation>
       	    <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-               <javaee8.cts.home>/Users/jgallimore/dev/ee8tck/javaeetck</javaee8.cts.home>
-               <javaee8.ri.home>/Users/jgallimore/dev/ee8tck/glassfish5/glassfish</javaee8.ri.home>
+                <jakartaee91.cts.home>/opt/dev/tcks/jakartaee91-tck</jakartaee91.cts.home>
+                <jakartaee91.ri.home>/opt/dev/tcks/glassfish6/glassfish</jakartaee91.ri.home>
             </properties>
           </profile>
         </profiles>
       </settings>
 
 
-## TEST RUN
+== TEST RUN
 
-To complete a test run against the latest TomEE 8.0.0-SNAPSHOT, from the tomee-tck folder, run
+To complete a test run against the latest TomEE 9.0.0-M8-SNAPSHOT, from the tomee-tck folder, run
 
     ./runtests --web tomee-plume com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
-A successful execution should show and output similiar to:
+A successful execution should show and output similar to:
 
           ===============================================================================
               1/-0/?0 - com/sun/ts/tests/ejb30/bb/localaccess/statelessclient/Client#java#exceptionTest1 - PASSED
@@ -88,7 +112,7 @@ A successful execution should show and output similiar to:
           ===============================================================================
 
 
-## MISC
+== MISC
 
 The target directory is not cleaned out at the beginning of a test
 run.  There are a few thousand tests and sometimes multiple
@@ -101,7 +125,7 @@ On occasion some bad state will get into the server install in the
 target/ directory.  If you start getting weird maven or groovy
 errors, clean out the target dir and try again.
 
-## TAB COMPLETION
+== TAB COMPLETION
 
 There is a nice little script in the root directory called
 runtests.completer which, when sourced, can give be a great
@@ -111,7 +135,7 @@ In bash just source the file like so:
 
   source runtests.completer
 
-### ZSH
+=== ZSH
 
 If you are using ZSH, you need to execute the follows commands:
 
@@ -121,7 +145,7 @@ If you are using ZSH, you need to execute the follows commands:
 
 Then you will be able to have the completer working fine for you ZSH as well. :)
 
-## LOGS
+== LOGS
 
 The TCK for the most part runs as a client in a separate vm.  The
 test results are sent to this vm and then logged here:
@@ -136,10 +160,10 @@ that log.
 
 The server logs are in the usual place:
 
-   target/apache-tomee-plume-8.0.0-SNAPSHOT/logs
-   target/apache-tomee-plume-8.0.0-SNAPSHOT/logs
+   target/apache-tomee-plume-9.0.0-M8-SNAPSHOT/logs
+   target/apache-tomee-plume-9.0.0-M8-SNAPSHOT/logs
 
-## SELECTING TESTS
+== SELECTING TESTS
 
 It is possible to select whole groups of tests or even individual
 tests.  The following are all valid ways to select which tests you'd
@@ -171,17 +195,17 @@ For the most part, you can copy and paste that test name as-is and use
 it to run a test that failed... with one slight adjustment.  You need
 to delete the "#java" part and then it will work.
 
-### BAD
+=== BAD
 
    ./runtests --web tomee-plume com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#java#beanClassLevel_from_ejbembed
 
-### GOOD
+=== GOOD
 
    ./runtests --web tomee-plume com/sun/ts/tests/ejb30/lite/stateful/concurrency/accesstimeout/annotated/Client#beanClassLevel_from_ejbembed
 
-## TEST DEBUG
+== TEST DEBUG
 
-The following are the flags the scrip `runtests` accept for debuggin purposes:
+The following are the flags the scrip `runtests` accept for debugging purposes:
 
 
     -d,--debug              Enable Server and TCK appclient debug options (5005 and 5003)
@@ -199,7 +223,7 @@ Example:
 
 Depending on the IDE, you will need to attempt twice to connect to the exposed port.
 
-## WHAT TO TEST
+== WHAT TO TEST
 
 The test that needs to be tested are the one having the following `keywords`:
 
@@ -207,7 +231,7 @@ The test that needs to be tested are the one having the following `keywords`:
 
 For more information about TCK structure and tests attributes check the link:about_tck{outfilesuffix}[about_tck] documentation.
 
-## WHAT NEXT
+== WHAT NEXT
 
 Getting from zero to passing is a long road.  Failures and the
 overall progress tends to go in three stages:
@@ -241,7 +265,7 @@ bit like working blind.  You don't really know how many steps
 backward you might be taking as a result of a change.  It can be
 done, but it is risky.
 
-## WORKING TOGETHER
+== WORKING TOGETHER
  Communication:-
  -Email:Make use of dev@tomee.apache.org
 

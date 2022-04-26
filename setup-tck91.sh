@@ -22,7 +22,7 @@ grep -q -m 1 jakartaee91.ri.home ~/.m2/settings.xml || {
 }
 
 ## Download the jakarta-jakartaeetckinfo.txt from Eclipse and get basic meta data
-TCKINFO="$(curl -s https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/staged-910/jakarta-jakartaeetckinfo.txt)"
+TCKINFO="$(curl -s https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-jakartaee-tckinfo.txt)"
 DATESTAMP="$(echo "$TCKINFO" | grep 'date:' | perl -pe 's,.*date: (\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d).*,$1.$2$3,')"
 URL="$(echo "$TCKINFO" | grep 'download.eclipse.org' | perl -pe 's,.*(://download.eclipse.org/[^ ]+\.zip).*,https$1,')"
 SHA="$(echo "$TCKINFO" | grep 'SHA256SUM' | perl -pe 's,.*SHA256SUM: ([0-9a-f]+).*,$1,')"
@@ -38,7 +38,7 @@ RIDIR="$(dirname "$OLDRI")"
 
 TCK="$NAME-$DATESTAMP"
 
-RI="glassfish-6.0.0"
+RI="glassfish-6.2.5"
 RIURL="https://download.eclipse.org/ee4j/glassfish/$RI.zip"
 
 echo "Latest TCK
