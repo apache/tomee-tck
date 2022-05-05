@@ -136,7 +136,8 @@
     <dependency>
       <groupId>org.apache.geronimo.components</groupId>
       <artifactId>geronimo-connector</artifactId>
-      <version>3.1.4</version>
+      <version>3.1.5</version>
+      <classifier>jakarta</classifier>
     </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
@@ -159,12 +160,12 @@
     <dependency>
       <groupId>com.icegreen</groupId>
       <artifactId>greenmail-standalone</artifactId>
-      <version>1.5.10</version>
+      <version>1.6.9</version>
     </dependency>
     <dependency>
       <groupId>com.unboundid</groupId>
       <artifactId>unboundid-ldapsdk</artifactId>
-      <version>5.1.0</version>
+      <version>6.0.4</version>
     </dependency>
 
     <!--<dependency>-->
@@ -285,9 +286,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.geronimo.modules</groupId>
-      <artifactId>geronimo-mail</artifactId>
-      <version>2.0.2</version>
+      <groupId>org.apache.geronimo.mail</groupId>
+      <artifactId>geronimo-mail_2.1_provider</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -917,8 +918,7 @@
                     <include name="stax-ex*.jar"/>
                     <include name="FastInfoset*.jar"/>
                     <include name="openejb-jee-accessors*.jar"/>
-                    <include name="sxc-jaxb*.jar"/>
-                    <include name="sxc-runtime*.jar"/>
+                    <include name="sxc-shade*.jar"/>
                     <include name="commons-cli*.jar"/>
                     <include name="commons-collections*.jar"/>
                     <include name="activemq-jdbc*.jar"/>
@@ -930,7 +930,6 @@
                     <include name="jackson-annotations*.jar"/>
                     <include name="jackson-core*.jar"/>
                     <include name="johnzon*.jar"/>
-                    <include name="geronimo-javamail*.jar"/>
                     <include name="xbean-asm*.jar"/>
                     <include name="xbean-finder*.jar"/>
                     <include name="xbean-reflect*.jar"/>
@@ -973,7 +972,8 @@
                     <include name="tomee-security*.jar"/>
                     <include name="tomee-catalina*.jar"/>
 
-                    <include name="geronimo-mail-*.jar"/>
+                    <include name="geronimo-mail_2.1_spec*.jar"/>
+                    <include name="geronimo-mail_2.1_provider*.jar"/>
 
                     <include name="eclipselink*.jar"/>
 

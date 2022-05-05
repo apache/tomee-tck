@@ -198,8 +198,9 @@ abstract class CommandSupport {
         builder = new PathBuilder(this)
         builder.directory = openejbLib
         builder.append("el-api.jar")
-        builder.append("jakarta.mail*.jar")
-        builder.append("jakarta.activation-*.jar")
+        builder.append("geronimo-mail_2.1_spec*.jar")
+        builder.append("geronimo-mail_2.1_provider*.jar")
+        // builder.append("jakarta.activation-*.jar")
         builder.append("jakartaee-api-*.jar")
 
         // only for plume
