@@ -17,4 +17,4 @@
 ## under the License.
 ##
 
-protocol=smtp;type=transport;class=org.apache.geronimo.mail.NullTransport;vendor=The Apache Software Foundation;version=nullTransport;
+protocol=smtp;type=transport;class=org.apache.geronimo.mail.transport.NullTransport;vendor=The Apache Software Foundation;version=nullTransport;
