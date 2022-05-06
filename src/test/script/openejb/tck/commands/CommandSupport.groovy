@@ -269,9 +269,9 @@ abstract class CommandSupport {
         // ts.harness.classpath
         builder = new PathBuilder(this)
         builder.reference('ts.run.classpath')
-        builder.directory = "$javaeetckHome/lib"
-        builder.append("apiCheck.jar")
-        builder.append("sigtest.jar")
+        // builder.directory = "$javaeetckHome/lib"
+        // builder.append("apiCheck.jar")
+        // builder.append("sigtest.jar")
         builder.directory = "$javaeetckHome/tools/ant/lib"
         builder.append("ant.jar")
         builder.append("ant-launcher.jar")
