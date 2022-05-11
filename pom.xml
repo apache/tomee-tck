@@ -563,7 +563,7 @@
           <plugin> <!-- not used by tomee yet -->
             <groupId>org.codehaus.gmaven</groupId>
             <artifactId>gmaven-plugin</artifactId>
-            <version>1.5</version>
+            <version>${version.gmaven-plugin}</version>
             <executions>
               <execution>
                 <id>generate-reverse-tests</id>
@@ -690,7 +690,7 @@
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
           <artifactId>gmaven-plugin</artifactId>
-          <version>1.5</version>
+          <version>${version.gmaven-plugin}</version>
           <configuration>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
