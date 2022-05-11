@@ -238,8 +238,22 @@ class JavaTestCommand
 
                 def containerJavaOpts = get('container.java.opts', "")
 
+                // http://openjdk.java.net/jeps/252
+                // need to set back java locale to COMPAT,SPI for Java 9 and above
+                // tomcat requires add-opens to function properly as well
+                def matches = containerJavaVersion ==~ /1[0-9]/;
+                if (matches || new File(containerJavaHome as String, 'jmods').exists()) {
+                    containerJavaOpts += " -Djava.locale.providers=COMPAT,SPI"
+                    containerJavaOpts += " --add-opens=java.base/java.lang=ALL-UNNAMED"
+                    containerJavaOpts += " --add-opens=java.base/java.io=ALL-UNNAMED"
+                    containerJavaOpts += " --add-opens=java.base/java.util=ALL-UNNAMED"
+                    containerJavaOpts += " --add-opens=java.base/java.util.concurrent=ALL-UNNAMED"
+                    containerJavaOpts += " --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
+                }
+
+
                 // not sure about this ....
-                if (tckJavaHome == null || !new File(tckJavaHome, 'jmods').exists()/*j9 doesnt support it*/) {
+                if (tckJavaHome == null || !new File(tckJavaHome as String, 'jmods').exists()/*j9 doesnt support it*/) {
                     sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
                     sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
                     sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
