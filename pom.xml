@@ -41,7 +41,7 @@
     <openejb.version>8.0.13-SNAPSHOT</openejb.version>
     <tomee.version>8.0.13-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.56</tomcat.version>
+    <tomcat.version>9.0.63</tomcat.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
