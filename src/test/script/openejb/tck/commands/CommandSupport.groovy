@@ -200,7 +200,7 @@ abstract class CommandSupport {
         builder.appendAll("geronimo-*_spec-*.jar")
         builder.append("javaee-api-*.jar")
         builder.directory = javaHome() +"/lib/"
-        builder.append("rt.jar")
+        // builder.append("rt.jar")
         builder.getPath("openejb.jee.classes")
 
         // ts.run.classpath - used to run the appclient
