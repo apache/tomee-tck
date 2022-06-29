@@ -133,12 +133,12 @@
     <dependency>
       <groupId>com.icegreen</groupId>
       <artifactId>greenmail-standalone</artifactId>
-      <version>1.5.10</version>
+      <version>1.6.9</version>
     </dependency>
     <dependency>
       <groupId>com.unboundid</groupId>
       <artifactId>unboundid-ldapsdk</artifactId>
-      <version>5.1.0</version>
+      <version>6.0.4</version>
     </dependency>
 
     <!--<dependency>-->
@@ -209,6 +209,7 @@
       <artifactId>backport-util-concurrent</artifactId>
       <version>3.1</version>
     </dependency>
+
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -336,6 +337,12 @@
       <version>2.6</version>
     </dependency>
     -->
+
+    <dependency>
+      <groupId>org.apache.yoko</groupId>
+      <artifactId>yoko-spec-corba</artifactId>
+      <version>1.4</version>
+    </dependency>
   </dependencies>
 
   <profiles>
@@ -553,7 +560,7 @@
           <plugin> <!-- not used by tomee yet -->
             <groupId>org.codehaus.gmaven</groupId>
             <artifactId>gmaven-plugin</artifactId>
-            <version>1.5</version>
+            <version>${version.gmaven-plugin}</version>
             <executions>
               <execution>
                 <id>generate-reverse-tests</id>
@@ -661,7 +668,7 @@
         <plugin>
           <groupId>org.codehaus.gmaven</groupId>
           <artifactId>gmaven-plugin</artifactId>
-          <version>1.5</version>
+          <version>${version.gmaven-plugin}</version>
           <configuration>
             <scriptpath>
               <element>${pom.basedir}/src/test/script</element>
@@ -826,7 +833,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>yoko-spec-corba,hawtbuf,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -1053,7 +1060,7 @@
     <repository>
       <id>apache-m2-snapshot</id>
       <name>Apache M2 Snapshot Repository</name>
-      <url>http://repository.apache.org/snapshots/</url>
+      <url>https://repository.apache.org/snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
