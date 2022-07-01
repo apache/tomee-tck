@@ -338,11 +338,6 @@
     </dependency>
     -->
 
-    <dependency>
-      <groupId>org.apache.yoko</groupId>
-      <artifactId>yoko-spec-corba</artifactId>
-      <version>1.4</version>
-    </dependency>
   </dependencies>
 
   <profiles>
@@ -833,7 +828,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>yoko-spec-corba,hawtbuf,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient,webdeployer</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -949,6 +944,8 @@
                     <include name="geronimo-mail-*.jar"/>
 
                     <include name="eclipselink*.jar"/>
+
+                    <include name="yoko*.jar"/>
 
                   </fileset>
                 </copy>
