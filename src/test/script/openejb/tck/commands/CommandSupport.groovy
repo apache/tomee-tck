@@ -190,24 +190,26 @@ abstract class CommandSupport {
 
         builder.appendAll("openejb-core-*.jar")
         builder.directory = "${project.build.directory}/lib"
-        builder.appendAll("*.jar")
+        builder.appendAll("*.jar") // probably adds way to many things
         builder.getPath("openejb.porting.classes")
 
         // openejb.jee.classes  -- spec classes used for
         // signature tests
         builder = new PathBuilder(this)
         builder.directory = openejbLib
-        builder.append("el-api.jar")
+        builder.append("jakartaee-api-*.jar")
+
+        // mail is a special case because api and impl are together
         builder.append("geronimo-mail_2.1_spec*.jar")
         builder.append("geronimo-mail_2.1_provider*.jar")
         // builder.append("jakarta.activation-*.jar")
-        builder.append("jakartaee-api-*.jar")
 
-        // only for plume
+        // only for plume because api and impl are mixed
         if (webcontainer.contains("plume")) {
             builder.append("jakarta.faces-*.jar")
         }
-
+        // Tomcat provided APIs because they are not in uber jar jakartaee-api
+        builder.append("el-api.jar")
         builder.append("jaspic-api.jar")
         builder.append("jsp-api.jar")
         builder.append("servlet-api.jar")

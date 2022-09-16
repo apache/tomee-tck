@@ -929,7 +929,6 @@
                     <include name="jackson-databind*.jar"/>
                     <include name="jackson-annotations*.jar"/>
                     <include name="jackson-core*.jar"/>
-                    <include name="johnzon*.jar"/>
                     <include name="xbean-asm*.jar"/>
                     <include name="xbean-finder*.jar"/>
                     <include name="xbean-reflect*.jar"/>
