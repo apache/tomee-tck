@@ -174,8 +174,9 @@ grant {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.loader"; // tomee
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.core"; // tomee
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.realm"; // tomee
-    permission java.io.FilePermission "${catalina.base}/lib/-", "read"; // java ee api class, slf4j, owb, etc
+    permission java.lang.RuntimePermission "getProtectionDomain"; // tomee
     permission java.lang.RuntimePermission "accessDeclaredMembers"; // owb
+    permission java.io.FilePermission "${catalina.base}/lib/-", "read"; // java ee api class, slf4j, owb, etc
     permission java.lang.reflect.ReflectPermission "suppressAccessChecks"; // owb
     permission java.net.SocketPermission "localhost", "connect,resolve"; // jndi
     permission java.net.SocketPermission "127.0.0.1", "connect,resolve"; // jndi
