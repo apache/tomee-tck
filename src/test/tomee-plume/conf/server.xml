@@ -87,7 +87,7 @@
          connector should be using the OpenSSL style configuration
          described in the APR documentation -->
     <Connector port="%webcontainer.default.ssl.port%" protocol="HTTP/1.1" SSLEnabled="true">
-      <SSLHostConfig truststoreFile="conf/ssl-truststore">
+      <SSLHostConfig protocols="TLSv1.2" truststoreFile="conf/ssl-truststore">
         <Certificate certificateKeystoreFile="conf/clientcert.jks"
                      certificateKeystorePassword="changeit"
                      type="RSA" />
