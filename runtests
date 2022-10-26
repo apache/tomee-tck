@@ -202,7 +202,7 @@ processOptions() {
 
             --source)
                 assertOptionArg "$1" "$2"
-                src="$(readlink -f "$2")"
+                src="$2"
                 shift
                 ;;
 
@@ -323,9 +323,14 @@ echo ">>> config => $( echo "$CONFIG" | sed 's/ /\n/g')"
 echo "" # just an empty line
 
 [ ! -z "$src" ] && {
-    ls "$src"
+    [ -f "$src" ] || {
+	echo "Cannot source file $src: file not found"
+	exit 1
+    }
+
     source "$src"
 }
+
 [ ! -z $env ] && export
 
 # printing the content of the 2 main directories
