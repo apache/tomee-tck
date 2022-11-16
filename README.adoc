@@ -97,7 +97,7 @@ Once unpacked, they can be "hooked" up via your maven settings.xml file like so:
 
 == TEST RUN
 
-To complete a test run against the latest TomEE 9.0.0-M9-SNAPSHOT, from the tomee-tck folder, run
+To complete a test run against the latest TomEE 9.0.0-SNAPSHOT, from the tomee-tck folder, run
 
     ./runtests --web tomee-plume com.sun.ts.tests.ejb30.bb.localaccess.statelessclient
 
@@ -176,8 +176,8 @@ that log.
 
 The server logs are in the usual place:
 
-   target/apache-tomee-plume-9.0.0-M9-SNAPSHOT/logs
-   target/apache-tomee-plume-9.0.0-M9-SNAPSHOT/logs
+   target/apache-tomee-plume-9.0.0-SNAPSHOT/logs
+   target/apache-tomee-plume-9.0.0-SNAPSHOT/logs
 
 == SELECTING TESTS
 
