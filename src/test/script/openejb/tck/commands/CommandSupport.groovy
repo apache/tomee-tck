@@ -200,8 +200,7 @@ abstract class CommandSupport {
         builder.append("jakartaee-api-*.jar")
 
         // mail is a special case because api and impl are together
-        builder.append("geronimo-mail_2.1_spec*.jar")
-        builder.append("geronimo-mail_2.1_provider*.jar")
+        builder.appendAll("geronimo-*mail_*.jar")
         // builder.append("jakarta.activation-*.jar")
 
         // only for plume because api and impl are mixed
@@ -251,7 +250,7 @@ abstract class CommandSupport {
         builder.append("jasper-el.jar")
         
         // for CXF JAX-RS client
-        builder.append("cxf-shade-*.jar")
+        builder.appendAll("cxf-*.jar")
         // builder.append("cxf-rt-rs-client-*.jar")
         // builder.append("cxf-rt-transports-http-*.jar")
         // builder.append("cxf-core-*.jar")

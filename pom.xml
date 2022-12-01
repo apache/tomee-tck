@@ -44,6 +44,12 @@
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
     <tomee.zip.version>9.0.0-SNAPSHOT</tomee.zip.version>
 
+    <!-- Settings to run against TomEE 9.0.0-M7 which passes all the Web Profile tests -->
+<!--    <openejb.inzip.version>8.0.7</openejb.inzip.version>-->
+<!--    <tomee.inzip.version>8.0.7</tomee.inzip.version>-->
+<!--    <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>-->
+<!--    <tomee.zip.version>9.0.0-M7</tomee.zip.version>-->
+
     <tomcat.version>10.0.27</tomcat.version>
 
     <johnzon.version>1.2.19</johnzon.version>
