@@ -59,3 +59,65 @@ grep -q "<id>$TCK</id>" $M2 || perl -i -pe "s,(<profiles>),\$1
 ## Update paths in ~/.m2/settings.xml
 perl -i -pe "s,(<jakartaee9.cts.home>)[^<]*,\${1}$TCKDIR/$TCK," $M2
 perl -i -pe "s,(<jakartaee9.ri.home>)[^<]*,\${1}$TCKDIR/$RI/glassfish," $M2
+
+
+################################################
+#
+# create a pom.xml for the tck so it can be
+# easily opened in IDEs that support Maven
+#
+################################################
+(cd "$TCK"
+
+
+
+cat > pom.xml <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>jakartaee-tck</groupId>
+  <artifactId>jakartaee-tck</artifactId>
+  <version>9.1.0</version>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>jakartaee-api</artifactId>
+      <version>9.1.0</version>
+    </dependency>
+$(
+for n in lib/*.jar; do
+
+    artifact="$(basename "$n" | perl -pe 's,(-[0-9.]+)?.jar$,,')"
+    
+    echo "    <dependency>
+      <groupId>jakartaee-tck</groupId>
+      <artifactId>$artifact</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>\${project.basedir}/$n</systemPath>
+    </dependency>"
+done
+)
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>    
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+EOF
+
+)
