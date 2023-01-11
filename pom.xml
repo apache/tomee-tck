@@ -39,10 +39,10 @@
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
 
-    <openejb.inzip.version>9.0.0-SNAPSHOT</openejb.inzip.version>
-    <tomee.inzip.version>9.0.0-SNAPSHOT</tomee.inzip.version>
+    <openejb.inzip.version>10.0.0-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>10.0.0-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
-    <tomee.zip.version>9.0.0-SNAPSHOT</tomee.zip.version>
+    <tomee.zip.version>10.0.0-SNAPSHOT</tomee.zip.version>
 
     <!-- Settings to run against TomEE 9.0.0-M7 which passes all the Web Profile tests -->
 <!--    <openejb.inzip.version>8.0.7</openejb.inzip.version>-->
@@ -59,8 +59,8 @@
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
     NOTE: Same for the Jakarta version "jakartaee9.cts.home" and "jakartaee9.ri.home" in ~/.m2/settings.xml
     -->
-    <cts.home>${jakartaee9.cts.home}</cts.home>
-    <ri.home>${jakartaee9.ri.home}</ri.home>
+    <cts.home>${jakartaee10.cts.home}</cts.home>
+    <ri.home>${jakartaee10.ri.home}</ri.home>
     <tck.version>9.0</tck.version>
 
     <localRepository>${settings.localRepository}</localRepository>
