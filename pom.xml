@@ -192,13 +192,6 @@
     </dependency>
     <dependency>
       <groupId>com.sun.javaee.tck</groupId>
-      <artifactId>tssv</artifactId>
-      <version>${tck.version}</version>
-      <scope>system</scope>
-      <systemPath>${cts.home}/lib/tssv.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.javaee.tck</groupId>
       <artifactId>tsprovider</artifactId>
       <version>${tck.version}</version>
       <scope>system</scope>
@@ -672,6 +665,15 @@
         <tck.version>9.1</tck.version>
       </properties>
 
+      <dependencies>
+        <dependency>
+          <groupId>com.sun.javaee.tck</groupId>
+          <artifactId>tssv</artifactId>
+          <version>${tck.version}</version>
+          <scope>system</scope>
+          <systemPath>${cts.home}/lib/tssv.jar</systemPath>
+        </dependency>
+      </dependencies>
     </profile>
 
   </profiles>

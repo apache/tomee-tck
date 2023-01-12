@@ -10,8 +10,8 @@
 TCKDIR="${1?Specify the directory where you would like the TCK to be downloaded and setup}"
 
 
-TCK_URL="https://download.eclipse.org/jakartaee/platform/9.1/jakarta-jakartaeetck-9.1.0.zip"
-RI_URL="https://download.eclipse.org/ee4j/glassfish/glassfish-6.2.5.zip"
+TCK_URL="https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.1.zip"
+RI_URL="https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-M8.zip"
 ANT_URL="https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.9-bin.zip"
 
 ####################################################################
@@ -50,15 +50,15 @@ grep -q "<id>$TCK</id>" $M2 || perl -i -pe "s,(<profiles>),\$1
         <activeByDefault>true</activeByDefault>
       </activation>
       <properties>
-        <jakartaee9.cts.home></jakartaee9.cts.home>
-        <jakartaee9.ri.home></jakartaee9.ri.home>
+        <jakartaee10.cts.home></jakartaee10.cts.home>
+        <jakartaee10.ri.home></jakartaee10.ri.home>
       </properties>
     </profile>
 ," $M2
 
 ## Update paths in ~/.m2/settings.xml
-perl -i -pe "s,(<jakartaee9.cts.home>)[^<]*,\${1}$TCKDIR/$TCK," $M2
-perl -i -pe "s,(<jakartaee9.ri.home>)[^<]*,\${1}$TCKDIR/$RI/glassfish," $M2
+perl -i -pe "s,(<jakartaee10.cts.home>)[^<]*,\${1}$TCKDIR/$TCK," $M2
+perl -i -pe "s,(<jakartaee10.ri.home>)[^<]*,\${1}$TCKDIR/$RI/glassfish," $M2
 
 
 ################################################
@@ -81,13 +81,13 @@ cat > pom.xml <<EOF
 
   <groupId>jakartaee-tck</groupId>
   <artifactId>jakartaee-tck</artifactId>
-  <version>9.1.0</version>
+  <version>10.0.1</version>
   
   <dependencies>
     <dependency>
       <groupId>org.apache.tomee</groupId>
       <artifactId>jakartaee-api</artifactId>
-      <version>9.1.0</version>
+      <version>10.0.0-SNAPSHOT</version>
     </dependency>
 $(
 for n in lib/*.jar; do
