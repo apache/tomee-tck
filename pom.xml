@@ -38,10 +38,10 @@
   <properties>
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
-    <openejb.version>8.0.13-SNAPSHOT</openejb.version>
-    <tomee.version>8.0.13-SNAPSHOT</tomee.version>
+    <openejb.version>8.0.15-SNAPSHOT</openejb.version>
+    <tomee.version>8.0.15-SNAPSHOT</tomee.version>
 
-    <tomcat.version>9.0.68</tomcat.version>
+    <tomcat.version>9.0.74</tomcat.version>
     <derby.version>10.14.2.0</derby.version>
 
     <!--
