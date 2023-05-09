@@ -235,17 +235,19 @@ abstract class CommandSupport {
         builder.append("jasper-el.jar")
         
         // for CXF JAX-RS client
-        builder.append("cxf-shade-*.jar")
+        builder.appendAll("cxf-*.jar")
         // builder.append("cxf-rt-rs-client-*.jar")
         // builder.append("cxf-rt-transports-http-*.jar")
         // builder.append("cxf-core-*.jar")
         // builder.append("cxf-rt-frontend-jaxrs-*.jar")
+        // builder.append("cxf-rt-rs-sse-*.jar") // commented out as this is part of cxf-shade...?
+        builder.append("neethi-*.jar")
+        builder.append("wsdl4j-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
-        // builder.append("cxf-rt-rs-sse-*.jar") // commented out as this is part of cxf-shade...?
 
-        // for jonzon
+        // for johnzon
         builder.appendAll("johnzon-*.jar")
 
         // tomcat for jaspic auth provider and factory
