@@ -243,7 +243,7 @@ abstract class CommandSupport {
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
-        builder.append("cxf-rt-rs-sse-*.jar")
+        // builder.append("cxf-rt-rs-sse-*.jar") // commented out as this is part of cxf-shade...?
 
         // for jonzon
         builder.appendAll("johnzon-*.jar")
