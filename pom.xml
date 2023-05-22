@@ -304,6 +304,12 @@
 
     <dependency>
       <groupId>org.apache.derby</groupId>
+      <artifactId>derbyshared</artifactId>
+      <version>${derby.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.derby</groupId>
       <artifactId>derbynet</artifactId>
       <version>${derby.version}</version>
     </dependency>
@@ -616,6 +622,11 @@
                 <artifactId>derbyclient</artifactId>
                 <version>${derby.version}</version>
               </dependency>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derbytools</artifactId>
+                <version>${derby.version}</version>
+              </dependency>
             </dependencies>
 
             <executions>
@@ -869,7 +880,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbyclient,derbynet,derbyshared,derbytools</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -885,7 +896,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbyclient,derbynet,derbyshared,derbytools</includeArtifactIds>
             </configuration>
           </execution>
         </executions>
