@@ -299,7 +299,7 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derbytools</artifactId>
-      <version>${version.derby}</version>
+      <version>${derby.version}</version>
     </dependency>
 
     <dependency>
