@@ -147,9 +147,11 @@ class JavaTestCommand
         // HACK: For some reason, need to quote JAVA_HOME on Windows...
         //
         def javaHome = require('java.home')
-        if (SystemUtils.IS_OS_WINDOWS) {
-            javaHome = "'${javaHome}'"
-        }
+        // JRG: I commented this out, as this appeared to append the content of the JAVA_HOME environment variable to the current working directory
+        // on Windows 11 for me. 2023-08-07
+        //if (SystemUtils.IS_OS_WINDOWS) {
+        //    javaHome = "${javaHome}"
+        //}
         
         ant.mkdir(dir: workingDir)
         
