@@ -253,13 +253,13 @@ class JavaTestCommand
 
 
                 // not sure about this ....
-                if (tckJavaHome == null || !new File(tckJavaHome as String, 'jmods').exists()/*j9 doesnt support it*/) {
-                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
-                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
-                    sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
-
-                    containerJavaOpts += " -Djava.locale.providers=COMPAT"
-                }
+//                if (tckJavaHome == null || !new File(tckJavaHome as String, 'jmods').exists()/*j9 doesnt support it*/) {
+//                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
+//                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
+//                    sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
+//
+//                    containerJavaOpts += " -Djava.locale.providers=COMPAT"
+//                }
 
                 // force memory on tasks because with JDK 8 it's computed with a bit too much
                 // containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
