@@ -52,8 +52,8 @@
 
     <tomcat.version>10.0.27</tomcat.version>
 
-    <johnzon.version>1.2.19</johnzon.version>
-    <derby.version>10.14.2.0</derby.version>
+    <johnzon.version>1.2.21</johnzon.version>
+    <derby.version>10.15.2.0</derby.version>
 
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
@@ -96,7 +96,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.16.5</version.activemq>
+    <version.activemq>5.18.1</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
@@ -300,6 +300,18 @@
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
+      <version>${derby.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbytools</artifactId>
+      <version>${derby.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyshared</artifactId>
       <version>${derby.version}</version>
     </dependency>
 
@@ -617,6 +629,11 @@
                 <artifactId>derbyclient</artifactId>
                 <version>${derby.version}</version>
               </dependency>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derbytools</artifactId>
+                <version>${derby.version}</version>
+              </dependency>
             </dependencies>
 
             <executions>
@@ -861,7 +878,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>hawtbuf,geronimo-jms_1.1_spec,activemq-client,tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,derby,derbyclient,derbynet,derbyshared,derbytools</includeArtifactIds>
             </configuration>
           </execution>
 
@@ -877,7 +894,7 @@
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
               <excludeTransitive>true</excludeTransitive>
-              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbynet,derbyclient</includeArtifactIds>
+              <includeArtifactIds>tsharness,tssv,cts,whitebox,dbprocedures,geronimo-mail,openejb-derbynet,derby,derbyclient,derbynet,derbyshared,derbytools</includeArtifactIds>
             </configuration>
           </execution>
         </executions>

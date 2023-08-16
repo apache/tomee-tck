@@ -234,6 +234,9 @@ abstract class CommandSupport {
 //        builder.append("hsqldb-*.jar")
         builder.append("derby-*.jar")
         builder.append("derbyclient-*.jar")
+        builder.append("derbynet-*.jar")
+        builder.append("derbyshared-*.jar")
+        builder.append("derbytools-*.jar")
         builder.append("openejb-client*.jar")
         builder.directory = "${javaeetckHome}/lib"
         builder.append("javatest.jar")
@@ -303,6 +306,9 @@ abstract class CommandSupport {
         builder.directory = openejbLib
         builder.append("derby-*.jar")
         builder.append("derbyclient-*.jar")
+        builder.append("derbynet-*.jar")
+        builder.append("derbyshared-*.jar")
+        builder.append("derbytools-*.jar")
         if (get("webcontainer").equals("tomee-plume")) {
             builder.appendAll("eclipselink-*.jar")
         }
