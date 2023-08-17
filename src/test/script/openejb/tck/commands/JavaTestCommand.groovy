@@ -147,9 +147,11 @@ class JavaTestCommand
         // HACK: For some reason, need to quote JAVA_HOME on Windows...
         //
         def javaHome = require('java.home')
-        if (SystemUtils.IS_OS_WINDOWS) {
-            javaHome = "'${javaHome}'"
-        }
+        // JRG: I commented this out, as this appeared to append the content of the JAVA_HOME environment variable to the current working directory
+        // on Windows 11 for me. 2023-08-07
+        //if (SystemUtils.IS_OS_WINDOWS) {
+        //    javaHome = "${javaHome}"
+        //}
         
         ant.mkdir(dir: workingDir)
         
@@ -253,13 +255,13 @@ class JavaTestCommand
 
 
                 // not sure about this ....
-                if (tckJavaHome == null || !new File(tckJavaHome as String, 'jmods').exists()/*j9 doesnt support it*/) {
-                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
-                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
-                    sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
-
-                    containerJavaOpts += " -Djava.locale.providers=COMPAT"
-                }
+//                if (tckJavaHome == null || !new File(tckJavaHome as String, 'jmods').exists()/*j9 doesnt support it*/) {
+//                    sysproperty(key: "java.endorsed.dirs", file: "${javaeeRiHome}/lib/endorsed")
+//                    sysproperty(key: "command.testExecute.endorsed.dir", value: "-Djava.endorsed.dirs=${javaeeCtsHome}/endorsedlib")
+//                    sysproperty(key: "command.testExecuteEjbEmbed.endorsed.dir", value: "-Djava.endorsed.dirs=${openejbHome}/endorsed")
+//
+//                    containerJavaOpts += " -Djava.locale.providers=COMPAT"
+//                }
 
                 // force memory on tasks because with JDK 8 it's computed with a bit too much
                 // containerJavaOpts += " -Xmx512m -Dtest.ejb.stateful.timeout.wait.seconds=60"
