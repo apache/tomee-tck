@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>9.1.1-SNAPSHOT</version>
+  <version>10.0.0-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
