@@ -53,7 +53,7 @@
     <tomcat.version>10.0.27</tomcat.version>
 
     <johnzon.version>1.2.21</johnzon.version>
-    <derby.version>10.15.2.0</derby.version>
+    <derby.version>10.17.1.0</derby.version>
 
     <!--
     NOTE: User must define "javaee8.cts.home" and "javaee8.ri.home" in ~/.m2/settings.xml
