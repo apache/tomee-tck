@@ -22,9 +22,9 @@ TCK=$(basename $TCK_URL| perl -pe 's,.zip$,,')
 RI=$(basename $RI_URL| perl -pe 's,.zip$,,')
 ANT=$(basename $ANT_URL| perl -pe 's,.zip$,,')
 
-[ -f "$TCK.zip" ] || curl -O $TCK_URL
-[ -f "$RI.zip" ] || curl -O $RI_URL
-[ -f "$ANT.zip" ] || curl -O $ANT_URL
+[ -f "$TCK.zip" ] || curl -LO $TCK_URL
+[ -f "$RI.zip" ] || curl -LO $RI_URL
+[ -f "$ANT.zip" ] || curl -LO $ANT_URL
 
 (mkdir "$TCK" && cd "$TCK" && bsdtar --strip-components=1 -xf "../$TCK.zip")
 (mkdir "$RI" && cd "$RI" && bsdtar --strip-components=1 -xf "../$RI.zip")
