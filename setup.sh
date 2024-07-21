@@ -10,7 +10,7 @@
 TCKDIR="${1?Specify the directory where you would like the TCK to be downloaded and setup}"
 
 
-TCK_URL="https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.1.zip"
+TCK_URL="https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.5.zip"
 RI_URL="https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-M8.zip"
 ANT_URL="https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.9-bin.zip"
 
