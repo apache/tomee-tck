@@ -356,16 +356,6 @@
       <artifactId>tomcat-api</artifactId>
       <version>${tomcat.version}</version>
     </dependency>
-
-    <!-- note this is somehow not in platform-tck,
-         to run tests manually copy tssv.jar from authentication 3.0 TCK over -->
-    <dependency>
-      <groupId>com.sun.javaee.tck</groupId>
-      <artifactId>tssv</artifactId>
-      <version>${tck.version}</version>
-      <scope>system</scope>
-      <systemPath>${cts.home}/lib/tssv.jar</systemPath>
-    </dependency>
   </dependencies>
 
   <profiles>

@@ -49,7 +49,6 @@
     com.sun.ts.tests.el \
     com.sun.ts.tests.connector \
     com.sun.ts.tests.jacc \
-    com.sun.ts.tests.jaspic \
     com.sun.ts.tests.javamail \
     com.sun.ts.tests.samples.javamail
 

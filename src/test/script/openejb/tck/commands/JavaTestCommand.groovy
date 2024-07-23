@@ -269,10 +269,8 @@ class JavaTestCommand
                 if (options.contains('security')) {
                     log.info("Enabling server security manager")
 
-                    // -Djava.security.properties=conf/security.properties
                     containerJavaOpts += " -Djava.security.manager -Dcts.home=${javaeeCtsHome} -Djava.security.debug=none " +
-                            "-Djava.security.policy=${project.basedir}/${openejbHome}/conf/catalina.policy " +
-                            "-Djava.security.properties=${project.basedir}/${openejbHome}/conf/security.properties"
+                            "-Djava.security.policy=${project.basedir}/${openejbHome}/conf/catalina.policy "
                 }
                 if (options.contains('websocket')) {
                     log.info("Enabling Tomcat WebSockets configuration")
