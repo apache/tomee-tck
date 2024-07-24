@@ -29,7 +29,7 @@
   <artifactId>tomee-tck</artifactId>
   <name>TomEE TCK Harness</name>
 
-  <version>10.0.0-M2-SNAPSHOT</version>
+  <version>10.0.0-M3-SNAPSHOT</version>
 
   <description>
     TomEE TCK Harness
@@ -39,10 +39,10 @@
 
     <openejb.groupId>org.apache.tomee</openejb.groupId>
 
-    <openejb.inzip.version>10.0.0-M2-SNAPSHOT</openejb.inzip.version>
-    <tomee.inzip.version>10.0.0-M2-SNAPSHOT</tomee.inzip.version>
+    <openejb.inzip.version>10.0.0-M3-SNAPSHOT</openejb.inzip.version>
+    <tomee.inzip.version>10.0.0-M3-SNAPSHOT</tomee.inzip.version>
     <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>
-    <tomee.zip.version>10.0.0-M2-SNAPSHOT</tomee.zip.version>
+    <tomee.zip.version>10.0.0-M3-SNAPSHOT</tomee.zip.version>
 
     <!-- Settings to run against TomEE 9.0.0-M7 which passes all the Web Profile tests -->
 <!--    <openejb.inzip.version>8.0.7</openejb.inzip.version>-->
@@ -50,9 +50,9 @@
 <!--    <tomee.zip.groupId>org.apache.tomee</tomee.zip.groupId>-->
 <!--    <tomee.zip.version>9.0.0-M7</tomee.zip.version>-->
 
-    <tomcat.version>10.0.27</tomcat.version>
+    <tomcat.version>10.1.26</tomcat.version>
 
-    <johnzon.version>1.2.21</johnzon.version>
+    <johnzon.version>2.0.1</johnzon.version>
     <derby.version>10.15.2.0</derby.version>
 
     <!--
@@ -96,7 +96,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.maven-dependency-plugin>2.9</version.maven-dependency-plugin>
-    <version.activemq>5.18.1</version.activemq>
+    <version.activemq>6.1.2</version.activemq>
     <version.gmaven-plugin>1.5</version.gmaven-plugin>
   </properties>
 
