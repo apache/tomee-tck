@@ -26,7 +26,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.activemq.command.ActiveMQTopic;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import java.io.PrintWriter;
 
 public class JMSAdminImpl implements TSJMSAdminInterface {
