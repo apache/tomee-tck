@@ -296,27 +296,6 @@ grant codeBase "file:${catalina.home}/webapps/host-manager/-" {
 // };
 
 // TomEE for CTS configuration
-grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/jaspic/-" {
-    permission java.io.FilePermission "${catalina.base}/conf/-", "read";
-    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml", "read,write,delete"; // Tomcat ACF
-    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml.new", "read,write,delete"; // Tomcat ACF
-    permission java.io.FilePermission "${catalina.base}/conf/jaspic-providers.xml.old", "read,write,delete"; // Tomcat ACF
-    permission java.io.FilePermission "${catalina.base}/temp/-", "read,write";
-    permission java.io.FilePermission "${catalina.base}/logs/-", "read,write";
-    permission java.io.FilePermission "${catalina.base}/work/-", "read,write";
-
-    // weird on ec2, it does not seem to work well for security api
-    // try a small hard coded version
-    permission java.io.FilePermission "/home/ec2-user/-", "read";
-    permission java.io.FilePermission "/home/ec2-user/jakartaeetck-9.1.0-2021-04-20.1739/dist/com/sun/ts/tests/securityapi/idstore/idstorepermission/securityapi_idstore_idstorepermission/securityapi_idstore_idstorepermission_web/-", "read";
-
-    permission java.util.PropertyPermission "*", "read,write"; // the log file
-    permission java.security.SecurityPermission "getProperty.authconfigprovider.factory";
-    permission java.security.SecurityPermission "setProperty.authconfigprovider.factory";
-    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.authenticator.jaspic";
-    permission java.util.logging.LoggingPermission "control";
-    permission java.net.SocketPermission "*", "connect,resolve"; // logger
-};
 grant codeBase "file:${cts.home}/dist/com/sun/ts/tests/servlet/ee/spec/security/permissiondd/servlet_ee_spec_security_permissiondd_web/-" {
     permission java.util.PropertyPermission "cts.*", "read";
 

@@ -947,13 +947,6 @@ com.sun.ts.tests.jacc.web.containerContracts
 com.sun.ts.tests.jacc.web.principal2role
 com.sun.ts.tests.jacc.web.providerContracts
 com.sun.ts.tests.jacc.web.toolsContracts
-com.sun.ts.tests.jaspic.spi.baseline
-com.sun.ts.tests.jaspic.spi.servlet
-com.sun.ts.tests.jaspic.tssv.config
-com.sun.ts.tests.jaspic.tssv.module.servlet
-com.sun.ts.tests.jaspic.tssv.module.soap
-com.sun.ts.tests.jaspic.tssv.util
-com.sun.ts.tests.jaspic.util
 com.sun.ts.tests.javaee.resource.servlet
 com.sun.ts.tests.javamail.ee.fetchprofile
 com.sun.ts.tests.javamail.ee.getMessageContent
