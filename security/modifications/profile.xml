@@ -1,0 +1,88 @@
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<profile xmlns="http://maven.apache.org/POM/4.0.0">
+    <id>tomee</id>
+
+    <properties>
+        <glassfish.root>${project.build.directory}</glassfish.root>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>apache-tomee</artifactId>
+            <version>${tomee.version}</version>
+            <type>zip</type>
+            <classifier>webprofile</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>arquillian-tomee-remote</artifactId>
+            <version>${tomee.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>-DTOMEE_LOCK_FILE=${user.dir}/.tomee-ports.lock</argLine>
+                    <systemPropertyVariables>
+                        <tomee.stopPort>-1</tomee.stopPort>
+                        <tomee.httpPort>8080</tomee.httpPort> <!-- 8080 is hardcoded in openid tests -->
+                        <tomee.httpsPort>-1</tomee.httpsPort>
+                        <tomee.ajpPort>-1</tomee.ajpPort>
+
+                        <tomee.dir>target/tomee/server</tomee.dir>
+                        <tomee.appWorkingDir>target/tomee/arquillian</tomee.appWorkingDir>
+                        <tomee.cleanOnStartUp>true</tomee.cleanOnStartUp>
+                        <tomee.classifier>webprofile</tomee.classifier>
+
+                        <!-- SSL configuration for app-openid2/app-openid3,
+                             these tests work by deploying an openid server in a separate tomcat installation
+                             with SSL configured using a custom certificate in a custom trustStore.
+                             To properly run these test we need to add the trustStore to both:
+                             - the current process that executes the tests (and will visit openid-server login page)
+                             - tomee that invokes the deployed openid-server app -->
+                        <javax.net.ssl.trustStore>${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks</javax.net.ssl.trustStore>
+                        <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
+                        <tomee.catalina_opts>-Djavax.net.ssl.trustStore=${glassfish.root}/glassfish7/glassfish/domains/domain1/config/cacerts.jks -Djavax.net.ssl.trustStorePassword=changeit</tomee.catalina_opts>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
