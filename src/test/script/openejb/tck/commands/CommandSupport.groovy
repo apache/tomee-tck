@@ -260,7 +260,7 @@ abstract class CommandSupport {
         // builder.append("cxf-rt-frontend-jaxrs-*.jar")
         // builder.append("cxf-rt-rs-sse-*.jar")
         builder.append("neethi-*.jar")
-        builder.append("wsdl4j-*.jar")
+        builder.append("libre-wsdl4j-*.jar")
         builder.append("woodstox-core-*.jar")
         builder.append("stax2-api-*.jar")
         builder.append("xmlschema-core-*.jar")
