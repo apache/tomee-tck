@@ -1,0 +1,5 @@
+<!DOCTYPE sun-web-app SYSTEM "http://glassfish.org/dtds/sun-web-app_2_5-0.dtd">
+<sun-web-app>
+    <context-root>/expected</context-root>
+    <resource-ref><res-ref-name>portable-ref-must-not-be-copied</res-ref-name></resource-ref>
+</sun-web-app>

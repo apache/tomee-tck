@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.apache.tomee.cts</groupId>
+        <artifactId>tomee-jakartaee11-tck</artifactId>
+        <version>11.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>jakarta-ee-11-webprofile-smoke-runner</artifactId>
+    <packaging>jar</packaging>
+
+    <name>TomEE Jakarta EE 11 Web Profile TCK Smoke Runner</name>
+
+    <properties>
+        <!-- A small Web Profile test which creates and deploys one JAX-RS WAR. -->
+        <smoke.test>com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT</smoke.test>
+    </properties>
+
+    <dependencies>
+        <!-- Published Jakarta EE 11 Platform TCK test artifact. -->
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>rest-platform-tck</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomee.cts</groupId>
+            <artifactId>tomee-porting</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-container</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>arquillian-tomee-remote</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>
+                        <dependency>jakarta.tck:rest-platform-tck</dependency>
+                    </dependenciesToScan>
+                    <includes>
+                        <include>**/${smoke.test}.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <webServerHost>localhost</webServerHost>
+                        <webServerPort>8080</webServerPort>
+                        <junit.log.traceflag>true</junit.log.traceflag>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>tck-smoke</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
