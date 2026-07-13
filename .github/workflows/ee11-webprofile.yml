@@ -10,6 +10,7 @@ on:
       - 'mvnw'
       - 'pom.xml'
       - 'runner-smoke/**'
+      - 'runner-webprofile/**'
       - 'tomee-porting/**'
   push:
     branches:
@@ -22,6 +23,7 @@ on:
       - 'mvnw'
       - 'pom.xml'
       - 'runner-smoke/**'
+      - 'runner-webprofile/**'
       - 'tomee-porting/**'
 
 permissions:
@@ -44,7 +46,9 @@ jobs:
       - name: Validate shell scripts
         run: |
           sh -n environment/verify-inputs.sh
-          sh -n environment/tomee/bin/setenv.sh
+          sh -n environment/reset-generated-test-environment.sh
+          sh -n environment/database/require-derby-port-free.sh
+          sh -n environment/database/wait-for-derby.sh
           sh -n environment/certificates/generate-test-certificates.sh
 
       - name: Validate XML templates
@@ -81,6 +85,13 @@ jobs:
       - name: Run the TomEE Web Profile smoke runner
         run: ./mvnw -B -ntp -pl runner-smoke -am verify
 
+      - name: Run the configured Web Profile catalog gate
+        run: >-
+          ./mvnw -B -ntp -Ptck-rest-platform
+          -pl runner-webprofile/run -am
+          -Dtck.test=com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT
+          verify
+
       - name: Verify the resolved TomEE snapshot bytes
         if: always()
         run: sh environment/verify-inputs.sh --require-tomee
@@ -97,3 +108,6 @@ jobs:
             runner-smoke/target/failsafe-reports/**
             runner-smoke/target/**/logs/**
             runner-smoke/target/*.log
+            runner-webprofile/run/target/surefire-reports/**
+            runner-webprofile/run/target/failsafe-reports/**
+            runner-webprofile/run/target/**/logs/**
