@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ports and certificate paths are supplied by environment/tomee/bin/setenv.sh. -->
+<Server port="${tck.shutdown.port}" shutdown="SHUTDOWN">
+  <Listener className="org.apache.tomee.catalina.ServerListener"/>
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener"/>
+
+  <GlobalNamingResources>
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml"/>
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="${tck.http.port}" protocol="HTTP/1.1"
+               connectionTimeout="20000" allowTrace="true"
+               redirectPort="${tck.https.port}"/>
+
+    <Connector port="${tck.https.port}" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               SSLEnabled="true" scheme="https" secure="true">
+      <SSLHostConfig protocols="TLSv1.2,TLSv1.3"
+                     certificateVerification="optional"
+                     truststoreFile="${tck.server.truststore}"
+                     truststorePassword="changeit"
+                     truststoreType="PKCS12">
+        <Certificate certificateKeystoreFile="${tck.server.keystore}"
+                     certificateKeystorePassword="changeit"
+                     certificateKeystoreType="PKCS12"
+                     certificateKeyAlias="server"
+                     type="RSA"/>
+      </SSLHostConfig>
+    </Connector>
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve"
+               directory="logs" prefix="localhost_access_log." suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
+      </Host>
+    </Engine>
+  </Service>
+</Server>

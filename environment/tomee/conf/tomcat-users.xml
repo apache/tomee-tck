@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test-only identities and groups prescribed by the Jakarta EE 11 TCK guide. -->
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+  <role rolename="staff"/>
+  <role rolename="guest"/>
+  <role rolename="mgr"/>
+  <role rolename="asadmin"/>
+
+  <user username="j2ee_vi" password="j2ee_vi" roles="staff"/>
+  <user username="javajoe" password="javajoe" roles="guest"/>
+  <user username="j2ee" password="j2ee" roles="staff,mgr,asadmin"/>
+  <user username="j2ee_ri" password="j2ee_ri" roles="staff"/>
+</tomcat-users>
