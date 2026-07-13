@@ -46,9 +46,11 @@ assert_hash 256 "$JAKARTA_TCK_BOM_SHA256" "$tmp_dir/artifacts-bom.pom"
 
 derby_base="https://repo1.maven.org/maven2/org/apache/derby"
 curl -fsSL "$derby_base/derbyclient/$DERBY_VERSION/derbyclient-$DERBY_VERSION.jar" -o "$tmp_dir/derbyclient.jar"
+curl -fsSL "$derby_base/derbynet/$DERBY_VERSION/derbynet-$DERBY_VERSION.jar" -o "$tmp_dir/derbynet.jar"
 curl -fsSL "$derby_base/derbyshared/$DERBY_VERSION/derbyshared-$DERBY_VERSION.jar" -o "$tmp_dir/derbyshared.jar"
 curl -fsSL "$derby_base/derbytools/$DERBY_VERSION/derbytools-$DERBY_VERSION.jar" -o "$tmp_dir/derbytools.jar"
 assert_hash 256 "$DERBY_CLIENT_SHA256" "$tmp_dir/derbyclient.jar"
+assert_hash 256 "$DERBY_NET_SHA256" "$tmp_dir/derbynet.jar"
 assert_hash 256 "$DERBY_SHARED_SHA256" "$tmp_dir/derbyshared.jar"
 assert_hash 256 "$DERBY_TOOLS_SHA256" "$tmp_dir/derbytools.jar"
 

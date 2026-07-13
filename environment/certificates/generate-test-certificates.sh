@@ -6,11 +6,10 @@ output_dir=${1:-target/ee11-certificates}
 password=changeit
 
 mkdir -p "$output_dir"
+# The build overlay lives under target and is regenerated on every run. Remove
+# only the files owned by this script, leaving unrelated output untouched.
 for file in server.p12 server.cer server-truststore.p12 clientcert.p12 cts_cert.cer client-truststore.p12; do
-  if [ -e "$output_dir/$file" ]; then
-    echo "refusing to overwrite $output_dir/$file" >&2
-    exit 1
-  fi
+  rm -f "$output_dir/$file"
 done
 
 keytool -genkeypair -noprompt \

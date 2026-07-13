@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>tomee-jakartaee11-tck</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>runner-webprofile</artifactId>
+  <packaging>pom</packaging>
+  <name>TomEE Jakarta EE 11 Web Profile TCK runners</name>
+
+  <!--
+    Intentionally no default modules. Select exactly one tck-* profile and a
+    test class. This makes `mvn verify` on the root a cheap configuration
+    check instead of an accidental full certification run.
+  -->
+  <profiles>
+    <profile>
+      <id>tck-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:javaee-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>javaee-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-rest-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:rest-platform-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>rest-platform-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-el-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:el-platform-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>el-platform-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-jsonb-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:jsonb-platform-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>jsonb-platform-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-jsonp-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:jsonp-platform-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>jsonp-platform-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-pages-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:pages-platform-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>pages-platform-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-persistence-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:persistence-platform-tck-tests</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>persistence-platform-tck-tests</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>persistence-platform-tck-common</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-tags</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:tags-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>tags-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-transactions</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:transactions-tck</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>transactions-tck</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>tck-websocket-platform</id>
+      <modules><module>run</module></modules>
+      <properties><tck.scan>jakarta.tck:websocket-tck-platform-tests</tck.scan></properties>
+      <dependencies>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>websocket-tck-platform-tests</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>jakarta.tck</groupId><artifactId>websocket-tck-common</artifactId><scope>test</scope></dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

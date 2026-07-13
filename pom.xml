@@ -21,6 +21,7 @@
   <modules>
     <module>tomee-porting</module>
     <module>runner-smoke</module>
+    <module>runner-webprofile</module>
   </modules>
 
   <properties>
@@ -37,6 +38,7 @@
 
     <tomee.version>11.0.0-SNAPSHOT</tomee.version>
     <tomee.classifier>webprofile</tomee.classifier>
+    <derby.version>10.15.2.0</derby.version>
 
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     <maven.enforcer.plugin.version>3.6.1</maven.enforcer.plugin.version>
@@ -81,6 +83,26 @@
         <groupId>org.apache.tomee</groupId>
         <artifactId>arquillian-tomee-remote</artifactId>
         <version>${tomee.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbyclient</artifactId>
+        <version>${derby.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbyshared</artifactId>
+        <version>${derby.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbytools</artifactId>
+        <version>${derby.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbynet</artifactId>
+        <version>${derby.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
