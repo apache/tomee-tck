@@ -86,9 +86,6 @@ jobs:
       - name: Run the TomEE Web Profile smoke runner
         run: ./mvnw -B -ntp -pl runner-smoke -am verify
 
-      - name: Run the configured Web Profile catalog gate
-        run: runner-webprofile/run-platform-suite.sh servlet rest
-
       - name: Verify the resolved TomEE snapshot bytes
         if: always()
         run: sh environment/verify-inputs.sh --require-tomee
@@ -105,6 +102,44 @@ jobs:
             runner-smoke/target/failsafe-reports/**
             runner-smoke/target/**/logs/**
             runner-smoke/target/*.log
+
+  platform-catalog:
+    needs:
+      - validate-environment
+      - smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        protocol: [servlet, javatest]
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run every ${{ matrix.protocol }} Platform Web Profile partition
+        run: runner-webprofile/run-platform-suite.sh ${{ matrix.protocol }}
+
+      - name: Verify the resolved TomEE snapshot bytes
+        if: always()
+        run: sh environment/verify-inputs.sh --require-tomee
+
+      - name: Collect Platform reports and TomEE logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ee11-platform-${{ matrix.protocol }}-java-21
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
             runner-webprofile/run/target/surefire-reports/**
             runner-webprofile/run/target/failsafe-reports/**
             runner-webprofile/run/target/**/logs/**

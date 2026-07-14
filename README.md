@@ -114,30 +114,27 @@ supplies modern runner properties directly. Deployment is handled by
 `org.apache.tomee.tck.porting.TomEETestArchiveProcessor`, registered as an
 Arquillian extension.
 
-## Expanding to the Web Profile
+## Scope
 
-Each TCK artifact needs a small runner or a well-isolated execution in a shared
-runner. Configure Surefire/JUnit with the `web` group; that tag is the official
-selection mechanism for required Web Profile tests. Add suites incrementally:
+The catalog covers every class published in the Jakarta EE 11 Platform TCK
+artifacts and selected by the official `web` JUnit group. It includes signature
+validation and all servlet- and JavaTest-protocol partitions represented by
+those artifacts. Known TomEE compatibility gaps remain visible as reviewed
+class or method exclusions; they are not compatibility passes.
 
-1. signature validation;
-2. Annotations, EL, JSON-P and JSON-B;
-3. Servlet, REST and WebSocket;
-4. CDI and Validation;
-5. Persistence and Transactions;
-6. Faces, Pages and Tags;
-7. Enterprise Beans Lite, Security and Authentication.
-
-Every suite must preserve Surefire XML and the corresponding TomEE logs. A full
-Web Profile result also needs a reviewed exclusion/challenge list and an exact
-manifest of TCK, TomEE, JDK and operating-system inputs.
+This repository replaces the old Jakarta EE *Platform TCK* harness. It does not
+bundle or claim results for each specification project's independently
+published standalone TCK. Those independent suites are additional inputs to a
+formal Jakarta EE compatibility certification, not missing Platform artifact
+partitions in this runner.
 
 ## CI
 
-`.github/workflows/ee11-webprofile.yml` validates the environment, runs the
-smoke runner, and executes the REST Platform catalog partition on Temurin 17
-and 21. It archives JUnit reports and TomEE logs even when a test fails. The
-workflow actions are pinned to full commit hashes.
+`.github/workflows/ee11-webprofile.yml` validates the environment and runs the
+smoke runner on Temurin 17 and 21. Separate Java 21 jobs execute every servlet
+and JavaTest partition in `platform-suite.tsv`; they archive JUnit reports and
+TomEE logs even when a test fails. The workflow actions are pinned to full
+commit hashes.
 
 ## Authoritative references
 

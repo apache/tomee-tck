@@ -47,56 +47,25 @@ isolates classpaths, TomEE instances, port use, exclusions, and reports.
 The checked-in [`platform-suite.tsv`](platform-suite.tsv) is the suite
 definition. It records every artifact/protocol partition selected by the
 official `web` JUnit tag and the number of tagged test classes in the Jakarta
-Platform TCK `11.0.2` source tag. Runtime artifacts come from the compatible
-`11.0.3` publication because that release has no matching source tag. The
-script verifies those expected counts against the generated reports, making an
-upstream scope or selection change a hard failure.
+Platform TCK `11.0.3` artifacts. The script verifies those expected counts
+against the generated reports, making an upstream scope or selection change a
+hard failure.
 
 Source and post-exclusion counts are separate manifest columns. Every reduction
 must be explained in [`KNOWN_FAILURES.md`](KNOWN_FAILURES.md) and in the matching
 file under `exclusions/`.
 
-The manifest contains 1,132 Platform TCK classes. The eight other `web`-tagged
-classes in the tagged repository are part of the standalone WebSocket TCK and
-belong in the independent-component suite required by EE-WP21.
+The manifest contains 1,132 Platform TCK classes. After the reviewed TomEE
+compatibility exclusions, 673 classes remain enabled.
 
-## Web Profile 11 coverage matrix
+## Certification boundary
 
-The authoritative required-component list is in the
-[Jakarta EE Web Profile 11 specification](https://jakarta.ee/specifications/webprofile/11/jakarta-webprofile-spec-11.0.html#required-components).
-The distinction below matters: Platform TCK artifacts have the common `11.0.3`
-release version, while independent specification TCKs have their own coordinates
-and versions and need dedicated runner/configuration work.
-
-| Required technology | Version | Platform artifact here | Independent TCK runner status |
-|---|---:|---|---|
-| Annotations | 3.0 | `javaee-tck` integration | TODO: add standalone Annotations TCK |
-| Authentication | 3.1 | `javaee-tck` integration | TODO: add standalone Authentication TCK and realm setup |
-| Concurrency | 3.1 | `javaee-tck` integration | TODO: add `jakarta.enterprise.concurrent-tck` runner |
-| CDI | 4.1 | `javaee-tck` integration | TODO: add a dedicated TestNG runner for `cdi-tck-ee-impl` and the CDI standalone suite |
-| Data | 1.0 | `javaee-tck` integration | TODO: add `jakarta.data-tck` web-profile runner |
-| Debugging Support | 2.0 | `pages-platform-tck` | Covered through Pages/Platform artifacts; verify upstream class manifest |
-| Dependency Injection | 2.0 | `javaee-tck` integration | TODO: add standalone DI TCK |
-| Enterprise Beans Lite | 4.0 | `javaee-tck` | Platform artifact runner available; class manifest still required |
-| Expression Language | 6.0 | `el-platform-tck`, `javaee-tck` | TODO: add standalone EL TCK |
-| Faces | 4.1 | `javaee-tck` integration | TODO: add standalone Faces TCK |
-| Interceptors | 2.2 | `javaee-tck` integration | TODO: add standalone Interceptors TCK |
-| JSON Binding | 3.0 | `jsonb-platform-tck` | TODO: add standalone JSON-B TCK |
-| JSON Processing | 2.1 | `jsonp-platform-tck` | TODO: add standalone JSON-P TCK |
-| Pages | 4.0 | `pages-platform-tck`, `javaee-tck` | TODO: add standalone Pages TCK |
-| Persistence | 3.2 | `persistence-platform-tck-tests` | TODO: add standalone Persistence TCK and database matrix |
-| RESTful Web Services | 4.0 | `rest-platform-tck` | TODO: add standalone REST TCK |
-| Security | 4.0 | `javaee-tck` integration | TODO: add standalone Security TCK and realm/identity-store setup |
-| Servlet | 6.1 | `javaee-tck` integration | TODO: add standalone Servlet TCK |
-| Standard Tag Library | 3.0 | `tags-tck` | Platform artifact runner available; class manifest still required |
-| Transactions | 2.0 | `transactions-tck`, `javaee-tck` | Platform artifact runner available; class manifest still required |
-| Validation | 3.1 | `javaee-tck` integration | TODO: add standalone Validation TCK |
-| WebSocket | 2.2 | `websocket-tck-platform-tests` | TODO: add standalone WebSocket TCK |
-
-Passing every profile in this directory is therefore **not** by itself a Web
-Profile compatibility result. The standalone component TCKs, Platform
-signature tests, exact test manifests, allowed exclusions, and required
-environment services must all be included before a certification run.
+This runner replaces the old Jakarta EE Platform TCK harness and covers the
+Platform integration artifacts above. Passing its retained catalog is not by
+itself a Jakarta EE compatibility result: the independently published TCK for
+each required Web Profile specification, plus the formal challenge/exclusion
+review, must also pass for certification. Those standalone TCKs deliberately
+remain outside this repository's Platform artifact catalog.
 
 ## Safety and output
 
