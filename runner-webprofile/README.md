@@ -1,43 +1,50 @@
 # Jakarta EE 11 Web Profile runner catalog
 
 This module is the explicit entry point for Jakarta EE 11 Web Profile
-certification work. The default build runs no TCK tests. Select one published
-Platform TCK artifact and one test (or a deliberately narrow test pattern):
+certification work. The default build runs no TCK tests. Run every modern
+Platform test selected for Web Profile with:
 
 ```shell
-./mvnw -Ptck-rest-platform \
-  -pl runner-webprofile/run -am \
+runner-webprofile/run-platform-suite.sh servlet
+```
+
+For diagnosis, run one partition and optionally one class directly:
+
+```shell
+./mvnw -pl runner-webprofile/run -am \
+  -Dtck.artifact=rest-platform-tck \
+  -Dtck.partition=rest \
+  -Dtck.groups='web & !tck-javatest' \
   -Dtck.test=com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT \
   verify
 ```
 
-The artifact profiles use the version inherited from
-`jakarta.tck:artifacts-bom`, currently `11.0.3`. Do not activate multiple
-`tck-*` profiles in one invocation: they share the `tck.scan` selector. Split
-technologies into separate CI jobs instead; that also isolates TomEE and port
-collisions and produces useful per-technology reports.
+The artifact version is inherited from `jakarta.tck:artifacts-bom`, currently
+`11.0.3`. Each manifest partition runs in a separate Maven invocation. This
+isolates classpaths, TomEE instances, port use, exclusions, and reports.
 
-## Platform integration artifact profiles
+## Platform integration artifacts
 
-| Profile | Published artifact scanned | Web Profile responsibility |
+| Published artifact scanned | Web Profile responsibility |
 |---|---|---|
-| `tck-platform` | `jakarta.tck:javaee-tck` | Cross-specification requirements, Servlet, security, naming, EJB Lite, and other classic Platform tests |
-| `tck-rest-platform` | `jakarta.tck:rest-platform-tck` | REST integration beyond the standalone REST TCK |
-| `tck-el-platform` | `jakarta.tck:el-platform-tck` | Expression Language Platform integration |
-| `tck-jsonb-platform` | `jakarta.tck:jsonb-platform-tck` | JSON Binding Platform integration |
-| `tck-jsonp-platform` | `jakarta.tck:jsonp-platform-tck` | JSON Processing Platform integration |
-| `tck-pages-platform` | `jakarta.tck:pages-platform-tck` | Pages and debugging-language integration |
-| `tck-persistence-platform` | `jakarta.tck:persistence-platform-tck-tests` | Persistence Platform integration (also supplies its common artifact) |
-| `tck-tags` | `jakarta.tck:tags-tck` | Standard Tag Library tests published with the Platform TCK |
-| `tck-transactions` | `jakarta.tck:transactions-tck` | Transactions Platform integration |
-| `tck-websocket-platform` | `jakarta.tck:websocket-tck-platform-tests` | WebSocket Platform integration (also supplies its common artifact) |
+| `jakarta.tck:javaee-tck` | Cross-specification requirements |
+| `jakarta.tck:rest-platform-tck` | REST integration beyond the standalone REST TCK |
+| `jakarta.tck:el-platform-tck` | Expression Language Platform integration |
+| `jakarta.tck:jsonb-platform-tck` | JSON Binding Platform integration |
+| `jakarta.tck:jsonp-platform-tck` | JSON Processing Platform integration |
+| `jakarta.tck:pages-platform-tck` | Pages and debugging-language integration |
+| `jakarta.tck:persistence-platform-tck-tests` | Persistence Platform integration |
+| `jakarta.tck:tags-tck` | Standard Tag Library tests published with the Platform TCK |
+| `jakarta.tck:transactions-tck` | Transactions Platform integration |
+| `jakarta.tck:websocket-tck-platform-tests` | WebSocket Platform integration |
 
 The checked-in [`platform-suite.tsv`](platform-suite.tsv) is the suite
 definition. It records every artifact/protocol partition selected by the
 official `web` JUnit tag and the number of tagged test classes in the Jakarta
 Platform TCK `11.0.2` source tag. Runtime artifacts come from the compatible
 `11.0.3` publication because that release has no matching source tag. The
-expected counts make an upstream scope change visible during review.
+script verifies those expected counts against the generated reports, making an
+upstream scope or selection change a hard failure.
 
 The manifest contains 1,132 Platform TCK classes. The eight other `web`-tagged
 classes in the tagged repository are part of the standalone WebSocket TCK and
@@ -83,13 +90,14 @@ environment services must all be included before a certification run.
 
 ## Safety and output
 
-- A selected profile fails during `validate` unless `-Dtck.test` is set.
-- `-Dtck.test` accepts a fully qualified class or a narrow Failsafe pattern.
+- A selected artifact fails during `validate` unless `-Dtck.partition` is set.
+- The default `-Dtck.test` pattern runs every `*IT` class selected by the tag
+  expression; override it only for diagnosis.
 - TomEE uses ports 8080, 8443, and 8005 and Derby uses 1527;
   run technology jobs sequentially unless each job receives distinct ports.
 - On JDK 21, TomEE 11 currently logs that JACC authorization checks are
   skipped because method security is not supported there. The Java 21 gate
   validates deployment and invocation, but security coverage remains blocked
   on that TomEE limitation.
-- Failsafe reports are in `runner-webprofile/run/target/failsafe-reports` and
+- Partitioned Failsafe reports are in `runner-webprofile/run/target/failsafe-reports` and
   generated deployments are in `runner-webprofile/run/target/deployments`.

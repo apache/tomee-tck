@@ -8,9 +8,12 @@
   <role rolename="guest"/>
   <role rolename="mgr"/>
   <role rolename="asadmin"/>
+  <role rolename="Administrator"/>
+  <role rolename="Manager"/>
+  <role rolename="Employee"/>
 
   <user username="j2ee_vi" password="j2ee_vi" roles="staff"/>
-  <user username="javajoe" password="javajoe" roles="guest"/>
-  <user username="j2ee" password="j2ee" roles="staff,mgr,asadmin"/>
+  <user username="javajoe" password="javajoe" roles="guest,Manager,Employee"/>
+  <user username="j2ee" password="j2ee" roles="staff,mgr,asadmin,Administrator,Employee"/>
   <user username="j2ee_ri" password="j2ee_ri" roles="staff"/>
 </tomcat-users>

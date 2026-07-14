@@ -212,13 +212,18 @@
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>require-explicit-tck-test</id>
+            <id>require-suite-partition</id>
             <goals><goal>enforce</goal></goals>
             <configuration>
               <rules>
                 <requireProperty>
-                  <property>tck.test</property>
-                  <message>Set -Dtck.test to one test class or a narrow Failsafe pattern.</message>
+                  <property>tck.artifact</property>
+                  <message>Use run-platform-suite.sh or set -Dtck.artifact.</message>
+                  <regex>.+</regex>
+                </requireProperty>
+                <requireProperty>
+                  <property>tck.partition</property>
+                  <message>Use run-platform-suite.sh or set -Dtck.partition.</message>
                   <regex>.+</regex>
                 </requireProperty>
               </rules>
@@ -232,15 +237,23 @@
         <version>${maven.surefire.plugin.version}</version>
         <configuration>
           <dependenciesToScan>
-            <dependency>${tck.scan}</dependency>
+            <dependency>jakarta.tck:${tck.artifact}</dependency>
           </dependenciesToScan>
+          <groups>${tck.groups}</groups>
           <includes>
             <include>${tck.test}</include>
           </includes>
+          <excludesFile>${project.basedir}/../exclusions/${tck.partition}.txt</excludesFile>
           <failIfNoTests>true</failIfNoTests>
+          <reportsDirectory>${project.build.directory}/failsafe-reports/${tck.partition}</reportsDirectory>
           <systemPropertyVariables>
             <webServerHost>${tck.host}</webServerHost>
             <webServerPort>${tck.http.port}</webServerPort>
+            <user>j2ee</user>
+            <password>j2ee</password>
+            <authuser>javajoe</authuser>
+            <authpassword>javajoe</authpassword>
+            <ts_home>${project.build.directory}</ts_home>
             <junit.log.traceflag>${tck.trace}</junit.log.traceflag>
           </systemPropertyVariables>
         </configuration>
@@ -255,6 +268,8 @@
   </build>
 
   <properties>
+    <tck.test>**/*IT.java</tck.test>
+    <tck.groups>web &amp; !tck-javatest</tck.groups>
     <tck.host>localhost</tck.host>
     <tck.http.port>8080</tck.http.port>
     <tck.trace>false</tck.trace>
