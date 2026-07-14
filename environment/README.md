@@ -35,7 +35,11 @@ The runner's preparation phase:
    using `derbynet` only in the separate Derby process, and replace TomEE's
    legacy JSTL jar with the Jakarta Tags 3.0.1 implementation (the Tags TCK
    still records TomEE's missing short-URI registration as a product gap);
-4. use fixed localhost ports 8005, 8080, 8443, and 1527. The catalog is a
+4. for the JDBC partition, create the CTS schema and stored procedures from
+   the Platform TCK 11.0.2 Derby definitions. The checked-in scripts contain
+   the authoritative `CREATE` statements but omit `DROP` statements because
+   every invocation starts with a freshly deleted Derby home;
+5. use fixed localhost ports 8005, 8080, 8443, and 1527. The catalog is a
    single-worker harness until port allocation is implemented consistently for
    Arquillian, TomEE, Derby, and TCK client properties.
 

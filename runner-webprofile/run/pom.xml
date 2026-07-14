@@ -373,7 +373,7 @@
               <password>CTS1</password>
               <autocommit>true</autocommit>
               <delimiter>;</delimiter>
-              <onError>continue</onError>
+              <onError>abort</onError>
             </configuration>
             <dependencies>
               <dependency>
