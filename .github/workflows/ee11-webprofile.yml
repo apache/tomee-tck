@@ -50,6 +50,7 @@ jobs:
           sh -n environment/database/require-derby-port-free.sh
           sh -n environment/database/wait-for-derby.sh
           sh -n environment/certificates/generate-test-certificates.sh
+          sh -n runner-webprofile/run-platform-suite.sh
 
       - name: Validate XML templates
         run: |
@@ -86,11 +87,7 @@ jobs:
         run: ./mvnw -B -ntp -pl runner-smoke -am verify
 
       - name: Run the configured Web Profile catalog gate
-        run: >-
-          ./mvnw -B -ntp -Ptck-rest-platform
-          -pl runner-webprofile/run -am
-          -Dtck.test=com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT
-          verify
+        run: runner-webprofile/run-platform-suite.sh servlet rest
 
       - name: Verify the resolved TomEE snapshot bytes
         if: always()

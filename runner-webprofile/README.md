@@ -101,9 +101,9 @@ environment services must all be included before a certification run.
 ## Safety and output
 
 - A selected artifact fails during `validate` unless `-Dtck.partition` is set.
-- The default `-Dtck.test` pattern runs every modern `*IT` class, or every
-  adapted JavaTest `*Test` class, selected by the tag expression. Override it
-  only for diagnosis.
+- Each manifest row supplies the class pattern appropriate to that published
+  artifact; the JUnit tag expression remains the authoritative Web Profile
+  selector. Override `-Dtck.test` only for diagnosis.
 - TomEE uses ports 8080, 8443, and 8005 and Derby uses 1527;
   run technology jobs sequentially unless each job receives distinct ports.
 - On JDK 21, TomEE 11 currently logs that JACC authorization checks are

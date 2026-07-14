@@ -1,12 +1,11 @@
 # Jakarta EE 11 Web Profile TCK runner
 
 This is the replacement path for running the Jakarta EE 11 Web Profile TCK
-against TomEE 11. It uses Maven, JUnit 5 and Arquillian; it does not use the
-legacy JavaTest/Ant harness, `TSDeployment`, or a checked-in TCK distribution.
-
-The current milestone is deliberately small: the reactor builds the TomEE
-archive processor and runs one deploy/invoke/undeploy smoke test. A green smoke
-test proves the container integration, not Web Profile compatibility.
+against TomEE 11. It uses the TCK's published Maven artifacts, JUnit 5 and
+Arquillian; it does not use the old Ant launcher, `TSDeployment`, or a
+checked-in TCK distribution. A small smoke module checks the TomEE adapter,
+while the partitioned Platform runner executes the Web Profile-tagged tests and
+keeps a reviewed list of known compatibility gaps.
 
 ## Reproducible inputs
 
@@ -48,20 +47,17 @@ stack. Maven itself is supplied by the wrapper.
 ./mvnw -B -ntp -pl runner-smoke -am verify
 ```
 
-Run the complete reactor (currently the porting module and smoke runner):
+Run the default reactor (porting-extension tests and the smoke runner; catalog
+TCK partitions remain opt-in):
 
 ```sh
 ./mvnw -B -ntp verify
 ```
 
-The Web Profile runner catalog keeps broader work opt-in. Select exactly one
-artifact profile and one test class, for example:
+Run one catalog partition, for example:
 
 ```sh
-./mvnw -B -ntp -Ptck-rest-platform \
-  -pl runner-webprofile/run -am \
-  -Dtck.test=com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT \
-  verify
+runner-webprofile/run-platform-suite.sh servlet rest
 ```
 
 See `runner-webprofile/README.md` for the available artifact profiles and the
@@ -111,9 +107,10 @@ test JVM with `clientcert.p12` and `client-truststore.p12` when a test requires
 client-certificate authentication. Generated keys are test-only and must not
 be committed.
 
-No `ts.jte` is staged: the current JUnit 5/Arquillian gate receives its client
-properties directly from Maven. Add legacy TCK properties only when a selected
-artifact demonstrably reads them. Deployment is handled by
+The JavaTest-protocol adapter reads the deliberately small
+`environment/tck/ts.jte`. It contains only properties still consumed by the
+published EE 11 tests, including the JDBC names and sizing values. Maven
+supplies modern runner properties directly. Deployment is handled by
 `org.apache.tomee.tck.porting.TomEETestArchiveProcessor`, registered as an
 Arquillian extension.
 
@@ -138,8 +135,8 @@ manifest of TCK, TomEE, JDK and operating-system inputs.
 ## CI
 
 `.github/workflows/ee11-webprofile.yml` validates the environment, runs the
-smoke runner, and executes the selected REST Platform catalog gate on Temurin
-17 and 21. It archives JUnit reports and TomEE logs even when a test fails. The
+smoke runner, and executes the REST Platform catalog partition on Temurin 17
+and 21. It archives JUnit reports and TomEE logs even when a test fails. The
 workflow actions are pinned to full commit hashes.
 
 ## Authoritative references
