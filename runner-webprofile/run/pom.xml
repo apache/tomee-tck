@@ -100,6 +100,12 @@
       <artifactId>derbynet</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>persistence-platform-tck-dbprocedures</artifactId>
+      <version>${jakarta.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -264,6 +270,42 @@
                 <argument>shutdown</argument>
                 <argument>-h</argument><argument>localhost</argument>
               </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <driver>org.apache.derby.jdbc.ClientDriver</driver>
+          <url>jdbc:derby://localhost:1527/derbyDB;create=true</url>
+          <username>CTS1</username>
+          <password>CTS1</password>
+          <autocommit>true</autocommit>
+          <delimiter>;</delimiter>
+          <onError>abort</onError>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>${derby.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbytools</artifactId>
+            <version>${derby.version}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>initialize-tck-database-schema</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>execute</goal></goals>
+            <configuration>
+              <sqlCommand>CREATE SCHEMA CTS1 AUTHORIZATION CTS1;</sqlCommand>
             </configuration>
           </execution>
         </executions>
@@ -509,9 +551,39 @@
                     <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sql</srcFile>
                     <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sprocs.sql</srcFile>
                   </srcFiles>
-                  <sqlCommand>CREATE SCHEMA CTS1 AUTHORIZATION CTS1;
-CALL sqlj.install_jar('${settings.localRepository}/jakarta/tck/jdbc-platform-tck/${jakarta.tck.version}/jdbc-platform-tck-${jakarta.tck.version}.jar', 'CTS1.CS_Procs', 0);
+                  <sqlCommand>CALL sqlj.install_jar('${settings.localRepository}/jakarta/tck/jdbc-platform-tck/${jakarta.tck.version}/jdbc-platform-tck-${jakarta.tck.version}.jar', 'CTS1.CS_Procs', 0);
 CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'CTS1.CS_Procs');</sqlCommand>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>persistence-database</id>
+      <activation>
+        <property>
+          <name>tck.partition</name>
+          <value>persistence-javatest</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sql-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>initialize-persistence-tck-database</id>
+                <phase>pre-integration-test</phase>
+                <goals><goal>execute</goal></goals>
+                <configuration>
+                  <srcFiles>
+                    <srcFile>${project.basedir}/../../environment/database/persistence-derby.ddl.sql</srcFile>
+                  </srcFiles>
+                  <sqlCommand>CALL sqlj.install_jar('${settings.localRepository}/jakarta/tck/persistence-platform-tck-dbprocedures/${jakarta.tck.version}/persistence-platform-tck-dbprocedures-${jakarta.tck.version}.jar', 'CTS1.Persistence_Procs', 0);
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'CTS1.Persistence_Procs');</sqlCommand>
                 </configuration>
               </execution>
             </executions>
