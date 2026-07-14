@@ -35,11 +35,12 @@ The runner's preparation phase:
    using `derbynet` only in the separate Derby process, and replace TomEE's
    legacy JSTL jar with the Jakarta Tags 3.0.1 implementation (the Tags TCK
    still records TomEE's missing short-URI registration as a product gap);
-4. create the `CTS1` schema for every partition before TomEE starts. The JDBC
-   and Persistence partitions additionally create their tables and stored
-   procedures from the Platform TCK Derby definitions. The checked-in scripts
-   contain the authoritative `CREATE` statements but omit `DROP` statements
-   because every invocation starts with a freshly deleted Derby home;
+4. create the `CTS1` schema and shared Platform tables for every partition
+   before TomEE starts. The JDBC and Persistence partitions additionally
+   create their technology-specific tables and stored procedures from the
+   Platform TCK Derby definitions. The checked-in scripts contain the
+   authoritative `CREATE` statements but omit `DROP` statements because every
+   invocation starts with a freshly deleted Derby home;
 5. use fixed localhost ports 8005, 8080, 8443, and 1527. The catalog is a
    single-worker harness until port allocation is implemented consistently for
    Arquillian, TomEE, Derby, and TCK client properties.

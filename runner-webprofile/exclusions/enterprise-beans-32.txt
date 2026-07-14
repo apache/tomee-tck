@@ -3,10 +3,6 @@
 # filtered-servlet, and Faces vehicles retain the EJB coverage.
 **/ClientEjblitejspTest.java
 
-# The XA timer tests cannot initialize their persistence state because OpenJPA
-# connects as CTS1 while Derby reports that the CTS1 schema does not exist.
-**/timer/basic/xa/*Test.java
-
 # All schedule/transaction vehicles reproduce the transaction-manager fault
 # already seen in the EJB 3.0 transaction tests: a timeout callback starts but
 # does not complete its transaction, and rollback state leaks between methods.

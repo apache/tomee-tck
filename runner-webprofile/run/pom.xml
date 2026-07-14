@@ -308,6 +308,16 @@
               <sqlCommand>CREATE SCHEMA CTS1 AUTHORIZATION CTS1;</sqlCommand>
             </configuration>
           </execution>
+          <execution>
+            <id>initialize-platform-tck-database</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>execute</goal></goals>
+            <configuration>
+              <srcFiles>
+                <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sql</srcFile>
+              </srcFiles>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -548,7 +558,6 @@
                 <goals><goal>execute</goal></goals>
                 <configuration>
                   <srcFiles>
-                    <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sql</srcFile>
                     <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sprocs.sql</srcFile>
                   </srcFiles>
                   <sqlCommand>CALL sqlj.install_jar('${settings.localRepository}/jakarta/tck/jdbc-platform-tck/${jakarta.tck.version}/jdbc-platform-tck-${jakarta.tck.version}.jar', 'CTS1.CS_Procs', 0);
