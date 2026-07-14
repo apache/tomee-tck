@@ -40,3 +40,8 @@ The runner's preparation phase:
 The TLS generator also creates client-side files. They may stay outside the
 server overlay when no selected test uses client-certificate authentication;
 only `server.p12` and `server-truststore.p12` are read by `server.xml`.
+
+The JavaTest Arquillian protocol reads `environment/tck/ts.jte`. This is a
+small set of properties actually propagated by the Jakarta EE 11 adapter, not
+the historical GlassFish-oriented `ts.jte`. Add a property only when a selected
+test documents or demonstrates that it needs one.

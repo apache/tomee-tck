@@ -66,7 +66,7 @@
   <build>
     <testResources>
       <testResource>
-        <directory>src/test/resources</directory>
+        <directory>src/test/resources-${tck.protocol}</directory>
         <filtering>true</filtering>
       </testResource>
     </testResources>
@@ -268,10 +268,33 @@
   </build>
 
   <properties>
+    <tck.protocol>servlet</tck.protocol>
     <tck.test>**/*IT.java</tck.test>
     <tck.groups>web &amp; !tck-javatest</tck.groups>
     <tck.host>localhost</tck.host>
     <tck.http.port>8080</tck.http.port>
     <tck.trace>false</tck.trace>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>javatest-protocol</id>
+      <activation>
+        <property>
+          <name>tck.protocol</name>
+          <value>javatest</value>
+        </property>
+      </activation>
+      <properties>
+        <tck.test>**/*Test.java</tck.test>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.tck.arquillian</groupId>
+          <artifactId>arquillian-protocol-javatest</artifactId>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>

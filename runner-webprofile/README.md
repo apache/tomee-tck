@@ -6,6 +6,7 @@ Platform test selected for Web Profile with:
 
 ```shell
 runner-webprofile/run-platform-suite.sh servlet
+runner-webprofile/run-platform-suite.sh javatest
 ```
 
 For diagnosis, run one partition and optionally one class directly:
@@ -26,8 +27,9 @@ isolates classpaths, TomEE instances, port use, exclusions, and reports.
 ## Platform integration artifacts
 
 | Published artifact scanned | Web Profile responsibility |
-|---|---|---|
-| `jakarta.tck:javaee-tck` | Cross-specification requirements |
+|---|---|
+| `jakarta.tck:jdbc-platform-tck` | JDBC integration |
+| `jakarta.tck:ejb30`, `jakarta.tck:ejb32` | Enterprise Beans Lite integration |
 | `jakarta.tck:rest-platform-tck` | REST integration beyond the standalone REST TCK |
 | `jakarta.tck:el-platform-tck` | Expression Language Platform integration |
 | `jakarta.tck:jsonb-platform-tck` | JSON Binding Platform integration |
@@ -37,6 +39,7 @@ isolates classpaths, TomEE instances, port use, exclusions, and reports.
 | `jakarta.tck:tags-tck` | Standard Tag Library tests published with the Platform TCK |
 | `jakarta.tck:transactions-tck` | Transactions Platform integration |
 | `jakarta.tck:websocket-tck-platform-tests` | WebSocket Platform integration |
+| `jakarta.tck:signaturevalidation` | Web Profile API signatures |
 
 The checked-in [`platform-suite.tsv`](platform-suite.tsv) is the suite
 definition. It records every artifact/protocol partition selected by the
@@ -91,8 +94,9 @@ environment services must all be included before a certification run.
 ## Safety and output
 
 - A selected artifact fails during `validate` unless `-Dtck.partition` is set.
-- The default `-Dtck.test` pattern runs every `*IT` class selected by the tag
-  expression; override it only for diagnosis.
+- The default `-Dtck.test` pattern runs every modern `*IT` class, or every
+  adapted JavaTest `*Test` class, selected by the tag expression. Override it
+  only for diagnosis.
 - TomEE uses ports 8080, 8443, and 8005 and Derby uses 1527;
   run technology jobs sequentially unless each job receives distinct ports.
 - On JDK 21, TomEE 11 currently logs that JACC authorization checks are

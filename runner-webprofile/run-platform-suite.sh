@@ -12,8 +12,8 @@ ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$SCRIPT_DIR/platform-suite.tsv"
 PROTOCOL=${1:-servlet}
 
-if [ "$PROTOCOL" != "servlet" ]; then
-  echo "Protocol '$PROTOCOL' is not wired yet; supported protocol: servlet" >&2
+if [ "$PROTOCOL" != "servlet" ] && [ "$PROTOCOL" != "javatest" ]; then
+  echo "Unknown protocol '$PROTOCOL'; supported protocols: servlet, javatest" >&2
   exit 2
 fi
 
@@ -29,6 +29,7 @@ while IFS="$TAB" read -r partition artifact protocol groups expected_classes; do
     -pl runner-webprofile/run -am \
     "-Dtck.artifact=$artifact" \
     "-Dtck.partition=$partition" \
+    "-Dtck.protocol=$protocol" \
     "-Dtck.groups=$groups" \
     verify
 
