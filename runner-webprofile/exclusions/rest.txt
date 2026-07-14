@@ -1,1 +1,37 @@
-# No exclusions.
+# Java 21, 2026-07-14: TomEE's CXF client has no writer for scalar JSON-P
+# JsonString/JsonNumber entities. This is the default JSON provider gap tracked
+# with the REST TCK work in TOMEE-4436:
+# https://issues.apache.org/jira/browse/TOMEE-4436
+**/jaxrs21/platform/providers/jsonp/JAXRSClientIT.java#serverJsonNumberArgumentTest
+**/jaxrs21/platform/providers/jsonp/JAXRSClientIT.java#serverJsonStringArgumentTest
+
+# Java 21, 2026-07-14: TomEE omits CXF's JAX-RS Bean Validation interceptors
+# when CDI is active, so invalid parameters and return values are not
+# validated. The two mapper classes contain only affected tests. Tracked under
+# the TomEE REST TCK umbrella:
+# https://issues.apache.org/jira/browse/TOMEE-4166
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#constraintDefinitionExceptionThrownTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#validateExecutableIsInvalidForBeingShortTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#returnIsInvalidForBeingOneCharLongTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#validateExecutableIsNotValidatedTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#beanAnnotatedIsInvalidForBeingFiveCharsLongTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#beanAnnotatedReturnIsInvalidForBeingFiveCharsLongTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#beanIsInvalidForBeingOneCharLongTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#returnIsInvalidForBeingFiveCharsLongTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#constraintDeclarationExceptionThrownTest
+**/platform/beanvalidation/annotation/JAXRSClientIT.java#beanIsInvalidForBeingFiveCharsLongTest
+**/platform/beanvalidation/constraintviolationexceptionmapper/JAXRSClientIT.java
+**/platform/beanvalidation/validationexceptionmapper/JAXRSClientIT.java
+
+# Java 21, 2026-07-14: @Context ServletConfig is null when the resource is
+# served through OpenEJBRestServlet. Other servlet-context assertions in this
+# class pass. Tracked under the TomEE REST TCK umbrella:
+# https://issues.apache.org/jira/browse/TOMEE-4166
+**/platform/environment/servlet/JAXRSClientIT.java#checkServletExtensionTest
+
+# Java 21, 2026-07-14: TomEE passes the CDI-managed Application singleton to
+# CXF as a resource class; CXF rejects it because it has no public constructor,
+# and the REST application never starts. Tracked under the TomEE REST TCK
+# umbrella:
+# https://issues.apache.org/jira/browse/TOMEE-4166
+**/platform/managedbean299/JAXRSClientIT.java
