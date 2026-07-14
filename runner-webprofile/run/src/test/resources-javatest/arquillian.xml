@@ -26,6 +26,7 @@
       <property name="trace">${tck.trace}</property>
       <property name="workDir">${project.build.directory}/javatest-work</property>
       <property name="tsJteFile">${project.basedir}/../../environment/tck/ts.jte</property>
+      <property name="tsSqlStmtFile">${project.basedir}/../../environment/tck/derby.dml.sql</property>
     </protocol>
   </container>
 </arquillian>

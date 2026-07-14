@@ -19,6 +19,7 @@ jdbc.db=derby
 db1=jdbc/DB1
 db2=jdbc/DB2
 db.supports.sequence=false
+db.dml.file=environment/tck/derby.dml.sql
 
 harness.log.port=2000
 harness.log.traceflag=false

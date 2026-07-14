@@ -45,3 +45,5 @@ The JavaTest Arquillian protocol reads `environment/tck/ts.jte`. This is a
 small set of properties actually propagated by the Jakarta EE 11 adapter, not
 the historical GlassFish-oriented `ts.jte`. Add a property only when a selected
 test documents or demonstrates that it needs one.
+The companion `derby.dml.sql` is copied verbatim from the Platform TCK 11.0.2
+release tree and is passed as the adapter's additional-property statement file.
