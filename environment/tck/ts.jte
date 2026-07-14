@@ -1,6 +1,9 @@
 # Minimal Jakarta EE 11 JavaTest adapter configuration for TomEE.
 platform.mode=jakartaEE
 javaee.level=web
+optional.tech.packages.to.ignore=jakarta.resource,jakarta.resource.cci,jakarta.resource.spi,jakarta.resource.spi.work,jakarta.resource.spi.endpoint,jakarta.resource.spi.security,jakarta.mail,jakarta.mail.event,jakarta.mail.internet,jakarta.mail.search,jakarta.mail.util,jakarta.security.jacc,jakarta.security.auth.message,jakarta.security.auth.message.callback,jakarta.security.auth.message.config,jakarta.security.auth.message.module
+bin.dir=${signature.bin.dir}
+sigTestClasspath=${signature.classpath}
 
 webServerHost=localhost
 webServerPort=8080
@@ -33,4 +36,4 @@ harness.log.traceflag=false
 harness.socket.retry.count=10
 harness.temp.directory=${java.io.tmpdir}
 work.dir=${java.io.tmpdir}
-ts_home=${java.io.tmpdir}
+ts_home=${tck.ts.home}

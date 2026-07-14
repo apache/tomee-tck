@@ -20,7 +20,7 @@
       <property name="cleanOnStartUp">true</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>
-      <property name="catalina_opts">-Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=true</property>
+      <property name="catalina_opts">-Dorg.apache.catalina.STRICT_SERVLET_COMPLIANCE=true --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
     </configuration>
     <protocol type="javatest">
       <property name="trace">${tck.trace}</property>

@@ -161,6 +161,11 @@
                   <!-- Overwrite the legacy JSTL jar shipped by TomEE. -->
                   <destFileName>taglibs-shade-${tomee.version}.jar</destFileName>
                 </artifactItem>
+                <artifactItem>
+                  <groupId>jakarta.servlet.jsp.jstl</groupId>
+                  <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+                  <version>${jakarta.tags.api.version}</version>
+                </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
             </configuration>
@@ -323,6 +328,9 @@
             <jstl.db.driver>org.apache.derby.jdbc.ClientDriver</jstl.db.driver>
             <authuser>javajoe</authuser>
             <authpassword>javajoe</authpassword>
+            <signature.bin.dir>${project.build.directory}/signature/com/sun/ts/tests/signaturetest/signature-repository</signature.bin.dir>
+            <signature.classpath>${signature.classpath}</signature.classpath>
+            <tck.ts.home>${tck.ts.home}</tck.ts.home>
             <securedWebServicePort>8443</securedWebServicePort>
             <ws_wait>5</ws_wait>
             <servlet_adaptor>org.apache.openejb.server.rest.OpenEJBRestServlet</servlet_adaptor>
@@ -349,9 +357,113 @@
     <tck.host>localhost</tck.host>
     <tck.http.port>8080</tck.http.port>
     <tck.trace>false</tck.trace>
+    <tck.ts.home>${java.io.tmpdir}</tck.ts.home>
   </properties>
 
   <profiles>
+    <profile>
+      <id>signature-runtime</id>
+      <activation>
+        <property>
+          <name>tck.partition</name>
+          <value>signature</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>stage-signature-runtime</id>
+                <phase>generate-test-resources</phase>
+                <goals><goal>copy-dependencies</goal></goals>
+                <configuration>
+                  <includeGroupIds>jakarta.tck</includeGroupIds>
+                  <includeArtifactIds>common,signaturetest,sigtest-maven-plugin</includeArtifactIds>
+                  <includeScope>test</includeScope>
+                  <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
+                  <overWriteIfNewer>true</overWriteIfNewer>
+                </configuration>
+              </execution>
+              <execution>
+                <id>stage-signature-metadata</id>
+                <phase>generate-test-resources</phase>
+                <goals><goal>unpack</goal></goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>jakarta.tck</groupId>
+                      <artifactId>signaturevalidation</artifactId>
+                      <version>${jakarta.tck.version}</version>
+                      <outputDirectory>${project.build.directory}/signature</outputDirectory>
+                      <includes>**/sig-test.map,**/sig-test-pkg-list.txt</includes>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>jakarta.tck</groupId>
+                      <artifactId>signaturevalidation</artifactId>
+                      <version>${jakarta.tck.version}</version>
+                      <outputDirectory>${project.build.directory}/signature/src</outputDirectory>
+                      <includes>**/*.sig</includes>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>org.apache.tomee</groupId>
+                      <artifactId>apache-tomee</artifactId>
+                      <version>${tomee.version}</version>
+                      <classifier>${tomee.classifier}</classifier>
+                      <type>zip</type>
+                      <outputDirectory>${project.build.directory}/signature/tomee</outputDirectory>
+                      <includes>**/lib/*.jar</includes>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>build-signature-classpath</id>
+                <phase>generate-test-resources</phase>
+                <goals><goal>run</goal></goals>
+                <configuration>
+                  <exportAntProperties>true</exportAntProperties>
+                  <target>
+                    <path id="tomee-api-classpath">
+                      <fileset dir="${project.build.directory}/signature/tomee/apache-tomee-${tomee.classifier}-${tomee.version}/lib">
+                        <include name="jakarta*.jar"/>
+                        <include name="el-api.jar"/>
+                        <include name="jaspic-api.jar"/>
+                        <include name="jsp-api.jar"/>
+                        <include name="myfaces-api-*.jar"/>
+                        <include name="servlet-api.jar"/>
+                        <include name="websocket-api.jar"/>
+                        <include name="websocket-client-api.jar"/>
+                      </fileset>
+                      <!-- The adapter replaces the distribution's legacy JSTL jar. -->
+                      <fileset dir="${project.build.directory}/tomee-overlay/lib">
+                        <include name="jakarta.servlet.jsp.jstl-api-*.jar"/>
+                        <include name="taglibs-shade-${tomee.version}.jar"/>
+                      </fileset>
+                    </path>
+                    <pathconvert pathsep="${path.separator}"
+                                 property="signature.classpath"
+                                 refid="tomee-api-classpath"/>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <properties>
+        <tck.ts.home>${project.build.directory}/signature</tck.ts.home>
+      </properties>
+    </profile>
     <profile>
       <id>jdbc-database</id>
       <activation>
