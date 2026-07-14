@@ -3,7 +3,7 @@
 jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152	152	**/*Test.java
 enterprise-beans-30	ejb30	javatest	web & tck-javatest	282	282	**/*Test.java
 enterprise-beans-32	ejb32	javatest	web & tck-javatest	72	72	**/*Test.java
-expression-language	el-platform-tck	javatest	web & tck-javatest	72	72	**/*Test.java
+expression-language	el-platform-tck	javatest	web & tck-javatest	72	66	**/*Test.java
 json-binding	jsonb-platform-tck	javatest	web & tck-javatest	6	4	**/*Test.java
 json-processing	jsonp-platform-tck	javatest	web & tck-javatest	4	4	**/*Test.java
 pages	pages-platform-tck	servlet	web & !tck-javatest	2	2	**/*IT.java

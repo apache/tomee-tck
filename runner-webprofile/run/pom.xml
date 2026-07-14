@@ -53,6 +53,12 @@
       <artifactId>tomcat-api</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Client-only EL tests require the implementation named by the TCK. -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>

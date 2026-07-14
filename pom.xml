@@ -105,6 +105,11 @@
         <version>${tomcat.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.openwebbeans</groupId>
         <artifactId>openwebbeans-impl</artifactId>
         <version>${openwebbeans.version}</version>

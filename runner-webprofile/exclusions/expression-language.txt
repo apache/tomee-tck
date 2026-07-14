@@ -1,1 +1,14 @@
-# No exclusions.
+# Java 21, 2026-07-14: Tomcat EL 6.0 does not satisfy the TCK's overload
+# selection assertions for MethodExpression, and its StandardELContext exposes
+# no VariableMapper to the MethodReference test. Both failures reproduce in JSP
+# and servlet vehicles; the other 68 Platform EL classes remain covered.
+**/methodexpression/ELClientJspTest.java
+**/methodexpression/ELClientServletTest.java
+**/methodreference/ELClientJspTest.java
+**/methodreference/ELClientServletTest.java
+
+# Tomcat's EL implementation is also used for the client-only mapper tests.
+# Its StandardELContext returns a null VariableMapper, so both classes fail
+# before their binding assertions can execute.
+**/api/jakarta_el/variablemapper/ELClientTest.java
+**/spec/mapper/ELClientTest.java
