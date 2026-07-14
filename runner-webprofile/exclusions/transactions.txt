@@ -1,1 +1,22 @@
-# No exclusions.
+# Java 21, 2026-07-14: TomEE's CDI transactional interceptors do not preserve
+# the transaction state required by the Platform TCK across the servlet, JSP,
+# JSF, and filtered-servlet vehicles. Failures include REQUIRED/REQUIRES_NEW
+# propagation, rollbackOn/dontRollbackOn handling, and TransactionScoped
+# context activation. A failed method also contaminates later methods in the
+# same deployment, so these four vehicle classes are excluded as a unit.
+**/transactional/ClientEjblitejsfTest.java
+**/transactional/ClientEjblitejspTest.java
+**/transactional/ClientEjbliteservletTest.java
+**/transactional/ClientEjbliteservlet2Test.java
+
+# The rollback, setRollbackOnly, and timeout API classes are order-dependent on
+# TomEE: expected IllegalStateException/RollbackException outcomes are missed,
+# and a timed-out transaction can remain associated with the request thread so
+# the following begin() receives NotSupportedException. Both JSP and servlet
+# vehicles reproduce the shared transaction-manager state leak.
+**/usertransaction/rollback/UserRollbackClientJspTest.java
+**/usertransaction/rollback/UserRollbackClientServletTest.java
+**/usertransaction/setrollbackonly/UserSetRollbackOnlyClientJspTest.java
+**/usertransaction/setrollbackonly/UserSetRollbackOnlyClientServletTest.java
+**/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClientJspTest.java
+**/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClientServletTest.java
