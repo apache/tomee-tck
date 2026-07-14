@@ -59,13 +59,17 @@ runner-webprofile/run-platform-suite.sh servlet rest
 The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
 Jenkins `ubuntu` agents and their managed `jdk_17_latest` and `jdk_21_latest`
 tools. The pipeline validates the environment, runs the smoke gate on both
-JDKs, and then runs the complete Servlet and JavaTest Platform catalogs on
-JDK 21. Test reports and TomEE logs are archived for 14 days.
+JDKs in parallel, and then fans out every manifest partition as an independent
+JDK 21 branch. Test reports and TomEE logs are archived for 14 days.
 
-The execution stages are deliberately sequential because TomEE and Derby bind
-fixed localhost ports. Configure an ASF Jenkins multibranch Pipeline job to use
-`Jenkinsfile` from SCM; Jenkins supplies the checkout and managed JDKs, while
-the checked-in Maven wrapper supplies Maven 3.9.9.
+Parallel branches request `ubuntu && ephemeral` agents. The current ASF cloud
+workers advertise one executor per host, which isolates the fixed localhost
+ports used by TomEE and Derby. Jenkins queues branches when fewer workers are
+available, so the pipeline uses available capacity without imposing a fixed
+partition count.
+Configure an ASF Jenkins multibranch Pipeline job to use `Jenkinsfile` from
+SCM; Jenkins supplies the checkout and managed JDKs, while the checked-in Maven
+wrapper supplies Maven 3.9.9.
 
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.
@@ -133,14 +137,6 @@ bundle or claim results for each specification project's independently
 published standalone TCK. Those independent suites are additional inputs to a
 formal Jakarta EE compatibility certification, not missing Platform artifact
 partitions in this runner.
-
-## CI
-
-`.github/workflows/ee11-webprofile.yml` validates the environment and runs the
-smoke runner on Temurin 17 and 21. Separate Java 21 jobs execute every servlet
-and JavaTest partition in `platform-suite.tsv`; they archive JUnit reports and
-TomEE logs even when a test fails. The workflow actions are pinned to full
-commit hashes.
 
 ## Authoritative references
 
