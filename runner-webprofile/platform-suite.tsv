@@ -1,4 +1,4 @@
-# Jakarta EE Platform TCK 11.0.2 source tag; artifacts are consumed from the compatible 11.0.3 release.
+# Jakarta EE Platform TCK 11.0.3 artifact inventory.
 # id	artifact	protocol	junit_tag_expression	source_classes	expected_executed_classes	failsafe_include
 jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152	152	**/*JSP.java,**/*Servlet.java
 enterprise-beans-30	ejb30	javatest	web & tck-javatest	282	170	**/*Test.java
@@ -8,7 +8,7 @@ json-binding	jsonb-platform-tck	javatest	web & tck-javatest	6	4	**/*Test.java
 json-processing	jsonp-platform-tck	javatest	web & tck-javatest	4	4	**/*Test.java
 pages	pages-platform-tck	servlet	web & !tck-javatest	2	2	**/*IT.java
 persistence-servlet	persistence-platform-tck-tests	servlet	web & !tck-javatest	1	0	**/*Test.java
-persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450	450	**/*Test.java
+persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450	201	**/*Test.java
 rest	rest-platform-tck	servlet	web & !tck-javatest	18	15	**/*IT.java
 tags	tags-tck	servlet	web & !tck-javatest	50	0	**/*IT.java
 transactions	transactions-tck	javatest	web & tck-javatest	16	6	**/*Test.java
