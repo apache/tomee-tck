@@ -1,1 +1,6 @@
-# No exclusions.
+# Java 21, 2026-07-14: all 73 EJB Lite JSP vehicle classes include the shared
+# Jakarta Tags core URI in ejblitejsp_vehicle.jsp. Jasper returns HTTP 500
+# before EJB assertions run because jakarta.tags.core is not registered. The
+# same EJB tests remain covered through servlet, filtered-servlet, and JSF
+# vehicles; the root Jakarta Tags gap is recorded in exclusions/tags.txt.
+**/ClientEjblitejspTest.java
