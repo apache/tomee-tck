@@ -26,16 +26,16 @@ class TomEETestArchiveProcessorTest {
     private final TomEETestArchiveProcessor processor = new TomEETestArchiveProcessor();
 
     @Test
-    void translatesOnlyTheContextRootForTomEEsExistingConversionStage() throws IOException {
+    void preservesTheCompleteDescriptorForTomEEsExistingConversionStage() throws IOException {
         final URL descriptor = getClass().getResource("/sun-web.xml");
         final WebArchive archive = ShrinkWrap.create(WebArchive.class, "sample.war");
 
         processor.processWebArchive(archive, getClass(), descriptor);
 
         assertNotNull(archive.get(ArchivePaths.create(TomEETestArchiveProcessor.SUN_WEB_XML)));
-        assertEquals("<sun-web-app><context-root>/expected</context-root></sun-web-app>",
-                new String(archive.get(TomEETestArchiveProcessor.SUN_WEB_XML).getAsset()
-                        .openStream().readAllBytes(), StandardCharsets.UTF_8));
+        final String copied = new String(archive.get(TomEETestArchiveProcessor.SUN_WEB_XML).getAsset()
+                .openStream().readAllBytes(), StandardCharsets.UTF_8);
+        assertEquals(new String(descriptor.openStream().readAllBytes(), StandardCharsets.UTF_8), copied);
     }
 
     @Test
@@ -48,12 +48,12 @@ class TomEETestArchiveProcessorTest {
     }
 
     @Test
-    void doesNothingWhenTheVendorDescriptorHasNoContextRoot() {
+    void preservesDescriptorsWithoutAContextRoot() {
         final WebArchive archive = ShrinkWrap.create(WebArchive.class, "portable.war");
 
         processor.processWebArchive(archive, getClass(), getClass().getResource("/sun-web-without-context.xml"));
 
-        assertFalse(archive.contains(ArchivePaths.create(TomEETestArchiveProcessor.SUN_WEB_XML)));
+        assertNotNull(archive.get(ArchivePaths.create(TomEETestArchiveProcessor.SUN_WEB_XML)));
     }
 
     @Test

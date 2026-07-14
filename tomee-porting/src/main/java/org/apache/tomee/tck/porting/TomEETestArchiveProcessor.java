@@ -6,31 +6,22 @@
  */
 package org.apache.tomee.tck.porting;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.asset.UrlAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import tck.arquillian.porting.lib.spi.AbstractTestArchiveProcessor;
 
 /**
  * Minimal TomEE porting hook for Jakarta EE 11 TCK deployment archives.
  *
  * <p>Portable descriptors and archive contents are deliberately left unchanged. TomEE's deployment
- * pipeline already understands a legacy GlassFish {@code sun-web.xml} context root through its
- * {@code SunConversion} stage. A minimal descriptor containing only that value is supplied because
- * Web Profile tests can expect an endpoint different from the WAR name.</p>
+ * pipeline already understands the legacy GlassFish {@code sun-web.xml} descriptor through its
+ * {@code SunConversion} stage. The descriptor must be preserved: in addition to context roots,
+ * tests use it for required principal-to-role and resource mappings.</p>
  *
  * <p>The remaining callbacks are intentionally no-ops until a failing TCK test demonstrates that a
  * specific vendor descriptor is required. This avoids importing obsolete GlassFish configuration
@@ -55,11 +46,7 @@ public class TomEETestArchiveProcessor extends AbstractTestArchiveProcessor {
     public void processWebArchive(final WebArchive webArchive, final Class<?> testClass,
                                   final URL sunXmlUrl) {
         if (sunXmlUrl != null && !webArchive.contains(ArchivePaths.create(SUN_WEB_XML))) {
-            final String contextRoot = readContextRoot(sunXmlUrl);
-            if (contextRoot != null) {
-                webArchive.addAsWebInfResource(new StringAsset("<sun-web-app><context-root>"
-                        + escapeXml(contextRoot) + "</context-root></sun-web-app>"), "sun-web.xml");
-            }
+            webArchive.addAsWebInfResource(new UrlAsset(sunXmlUrl), "sun-web.xml");
         }
     }
 
@@ -81,34 +68,4 @@ public class TomEETestArchiveProcessor extends AbstractTestArchiveProcessor {
         // No EAR-wide vendor descriptor conversion is currently required for the Web Profile.
     }
 
-    private static String readContextRoot(final URL descriptor) {
-        try (InputStream input = descriptor.openStream()) {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-
-            NodeList roots = factory.newDocumentBuilder().parse(input)
-                    .getElementsByTagNameNS("*", "context-root");
-            if (roots.getLength() == 0) {
-                return null;
-            }
-            final String value = roots.item(0).getTextContent().trim();
-            return value.isEmpty() ? null : value;
-        } catch (IOException | ParserConfigurationException | SAXException e) {
-            throw new IllegalArgumentException("Cannot read GlassFish web descriptor " + descriptor, e);
-        }
-    }
-
-    private static String escapeXml(final String value) {
-        return value.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&apos;");
-    }
 }
