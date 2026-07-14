@@ -4,14 +4,15 @@ Exclusions keep the remaining suite runnable; they do not turn a result into a
 compatibility pass. Each entry corresponds to a narrow pattern in `exclusions/`.
 
 The generated TomEE overlay also replaces `taglibs-shade`, which still contains
-legacy JSTL TLD URIs, with `org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1`.
-TomEE/Tomcat still does not expose the replacement jar's `jakarta.tags.*` TLD
-mappings to applications. All 50 Tags classes exercise those URIs and are
-excluded below; one method in the compatibility class avoids them, but retaining
-one method would not constitute useful Tags coverage.
+legacy JSTL TLD URIs, with the Jakarta Tags 3.0 API and GlassFish
+implementation. TomEE/Tomcat still does not expose the replacement jar's
+`jakarta.tags.*` TLD mappings to applications. All 50 Tags classes exercise
+those URIs and are excluded below; one method in the compatibility class avoids
+them, but retaining one method would not constitute useful Tags coverage.
 
 | Partition | Excluded class | Reproduced | Product gap |
 |---|---|---|---|
+| `signature` | Both Web Profile signature vehicle wrappers | Java 21, 2026-07-14 | TomEE's `webprofile` distribution exposes Jakarta Batch and Jakarta Messaging packages through its combined `jakartaee-api` jar even though these optional technologies are not declared by `javaee.level=web`. The required Web Profile packages, including the corrected Jakarta Tags API, pass the signature check. Optional technologies must instead be removed from this distribution or declared and covered by their complete TCKs. |
 | `expression-language` | Method-expression and method-reference tests in JSP and servlet vehicles, plus two client-side variable-mapper classes | Java 21, 2026-07-14 | Tomcat EL 6.0 fails Jakarta EL 6 overload-selection assertions for `MethodExpression`, while its `StandardELContext` supplies no `VariableMapper` to method-reference or variable-binding tests. The remaining 66 Platform EL classes stay enabled. |
 | `json-binding` | Serializer customization CDI test in JSP and servlet vehicles | Java 21, 2026-07-14 | TomEE's Johnzon integration does not inject the CDI-managed field in the `@JsonbTypeDeserializer` used for a nested generic type. CDI adapter injection and provider-selection tests remain covered. |
 | `transactions` | Four `jta.ee.transactional.ClientEjblite*Test` vehicle classes | Java 21, 2026-07-14 | TomEE's CDI transactional interceptors fail transaction propagation, rollback-rule, and `TransactionScoped` context assertions across the servlet, JSP, JSF, and filtered-servlet vehicles. A failed assertion can leave transaction state active and cascade into later methods, so the affected vehicle classes are excluded as a unit. |

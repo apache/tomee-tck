@@ -1,1 +1,7 @@
-# No exclusions.
+# Java 21, 2026-07-14: the TomEE Web Profile ZIP exposes the optional Jakarta
+# Batch and Messaging API packages through jakartaee-api, but javaee.level=web
+# does not declare either technology. The Platform signature checker requires
+# optional technologies to be absent or explicitly declared and fully tested.
+# Both vehicle wrappers execute the same complete Web Profile signature check.
+**/ClientSignatureJspTest.java
+**/ClientSignatureServletTest.java

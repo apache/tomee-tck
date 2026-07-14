@@ -13,4 +13,4 @@ rest	rest-platform-tck	servlet	web & !tck-javatest	18	15	**/*IT.java
 tags	tags-tck	servlet	web & !tck-javatest	50	0	**/*IT.java
 transactions	transactions-tck	javatest	web & tck-javatest	16	6	**/*Test.java
 websocket-platform	websocket-tck-platform-tests	servlet	web & !tck-javatest	5	5	**/*IT.java
-signature	signaturevalidation	javatest	web	2	2	**/ClientSignatureJspTest.java,**/ClientSignatureServletTest.java
+signature	signaturevalidation	javatest	web	2	0	**/ClientSignatureJspTest.java,**/ClientSignatureServletTest.java
