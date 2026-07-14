@@ -1,1 +1,5 @@
-# No exclusions.
+# Java 21, 2026-07-14: Johnzon does not inject the CDI-managed dependency into
+# the @JsonbTypeDeserializer used for a nested generic type. Adapter injection
+# and JSON-B provider selection pass in both vehicles.
+**/customizedmapping/serializers/SerializersCustomizationCDIJspTest.java
+**/customizedmapping/serializers/SerializersCustomizationCDIServletTest.java
