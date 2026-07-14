@@ -131,6 +131,23 @@
               <overWriteIfNewer>true</overWriteIfNewer>
             </configuration>
           </execution>
+          <execution>
+            <id>replace-legacy-tags-implementation</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy</goal></goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.glassfish.web</groupId>
+                  <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+                  <version>${jakarta.tags.impl.version}</version>
+                  <!-- Overwrite the legacy JSTL jar shipped by TomEE. -->
+                  <destFileName>taglibs-shade-${tomee.version}.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -269,11 +286,16 @@
           <!-- The manifest count guard still fails every unexpected empty selection. -->
           <failIfNoTests>false</failIfNoTests>
           <reportsDirectory>${project.build.directory}/failsafe-reports/${tck.partition}</reportsDirectory>
+          <summaryFile>${project.build.directory}/failsafe-reports/${tck.partition}/failsafe-summary.xml</summaryFile>
           <systemPropertyVariables>
             <webServerHost>${tck.host}</webServerHost>
             <webServerPort>${tck.http.port}</webServerPort>
             <user>j2ee</user>
             <password>j2ee</password>
+            <jstl.db.url>jdbc:derby://localhost:1527/derbyDB;create=true</jstl.db.url>
+            <jstl.db.user>cts1</jstl.db.user>
+            <jstl.db.password>cts1</jstl.db.password>
+            <jstl.db.driver>org.apache.derby.jdbc.ClientDriver</jstl.db.driver>
             <authuser>javajoe</authuser>
             <authpassword>javajoe</authpassword>
             <servlet_adaptor>org.apache.openejb.server.rest.OpenEJBRestServlet</servlet_adaptor>

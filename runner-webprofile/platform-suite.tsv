@@ -10,7 +10,7 @@ pages	pages-platform-tck	servlet	web & !tck-javatest	2	2	**/*IT.java
 persistence-servlet	persistence-platform-tck-tests	servlet	web & !tck-javatest	1	0	**/*Test.java
 persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450	450	**/*Test.java
 rest	rest-platform-tck	servlet	web & !tck-javatest	18	15	**/*IT.java
-tags	tags-tck	servlet	web & !tck-javatest	50	50	**/*IT.java
+tags	tags-tck	servlet	web & !tck-javatest	50	0	**/*IT.java
 transactions	transactions-tck	javatest	web & tck-javatest	16	16	**/*Test.java
 websocket-platform	websocket-tck-platform-tests	servlet	web & !tck-javatest	5	5	**/*IT.java
 signature	signaturevalidation	signature	web	2	2	**/*Test.java

@@ -7,7 +7,7 @@ this layout beneath its own `target` directory:
 ```text
 target/tomee-overlay/
 ├── conf/    # environment/tomee/conf plus generated TLS files
-└── lib/     # Derby client runtime
+└── lib/     # Derby client runtime and Jakarta Tags implementation
 ```
 
 The `conf` and `lib` values are source directories. During container
@@ -32,7 +32,9 @@ The runner's preparation phase:
 3. copy `org.apache.derby:derbyclient`, `derbyshared`, and `derbytools` at the
    version in `environment/versions.env` into the overlay `lib` directory (the
    configured `org.apache.derby.jdbc.ClientDriver` is in `derbytools`), while
-   using `derbynet` only in the separate Derby process;
+   using `derbynet` only in the separate Derby process, and replace TomEE's
+   legacy JSTL jar with the Jakarta Tags 3.0.1 implementation (the Tags TCK
+   still records TomEE's missing short-URI registration as a product gap);
 4. use fixed localhost ports 8005, 8080, 8443, and 1527. The catalog is a
    single-worker harness until port allocation is implemented consistently for
    Arquillian, TomEE, Derby, and TCK client properties.

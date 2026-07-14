@@ -41,6 +41,7 @@
     <openwebbeans.version>4.1.0</openwebbeans.version>
     <johnzon.version>2.1.0</johnzon.version>
     <cxf.version>4.2.2</cxf.version>
+    <jakarta.tags.impl.version>3.0.1</jakarta.tags.impl.version>
     <derby.version>10.15.2.0</derby.version>
 
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
@@ -111,6 +112,11 @@
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-rt-rs-client</artifactId>
         <version>${cxf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.web</groupId>
+        <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+        <version>${jakarta.tags.impl.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>
