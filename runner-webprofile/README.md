@@ -32,9 +32,16 @@ collisions and produces useful per-technology reports.
 | `tck-transactions` | `jakarta.tck:transactions-tck` | Transactions Platform integration |
 | `tck-websocket-platform` | `jakarta.tck:websocket-tck-platform-tests` | WebSocket Platform integration (also supplies its common artifact) |
 
-These profiles are runners, not a suite definition. A checked-in suite manifest
-or CI matrix should enumerate exact classes and exclusions. This avoids silently
-changing the certification scope when an upstream artifact adds tests.
+The checked-in [`platform-suite.tsv`](platform-suite.tsv) is the suite
+definition. It records every artifact/protocol partition selected by the
+official `web` JUnit tag and the number of tagged test classes in the Jakarta
+Platform TCK `11.0.2` source tag. Runtime artifacts come from the compatible
+`11.0.3` publication because that release has no matching source tag. The
+expected counts make an upstream scope change visible during review.
+
+The manifest contains 1,132 Platform TCK classes. The eight other `web`-tagged
+classes in the tagged repository are part of the standalone WebSocket TCK and
+belong in the independent-component suite required by EE-WP21.
 
 ## Web Profile 11 coverage matrix
 
