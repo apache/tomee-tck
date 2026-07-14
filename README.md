@@ -54,13 +54,25 @@ Run one catalog partition, for example:
 runner-webprofile/run-platform-suite.sh servlet rest
 ```
 
+## ASF Jenkins pipeline
+
+The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
+Jenkins `ubuntu` agents and their managed `jdk_17_latest` and `jdk_21_latest`
+tools. The pipeline validates the environment, runs the smoke gate on both
+JDKs, and then runs the complete Servlet and JavaTest Platform catalogs on
+JDK 21. Test reports and TomEE logs are archived for 14 days.
+
+The execution stages are deliberately sequential because TomEE and Derby bind
+fixed localhost ports. Configure an ASF Jenkins multibranch Pipeline job to use
+`Jenkinsfile` from SCM; Jenkins supplies the checkout and managed JDKs, while
+the checked-in Maven wrapper supplies Maven 3.9.9.
+
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.
 
 For a locally built TomEE snapshot, install both the Web Profile distribution
-and remote Arquillian adapter into the same Maven repository first. Then update
-the lock file to the actual resolved checksums before treating the run as
-reproducible.
+and remote Arquillian adapter into the same Maven repository first. Development
+runs intentionally consume the mutable snapshot without a checksum lock.
 
 ## Environment templates
 
