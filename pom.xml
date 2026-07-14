@@ -39,6 +39,8 @@
     <tomee.version>11.0.0-SNAPSHOT</tomee.version>
     <tomee.classifier>webprofile</tomee.classifier>
     <openwebbeans.version>4.1.0</openwebbeans.version>
+    <johnzon.version>2.1.0</johnzon.version>
+    <cxf.version>4.2.2</cxf.version>
     <derby.version>10.15.2.0</derby.version>
 
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
@@ -94,6 +96,21 @@
         <groupId>org.apache.openwebbeans</groupId>
         <artifactId>openwebbeans-impl</artifactId>
         <version>${openwebbeans.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.johnzon</groupId>
+        <artifactId>johnzon-core</artifactId>
+        <version>${johnzon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.johnzon</groupId>
+        <artifactId>johnzon-jsonb</artifactId>
+        <version>${johnzon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-client</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>
