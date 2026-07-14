@@ -18,6 +18,13 @@ Driver=org.apache.derby.jdbc.ClientDriver
 jdbc.db=derby
 db1=jdbc/DB1
 db2=jdbc/DB2
+ptable=ctstable1
+ftable=ctstable2
+cofSize=5
+cofTypeSize=5
+binarySize=24
+varbinarySize=48
+longvarbinarySize=50
 db.supports.sequence=false
 db.dml.file=environment/tck/derby.dml.sql
 

@@ -353,6 +353,61 @@
 
   <profiles>
     <profile>
+      <id>jdbc-database</id>
+      <activation>
+        <property>
+          <name>tck.partition</name>
+          <value>jdbc</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sql-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <configuration>
+              <driver>org.apache.derby.jdbc.ClientDriver</driver>
+              <url>jdbc:derby://localhost:1527/derbyDB;create=true</url>
+              <username>CTS1</username>
+              <password>CTS1</password>
+              <autocommit>true</autocommit>
+              <delimiter>;</delimiter>
+              <onError>continue</onError>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derbyclient</artifactId>
+                <version>${derby.version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derbytools</artifactId>
+                <version>${derby.version}</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>initialize-jdbc-tck-database</id>
+                <phase>pre-integration-test</phase>
+                <goals><goal>execute</goal></goals>
+                <configuration>
+                  <srcFiles>
+                    <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sql</srcFile>
+                    <srcFile>${project.basedir}/../../environment/database/jdbc-derby.ddl.sprocs.sql</srcFile>
+                  </srcFiles>
+                  <sqlCommand>CREATE SCHEMA CTS1 AUTHORIZATION CTS1;
+CALL sqlj.install_jar('${settings.localRepository}/jakarta/tck/jdbc-platform-tck/${jakarta.tck.version}/jdbc-platform-tck-${jakarta.tck.version}.jar', 'CTS1.CS_Procs', 0);
+CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.classpath', 'CTS1.CS_Procs');</sqlCommand>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>javatest-protocol</id>
       <activation>
         <property>
