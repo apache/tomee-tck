@@ -49,6 +49,10 @@ Platform TCK `11.0.2` source tag. Runtime artifacts come from the compatible
 script verifies those expected counts against the generated reports, making an
 upstream scope or selection change a hard failure.
 
+Source and post-exclusion counts are separate manifest columns. Every reduction
+must be explained in [`KNOWN_FAILURES.md`](KNOWN_FAILURES.md) and in the matching
+file under `exclusions/`.
+
 The manifest contains 1,132 Platform TCK classes. The eight other `web`-tagged
 classes in the tagged repository are part of the standalone WebSocket TCK and
 belong in the independent-component suite required by EE-WP21.

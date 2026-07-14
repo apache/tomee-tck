@@ -1,1 +1,5 @@
-# No exclusions.
+# Java 21, 2026-07-14: deployment fails because PersistenceUnitUtil with the
+# TCK qualifier is an unsatisfied CDI dependency. Jakarta Persistence 3.2
+# dependency-injection integration is still open in OPENJPA-2940:
+# https://issues.apache.org/jira/browse/OPENJPA-2940
+**/ServletEMLookupTest.java

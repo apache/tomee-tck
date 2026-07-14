@@ -31,6 +31,12 @@
       <artifactId>arquillian-tomee-remote</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- TomEE's remote adapter declares this provided but may serialize its exceptions. -->
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.junit5</groupId>
       <artifactId>arquillian-junit5-container</artifactId>
@@ -244,7 +250,8 @@
             <include>${tck.test}</include>
           </includes>
           <excludesFile>${project.basedir}/../exclusions/${tck.partition}.txt</excludesFile>
-          <failIfNoTests>true</failIfNoTests>
+          <!-- The manifest count guard still fails every unexpected empty selection. -->
+          <failIfNoTests>false</failIfNoTests>
           <reportsDirectory>${project.build.directory}/failsafe-reports/${tck.partition}</reportsDirectory>
           <systemPropertyVariables>
             <webServerHost>${tck.host}</webServerHost>

@@ -1,16 +1,16 @@
 # Jakarta EE Platform TCK 11.0.2 source tag; artifacts are consumed from the compatible 11.0.3 release.
-# id	artifact	protocol	junit_tag_expression	expected_classes
-jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152
-enterprise-beans-30	ejb30	javatest	web & tck-javatest	282
-enterprise-beans-32	ejb32	javatest	web & tck-javatest	72
-expression-language	el-platform-tck	javatest	web & tck-javatest	72
-json-binding	jsonb-platform-tck	javatest	web & tck-javatest	6
-json-processing	jsonp-platform-tck	javatest	web & tck-javatest	4
-pages	pages-platform-tck	servlet	web & !tck-javatest	2
-persistence-servlet	persistence-platform-tck-tests	servlet	web & !tck-javatest	1
-persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450
-rest	rest-platform-tck	servlet	web & !tck-javatest	18
-tags	tags-tck	servlet	web & !tck-javatest	50
-transactions	transactions-tck	javatest	web & tck-javatest	16
-websocket-platform	websocket-tck-platform-tests	servlet	web & !tck-javatest	5
-signature	signaturevalidation	signature	web	2
+# id	artifact	protocol	junit_tag_expression	source_classes	expected_executed_classes	failsafe_include
+jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152	152	**/*Test.java
+enterprise-beans-30	ejb30	javatest	web & tck-javatest	282	282	**/*Test.java
+enterprise-beans-32	ejb32	javatest	web & tck-javatest	72	72	**/*Test.java
+expression-language	el-platform-tck	javatest	web & tck-javatest	72	72	**/*Test.java
+json-binding	jsonb-platform-tck	javatest	web & tck-javatest	6	6	**/*Test.java
+json-processing	jsonp-platform-tck	javatest	web & tck-javatest	4	4	**/*Test.java
+pages	pages-platform-tck	servlet	web & !tck-javatest	2	2	**/*IT.java
+persistence-servlet	persistence-platform-tck-tests	servlet	web & !tck-javatest	1	0	**/*Test.java
+persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450	450	**/*Test.java
+rest	rest-platform-tck	servlet	web & !tck-javatest	18	18	**/*IT.java
+tags	tags-tck	servlet	web & !tck-javatest	50	50	**/*IT.java
+transactions	transactions-tck	javatest	web & tck-javatest	16	16	**/*Test.java
+websocket-platform	websocket-tck-platform-tests	servlet	web & !tck-javatest	5	5	**/*IT.java
+signature	signaturevalidation	signature	web	2	2	**/*Test.java

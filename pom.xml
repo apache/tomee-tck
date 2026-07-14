@@ -38,6 +38,7 @@
 
     <tomee.version>11.0.0-SNAPSHOT</tomee.version>
     <tomee.classifier>webprofile</tomee.classifier>
+    <openwebbeans.version>4.1.0</openwebbeans.version>
     <derby.version>10.15.2.0</derby.version>
 
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
@@ -88,6 +89,11 @@
         <groupId>org.apache.tomee</groupId>
         <artifactId>arquillian-tomee-remote</artifactId>
         <version>${tomee.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.openwebbeans</groupId>
+        <artifactId>openwebbeans-impl</artifactId>
+        <version>${openwebbeans.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>
