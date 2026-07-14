@@ -15,9 +15,9 @@ requests to it, undeploy it, and stop TomEE.
 ## Prerequisites
 
 - JDK 17 or newer.
-- `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` and the matching
-  `org.apache.tomee:apache-tomee:zip:webprofile:11.0.0-SNAPSHOT` available from
-  the Apache snapshot repository or the local Maven repository.
+- The current `11.0.0-SNAPSHOT` TomEE remote adapter and Web Profile
+  distribution, available from the Apache snapshot repository or the local
+  Maven repository.
 - Network access to Maven Central, which publishes
   `jakarta.tck:rest-platform-tck:11.0.3`, or that artifact already cached in
   the local Maven repository.

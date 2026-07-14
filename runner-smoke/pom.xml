@@ -59,6 +59,22 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>resolve-tomee-distribution</id>
+                        <phase>generate-test-resources</phase>
+                        <goals><goal>get</goal></goals>
+                        <configuration>
+                            <artifact>org.apache.tomee:apache-tomee:${tomee.version}:zip:${tomee.classifier}</artifact>
+                            <transitive>false</transitive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <dependenciesToScan>

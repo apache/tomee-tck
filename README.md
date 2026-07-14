@@ -16,26 +16,20 @@ The build uses these centrally managed inputs:
 | Jakarta EE API | `jakarta.platform:jakarta.jakartaee-api:11.0.0` | Maven Central transport and repository checksums |
 | Platform TCK artifacts | `jakarta.tck:artifacts-bom:11.0.3` | SHA-256 in `environment/versions.env` |
 | TCK Arquillian porting library | `jakarta.tck.arquillian:tck-porting-lib:11.1.3` | version selected by the 11.0.3 BOM |
-| TomEE Web Profile | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | exact timestamped build and SHA-512 in `environment/versions.env` |
-| TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | exact timestamped build and SHA-512 in `environment/versions.env` |
+| TomEE Web Profile | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | mutable development snapshot; not locked yet |
+| TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | mutable development snapshot; not locked yet |
 | Derby runtime | `derbyclient`, `derbynet`, `derbyshared`, and `derbytools` `10.15.2.0` | per-jar SHA-256 values in `environment/versions.env` |
 
-TomEE is temporarily a snapshot because this work targets development after
-the 11.0.0-M1 milestone. A snapshot can change without its coordinate changing.
-CI therefore fails if Maven resolves bytes different from the reviewed lock.
-When intentionally advancing TomEE, update the timestamped build names and
-SHA-512 values together with the root Maven version.
+TomEE is temporarily sourced from the snapshot repository because this work
+targets active TomEE 11 development after the 11.0.0-M1 milestone. Maven always
+uses the current `11.0.0-SNAPSHOT`; CI does not pin or checksum those changing
+bytes. A timestamped version and checksum should only be added when the harness
+needs a stable qualification candidate.
 
 Verify the immutable TCK BOM metadata without downloading TomEE:
 
 ```sh
 sh environment/verify-inputs.sh --metadata-only
-```
-
-After Maven has resolved TomEE, verify the exact distribution and adapter:
-
-```sh
-sh environment/verify-inputs.sh --require-tomee
 ```
 
 ## Run the smoke test
