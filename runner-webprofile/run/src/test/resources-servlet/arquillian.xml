@@ -5,7 +5,8 @@
   <engine>
     <property name="deploymentExportPath">target/deployments</property>
   </engine>
-  <container qualifier="tomee" default="true">
+  <!-- The WebSocket Platform TLS deployment explicitly targets "https". -->
+  <container qualifier="https" default="true">
     <configuration>
       <property name="groupId">org.apache.tomee</property>
       <property name="artifactId">apache-tomee</property>

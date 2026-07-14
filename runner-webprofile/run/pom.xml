@@ -42,6 +42,17 @@
       <artifactId>arquillian-junit5-container</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- The Platform WebSocket tests are client-side and require a provider. -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-api</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -275,6 +286,14 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${maven.surefire.plugin.version}</version>
         <configuration>
+          <argLine>
+            -Djavax.net.ssl.keyStore=${project.build.directory}/tomee-overlay/conf/clientcert.p12
+            -Djavax.net.ssl.keyStorePassword=changeit
+            -Djavax.net.ssl.keyStoreType=PKCS12
+            -Djavax.net.ssl.trustStore=${project.build.directory}/tomee-overlay/conf/client-truststore.p12
+            -Djavax.net.ssl.trustStorePassword=changeit
+            -Djavax.net.ssl.trustStoreType=PKCS12
+          </argLine>
           <dependenciesToScan>
             <dependency>jakarta.tck:${tck.artifact}</dependency>
           </dependenciesToScan>
@@ -298,6 +317,8 @@
             <jstl.db.driver>org.apache.derby.jdbc.ClientDriver</jstl.db.driver>
             <authuser>javajoe</authuser>
             <authpassword>javajoe</authpassword>
+            <securedWebServicePort>8443</securedWebServicePort>
+            <ws_wait>5</ws_wait>
             <servlet_adaptor>org.apache.openejb.server.rest.OpenEJBRestServlet</servlet_adaptor>
             <org.apache.cxf.transport.http.forceURLConnection>true</org.apache.cxf.transport.http.forceURLConnection>
             <openejb.jaxrs.fail-on-constrainedto>false</openejb.jaxrs.fail-on-constrainedto>

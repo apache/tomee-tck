@@ -38,6 +38,7 @@
 
     <tomee.version>11.0.0-SNAPSHOT</tomee.version>
     <tomee.classifier>webprofile</tomee.classifier>
+    <tomcat.version>11.0.23</tomcat.version>
     <openwebbeans.version>4.1.0</openwebbeans.version>
     <johnzon.version>2.1.0</johnzon.version>
     <cxf.version>4.2.2</cxf.version>
@@ -92,6 +93,16 @@
         <groupId>org.apache.tomee</groupId>
         <artifactId>arquillian-tomee-remote</artifactId>
         <version>${tomee.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-websocket</artifactId>
+        <version>${tomcat.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-api</artifactId>
+        <version>${tomcat.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.openwebbeans</groupId>
