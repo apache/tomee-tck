@@ -9,6 +9,9 @@ runner-webprofile/run-platform-suite.sh servlet
 runner-webprofile/run-platform-suite.sh javatest
 ```
 
+Pass a manifest ID as the second argument to run or resume one partition, for
+example `runner-webprofile/run-platform-suite.sh servlet rest`.
+
 For diagnosis, run one partition and optionally one class directly:
 
 ```shell

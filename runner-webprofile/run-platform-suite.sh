@@ -11,6 +11,7 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$SCRIPT_DIR/platform-suite.tsv"
 PROTOCOL=${1:-servlet}
+ONLY_PARTITION=${2:-}
 
 if [ "$PROTOCOL" != "servlet" ] && [ "$PROTOCOL" != "javatest" ]; then
   echo "Unknown protocol '$PROTOCOL'; supported protocols: servlet, javatest" >&2
@@ -23,6 +24,7 @@ while IFS="$TAB" read -r partition artifact protocol groups source_classes expec
     ''|'#'*) continue ;;
   esac
   [ "$protocol" = "$PROTOCOL" ] || continue
+  [ -z "$ONLY_PARTITION" ] || [ "$partition" = "$ONLY_PARTITION" ] || continue
 
   echo "Running $partition: $artifact ($groups; source: $source_classes, expected after exclusions: $expected_classes)"
   report_dir="$SCRIPT_DIR/run/target/failsafe-reports/$partition"
