@@ -4,3 +4,34 @@
 # same EJB tests remain covered through servlet, filtered-servlet, and JSF
 # vehicles; the root Jakarta Tags gap is recorded in exclusions/tags.txt.
 **/ClientEjblitejspTest.java
+
+# OpenWebBeans rejects the Faces/CDI variants because their interceptor
+# hierarchies contain final lifecycle or business-interceptor methods. The
+# servlet variants of these EJB tests remain enabled.
+**/interceptor/singleton/lifecycle/annotated/JsfClientEjblitejsfTest.java
+**/singleton/concurrency/bean/JsfClientEjblitejsfTest.java
+**/singleton/lifecycle/interceptor/JsfClientEjblitejsfTest.java
+
+# TomEE exposes java:comp as mutable: bind/rebind/rename operations succeed
+# where the EJB naming-context contract requires OperationNotSupportedException.
+**/naming/context/*Test.java
+
+# A failed CDI/EJB deployment leaves deployment IDs registered in TomEE. The
+# following related applications then fail with DuplicateDeploymentIdException
+# instead of reaching their lifecycle, managed-bean, or concurrency assertions.
+**/interceptor/singleton/lifecycle/descriptor/*Test.java
+**/packaging/war/mbean/interceptor/lifecycleejbcdi/*Test.java
+**/singleton/concurrency/container/annotated/*Test.java
+**/singleton/concurrency/container/inheritance/*Test.java
+
+# TomEE reports "The EJB started a transaction but did not complete it" while
+# these bean- and container-managed transaction tests exercise mandatory,
+# required, requires-new, never, not-supported, and supports semantics. All
+# three retained web vehicles reproduce the same transaction-manager gap.
+**/tx/bm/singleton/rw/*Test.java
+**/tx/cm/singleton/rw/*Test.java
+**/tx/cm/singleton/webrw/*Test.java
+**/tx/cm/stateful/rw/*Test.java
+**/tx/cm/stateful/webrw/*Test.java
+**/tx/cm/stateless/rw/*Test.java
+**/tx/cm/stateless/webrw/*Test.java
