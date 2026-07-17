@@ -373,7 +373,7 @@
           <includes>
             <include>${tck.test}</include>
           </includes>
-          <excludesFile>${project.basedir}/../exclusions/${tck.partition}.txt</excludesFile>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
           <!-- The manifest count guard still fails every unexpected empty selection. -->
           <failIfNoTests>false</failIfNoTests>
           <reportsDirectory>${project.build.directory}/failsafe-reports/${tck.partition}</reportsDirectory>
@@ -412,6 +412,9 @@
   </build>
 
   <properties>
+    <!-- Exclusions are TomEE-distribution-specific; run-platform-suite.sh
+         selects exclusions/<classifier>/<partition>.txt when it exists. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/${tck.partition}.txt</tck.exclusions.file>
     <tck.protocol>servlet</tck.protocol>
     <tck.test>**/*IT.java</tck.test>
     <tck.groups>web &amp; !tck-javatest</tck.groups>

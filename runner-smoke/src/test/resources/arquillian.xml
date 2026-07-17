@@ -10,8 +10,8 @@
         <configuration>
             <property name="groupId">org.apache.tomee</property>
             <property name="artifactId">apache-tomee</property>
-            <property name="version">11.0.0-SNAPSHOT</property>
-            <property name="classifier">webprofile</property>
+            <property name="version">${tomee.version}</property>
+            <property name="classifier">${tomee.classifier}</property>
             <property name="type">zip</property>
             <property name="host">localhost</property>
             <property name="httpPort">8080</property>

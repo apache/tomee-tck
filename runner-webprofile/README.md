@@ -12,6 +12,19 @@ runner-webprofile/run-platform-suite.sh javatest
 Pass a manifest ID as the second argument to run or resume one partition, for
 example `runner-webprofile/run-platform-suite.sh servlet rest`.
 
+Set `TOMEE_CLASSIFIER=plume` to test the EclipseLink-based Plume distribution
+instead of the default `webprofile` ZIP. The script then reads
+`platform-suite-plume.tsv` and prefers partition exclusions from
+`exclusions/plume/` where they exist:
+
+```shell
+TOMEE_CLASSIFIER=plume runner-webprofile/run-platform-suite.sh javatest persistence-javatest
+```
+
+On Plume, 448 of the 450 Jakarta Persistence javatest classes pass; the
+webprofile distribution's 249 persistence exclusions are OpenJPA gaps that do
+not reproduce on EclipseLink (see `KNOWN_FAILURES.md`).
+
 For diagnosis, run one partition and optionally one class directly:
 
 ```shell
@@ -56,7 +69,16 @@ must be explained in [`KNOWN_FAILURES.md`](KNOWN_FAILURES.md) and in the matchin
 file under `exclusions/`.
 
 The manifest contains 1,132 Platform TCK classes. After the reviewed TomEE
-compatibility exclusions, 673 classes remain enabled.
+compatibility exclusions, 673 classes remain enabled for the `webprofile`
+distribution. The counts were re-derived independently from the published
+11.0.3 jars by scanning class-level (and inherited) JUnit `@Tag` annotations;
+every artifact in `jakarta.tck:artifacts-bom` carrying classes in the strict
+`web` group is represented here. The only intentionally unlisted `web`-tagged
+class is `com.sun.ts.tests.jta.ee.transactional.EJBLiteJSPTag`, a server-side
+JSP `SimpleTag` helper that inherits the tag from its JSP-vehicle client and is
+not a runnable client test. Artifacts such as `jms-platform-tck` and
+`connector` carry only `web_optional` classes, which the Web Profile TCK does
+not require.
 
 ## Certification boundary
 
@@ -66,6 +88,26 @@ itself a Jakarta EE compatibility result: the independently published TCK for
 each required Web Profile specification, plus the formal challenge/exclusion
 review, must also pass for certification. Those standalone TCKs deliberately
 remain outside this repository's Platform artifact catalog.
+
+The Jakarta EE 11 Web Profile specification (section 2.1) requires 22
+component specifications. Mapped against this catalog:
+
+- Platform-artifact integration coverage here, standalone TCK still required
+  separately: Expression Language 6.0, JSON Binding 3.0, JSON Processing 2.1,
+  Pages 4.0, Persistence 3.2, RESTful Web Services 4.0, Transactions 2.0,
+  WebSocket 2.2.
+- Fully covered by Platform artifacts: Enterprise Beans 4.0 Lite (`ejb30`,
+  `ejb32`), Standard Tag Library 3.0 (`tags-tck`), Debugging Support for
+  Other Languages 2.0 (via the Pages debugging classes).
+- No coverage in this repository, certified only through their standalone
+  TCKs: Servlet 6.1, Faces 4.1, CDI 4.1, Dependency Injection 2.0,
+  Annotations 3.0, Interceptors 2.2, Validation 3.1, Security 4.0,
+  Authentication 3.1, Concurrency 3.1, and Data 1.0 (new in Web Profile 11).
+
+Note that Jakarta Authentication became a *required* Web Profile technology in
+EE 11; its API packages are therefore part of the signature validation scope
+(`environment/tck/ts.jte` must not list `jakarta.security.auth.message.*`
+among ignorable optional packages).
 
 ## Safety and output
 

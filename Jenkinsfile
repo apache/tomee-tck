@@ -110,12 +110,8 @@ from xml.etree import ElementTree
     stage('Platform catalog') {
       steps {
         script {
-          def branches = platformPartitions.collectEntries { entry ->
-            def partition = entry.partition
-            def protocol = entry.protocol
-            def branchName = "${protocol} - ${partition}"
-
-            [(branchName): {
+          def catalogBranch = { String branchName, String protocol, String partition, String classifier ->
+            {
               stage(branchName) {
                 node('ubuntu && ephemeral') {
                   deleteDir()
@@ -124,7 +120,7 @@ from xml.etree import ElementTree
 
                   try {
                     timeout(time: 360, unit: 'MINUTES') {
-                      withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin"]) {
+                      withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin", "TOMEE_CLASSIFIER=${classifier}"]) {
                         sh "runner-webprofile/run-platform-suite.sh ${protocol} ${partition}"
                       }
                     }
@@ -138,8 +134,21 @@ from xml.etree import ElementTree
                   }
                 }
               }
-            }]
+            }
           }
+
+          def branches = platformPartitions.collectEntries { entry ->
+            def branchName = "${entry.protocol} - ${entry.partition}"
+            [(branchName): catalogBranch(branchName, entry.protocol, entry.partition, 'webprofile')]
+          }
+
+          // The EclipseLink-based Plume distribution is where Jakarta
+          // Persistence compatibility is actually tracked; OpenJPA blocks most
+          // of the persistence catalog on the webprofile ZIP.
+          branches['javatest - persistence-javatest (plume)'] =
+            catalogBranch('javatest - persistence-javatest (plume)', 'javatest', 'persistence-javatest', 'plume')
+          branches['servlet - persistence-servlet (plume)'] =
+            catalogBranch('servlet - persistence-servlet (plume)', 'servlet', 'persistence-servlet', 'plume')
 
           parallel branches
         }

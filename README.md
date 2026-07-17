@@ -17,6 +17,7 @@ The build uses these centrally managed inputs:
 | Platform TCK artifacts | `jakarta.tck:artifacts-bom:11.0.3` | SHA-256 in `environment/versions.env` |
 | TCK Arquillian porting library | `jakarta.tck.arquillian:tck-porting-lib:11.1.3` | version selected by the 11.0.3 BOM |
 | TomEE Web Profile | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | mutable development snapshot; not locked yet |
+| TomEE Plume (opt-in via `TOMEE_CLASSIFIER=plume`) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:plume:zip` | mutable development snapshot; not locked yet |
 | TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | mutable development snapshot; not locked yet |
 | Derby runtime | `derbyclient`, `derbynet`, `derbyshared`, and `derbytools` `10.15.2.0` | per-jar SHA-256 values in `environment/versions.env` |
 
@@ -54,13 +55,24 @@ Run one catalog partition, for example:
 runner-webprofile/run-platform-suite.sh servlet rest
 ```
 
+Test the EclipseLink-based TomEE Plume distribution instead of the default
+`webprofile` ZIP (the Jakarta Persistence catalog passes almost completely
+there, unlike on OpenJPA):
+
+```sh
+TOMEE_CLASSIFIER=plume runner-webprofile/run-platform-suite.sh javatest persistence-javatest
+```
+
 ## ASF Jenkins pipeline
 
 The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
 Jenkins `ubuntu` agents and their managed `jdk_17_latest` and `jdk_21_latest`
 tools. The pipeline validates the environment, runs the smoke gate on both
 JDKs in parallel, and then fans out every manifest partition as an independent
-JDK 21 branch. Test reports and TomEE logs are archived for 14 days.
+JDK 21 branch. Two additional branches run the Jakarta Persistence partitions
+against the EclipseLink-based TomEE Plume distribution, where the persistence
+catalog is expected to pass almost completely. Test reports and TomEE logs are
+archived for 14 days.
 
 Parallel branches request `ubuntu && ephemeral` agents. The current ASF cloud
 workers advertise one executor per host, which isolates the fixed localhost

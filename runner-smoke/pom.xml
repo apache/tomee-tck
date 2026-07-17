@@ -52,6 +52,14 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <!-- Filter arquillian.xml so the TomEE version and distribution
+                 classifier follow the reactor properties. -->
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
