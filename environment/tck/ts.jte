@@ -1,7 +1,15 @@
 # Minimal Jakarta EE 11 JavaTest adapter configuration for TomEE.
 platform.mode=jakartaEE
 javaee.level=web
-optional.tech.packages.to.ignore=jakarta.resource,jakarta.resource.cci,jakarta.resource.spi,jakarta.resource.spi.work,jakarta.resource.spi.endpoint,jakarta.resource.spi.security,jakarta.mail,jakarta.mail.event,jakarta.mail.internet,jakarta.mail.search,jakarta.mail.util,jakarta.security.jacc,jakarta.security.auth.message,jakarta.security.auth.message.callback,jakarta.security.auth.message.config,jakarta.security.auth.message.module
+# Packages of optional technologies that the TomEE distributions expose through
+# the combined jakartaee-api jar without declaring the technology. The
+# signature test otherwise fails their "undeclared optional technology"
+# presence check. Jakarta Authentication (jakarta.security.auth.message.*) is
+# NOT listed: EE 11 makes it a required Web Profile technology, so its
+# signatures must be validated. jakarta.batch.* and jakarta.jms are also
+# deliberately not listed; their leak through the webprofile distribution is
+# recorded as a signature-partition compatibility gap in KNOWN_FAILURES.md.
+optional.tech.packages.to.ignore=jakarta.resource,jakarta.resource.cci,jakarta.resource.spi,jakarta.resource.spi.work,jakarta.resource.spi.endpoint,jakarta.resource.spi.security,jakarta.mail,jakarta.mail.event,jakarta.mail.internet,jakarta.mail.search,jakarta.mail.util,jakarta.security.jacc
 bin.dir=${signature.bin.dir}
 sigTestClasspath=${signature.classpath}
 
