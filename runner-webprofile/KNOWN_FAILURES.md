@@ -59,6 +59,8 @@ them reproduce on EclipseLink. The default persistence exclusions
 | `persistence-javatest` | Both `entityManagerFactoryCloseExceptions` servlet vehicles | Java 21, 2026-07-17 | The `exceptionsTest` methods themselves pass. The test legitimately closes the container-managed `EntityManagerFactory`; TomEE's subsequent undeploy calls `close()` again and `Assembler.destroyApplication` fails with "Attempting to execute an operation on a closed EntityManagerFactory", so the class reports an undeploy error. TomEE must tolerate an already-closed EMF during undeploy. |
 | `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | Same missing Jakarta Persistence 3.2 CDI qualifier-bean integration as on the webprofile distribution; the provider swap does not change the result. |
 
-The non-persistence partitions carry the expectations established on the
-webprofile distribution until a full Plume pass reviews each one (the Faces
-vehicles run on Mojarra there instead of MyFaces).
+All remaining partitions were re-run on Plume on Java 21, 2026-07-17: every
+partition passes with the same expectations and exclusions that were
+established on the webprofile distribution, including the Faces vehicles,
+which run on Mojarra there instead of MyFaces. The recorded non-persistence
+gaps are container behavior shared by both distributions.
