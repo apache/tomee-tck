@@ -16,8 +16,8 @@ The build uses these centrally managed inputs:
 | Jakarta EE API | `jakarta.platform:jakarta.jakartaee-api:11.0.0` | Maven Central transport and repository checksums |
 | Platform TCK artifacts | `jakarta.tck:artifacts-bom:11.0.3` | SHA-256 in `environment/versions.env` |
 | TCK Arquillian porting library | `jakarta.tck.arquillian:tck-porting-lib:11.1.3` | version selected by the 11.0.3 BOM |
-| TomEE Web Profile | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | mutable development snapshot; not locked yet |
-| TomEE Plume (opt-in via `TOMEE_CLASSIFIER=plume`) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:plume:zip` | mutable development snapshot; not locked yet |
+| TomEE Plume (default target under test) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:plume:zip` | mutable development snapshot; not locked yet |
+| TomEE Web Profile (opt-in via `TOMEE_CLASSIFIER=webprofile`) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | mutable development snapshot; not locked yet |
 | TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | mutable development snapshot; not locked yet |
 | Derby runtime | `derbyclient`, `derbynet`, `derbyshared`, and `derbytools` `10.15.2.0` | per-jar SHA-256 values in `environment/versions.env` |
 
@@ -55,12 +55,12 @@ Run one catalog partition, for example:
 runner-webprofile/run-platform-suite.sh servlet rest
 ```
 
-Test the EclipseLink-based TomEE Plume distribution instead of the default
-`webprofile` ZIP (the Jakarta Persistence catalog passes almost completely
-there, unlike on OpenJPA):
+The EclipseLink-based TomEE Plume distribution is the default target under
+test; the Jakarta Persistence catalog passes almost completely there, unlike
+on OpenJPA. Test the OpenJPA-based `webprofile` ZIP instead with:
 
 ```sh
-TOMEE_CLASSIFIER=plume runner-webprofile/run-platform-suite.sh javatest persistence-javatest
+TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest persistence-javatest
 ```
 
 ## ASF Jenkins pipeline
@@ -69,10 +69,10 @@ The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
 Jenkins `ubuntu` agents and their managed `jdk_17_latest` and `jdk_21_latest`
 tools. The pipeline validates the environment, runs the smoke gate on both
 JDKs in parallel, and then fans out every manifest partition as an independent
-JDK 21 branch. Two additional branches run the Jakarta Persistence partitions
-against the EclipseLink-based TomEE Plume distribution, where the persistence
-catalog is expected to pass almost completely. Test reports and TomEE logs are
-archived for 14 days.
+JDK 21 branch against the default TomEE Plume distribution. One additional
+branch runs the Jakarta Persistence javatest partition against the
+OpenJPA-based webprofile distribution to track its reviewed exclusion list.
+Test reports and TomEE logs are archived for 14 days.
 
 Parallel branches request `ubuntu && ephemeral` agents. The current ASF cloud
 workers advertise one executor per host, which isolates the fixed localhost
@@ -86,9 +86,10 @@ wrapper supplies Maven 3.9.9.
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.
 
-For a locally built TomEE snapshot, install both the Web Profile distribution
-and remote Arquillian adapter into the same Maven repository first. Development
-runs intentionally consume the mutable snapshot without a checksum lock.
+For a locally built TomEE snapshot, install the distribution under test (Plume
+by default) and the remote Arquillian adapter into the same Maven repository
+first. Development runs intentionally consume the mutable snapshot without a
+checksum lock.
 
 ## Environment templates
 

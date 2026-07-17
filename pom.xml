@@ -37,7 +37,9 @@
     <junit.version>5.11.4</junit.version>
 
     <tomee.version>11.0.0-SNAPSHOT</tomee.version>
-    <tomee.classifier>webprofile</tomee.classifier>
+    <!-- The EclipseLink-based Plume distribution is the default target under
+         test; set -Dtomee.classifier=webprofile for the OpenJPA-based ZIP. -->
+    <tomee.classifier>plume</tomee.classifier>
     <tomcat.version>11.0.23</tomcat.version>
     <openwebbeans.version>4.1.0</openwebbeans.version>
     <johnzon.version>2.1.0</johnzon.version>

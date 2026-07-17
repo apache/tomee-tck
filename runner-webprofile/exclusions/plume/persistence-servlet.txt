@@ -1,8 +1,0 @@
-# TomEE Plume (EclipseLink 5.0.1), Java 21, 2026-07-17: deployment fails with
-# "jakarta.enterprise.inject.UnsatisfiedResolutionException: Api type
-# [jakarta.persistence.EntityManagerFactory] is not found with the qualifiers
-# @CtsEm2Qualifier". The failure reproduces identically on the OpenJPA-based
-# webprofile distribution, so this is TomEE's missing Jakarta Persistence 3.2
-# CDI integration (qualified EntityManagerFactory/EntityManager beans declared
-# through persistence.xml), not a provider defect.
-**/ServletEMLookupTest.java

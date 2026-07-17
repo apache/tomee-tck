@@ -12,17 +12,13 @@ ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 PROTOCOL=${1:-servlet}
 ONLY_PARTITION=${2:-}
 
-# The TomEE distribution under test. The default Web Profile manifest and
-# exclusions describe the webprofile ZIP (OpenJPA); TOMEE_CLASSIFIER=plume
-# selects the EclipseLink-based distribution together with its own
-# platform-suite-plume.tsv counts and exclusions/plume overrides.
-TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-webprofile}
+# The TomEE distribution under test. The default manifest and exclusions
+# describe the EclipseLink-based Plume ZIP; TOMEE_CLASSIFIER=webprofile
+# selects the OpenJPA-based distribution together with its
+# platform-suite-webprofile.tsv counts and exclusions/webprofile overrides.
+TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 MANIFEST="$SCRIPT_DIR/platform-suite.tsv"
-if [ "$TOMEE_CLASSIFIER" != "webprofile" ]; then
-  if [ ! -f "$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv" ]; then
-    echo "No manifest platform-suite-$TOMEE_CLASSIFIER.tsv for TOMEE_CLASSIFIER=$TOMEE_CLASSIFIER" >&2
-    exit 2
-  fi
+if [ -f "$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv" ]; then
   MANIFEST="$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv"
 fi
 
@@ -40,7 +36,7 @@ while IFS="$TAB" read -r partition artifact protocol groups source_classes expec
   [ -z "$ONLY_PARTITION" ] || [ "$partition" = "$ONLY_PARTITION" ] || continue
 
   exclusions_file="$SCRIPT_DIR/exclusions/$partition.txt"
-  if [ "$TOMEE_CLASSIFIER" != "webprofile" ] && [ -f "$SCRIPT_DIR/exclusions/$TOMEE_CLASSIFIER/$partition.txt" ]; then
+  if [ -f "$SCRIPT_DIR/exclusions/$TOMEE_CLASSIFIER/$partition.txt" ]; then
     exclusions_file="$SCRIPT_DIR/exclusions/$TOMEE_CLASSIFIER/$partition.txt"
   fi
 

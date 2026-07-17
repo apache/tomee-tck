@@ -137,18 +137,18 @@ from xml.etree import ElementTree
             }
           }
 
+          // The EclipseLink-based Plume distribution is the default target
+          // under test; OpenJPA blocks most of the persistence catalog on the
+          // webprofile ZIP.
           def branches = platformPartitions.collectEntries { entry ->
             def branchName = "${entry.protocol} - ${entry.partition}"
-            [(branchName): catalogBranch(branchName, entry.protocol, entry.partition, 'webprofile')]
+            [(branchName): catalogBranch(branchName, entry.protocol, entry.partition, 'plume')]
           }
 
-          // The EclipseLink-based Plume distribution is where Jakarta
-          // Persistence compatibility is actually tracked; OpenJPA blocks most
-          // of the persistence catalog on the webprofile ZIP.
-          branches['javatest - persistence-javatest (plume)'] =
-            catalogBranch('javatest - persistence-javatest (plume)', 'javatest', 'persistence-javatest', 'plume')
-          branches['servlet - persistence-servlet (plume)'] =
-            catalogBranch('servlet - persistence-servlet (plume)', 'servlet', 'persistence-servlet', 'plume')
+          // Track the OpenJPA-based webprofile distribution's persistence
+          // compatibility gaps against their reviewed exclusion list.
+          branches['javatest - persistence-javatest (webprofile)'] =
+            catalogBranch('javatest - persistence-javatest (webprofile)', 'javatest', 'persistence-javatest', 'webprofile')
 
           parallel branches
         }

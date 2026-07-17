@@ -3,9 +3,13 @@
 Exclusions keep the remaining suite runnable; they do not turn a result into a
 compatibility pass. Each entry corresponds to a narrow pattern in `exclusions/`.
 
-Unless stated otherwise the entries describe the TomEE `webprofile`
-distribution (OpenJPA). The [TomEE Plume section](#tomee-plume-eclipselink)
-records the distribution-specific results for the EclipseLink-based Plume ZIP.
+The EclipseLink-based TomEE Plume distribution is the default target under
+test. The table below was established on the OpenJPA-based `webprofile`
+distribution; every non-persistence entry is provider-independent container
+behavior. The [TomEE Plume section](#tomee-plume-eclipselink) records the
+persistence results that replace the webprofile persistence exclusions in the
+default suite, and `exclusions/webprofile/` keeps the OpenJPA-specific
+overrides for `TOMEE_CLASSIFIER=webprofile` runs.
 
 The generated TomEE overlay also replaces `taglibs-shade`, which still contains
 legacy JSTL TLD URIs, with the Jakarta Tags 3.0 API and GlassFish
@@ -46,15 +50,15 @@ The complete 450-class `persistence-javatest` catalog and the
 (EclipseLink 5.0.1) on Java 21, 2026-07-17, with no exclusions applied.
 448 of 450 javatest classes pass (3,817 tests). The webprofile distribution's
 249 Jakarta Persistence exclusions are OpenJPA gaps, not TomEE gaps: none of
-them reproduce on EclipseLink. The Plume-specific exclusions in
-`exclusions/plume/` are:
+them reproduce on EclipseLink. The default persistence exclusions
+(`exclusions/persistence-javatest.txt` and
+`exclusions/persistence-servlet.txt`) therefore contain only:
 
 | Partition | Excluded class | Reproduced | Product gap |
 |---|---|---|---|
 | `persistence-javatest` | Both `entityManagerFactoryCloseExceptions` servlet vehicles | Java 21, 2026-07-17 | The `exceptionsTest` methods themselves pass. The test legitimately closes the container-managed `EntityManagerFactory`; TomEE's subsequent undeploy calls `close()` again and `Assembler.destroyApplication` fails with "Attempting to execute an operation on a closed EntityManagerFactory", so the class reports an undeploy error. TomEE must tolerate an already-closed EMF during undeploy. |
 | `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | Same missing Jakarta Persistence 3.2 CDI qualifier-bean integration as on the webprofile distribution; the provider swap does not change the result. |
 
-The remaining partitions have not yet been re-validated on Plume;
-`platform-suite-plume.tsv` carries the webprofile expectations for them until
-a full Plume pass reviews each one (the Faces vehicles run on Mojarra there
-instead of MyFaces).
+The non-persistence partitions carry the expectations established on the
+webprofile distribution until a full Plume pass reviews each one (the Faces
+vehicles run on Mojarra there instead of MyFaces).

@@ -12,18 +12,17 @@ runner-webprofile/run-platform-suite.sh javatest
 Pass a manifest ID as the second argument to run or resume one partition, for
 example `runner-webprofile/run-platform-suite.sh servlet rest`.
 
-Set `TOMEE_CLASSIFIER=plume` to test the EclipseLink-based Plume distribution
-instead of the default `webprofile` ZIP. The script then reads
-`platform-suite-plume.tsv` and prefers partition exclusions from
-`exclusions/plume/` where they exist:
+The EclipseLink-based TomEE Plume distribution is the default target under
+test; 448 of the 450 Jakarta Persistence javatest classes pass there. Set
+`TOMEE_CLASSIFIER=webprofile` to test the OpenJPA-based `webprofile` ZIP
+instead. The script then reads `platform-suite-webprofile.tsv` and prefers
+partition exclusions from `exclusions/webprofile/` where they exist — the
+OpenJPA provider blocks 249 of the 450 persistence classes there (see
+`KNOWN_FAILURES.md`):
 
 ```shell
-TOMEE_CLASSIFIER=plume runner-webprofile/run-platform-suite.sh javatest persistence-javatest
+TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest persistence-javatest
 ```
-
-On Plume, 448 of the 450 Jakarta Persistence javatest classes pass; the
-webprofile distribution's 249 persistence exclusions are OpenJPA gaps that do
-not reproduce on EclipseLink (see `KNOWN_FAILURES.md`).
 
 For diagnosis, run one partition and optionally one class directly:
 
@@ -69,8 +68,9 @@ must be explained in [`KNOWN_FAILURES.md`](KNOWN_FAILURES.md) and in the matchin
 file under `exclusions/`.
 
 The manifest contains 1,132 Platform TCK classes. After the reviewed TomEE
-compatibility exclusions, 673 classes remain enabled for the `webprofile`
-distribution. The counts were re-derived independently from the published
+compatibility exclusions, 920 classes remain enabled on the default Plume
+distribution (673 on the OpenJPA-based `webprofile` distribution, whose
+provider blocks most of the persistence catalog). The counts were re-derived independently from the published
 11.0.3 jars by scanning class-level (and inherited) JUnit `@Tag` annotations;
 every artifact in `jakarta.tck:artifacts-bom` carrying classes in the strict
 `web` group is represented here. The only intentionally unlisted `web`-tagged

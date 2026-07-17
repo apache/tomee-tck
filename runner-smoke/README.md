@@ -39,8 +39,8 @@ To substitute another test class from the same published TCK artifact:
 
 Arquillian exports the generated archive to `target/deployments`, while
 Failsafe writes its reports under `target/failsafe-reports`. The TomEE remote
-adapter resolves and unpacks the Web Profile distribution in the module's
-build directory.
+adapter resolves and unpacks the distribution selected by `tomee.classifier`
+(Plume by default) in the module's build directory.
 
 The shared archive processor is on the test class path. Database, security,
 TLS, mail, LDAP, and messaging services are deliberately outside this smoke
