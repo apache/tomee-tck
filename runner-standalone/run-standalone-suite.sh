@@ -25,7 +25,7 @@ TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
-Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet,
+Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet, pages,
          validation, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
 EOF
@@ -40,6 +40,8 @@ case "$ID" in
     MODULES="runner-standalone/di-install,runner-standalone/di" ;;
   servlet)
     MODULES="runner-standalone/servlet-install,runner-standalone/servlet" ;;
+  pages)
+    MODULES="runner-standalone/pages-install,runner-standalone/pages" ;;
   validation)
     MODULES="runner-standalone/validation-install,runner-standalone/validation" ;;
   concurrency|data|cdi|cdi-ee)

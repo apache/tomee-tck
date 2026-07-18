@@ -38,6 +38,8 @@
     <module>cdi-ee</module>
     <module>servlet-install</module>
     <module>servlet</module>
+    <module>pages-install</module>
+    <module>pages</module>
     <module>validation-install</module>
     <module>validation</module>
     <module>security</module>

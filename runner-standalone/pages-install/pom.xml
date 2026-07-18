@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-pages-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Pages 4.0 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Pages TCK distribution and installs the
+    jakarta.tck:jakarta-pages-tck artifact into the local repository; the
+    distribution is not published to Maven Central. Its support libraries
+    (jakarta.tck:common and friends, 11.0.0-M1) are on Central.
+  </description>
+
+  <properties>
+    <pages.tck.version>4.0.0</pages.tck.version>
+    <pages.tck.zip>jakarta-pages-tck-${pages.tck.version}.zip</pages.tck.zip>
+    <pages.tck.url>https://download.eclipse.org/jakartaee/pages/4.0/${pages.tck.zip}</pages.tck.url>
+    <pages.tck.sha256>5446aa866601a7c4c425f74054590cfc7f4fc05592a572d399ecc8694e265489</pages.tck.sha256>
+  </properties>
+
+  <profiles>
+    <profile>
+      <!-- The download and install executions only exist inside the
+           standalone-tck profile; the default reactor must neither download
+           TCK material nor touch the local repository
+           (maven-install-plugin's install-file goal has no skip option). -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.13.0</version>
+            <executions>
+              <execution>
+                <id>download-pages-tck</id>
+                <phase>generate-resources</phase>
+                <goals><goal>wget</goal></goals>
+                <configuration>
+                  <url>${pages.tck.url}</url>
+                  <sha256>${pages.tck.sha256}</sha256>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>3.1.4</version>
+            <executions>
+              <execution>
+                <id>install-pages-tck</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <!-- The distribution ships no standalone pom; a generated stub
+                       is used and the runner declares the support dependencies
+                       (the jar's embedded pom references javatest:javatest,
+                       which is not resolvable from Maven Central). -->
+                  <file>${project.build.directory}/pages-tck/artifacts/jakarta-pages-tck-${pages.tck.version}.jar</file>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>jakarta-pages-tck</artifactId>
+                  <version>${pages.tck.version}</version>
+                  <packaging>jar</packaging>
+                  <generatePom>true</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
