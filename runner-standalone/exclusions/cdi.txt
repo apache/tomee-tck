@@ -1,0 +1,260 @@
+# Jakarta CDI 4.1 TCK core suite (jakarta.enterprise:cdi-tck-core-impl:4.1.0)
+# on OpenWebBeans 4.1 / TomEE Plume snapshot, Java 21, 2026-07-18: 1,388 tests,
+# 90 failures (63 test methods + 27 classes failing in deployment/
+# configuration), 82 skipped. The failures cluster in the new CDI 4.1 Method
+# Invokers API and in build-compatible extensions - OpenWebBeans 4.1 feature
+# gaps to triage upstream, plus a smaller set of full-profile observer and
+# interceptor issues.
+#
+# Format: one fully-qualified class name (excludes the whole class, required
+# where the deployment/configuration phase itself fails) or Class#method per
+# line. Read by the ExclusionsAnnotationTransformer TestNG listener through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
+
+# BeanContainerTest: 1 of 10 executed methods fail
+org.jboss.cdi.tck.tests.beanContainer.BeanContainerTest#testGetContexts
+
+# BeanByTypeTest: 1 of 6 executed methods fail
+org.jboss.cdi.tck.tests.beanContainer.bytype.BeanByTypeTest#testSameBindingTwice
+
+# ChangeBeanQualifierTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.changeBeanQualifier.ChangeBeanQualifierTest
+
+# ChangeInjectionPointTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.changeInjectionPoint.ChangeInjectionPointTest
+
+# ChangeInterceptorBindingTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.changeInterceptorBinding.ChangeInterceptorBindingTest
+
+# ChangeObserverQualifierTest: 1 of 2 executed methods fail
+org.jboss.cdi.tck.tests.build.compatible.extensions.changeObserverQualifier.ChangeObserverQualifierTest#test
+
+# CustomInterceptorBindingTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.customInterceptorBinding.CustomInterceptorBindingTest
+
+# CustomNormalScopeTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.customNormalScope.CustomNormalScopeTest
+
+# CustomPseudoScopeTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.customPseudoScope.CustomPseudoScopeTest
+
+# CustomQualifierTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.customQualifier.CustomQualifierTest
+
+# CustomStereotypeTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.customStereotype.CustomStereotypeTest
+
+# EnhancementMultipleParams2Test: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.EnhancementMultipleParams2Test
+
+# EnhancementMultipleParamsTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.EnhancementMultipleParamsTest
+
+# EnhancementNoParamTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.EnhancementNoParamTest
+
+# EnhancementOnlyMessagesTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.EnhancementOnlyMessagesTest
+
+# EnhancementOnlyTypesTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.EnhancementOnlyTypesTest
+
+# RegistrationMultipleParams2Test: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationMultipleParams2Test
+
+# RegistrationMultipleParamsTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationMultipleParamsTest
+
+# RegistrationNoParamTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationNoParamTest
+
+# RegistrationOnlyMessagesTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationOnlyMessagesTest
+
+# RegistrationOnlyTypesTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.invalid.RegistrationOnlyTypesTest
+
+# SyntheticBeanTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticBean.SyntheticBeanTest
+
+# SyntheticBeanInjectionPointTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticBeanInjectionPoint.SyntheticBeanInjectionPointTest
+
+# SyntheticBeanWithLookupTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticBeanWithLookup.SyntheticBeanWithLookupTest
+
+# SyntheticObserverTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticObserver.SyntheticObserverTest
+
+# SyntheticObserverOfParameterizedTypeTest: 1 failing
+org.jboss.cdi.tck.tests.build.compatible.extensions.syntheticObserverOfParameterizedType.SyntheticObserverOfParameterizedTypeTest
+
+# ValidationTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.build.compatible.extensions.validation.ValidationTest
+
+# BeanTypesWithIllegalTypeTest: 3 failing
+org.jboss.cdi.tck.tests.definition.bean.types.illegal.BeanTypesWithIllegalTypeTest
+
+# EmptyBeansXmlDiscoveryTest: 1 failing
+org.jboss.cdi.tck.tests.deployment.discovery.EmptyBeansXmlDiscoveryTest
+
+# FireEventTest: 1 of 10 executed methods fail
+org.jboss.cdi.tck.tests.event.fires.FireEventTest#testDuplicateBindingsToFireEventFails
+
+# ImplicitEventTest: 1 of 6 executed methods fail
+org.jboss.cdi.tck.tests.event.implicit.ImplicitEventTest#testImplicitEventIsPassivationCapable
+
+# StartupShutdownTest: 1 failing
+org.jboss.cdi.tck.tests.event.lifecycle.StartupShutdownTest
+
+# DuplicateBindingTypesWhenResolvingTest: 1 failing
+org.jboss.cdi.tck.tests.event.resolve.binding.DuplicateBindingTypesWhenResolvingTest
+
+# SelectEventTest: 2 of 6 executed methods fail
+org.jboss.cdi.tck.tests.event.select.SelectEventTest#testEventSelectThrowsExceptionForDuplicateBindingType
+org.jboss.cdi.tck.tests.event.select.SelectEventTest#testEventSelectWithSubtypeThrowsExceptionForDuplicateBindingType
+
+# CustomBeanImplementationTest: 1 of 12 executed methods fail
+org.jboss.cdi.tck.tests.full.definition.bean.custom.CustomBeanImplementationTest#testInjectionPointGetMemberIsUsedToDetermineTheClassThatDeclaresAnInjectionPoint
+
+# AlternativeMetadataTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.full.extensions.alternative.metadata.AlternativeMetadataTest
+
+# LifecycleEventOrderingTest: 2 failing
+org.jboss.cdi.tck.tests.full.extensions.beanDiscovery.event.ordering.LifecycleEventOrderingTest
+
+# AnnotatedTypeConfiguratorTest: 1 of 6 executed methods fail
+org.jboss.cdi.tck.tests.full.extensions.configurators.annotatedTypeConfigurator.AnnotatedTypeConfiguratorTest#addMethodsOfAnnotationTypecConfigurator
+
+# BeanConfiguratorTest: 2 of 5 executed methods fail
+org.jboss.cdi.tck.tests.full.extensions.configurators.bean.BeanConfiguratorTest#testCreationalAndDisposalMethods
+org.jboss.cdi.tck.tests.full.extensions.configurators.bean.BeanConfiguratorTest#testDefaultScopeOfAddedBean
+
+# SpecializationTest: 1 failing
+org.jboss.cdi.tck.tests.full.extensions.lifecycle.processBeanAttributes.specialization.SpecializationTest
+
+# BuildCompatibleExtensionSmokeTest: 1 failing
+org.jboss.cdi.tck.tests.full.extensions.lite.coexistence.BuildCompatibleExtensionSmokeTest
+
+# SimpleBeanSpecializationTest: 3 of 5 executed methods fail
+org.jboss.cdi.tck.tests.full.inheritance.specialization.simple.SimpleBeanSpecializationTest#testIndirectSpecialization
+org.jboss.cdi.tck.tests.full.inheritance.specialization.simple.SimpleBeanSpecializationTest#testSpecializingBeanHasNameOfSpecializedBean
+org.jboss.cdi.tck.tests.full.inheritance.specialization.simple.SimpleBeanSpecializationTest#testSpecializingBeanHasQualifiersOfSpecializedAndSpecializingBean
+
+# InterceptorDefinitionTest: 1 of 11 executed methods fail
+org.jboss.cdi.tck.tests.interceptors.definition.InterceptorDefinitionTest#testSameBindingTypesToResolveInterceptorsFails
+
+# SimpleInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.SimpleInvokerTest
+
+# BadInstanceInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.BadInstanceInvokerTest
+
+# ExcessArgumentsInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.ExcessArgumentsInvokerTest
+
+# GoodInstanceInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.GoodInstanceInvokerTest
+
+# InstanceMethodInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.InstanceMethodInvokerTest
+
+# InterceptedMethodInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.InterceptedMethodInvokerTest
+
+# InvokerAssignabilityTest: 2 failing
+org.jboss.cdi.tck.tests.invokers.basic.InvokerAssignabilityTest
+
+# InvokerVisibilityTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.InvokerVisibilityTest
+
+# MissingArgumentsInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.MissingArgumentsInvokerTest
+
+# PrimitiveParametersInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.PrimitiveParametersInvokerTest
+
+# PrimitiveReturnValueInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.PrimitiveReturnValueInvokerTest
+
+# StaticMethodInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.StaticMethodInvokerTest
+
+# ThrowingInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.ThrowingInvokerTest
+
+# VarargsMethodInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.VarargsMethodInvokerTest
+
+# VoidMethodInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.VoidMethodInvokerTest
+
+# ZeroParametersInvokerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.basic.ZeroParametersInvokerTest
+
+# ConstructorInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.ctor.ConstructorInvokerTest
+
+# InterceptorInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.interceptor.InterceptorInvokerTest
+
+# MethodFromDifferentClassInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.method.MethodFromDifferentClassInvokerTest
+
+# ObjectMethodButNotToStringInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.objmethod.ObjectMethodButNotToStringInvokerTest
+
+# PrivateMethodInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.privatemethod.PrivateMethodInvokerTest
+
+# ProducerFieldBeanInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.prodfield.ProducerFieldBeanInvokerTest
+
+# ProducerMethodBeanInvokerTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.invalid.prodmethod.ProducerMethodBeanInvokerTest
+
+# ArgumentArraySizeWithLookupTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentArraySizeWithLookupTest
+
+# ArgumentLookupBeanManagerTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentLookupBeanManagerTest
+
+# ArgumentLookupDependentTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentLookupDependentTest
+
+# ArgumentLookupEventTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentLookupEventTest
+
+# ArgumentLookupInstanceTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentLookupInstanceTest
+
+# ArgumentLookupTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.ArgumentLookupTest
+
+# BadArgumentLookupEqualToNumberOfParamsTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.lookup.BadArgumentLookupEqualToNumberOfParamsTest
+
+# BadArgumentLookupGreaterThanNumberOfParamsTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.lookup.BadArgumentLookupGreaterThanNumberOfParamsTest
+
+# BadArgumentLookupLessThanZeroTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.lookup.BadArgumentLookupLessThanZeroTest
+
+# InstanceLookupDependentTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.InstanceLookupDependentTest
+
+# InstanceLookupStaticMethodTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.InstanceLookupStaticMethodTest
+
+# InstanceLookupTest: 1 failing
+org.jboss.cdi.tck.tests.invokers.lookup.InstanceLookupTest
+
+# LookupAmbiguousTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.lookup.LookupAmbiguousTest
+
+# LookupUnsatisfiedTest: 0 failing, 1 failing configuration/deployment method(s)
+org.jboss.cdi.tck.tests.invokers.lookup.LookupUnsatisfiedTest
+
+# DynamicLookupTest: 2 of 13 executed methods fail
+org.jboss.cdi.tck.tests.lookup.dynamic.DynamicLookupTest#testDuplicateBindingsThrowsException
+org.jboss.cdi.tck.tests.lookup.dynamic.DynamicLookupTest#testNonBindingThrowsException

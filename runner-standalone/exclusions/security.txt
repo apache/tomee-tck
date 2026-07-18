@@ -1,0 +1,25 @@
+# Jakarta Security 4.0 TCK source reactor (4.0.1) driven by the Maven invoker
+# against TomEE Plus, Java 21, 2026-07-18: 26 app modules, 132 tests, 5
+# failures, 2 errors. The entries are TomEE Jakarta Security results to
+# triage: the BASIC authentication mechanism answers 401 for valid
+# credentials in the decorate/handler2 variants, and the two OpenID modules
+# fail token validation against the bundled OpenID provider.
+#
+# Format: maven-surefire/failsafe excludesFile patterns; the runner passes
+# this file to every TCK app module through the invoker as
+# -Dsurefire.excludesFile/-Dfailsafe.excludesFile.
+
+# AppCustomAuthenticationMechanismHandler2IT: 3 failing
+**/ee/jakarta/tck/security/test/AppCustomAuthenticationMechanismHandler2IT.java
+
+# AppMemBasicDecorateIT: 1 of 2 executed methods fail
+**/ee/jakarta/tck/security/test/AppMemBasicDecorateIT.java#testAuthenticated
+
+# AppMemBasicIT: 1 of 4 executed methods fail
+**/ee/jakarta/tck/security/test/AppMemBasicIT.java#testAuthenticated
+
+# OpenId2DefaultIT: 1 failing
+**/ee/jakarta/tck/security/test/OpenId2DefaultIT.java
+
+# OpenId3DefaultIT: 1 failing
+**/ee/jakarta/tck/security/test/OpenId3DefaultIT.java

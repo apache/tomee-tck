@@ -1,0 +1,3 @@
+# Intentionally empty. Pass -Dtck.exclusions.file=<repo>/runner-standalone/exclusions/none.txt
+# (or =none for the TestNG-based runners) to run a suite without the reviewed
+# exclusions and collect the full compatibility baseline.

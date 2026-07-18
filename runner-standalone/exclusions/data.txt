@@ -1,0 +1,26 @@
+# Jakarta Data 1.0 TCK (jakarta.data:jakarta.data-tck:1.0.0, web+persistence
+# groups) on the TomEE Plume snapshot, Java 21, 2026-07-18: 99 tests, 73
+# failures, 22 errors. TomEE's Jakarta Data provider does not materialize
+# repository interface implementations inside deployed applications, so every
+# @Inject of a repository is null and all repository-driven tests fail.
+# The signature test and the tests that do not touch a repository pass.
+# One TomEE gap accounts for the whole list; fixing repository materialization
+# should allow removing this file wholesale.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
+
+# CDITests: 2 failing
+**/ee/jakarta/tck/data/core/cdi/CDITests.java
+
+# EntityTests: 73 failing
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java
+
+# PersistenceEntityTests: 10 failing
+**/ee/jakarta/tck/data/standalone/persistence/PersistenceEntityTests.java
+
+# PersistenceTests: 2 failing
+**/ee/jakarta/tck/data/web/transaction/PersistenceTests.java
+
+# ValidationTests: 8 failing
+**/ee/jakarta/tck/data/web/validation/ValidationTests.java

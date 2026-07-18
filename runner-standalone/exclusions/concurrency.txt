@@ -1,0 +1,100 @@
+# Jakarta Concurrency 3.1 TCK (jakarta.enterprise.concurrent-tck:3.1.1, web
+# group) on the TomEE Plume snapshot, Java 21, 2026-07-18: 187 tests, 45
+# failures, 49 errors, 14 skipped. Signature and virtual-thread tests pass.
+# Every entry below is a TomEE Concurrency 3.1 implementation gap: resources
+# declared with @ManagedExecutorDefinition, @ManagedScheduledExecutorDefinition,
+# @ManagedThreadFactoryDefinition, and @ContextServiceDefinition are injected
+# as null, context propagation to unmanaged threads is incomplete, and
+# transaction semantics around ContextService proxies differ from the spec.
+# Reviewed exclusions keep the remaining suite runnable; they are not
+# compatibility passes.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
+
+# ContextServiceTests: 14 failing
+**/ee/jakarta/tck/concurrent/api/ContextService/ContextServiceTests.java
+
+# LastExecutionTests: 4 failing
+**/ee/jakarta/tck/concurrent/api/LastExecution/LastExecutionTests.java
+
+# ManagedExecutorsTests: 6 of 10 executed methods fail
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#isCurrentThreadShutdown
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#isCurrentThreadShutdownManageableThread
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#manageCallableTaskWithTaskListener
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#manageCallableTaskWithTaskListenerAndMap
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#manageRunnableTaskWithTaskListener
+**/ee/jakarta/tck/concurrent/api/ManagedExecutors/ManagedExecutorsTests.java#manageRunnableTaskWithTaskListenerAndMap
+
+# ManagedScheduledExecutorServiceTests: 2 of 4 executed methods fail
+**/ee/jakarta/tck/concurrent/api/ManagedScheduledExecutorService/ManagedScheduledExecutorServiceTests.java#normalScheduleProcess1Test
+**/ee/jakarta/tck/concurrent/api/ManagedScheduledExecutorService/ManagedScheduledExecutorServiceTests.java#normalScheduleProcess2Test
+
+# ManagedTaskListenerTests: 4 failing
+**/ee/jakarta/tck/concurrent/api/ManagedTaskListener/ManagedTaskListenerTests.java
+
+# ManagedThreadFactoryTests: 3 failing
+**/ee/jakarta/tck/concurrent/api/ManagedThreadFactory/ManagedThreadFactoryTests.java
+
+# TriggerTests: 2 failing
+**/ee/jakarta/tck/concurrent/api/Trigger/TriggerTests.java
+
+# ContextPropagationWebTests: 4 of 14 executed methods fail
+**/ee/jakarta/tck/concurrent/spec/ContextService/contextPropagate/ContextPropagationWebTests.java#testClassloaderAndCreateProxyInServlet
+**/ee/jakarta/tck/concurrent/spec/ContextService/contextPropagate/ContextPropagationWebTests.java#testCopyWithContextCapture
+**/ee/jakarta/tck/concurrent/spec/ContextService/contextPropagate/ContextPropagationWebTests.java#testJNDIContextAndCreateProxyInServlet
+**/ee/jakarta/tck/concurrent/spec/ContextService/contextPropagate/ContextPropagationWebTests.java#testSecurityAndCreateProxyInServlet
+
+# ContextPropagationServletTests: 2 failing
+**/ee/jakarta/tck/concurrent/spec/ContextService/contextPropagate/servlet/ContextPropagationServletTests.java
+
+# TransactionTests: 1 failing
+**/ee/jakarta/tck/concurrent/spec/ContextService/tx/TransactionTests.java
+
+# InheritedAPITests: 4 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedExecutorService/inheritedapi/InheritedAPITests.java
+
+# ForbiddenAPIEJBTests: 5 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedExecutorService/managed/forbiddenapi/ForbiddenAPIEJBTests.java
+
+# ForbiddenAPIServletTests: 5 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedExecutorService/managed/forbiddenapi/ForbiddenAPIServletTests.java
+
+# ManagedExecutorDefinitionWebTests: 1 of 18 executed methods fail
+**/ee/jakarta/tck/concurrent/spec/ManagedExecutorService/resourcedef/ManagedExecutorDefinitionWebTests.java#testAsynchronousMethodVoidReturnType
+
+# TransactionTests: 1 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedExecutorService/tx/TransactionTests.java
+
+# InheritedAPIServletTests: 7 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedScheduledExecutorService/inheritedapi/InheritedAPIServletTests.java
+
+# InheritedAPIWebTests: 7 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedScheduledExecutorService/inheritedapi/InheritedAPIWebTests.java
+
+# ForbiddenAPIEJBTests: 5 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedScheduledExecutorService/managed/forbiddenapi/ForbiddenAPIEJBTests.java
+
+# ForbiddenAPIServletTests: 5 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedScheduledExecutorService/managed/forbiddenapi/ForbiddenAPIServletTests.java
+
+# TransactionTests: 1 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedScheduledExecutorService/tx/TransactionTests.java
+
+# ContextWebTests: 2 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedThreadFactory/context/ContextWebTests.java
+
+# TransactionTests: 1 failing
+**/ee/jakarta/tck/concurrent/spec/ManagedThreadFactory/tx/TransactionTests.java
+
+# AnnotationWebTests: 4 of 7 executed methods fail
+**/ee/jakarta/tck/concurrent/spec/Platform/anno/AnnotationWebTests.java#testAnnoDefinedContextServiceQualifiers
+**/ee/jakarta/tck/concurrent/spec/Platform/anno/AnnotationWebTests.java#testAnnoDefinedManagedExecutorSvcQualifiers
+**/ee/jakarta/tck/concurrent/spec/Platform/anno/AnnotationWebTests.java#testAnnoDefinedManagedScheduledExecutorSvcQualifers
+**/ee/jakarta/tck/concurrent/spec/Platform/anno/AnnotationWebTests.java#testAnnoDefinedManagedThreadFactoryQualifersWeb
+
+# DeploymentDescriptorWebTests: 4 of 7 executed methods fail
+**/ee/jakarta/tck/concurrent/spec/Platform/dd/DeploymentDescriptorWebTests.java#testDeploymentDescriptorDefinedContextServiceQualifiers
+**/ee/jakarta/tck/concurrent/spec/Platform/dd/DeploymentDescriptorWebTests.java#testDeploymentDescriptorDefinedManagedExecutorSvcQualifiers
+**/ee/jakarta/tck/concurrent/spec/Platform/dd/DeploymentDescriptorWebTests.java#testDeploymentDescriptorDefinedManagedScheduledExecutorSvcQualifers
+**/ee/jakarta/tck/concurrent/spec/Platform/dd/DeploymentDescriptorWebTests.java#testDeploymentDescriptorDefinedManagedThreadFactoryQualifers

@@ -1,0 +1,121 @@
+# Jakarta Faces 4.1 TCK source reactor (4.1.2), modern Arquillian modules
+# (faces22/23/40/41) on Mojarra / TomEE Plume snapshot, Java 21, 2026-07-18:
+# 263 tests on record, 9 failures, 30 errors, 5 skipped. The dominant product
+# finding: TomEE's faces-config.xml unmarshaller rejects the
+# xsi:schemaLocation attribute used by Faces 4.1 descriptors, so the affected
+# applications never deploy and their tests error out. The rest are CDI
+# integration and component behavior differences to triage. The legacy
+# JavaTest old-tck half and the signature module are not yet ported and are
+# not covered by this file.
+#
+# Format: maven-surefire/failsafe excludesFile patterns; the runner passes
+# this file to every TCK module through the invoker as
+# -Dsurefire.excludesFile/-Dfailsafe.excludesFile.
+
+# Spec1581IT: 1 failing
+**/ee/jakarta/tck/faces/test/faces40/javapages/Spec1581IT.java
+
+# Spec1581IT: 1 failing
+**/ee/jakarta/tck/faces/test/faces40/javapagewithmetadata/Spec1581IT.java
+
+# MethodValidationIT: 2 of 3 executed methods fail
+**/ee/jakarta/tck/faces/test/javaee7/cdimethodvalidation/cdimethodvalidation/MethodValidationIT.java#testCorrectUsage2
+**/ee/jakarta/tck/faces/test/javaee7/cdimethodvalidation/cdimethodvalidation/MethodValidationIT.java#testIncorrectUsage
+
+# Spec1IT: 1 of 5 executed methods fail
+**/ee/jakarta/tck/faces/test/javaee7/multiFieldValidation/Spec1IT.java#testSimpleValidFieldsInvalidBean
+
+# Issue3729IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Issue3729IT.java
+
+# Issue3730IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Issue3730IT.java
+
+# Issue3731IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Issue3731IT.java
+
+# Spec1582ApplicationMap2IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582ApplicationMap2IT.java
+
+# Spec1582HeaderMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582HeaderMapIT.java
+
+# Spec1582HeaderValuesMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582HeaderValuesMapIT.java
+
+# Spec1582InitParameterMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582InitParameterMapIT.java
+
+# Spec1582RequestCookieMap2IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582RequestCookieMap2IT.java
+
+# Spec1582RequestMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582RequestMapIT.java
+
+# Spec1582RequestParameterMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582RequestParameterMapIT.java
+
+# Spec1582RequestParametersValuesMapIT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582RequestParametersValuesMapIT.java
+
+# Spec1582ViewMap2IT: 1 failing
+**/ee/jakarta/tck/faces/test/javaee8/cdi/Spec1582ViewMap2IT.java
+
+# Spec1337IT: 1 of 3 executed methods fail
+**/ee/jakarta/tck/faces/test/servlet40/el/Spec1337IT.java#testResourceEL3
+
+# Spec1260IT: 3 of 6 executed methods fail
+**/ee/jakarta/tck/faces/test/servlet40/exactmapping_selenium/Spec1260IT.java#testLinkToNonExactMappedView
+**/ee/jakarta/tck/faces/test/servlet40/exactmapping_selenium/Spec1260IT.java#testPostBackOnLinkedNonExactMappedView
+**/ee/jakarta/tck/faces/test/servlet40/exactmapping_selenium/Spec1260IT.java#testResourceReferenceFromExactMappedView
+
+# Issue5032IT: 2 failing
+**/ee/jakarta/tck/faces/test/servlet50/ajax_selenium/Issue5032IT.java
+
+# Issue5415IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/ajax_selenium/Issue5415IT.java
+
+# Spec1567IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/ajax_selenium/Spec1567IT.java
+
+# Issue5171IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/beanValidation/Issue5171IT.java
+
+# Spec1568IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/doctype/Spec1568IT.java
+
+# Spec1556IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/inputfile/Spec1556IT.java
+
+# Spec1555IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/inputfile_selenium/Spec1555IT.java
+
+# Spec1560IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/inputtext/Spec1560IT.java
+
+# Spec1553IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/namespaces/Spec1553IT.java
+
+# Spec1565IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/resources/Spec1565IT.java
+
+# Spec1563IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/selectitemgroup/Spec1563IT.java
+
+# Spec1559IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/selectitemgroups/Spec1559IT.java
+
+# Spec1574IT: 1 failing
+**/ee/jakarta/tck/faces/test/servlet50/selectmanycheckbox/Spec1574IT.java
+
+# Spec1760IT: 1 failing
+**/org/eclipse/ee4j/tck/faces/faces41/headAndBodyRenderer/Spec1760IT.java
+
+# Spec1263IT: 1 failing
+**/org/eclipse/ee4j/tck/faces/faces41/uiRepeat/Spec1263IT.java
+
+# Spec1819IT: 1 failing
+**/org/eclipse/ee4j/tck/faces/faces41/uuidConverter/Spec1819IT.java
+
+# ExtensionlessMappingIT: 1 failing
+**/org/javaee8/cdi/dynamic/bean/ExtensionlessMappingIT.java
