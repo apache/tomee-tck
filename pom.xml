@@ -46,6 +46,10 @@
     <jakarta.tags.impl.version>3.0.1</jakarta.tags.impl.version>
     <jakarta.tags.api.version>3.0.2</jakarta.tags.api.version>
     <derby.version>10.15.2.0</derby.version>
+    <!-- Derby network server port; the runner lifecycles and the staged
+         tomee.xml datasources all honour an override, so a suite can run
+         next to another harness instance. -->
+    <tck.derby.port>1527</tck.derby.port>
 
     <maven.antrun.plugin.version>3.1.0</maven.antrun.plugin.version>
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>

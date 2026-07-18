@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Test-only TomEE resources required by the Jakarta EE Web Profile TCK. -->
+<!-- Test-only TomEE resources required by the Jakarta EE Web Profile TCK.
+     The runner poms substitute ${tck.derby.port} while staging the overlay. -->
 <openejb>
   <Resource id="jdbc/DB1" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>
 
   <Resource id="jdbc/DB2" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>
 
   <Resource id="jdbc/DBTimer" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>

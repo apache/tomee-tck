@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Port-aware copy of environment/tomee/conf/tomee.xml; ${tck.derby.port} is
-     substituted while staging the overlay so the suite can run beside
-     another harness instance. -->
+<!-- Test-only TomEE resources for the Jakarta Data TCK; replaces the shared
+     overlay tomee.xml so the TCK's jdbc/DataTCK datasource is available in
+     addition to the standard TCK datasources. ${tck.derby.port} is
+     substituted while staging the overlay. -->
 <openejb>
   <Resource id="jdbc/DB1" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
@@ -18,6 +19,13 @@
   </Resource>
 
   <Resource id="jdbc/DBTimer" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
+    UserName cts1
+    Password cts1
+  </Resource>
+
+  <Resource id="jdbc/DataTCK" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
     JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
