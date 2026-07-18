@@ -38,15 +38,12 @@ public class DependencyInjectionTckTest {
             // The JUnit runner loads this class once for discovery and once
             // for execution; OpenWebBeans allows a single container per class
             // loader, so reuse the running one.
-            return suiteFromRunningContainer();
+            return suiteFor(CDI.current().select(Car.class).get());
         }
-        final TestSuite suite = new TestSuite("Jakarta Dependency Injection 2.0 TCK");
-        suite.addTest(Tck.testsFor(tckCar, false, true));
-        return suite;
+        return suiteFor(tckCar);
     }
 
-    private static Test suiteFromRunningContainer() {
-        final Car tckCar = CDI.current().select(Car.class).get();
+    private static Test suiteFor(final Car tckCar) {
         final TestSuite suite = new TestSuite("Jakarta Dependency Injection 2.0 TCK");
         suite.addTest(Tck.testsFor(tckCar, false, true));
         return suite;
