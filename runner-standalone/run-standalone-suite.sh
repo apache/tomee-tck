@@ -11,9 +11,9 @@
 #
 # Container-based runners default to ports 8080/8443/8005/1527; run one at
 # a time. -Dtck.derby.port overrides the Derby port everywhere, and the
-# concurrency, data, servlet, validation, cdi, cdi-ee, pages, rest,
-# websocket, and transactions runners also honor -Dtomee.http.port/
-# -Dtomee.https.port/-Dtomee.shutdown.port for side-by-side runs. Use them
+# container-based runners honor -Dtomee.http.port/-Dtomee.https.port/
+# -Dtomee.shutdown.port for side-by-side runs (the security, authentication,
+# and faces source reactors still assume the fixed ports). Use the overrides
 # whenever anything else may hold 8080: the Arquillian adapter silently
 # attaches to any server already on the port.
 # TOMEE_CLASSIFIER selects the distribution (default: plume).
@@ -40,44 +40,26 @@ EOF
   exit 2
 }
 
+# A runner id maps to its module directory, preceded by its <id>-install
+# twin when one exists. The source-reactor runners manage their own TomEE
+# and need the full Maven lifecycle up to verify for their invoker/JavaTest
+# runs; everything else stops at test.
+GOAL=test
 case "$ID" in
-  '') usage ;;
-  annotations)
-    MODULES="runner-standalone/annotations-install,runner-standalone/annotations" ;;
-  di)
-    MODULES="runner-standalone/di-install,runner-standalone/di" ;;
-  el)
-    MODULES="runner-standalone/el-install,runner-standalone/el" ;;
-  persistence)
-    MODULES="runner-standalone/persistence-install,runner-standalone/persistence" ;;
-  servlet)
-    MODULES="runner-standalone/servlet-install,runner-standalone/servlet" ;;
-  pages)
-    MODULES="runner-standalone/pages-install,runner-standalone/pages" ;;
-  rest)
-    MODULES="runner-standalone/rest-install,runner-standalone/rest" ;;
-  validation)
-    MODULES="runner-standalone/validation-install,runner-standalone/validation" ;;
-  websocket)
-    MODULES="runner-standalone/websocket-install,runner-standalone/websocket" ;;
-  debugging)
-    MODULES="runner-standalone/debugging-install,runner-standalone/debugging" ;;
-  concurrency|data|cdi|cdi-ee|jsonp|jsonb)
-    MODULES="runner-standalone/$ID" ;;
+  ''|*-install|tck-common|exclusions|*/*|.*) usage ;;
   security|authentication|faces|faces-old|transactions)
-    # These TCK reactors manage their own TomEE; they need the full Maven
-    # lifecycle up to verify for their invoker/JavaTest runs.
-    shift
-    exec "$ROOT_DIR/mvnw" -B -ntp \
-      -pl "runner-standalone/$ID" -am \
-      -Dtck.standalone=true \
-      verify "$@" ;;
-  *) usage ;;
+    GOAL=verify ;;
 esac
+[ -f "$SCRIPT_DIR/$ID/pom.xml" ] || usage
+
+MODULES="runner-standalone/$ID"
+if [ -f "$SCRIPT_DIR/$ID-install/pom.xml" ]; then
+  MODULES="runner-standalone/$ID-install,$MODULES"
+fi
 
 shift
 exec "$ROOT_DIR/mvnw" -B -ntp \
   -pl "$MODULES" -am \
   -Dtck.standalone=true \
   "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
-  test "$@"
+  "$GOAL" "$@"

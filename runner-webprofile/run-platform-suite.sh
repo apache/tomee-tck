@@ -27,6 +27,10 @@ if [ "$PROTOCOL" != "servlet" ] && [ "$PROTOCOL" != "javatest" ]; then
   exit 2
 fi
 
+# Build the shared modules once so the per-partition runs can skip -am and
+# not rebuild the unchanged reactor every iteration.
+"$ROOT_DIR/mvnw" -B -ntp -pl tomee-porting -am install </dev/null
+
 TAB=$(printf '\t')
 while IFS="$TAB" read -r partition artifact protocol groups source_classes expected_classes test_pattern; do
   case "$partition" in
@@ -44,7 +48,7 @@ while IFS="$TAB" read -r partition artifact protocol groups source_classes expec
   report_dir="$SCRIPT_DIR/run/target/failsafe-reports/$partition"
   rm -rf "$report_dir"
   "$ROOT_DIR/mvnw" \
-    -pl runner-webprofile/run -am \
+    -pl runner-webprofile/run \
     "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
     "-Dtck.artifact=$artifact" \
     "-Dtck.partition=$partition" \
