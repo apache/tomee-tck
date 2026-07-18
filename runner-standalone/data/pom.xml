@@ -25,6 +25,11 @@
 
   <properties>
     <data.tck.version>1.0.0</data.tck.version>
+    <!-- Overridable to run next to another harness instance; the Arquillian
+         adapter otherwise attaches to whatever already answers on 8080. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/data.txt</tck.exclusions.file>
@@ -76,6 +81,15 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- The generated persistence unit runs on java:comp/DefaultDataSource,
+         which TomEE materializes on embedded Derby; the engine jar is not
+         part of the shared client-only Derby staging. -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>${derby.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -84,11 +98,45 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <!-- Replaces the shared tomee.xml (fixed Derby port 1527) with a
+                 filtered copy honouring ${tck.derby.port}; runs after the
+                 inherited stage-tomee-configuration execution. -->
+            <id>stage-port-aware-tomee-configuration</id>
+            <phase>process-test-resources</phase>
+            <goals><goal>copy-resources</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.container.skip}</skip>
+              <overwrite>true</overwrite>
+              <outputDirectory>${project.build.directory}/tomee-overlay/conf</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/tomee-conf-filtered</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
+          <execution>
+            <id>stage-derby-embedded</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.container.skip}</skip>
+              <includeGroupIds>org.apache.derby</includeGroupIds>
+              <includeArtifactIds>derby</includeArtifactIds>
+              <includeScope>test</includeScope>
+              <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
           <execution>
             <id>stage-tomee-api-jar</id>
             <phase>generate-test-resources</phase>

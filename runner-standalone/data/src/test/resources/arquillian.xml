@@ -15,14 +15,23 @@
       <property name="conf">${project.build.directory}/tomee-overlay/conf</property>
       <property name="lib">${project.build.directory}/tomee-overlay/lib</property>
       <property name="host">localhost</property>
-      <property name="httpPort">8080</property>
-      <property name="stopPort">8005</property>
+      <!-- The adapter reuses any server already answering on httpPort, so
+           override tomee.http.port/tomee.shutdown.port to run next to
+           another harness instance. -->
+      <property name="httpPort">${tomee.http.port}</property>
+      <property name="httpsPort">${tomee.https.port}</property>
+      <property name="stopPort">${tomee.shutdown.port}</property>
       <property name="cleanOnStartUp">true</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>
       <!-- The Data TCK relies on auto-detected JUnit extensions inside the
            container and extracts the JDK image for its signature test. -->
       <property name="catalina_opts">-Djunit.jupiter.extensions.autodetection.enabled=true -Djimage.dir=${project.build.directory}/jimage --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+      <!-- Declares the java:comp/Default* resource-env-refs (incl.
+           DefaultDataSource used by the generated persistence.xml); without
+           it @Resource(lookup="java:comp/Default...") injections stay null
+           (BuiltInEnvironmentEntries in openejb-core). -->
+      <property name="properties">openejb.environment.default=true</property>
     </configuration>
   </container>
 </arquillian>

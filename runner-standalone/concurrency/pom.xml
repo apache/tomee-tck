@@ -25,6 +25,11 @@
 
   <properties>
     <concurrency.tck.version>3.1.1</concurrency.tck.version>
+    <!-- Overridable to run next to another harness instance; the Arquillian
+         adapter otherwise attaches to whatever already answers on 8080. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/concurrency.txt</tck.exclusions.file>
@@ -73,6 +78,16 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- The TCK's transaction tests declare a @DataSourceDefinition on
+         org.apache.derby.jdbc.EmbeddedDataSource (in-memory database inside
+         the server), so the container lib needs the Derby engine jar in
+         addition to the network client staged by the shared lifecycle. -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>${derby.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -85,6 +100,21 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-derby-embedded</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.container.skip}</skip>
+              <includeGroupIds>org.apache.derby</includeGroupIds>
+              <includeArtifactIds>derby</includeArtifactIds>
+              <includeScope>test</includeScope>
+              <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

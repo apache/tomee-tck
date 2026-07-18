@@ -1,26 +1,63 @@
 # Jakarta Data 1.0 TCK (jakarta.data:jakarta.data-tck:1.0.0, web+persistence
-# groups) on the TomEE Plume snapshot, Java 21, 2026-07-18: 99 tests, 73
-# failures, 22 errors. TomEE's Jakarta Data provider does not materialize
-# repository interface implementations inside deployed applications, so every
-# @Inject of a repository is null and all repository-driven tests fail.
-# The signature test and the tests that do not touch a repository pass.
-# One TomEE gap accounts for the whole list; fixing repository materialization
-# should allow removing this file wholesale.
+# groups) on the TomEE Plume snapshot, Java 21, 2026-07-18: 99 tests, 7
+# failures, 29 errors, all in standalone.entity.EntityTests. The other six
+# classes (CDI, persistence-entity, signature, servlet example, transaction,
+# validation) pass completely.
+#
+# The previous list excluded 95 tests across 5 classes as "TomEE's Jakarta
+# Data provider does not materialize repository implementations"; that was
+# harness misconfiguration. The runner's DataTckArchiveProcessor now
+# completes the TCK deployments the way the Jakarta Data runtime is expected
+# to (a persistence.xml on java:comp/DefaultDataSource and a beans.xml with
+# bean-discovery-mode="all" so @Repository interfaces are scanned; same as
+# apache/tomee tck/data-standalone), the container declares the
+# java:comp/Default* refs via openejb.environment.default=true, and the
+# Derby engine jar is staged for the embedded DefaultDataSource. With those
+# in place repositories materialize and inject fine.
+#
+# The 36 remaining EntityTests methods are genuine openejb-jakarta-data
+# gaps in query generation/translation for the unmapped-superclass entity:
+# ignoreCase state-field paths, literal/parenthesis/NOT/OR handling in
+# @Query JDQL, cursored pagination, empty/partial queries, and static
+# metamodel sorts.
 #
 # Format: maven-surefire excludesFile patterns, applied through
 # -Dtck.exclusions.file (see runner-standalone/README.md).
 
-# CDITests: 2 failing
-**/ee/jakarta/tck/data/core/cdi/CDITests.java
-
-# EntityTests: 73 failing
-**/ee/jakarta/tck/data/standalone/entity/EntityTests.java
-
-# PersistenceEntityTests: 10 failing
-**/ee/jakarta/tck/data/standalone/persistence/PersistenceEntityTests.java
-
-# PersistenceTests: 2 failing
-**/ee/jakarta/tck/data/web/transaction/PersistenceTests.java
-
-# ValidationTests: 8 failing
-**/ee/jakarta/tck/data/web/validation/ValidationTests.java
+# EntityTests: 7 failures + 29 errors
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testBasicRepository
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testCommonInterfaceQueries
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testCursoredPageOf7FromCursor
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testCursoredPageOfNothing
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testCursoredPageWithoutTotalOf9FromCursor
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testCursoredPageWithoutTotalOfNothing
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testDataRepository
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testEmptyQuery
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testEmptyResultException
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFindAllWithPagination
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFindFirst
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFindFirst3
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFindList
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFindPage
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFirstCursoredPageOf8AndNextPages
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testFirstCursoredPageWithoutTotalOf6AndNextPages
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testIgnoreCase
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testLiteralInteger
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testLiteralTrue
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testMixedSort
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testNonUniqueResultException
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testNot
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testOrderByHasPrecedenceOverPageRequestSorts
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testOrderByHasPrecedenceOverSorts
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testPartialQuerySelectAndOrderBy
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testPrimaryEntityClassDeterminedByLifeCycleMethods
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testQueryWithNot
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testQueryWithNull
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testQueryWithOr
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testQueryWithParenthesis
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testSingleEntity
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testStaticMetamodelDescendingSorts
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testStaticMetamodelDescendingSortsPreGenerated
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testUpdateQueryWithWhereClause
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testUpdateQueryWithoutWhereClause
+**/ee/jakarta/tck/data/standalone/entity/EntityTests.java#testVarargsSort

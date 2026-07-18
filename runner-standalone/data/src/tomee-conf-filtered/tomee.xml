@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Test-only TomEE resources for the Jakarta Data TCK. Replaces the shared
+<!-- Port-aware test-only TomEE resources for the Jakarta Data TCK; ${tck.derby.port}
+     is substituted while staging the overlay. Replaces the shared
      overlay tomee.xml so the TCK's jdbc/DataTCK datasource is available in
      addition to the standard TCK datasources. -->
 <openejb>
   <Resource id="jdbc/DB1" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>
 
   <Resource id="jdbc/DB2" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>
 
   <Resource id="jdbc/DBTimer" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>
 
   <Resource id="jdbc/DataTCK" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
-    JdbcUrl jdbc:derby://localhost:1527/derbyDB;create=true
+    JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true
     UserName cts1
     Password cts1
   </Resource>

@@ -163,6 +163,13 @@
             <!-- Registers the CdiContainerExtension that boots OpenWebBeans
                  for the TCK's CDI tests. -->
             <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
+            <!-- Johnzon defaults to serializing BigDecimal/BigInteger as JSON
+                 strings to avoid IEEE-754 precision loss in consumers; the
+                 spec (JSON Binding 3.0 §3.4.1) and TCK require JSON numbers.
+                 Same switches as apache/tomee tck/jsonb-standalone; see
+                 https://github.com/jakartaee/jsonb-api/issues/187. -->
+            <johnzon.use-bigdecimal-stringadapter>false</johnzon.use-bigdecimal-stringadapter>
+            <johnzon.use-biginteger-stringadapter>false</johnzon.use-biginteger-stringadapter>
             <jimage.dir>${project.build.directory}/jimage</jimage.dir>
             <signature.sigTestClasspath>${jsonb.sig.api.jar}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</signature.sigTestClasspath>
           </systemPropertyVariables>
