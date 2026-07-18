@@ -150,9 +150,13 @@ from xml.etree import ElementTree
           branches['javatest - persistence-javatest (webprofile)'] =
             catalogBranch('javatest - persistence-javatest (webprofile)', 'javatest', 'persistence-javatest', 'webprofile')
 
-          // Standalone specification TCK runners that are validated so far.
-          // The remaining runners join as their harnesses are completed; see
-          // runner-standalone/README.md for status.
+          // Standalone specification TCK runners. Every container-based suite
+          // runs with its reviewed exclusion list from
+          // runner-standalone/exclusions/, so a red branch is a regression,
+          // not a known gap. The source-reactor runners (security,
+          // authentication, faces) stay out until a full run has verified
+          // their exclusion wiring; see runner-standalone/README.md and
+          // KNOWN_ISSUES.md.
           def standaloneBranch = { String id ->
             {
               stage("standalone - ${id}") {
@@ -179,7 +183,7 @@ from xml.etree import ElementTree
               }
             }
           }
-          for (id in ['annotations', 'di']) {
+          for (id in ['annotations', 'di', 'concurrency', 'data', 'servlet', 'validation', 'cdi', 'cdi-ee']) {
             branches["standalone - ${id}"] = standaloneBranch(id)
           }
 
