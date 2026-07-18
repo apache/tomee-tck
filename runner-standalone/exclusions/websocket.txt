@@ -1,57 +1,30 @@
 # Jakarta WebSocket 2.2 TCK (jakarta.tck:websocket-tck-spec-tests:2.2.0) on
-# the TomEE Plume snapshot, Java 21, 2026-07-18: 715 tests, 0 failures,
-# 30 errors, 0 skipped. The signature test passes.
+# the TomEE Plume snapshot, Java 21: 737 tests, 0 failures, 3 errors,
+# 0 skipped. The signature test passes.
 #
-# The errors cluster in two Tomcat behaviors:
-# - 25 negative-deployment classes (negdep server-side): a WAR containing an
-#   invalid server endpoint fails the whole webapp deployment on Tomcat.
-#   The spec requires the deployment error to halt the application
-#   deployment, so this is arguably compliant-but-stricter behavior, but
-#   Arquillian surfaces the failed deployment as a test error before the
-#   probe can run. The client-side negdep classes all pass.
-# - 5 behavioral differences: the server-side configurator observes
-#   extension lists that include Tomcat's built-in permessage-deflate
-#   (3 getNegotiatedExtensions* tests), and two timeout tests
-#   (session setTimeout2Test, spec closing status-1006-after-timeout)
-#   observe different idle-timeout/close-code behavior.
-# These are Tomcat/TomEE product results to triage upstream.
+# The 3 errors are one behavioral difference in a single class. The
+# server-side configurator reports the extensions the client requested and
+# the extensions it negotiated. TomEE's client-side WebSocket container
+# (Tomcat's tomcat-websocket) always advertises its built-in
+# permessage-deflate extension in the opening handshake, so that extension
+# appears in the requested and negotiated lists the configurator observes,
+# while the test expects only the extensions it declared. The failure
+# reproduces when the class is run on its own, so it is a genuine
+# Tomcat/TomEE client-container behavior to triage upstream, not a harness
+# artifact.
+#
+# The negative-deployment classes (the negdep package) now run and pass: an
+# invalid server endpoint aborts the whole webapp deployment as the spec
+# requires, and the runner's Arquillian extension
+# (NegativeDeploymentToleranceObserver) tolerates that deployment failure so
+# each client probe still runs. See runner-standalone/websocket for the
+# extension.
 #
 # Format: maven-surefire excludesFile patterns, applied through
 # -Dtck.exclusions.file (see runner-standalone/README.md).
 
-# Negative-deployment tests: Tomcat halts the whole webapp deployment
-**/websocket/negdep/invalidpathparamtype/srv/onclose/WSCClientIT.java
-**/websocket/negdep/invalidpathparamtype/srv/onerror/WSCClientIT.java
-**/websocket/negdep/invalidpathparamtype/srv/onmessage/WSCClientIT.java
-**/websocket/negdep/invalidpathparamtype/srv/onopen/WSCClientIT.java
-**/websocket/negdep/malformedpath/WSCClientIT.java
-**/websocket/negdep/multiplepaths/WSCClientIT.java
-**/websocket/negdep/onclose/srv/duplicate/WSCClientIT.java
-**/websocket/negdep/onclose/srv/toomanyargs/WSCClientIT.java
-**/websocket/negdep/onerror/srv/duplicate/WSCClientIT.java
-**/websocket/negdep/onerror/srv/toomanyargs/WSCClientIT.java
-**/websocket/negdep/onmessage/pasrv/nomoreendpoints/WSCClientIT.java
-**/websocket/negdep/onmessage/ppsrv/nomoreendpoints/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/binarybytebufferint/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/binaryduplicate/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/binaryinputstreamboolean/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/binarynodecoder/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/pongboolean/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/pongduplicate/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/textbigdecimal/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/textduplicate/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/textnodecoder/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/textreaderboolean/WSCClientIT.java
-**/websocket/negdep/onmessage/srv/textstringint/WSCClientIT.java
-**/websocket/negdep/onopen/srv/duplicate/WSCClientIT.java
-**/websocket/negdep/onopen/srv/toomanyargs/WSCClientIT.java
-
-# Extension negotiation: the configurator observes permessage-deflate in
-# the requested/negotiated lists
+# Extension negotiation: the configurator observes the client container's
+# built-in permessage-deflate in the requested/negotiated lists
 **/websocket/ee/jakarta/websocket/server/serverendpointconfig/configurator/WSCClientIT.java#getNegotiatedExtensionsRequestedTest
 **/websocket/ee/jakarta/websocket/server/serverendpointconfig/configurator/WSCClientIT.java#getNegotiatedExtensionsResultedTest
 **/websocket/ee/jakarta/websocket/server/serverendpointconfig/configurator/WSCClientIT.java#getNegotiatedExtensionsOrderedByRequestTest
-
-# Idle-timeout and close-code behavioral differences
-**/websocket/ee/jakarta/websocket/session/WSClientIT.java#setTimeout2Test
-**/websocket/spec/application/closing/WSCClientIT.java#connectionHasBeenClosedWithStatus1006AfterTimeoutTest

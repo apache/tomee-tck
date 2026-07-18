@@ -39,7 +39,7 @@ Detail lives next to each runner:
 | debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
 | authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
-| websocket | 715 tests, 30 E | 25 classes + 5 methods | Tomcat halts webapp deploy on invalid endpoints; extension/timeout behavior |
+| websocket | 737 tests, 3 E | 3 methods | Client container advertises permessage-deflate in the negotiated extension lists |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
 | faces-old (JavaTest) | 5,391 tests, all pass (recorded run: 5 F from a foreign server answering :8080 mid-run; pass on re-run) | — | — (standalone mode, no exclusions) |
 | faces-signaturetest | passes against Plume's Mojarra (org.glassfish:jakarta.faces 4.1.9) | — | — |
@@ -108,13 +108,18 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 11. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
-12. **WebSocket 2.2 behavior (Tomcat)** — a WAR containing an invalid
-    server endpoint fails the whole webapp deployment (the spec-required
-    deployment halt, but the TCK's Arquillian harness reports the failed
-    deploy as an error; 25 negative-deployment classes), the server-side
-    configurator observes Tomcat's built-in `permessage-deflate` in the
-    requested/negotiated extension lists (3 tests), and two idle-timeout/
-    close-code assertions differ.
+12. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
+    configurator reports the extensions the client requested and negotiated.
+    TomEE's client-side WebSocket container (Tomcat's `tomcat-websocket`)
+    always advertises its built-in `permessage-deflate` extension in the
+    opening handshake, so it appears in the requested and negotiated lists
+    the configurator observes while the test expects only the extensions it
+    declared (3 methods in one class). The failure reproduces when the class
+    runs on its own, so it is a Tomcat/TomEE client-container behavior to
+    triage upstream. The negative-deployment classes (an invalid server
+    endpoint aborts the whole webapp deployment, as the spec requires) run
+    and pass: the runner's Arquillian extension tolerates the deployment
+    failure so each client probe still runs.
     [websocket.txt](runner-standalone/exclusions/websocket.txt).
 13. **Bean Validation XML config broken on stock Plume** — the Plume
     distribution ships EclipseLink MOXy (`eclipselink-5.0.1.jar`) and the JAXB

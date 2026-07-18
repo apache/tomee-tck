@@ -160,6 +160,12 @@
             <webServerHost>localhost</webServerHost>
             <webServerPort>${tomee.http.port}</webServerPort>
             <ws_wait>${websocket.tck.ws.wait}</ws_wait>
+            <!-- tomcat-websocket is the TCK's client-side WebSocket container in
+                 this JVM; the abnormal-close timeout tests need it to poll idle
+                 sessions on a short period and to bound the 1006 close send.
+                 Mirrors the server-side overlay in src/tomee-conf. -->
+            <org.apache.tomcat.websocket.DEFAULT_PROCESS_PERIOD>0</org.apache.tomcat.websocket.DEFAULT_PROCESS_PERIOD>
+            <org.apache.tomcat.websocket.ABNORMAL_SESSION_CLOSE_SEND_TIMEOUT>1000</org.apache.tomcat.websocket.ABNORMAL_SESSION_CLOSE_SEND_TIMEOUT>
             <!-- Strict mode for the negative-deployment tests: an invalid
                  endpoint left in service is a failure. -->
             <lib.name>cts</lib.name>
