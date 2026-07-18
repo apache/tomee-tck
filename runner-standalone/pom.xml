@@ -38,6 +38,8 @@
     <module>cdi-ee</module>
     <module>servlet-install</module>
     <module>servlet</module>
+    <module>rest-install</module>
+    <module>rest</module>
     <module>validation-install</module>
     <module>validation</module>
     <module>security</module>
@@ -51,6 +53,11 @@
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
+    <!-- Derby network server port; override together with the runner's
+         tomee.*.port properties to run a suite next to another harness
+         instance. The shared tomee.xml datasources stay on 1527, which only
+         matters for suites that actually touch the database. -->
+    <tck.derby.port>1527</tck.derby.port>
   </properties>
 
   <dependencies>
@@ -185,6 +192,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/require-derby-port-free.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${tck.derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -214,6 +222,10 @@
                 <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                 <arguments>
                   <argument>-Dderby.system.home=${project.build.directory}/derby</argument>
+                  <!-- The port travels as a system property because
+                       exec-maven-plugin swallows the value after a literal
+                       -p argument (module-path handling). -->
+                  <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
@@ -234,6 +246,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/wait-for-derby.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${tck.derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -247,6 +260,7 @@
                 <executable>${java.home}/bin/java</executable>
                 <classpathScope>test</classpathScope>
                 <arguments>
+                  <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>

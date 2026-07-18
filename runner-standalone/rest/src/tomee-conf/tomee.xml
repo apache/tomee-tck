@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replaces the shared overlay tomee.xml for the REST TCK runner: the suite
+     uses no datasource, and dropping the Derby-backed definitions keeps the
+     server log clean when the Derby port is offset for side-by-side runs. -->
+<openejb/>

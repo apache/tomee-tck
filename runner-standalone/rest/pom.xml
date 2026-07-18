@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-rest</artifactId>
+  <name>Jakarta RESTful Web Services 4.0 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta RESTful Web Services 4.0 TCK against the
+    TomEE distribution selected by tomee.classifier. TomEE's implementation
+    is Apache CXF; the client half of every test runs on the CXF JAX-RS
+    client so both sides of the wire exercise the product under test.
+  </description>
+
+  <properties>
+    <rest.tck.version>4.0.1</rest.tck.version>
+    <!-- Match the CXF version shipped in the TomEE 11 distribution. -->
+    <cxf.version>4.2.2</cxf.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/rest.txt</tck.exclusions.file>
+    <!-- Harness default ports; override for concurrent side-by-side runs. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
+  </properties>
+
+  <dependencies>
+    <!-- TomEE remote Arquillian adapter and client-side runtime. -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>arquillian-tomee-remote</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit5</groupId>
+      <artifactId>arquillian-junit5-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- The TCK API level under test; declared before CXF so it wins over
+         the 3.1 API that the CXF poms reference. -->
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>4.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- CXF as the client-side JAX-RS implementation (ClientBuilder,
+         RuntimeDelegate, SSE, and the SeBootstrap tests' embedded server). -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-client</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-sse</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- CXF auto-registers its JSON-P/JSON-B providers when this extension
+         is present, which the client half of the JSON-B context-provider
+         tests requires (the server ships it in TomEE's lib). -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-extension-providers</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-transports-http-jetty</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Client-side entity providers used by the TCK assertions. -->
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>4.0.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-jsonb</artifactId>
+      <version>2.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Utilities of the TCK itself. -->
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>2.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Inherit the shared TomEE/Derby container lifecycle. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <!-- The signature test validates the jakarta.ws.rs packages
+                       of the distribution's combined API jar; jakarta.xml.bind
+                       must be on the signature classpath as well. -->
+                  <includes>**/lib/jakartaee-api-*.jar,**/lib/jakarta.xml.bind-api-*.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-rest-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="rest-sig-api-jars">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                    <include name="**/lib/jakarta.xml.bind-api-*.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="rest.sig.api.jars"
+                             refid="rest-sig-api-jars"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <argLine>-Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR</argLine>
+          <dependenciesToScan>
+            <dependency>jakarta.ws.rs:jakarta-restful-ws-tck</dependency>
+          </dependenciesToScan>
+          <!-- The TCK's test classes use the *IT suffix, which surefire's
+               default includes do not match. -->
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <systemPropertyVariables>
+            <!-- TomEE materializes web.xml servlet entries whose init-param
+                 jakarta.ws.rs.Application names the app through its own CXF
+                 adaptor servlet, like the Platform TCK runner does. -->
+            <servlet_adaptor>org.apache.openejb.server.rest.OpenEJBRestServlet</servlet_adaptor>
+            <webServerHost>localhost</webServerHost>
+            <webServerPort>${tomee.http.port}</webServerPort>
+            <user>j2ee</user>
+            <password>j2ee</password>
+            <authuser>javajoe</authuser>
+            <authpassword>javajoe</authpassword>
+            <porting.ts.url.class.1>ee.jakarta.tck.ws.rs.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
+            <junit.log.traceflag>false</junit.log.traceflag>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <optional.tech.packages.to.ignore>jakarta.xml.bind</optional.tech.packages.to.ignore>
+            <signature.sigTestClasspath>${rest.sig.api.jars}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</signature.sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!-- The TCK artifact comes from the EFTL distribution installed by the
+           matching -install module; keep it out of the default reactor so a
+           fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.ws.rs</groupId>
+          <artifactId>jakarta-restful-ws-tck</artifactId>
+          <version>${rest.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

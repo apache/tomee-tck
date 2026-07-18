@@ -9,8 +9,11 @@
 #
 #   runner-standalone/run-standalone-suite.sh <id> [extra mvn args]
 #
-# Container-based runners use fixed ports 8080/8443/8005/1527; run one at a
-# time. TOMEE_CLASSIFIER selects the distribution (default: plume).
+# Container-based runners default to ports 8080/8443/8005/1527; run one at
+# a time. -Dtck.derby.port overrides the Derby port everywhere, and the
+# rest runner also honors -Dtomee.http.port/-Dtomee.https.port/
+# -Dtomee.shutdown.port for side-by-side runs.
+# TOMEE_CLASSIFIER selects the distribution (default: plume).
 # The reviewed exclusion list in runner-standalone/exclusions/<id>.txt is
 # applied by default; append -Dtck.exclusions.file=... to override (see
 # exclusions/none.txt for full baseline runs).
@@ -25,7 +28,7 @@ TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
-Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet,
+Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet, rest,
          validation, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
 EOF
@@ -40,6 +43,8 @@ case "$ID" in
     MODULES="runner-standalone/di-install,runner-standalone/di" ;;
   servlet)
     MODULES="runner-standalone/servlet-install,runner-standalone/servlet" ;;
+  rest)
+    MODULES="runner-standalone/rest-install,runner-standalone/rest" ;;
   validation)
     MODULES="runner-standalone/validation-install,runner-standalone/validation" ;;
   concurrency|data|cdi|cdi-ee)

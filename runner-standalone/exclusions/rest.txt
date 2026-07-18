@@ -1,0 +1,38 @@
+# Jakarta RESTful Web Services 4.0 TCK (jakarta.ws.rs:jakarta-restful-ws-tck:
+# 4.0.1) on the TomEE Plume snapshot, Java 21, 2026-07-18: 2,803 tests,
+# 4 failures, 11 errors, 128 skipped (the TCK's own @Disabled tests).
+# One of the errors was a harness gap (the CXF client needs
+# cxf-rt-rs-extension-providers for spec-required JSON-B support) and is
+# fixed in the runner; the 14 tests below are TomEE/CXF product results.
+# Reviewed exclusions keep the remaining suite runnable; they are not
+# compatibility passes.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
+
+# TomEE refuses to deploy an application whose classes include a
+# @ConstrainedTo(RuntimeType.CLIENT) provider ("IllegalArgumentException:
+# class ...ClientSideWriter is not a SERVER provider" from
+# TomeeJaxRsService) where the spec requires the server runtime to ignore
+# client-constrained providers; every request then answers 404.
+**/ee/jakarta/tck/ws/rs/ee/rs/constrainedto/JAXRSClientIT.java
+
+# ContainerRequestContext.getLength() must be -1 without a request entity;
+# TomEE/CXF reports 0.
+**/ee/jakarta/tck/ws/rs/ee/rs/container/requestcontext/JAXRSClientIT.java#getLengthWhenNoEntityTest
+
+# HttpHeaders.getLength() resource response arrives empty instead of the
+# expected non-zero length value.
+**/ee/jakarta/tck/ws/rs/ee/rs/core/headers/JAXRSClientIT.java#getLengthTest
+
+# CXF client Response.hasEntity() answers true for an entity-less response.
+**/ee/jakarta/tck/ws/rs/ee/rs/core/response/JAXRSClientIT.java#hasEntityWhenNoEntityTest
+
+# REST 3.1 automatic discovery of Feature/DynamicFeature implementations
+# through META-INF/services is not implemented.
+**/ee/jakarta/tck/ws/rs/jaxrs31/spec/extensions/JAXRSClientIT.java#featureIsRegisteredTest
+**/ee/jakarta/tck/ws/rs/jaxrs31/spec/extensions/JAXRSClientIT.java#dynamicFeatureIsRegisteredTest
+
+# A request to a path only matching the superclass @Path must answer 404;
+# TomEE/CXF answers 405.
+**/ee/jakarta/tck/ws/rs/spec/resource/annotationprecedence/subclass/JAXRSClientIT.java#incorrectPathOnClassTest

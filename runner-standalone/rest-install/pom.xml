@@ -16,20 +16,24 @@
     <version>11.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>runner-standalone-validation-install</artifactId>
+  <artifactId>runner-standalone-rest-install</artifactId>
   <packaging>pom</packaging>
-  <name>Jakarta Validation 3.1 TCK installer</name>
+  <name>Jakarta RESTful Web Services 4.0 TCK installer</name>
   <description>
-    Downloads the EFTL Jakarta Validation TCK distribution and installs the
-    jakarta.validation:validation-tck-tests artifact (jar and TestNG suite)
-    into the local repository.
+    Downloads the EFTL Jakarta RESTful Web Services TCK distribution and
+    installs the jakarta.ws.rs:jakarta-restful-ws-tck artifact into the local
+    repository. The same jar is also published on Maven Central under these
+    coordinates, but the harness convention is to consume the official EFTL
+    zip with a pinned SHA-256 so the certification input is the exact
+    distribution Eclipse publishes.
   </description>
 
   <properties>
-    <validation.tck.version>3.1.1</validation.tck.version>
-    <validation.tck.zip>validation-tck-dist-${validation.tck.version}.zip</validation.tck.zip>
-    <validation.tck.url>https://download.eclipse.org/jakartaee/bean-validation/3.1/${validation.tck.zip}</validation.tck.url>
-    <validation.tck.sha256>bda9de47960845a7c73aa9a1616e4bbed3e346de3516f768819cf5af77bf969f</validation.tck.sha256>
+    <rest.tck.version>4.0.1</rest.tck.version>
+    <rest.tck.zip>jakarta-restful-ws-tck-${rest.tck.version}.zip</rest.tck.zip>
+    <rest.tck.url>https://download.eclipse.org/jakartaee/restful-ws/4.0/${rest.tck.zip}</rest.tck.url>
+    <!-- From ${rest.tck.url}.sha256 -->
+    <rest.tck.sha256>b6290c1b5b3d2fdd9cc700a999243492a7e27b94a9b6af1974ff4dc5bfbf98f2</rest.tck.sha256>
   </properties>
 
   <!-- The download/install work only happens in TCK mode: install-file has
@@ -52,13 +56,13 @@
             <version>1.13.0</version>
             <executions>
               <execution>
-                <id>download-validation-tck</id>
+                <id>download-rest-tck</id>
                 <phase>generate-resources</phase>
                 <goals><goal>wget</goal></goals>
                 <configuration>
                   <skip>${tck.standalone.skip}</skip>
-                  <url>${validation.tck.url}</url>
-                  <sha256>${validation.tck.sha256}</sha256>
+                  <url>${rest.tck.url}</url>
+                  <sha256>${rest.tck.sha256}</sha256>
                   <unpack>true</unpack>
                   <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
@@ -71,30 +75,21 @@
             <version>3.1.4</version>
             <executions>
               <execution>
-                <id>install-validation-tck-tests</id>
+                <id>install-rest-tck</id>
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
                   <skip>${tck.standalone.skip}</skip>
-                  <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/validation-tck-tests-${validation.tck.version}.jar</file>
-                  <groupId>jakarta.validation</groupId>
-                  <artifactId>validation-tck-tests</artifactId>
-                  <version>${validation.tck.version}</version>
+                  <!-- The distribution ships no standalone pom for the artifact
+                       (only the one embedded in the jar, whose parent is the
+                       jakarta.ws.rs:all reactor); generate a plain pom and let
+                       the runner declare the dependencies explicitly. -->
+                  <file>${project.build.directory}/restful-ws-tck/artifacts/jakarta-restful-ws-tck-${rest.tck.version}.jar</file>
+                  <groupId>jakarta.ws.rs</groupId>
+                  <artifactId>jakarta-restful-ws-tck</artifactId>
+                  <version>${rest.tck.version}</version>
                   <packaging>jar</packaging>
-                </configuration>
-              </execution>
-              <execution>
-                <id>install-validation-tck-suite</id>
-                <phase>process-resources</phase>
-                <goals><goal>install-file</goal></goals>
-                <configuration>
-                  <skip>${tck.standalone.skip}</skip>
-                  <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/tck-tests.xml</file>
-                  <groupId>jakarta.validation</groupId>
-                  <artifactId>validation-tck-tests</artifactId>
-                  <version>${validation.tck.version}</version>
-                  <classifier>suite</classifier>
-                  <packaging>xml</packaging>
+                  <generatePom>true</generatePom>
                 </configuration>
               </execution>
             </executions>
