@@ -1,0 +1,5 @@
+# Jakarta WebSocket 2.2 TCK (jakarta.tck:websocket-tck-spec-tests:2.2.0) on
+# the TomEE Plume snapshot, Java 21: reviewed known-gap exclusions.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).

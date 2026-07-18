@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-websocket</artifactId>
+  <name>Jakarta WebSocket 2.2 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta WebSocket 2.2 TCK against the TomEE
+    distribution selected by tomee.classifier. The suite is JUnit 5 +
+    Arquillian like the Servlet TCK; Tomcat's tomcat-websocket provides the
+    client-side WebSocket container the tests connect with. All ports are
+    overridable (tck.http.port, tck.https.port, tck.stop.port,
+    tck.derby.port) so a run can sit next to another TomEE on the same host.
+  </description>
+
+  <properties>
+    <websocket.tck.version>2.2.0</websocket.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/websocket.txt</tck.exclusions.file>
+    <!-- Container ports; the TomEE remote adapter rewrites the staged
+         conf/server.xml to these values, so overriding the properties is
+         enough to relocate the whole suite. -->
+    <tck.http.port>8080</tck.http.port>
+    <tck.https.port>8443</tck.https.port>
+    <tck.stop.port>8005</tck.stop.port>
+    <!-- Response wait used by the TCK clients, in seconds (ts.jte ws_wait). -->
+    <websocket.tck.ws.wait>5</websocket.tck.ws.wait>
+  </properties>
+
+  <dependencies>
+    <!-- TomEE remote Arquillian adapter and client-side runtime. -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>arquillian-tomee-remote</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit5</groupId>
+      <artifactId>arquillian-junit5-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Client-side jakarta.websocket container: the TCK clients look up
+         ContainerProvider, and TomEE's WebSocket implementation is Tomcat's. -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-websocket</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- The signature test framework (jakarta.tck:signaturetest) drives the
+         sigtest tool from this artifact. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Inherit the shared TomEE/Derby container lifecycle. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <!-- The signature test verifies the API jars the server
+                     actually ships. -->
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/websocket-api.jar,**/lib/websocket-client-api.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-websocket-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="websocket-api-jars">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/websocket-api.jar"/>
+                    <include name="**/lib/websocket-client-api.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="websocket.sig.api.jars"
+                             refid="websocket-api-jars"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <argLine>-Duser.language=en -Duser.country=US</argLine>
+          <dependenciesToScan>
+            <dependency>jakarta.tck:websocket-tck-spec-tests</dependency>
+          </dependenciesToScan>
+          <!-- The TCK test classes end in IT, which the surefire defaults
+               would not pick up. -->
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <systemPropertyVariables>
+            <webServerHost>localhost</webServerHost>
+            <webServerPort>${tck.http.port}</webServerPort>
+            <ws_wait>${websocket.tck.ws.wait}</ws_wait>
+            <!-- Strict mode for the negative-deployment tests: an invalid
+                 endpoint left in service is a failure. -->
+            <lib.name>cts</lib.name>
+            <porting.ts.url.class.1>com.sun.ts.tests.websocket.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <sigTestClasspath>${websocket.sig.api.jars}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- These artifacts come from the EFTL distribution installed by the
+           matching -install module; keep them out of the default reactor so
+           a fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- Contains the tests, the websocket common client, and the porting
+             (SunRIURL) implementation; the jakarta.tck helper artifacts
+             (common, libutil, signaturetest) resolve transitively. -->
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>websocket-tck-spec-tests</artifactId>
+          <version>${websocket.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>
