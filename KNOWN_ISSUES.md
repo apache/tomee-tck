@@ -33,7 +33,7 @@ Detail lives next to each runner:
 | cdi-ee | 1,829 run, 106 F | 79 methods + 27 deploy-failing classes | OpenWebBeans 4.1 build-compatible-extensions gap + EE integration |
 | el | 361/361 pass (incl. signature test) | — | — |
 | persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
-| transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
+| transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files, whole) | Cross-request UserTransaction state leaks across pooled servlet requests |
 | jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
 | jsonb | 295 tests, 1 F + 1 E | 2 tests | 2 Johnzon 2.1.0 gaps |
 | debugging | passes (4 SMAPs validated) | — | — |
@@ -124,14 +124,27 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 8. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
    replacement Jakarta Tags 3.0 jar are not exposed to applications; all 50
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
-9. **Transactions** — CDI `@Transactional` interceptors fail propagation,
-   rollback-rule, and `TransactionScoped` assertions; `UserTransaction`
-   rollback/timeout semantics leak state between requests. Confirmed by the
-   standalone Transactions 2.0 TCK web vehicles: `commit()` does not throw
-   after `setTransactionTimeout` expiry, and rollback/`setRollbackOnly`
-   `IllegalStateException` semantics poison the following request — 22
-   entries in
-   [transactions.txt](runner-standalone/exclusions/transactions.txt).
+9. **Transactions — cross-request `UserTransaction` state leakage across
+   pooled servlet requests.** A `UserTransaction` a servlet/jsp request leaves
+   in a non-clean state poisons the next request served on the same pooled
+   Tomcat exec thread; the victim sees an `IllegalStateException` that is not
+   thrown (or an unexpected exception). It is a leaker/victim pair — the same
+   test passes in one vehicle and fails in the other, and the failing set
+   depends on which request lands on which thread. The standalone Transactions
+   2.0 TCK web vehicles show it directly (49 tests, 40 pass, 9 fail at the full
+   baseline; all three signature vehicles pass): the chronologically first
+   failures land in the `rollback` area, before any `setTransactionTimeout`
+   call. Run in isolation on a fresh server the `rollback` area passes 10/10
+   and `settransactiontimeout` 4/4; `setrollbackonly` passes 7/8, its last
+   request still a victim of its own prior request. There is no
+   commit-after-timeout gap — `settransactiontimeout001` sleeps 30s before
+   `commit()` and, when it reaches that path in isolation, `commit()` throws as
+   required. Because excluding only the baseline-failing ids just shifts the
+   victims to other tests in the same areas, the three affected areas are
+   excluded whole (order-stable, green default run) — 22 entries in
+   [transactions.txt](runner-standalone/exclusions/transactions.txt). The
+   Platform catalog additionally shows CDI `@Transactional` interceptors
+   failing propagation, rollback-rule, and `TransactionScoped` assertions.
 10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak

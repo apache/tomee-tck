@@ -151,9 +151,20 @@
                 </macrodef>
 
                 <!-- Reviewed TomEE known-gap exclusions on top of the TCK's
-                     own exclude list; rebuilt from the pristine copy so
-                     re-runs never accumulate duplicates. -->
-                <copy file="${tck.home}/bin/ts.jtx" tofile="${tck.home}/bin/ts.jtx.orig" overwrite="false"/>
+                     own exclude list. The pristine baseline (ts.jtx.orig) is
+                     re-materialized from the distribution zip on every run:
+                     ts.jtx in the extracted tree is the file we append to, so
+                     copying it into ts.jtx.orig would snapshot a copy that a
+                     previous iteration already appended to (the exclusions
+                     stack, and a 'none' baseline run silently keeps them).
+                     Unzipping the single pristine entry each time keeps the
+                     baseline honest and re-runs duplicate-free. -->
+                <delete file="${tck.home}/bin/ts.jtx.orig" quiet="true"/>
+                <unzip src="${project.build.directory}/jakarta-transactions-tck-${transactions.tck.version}.zip"
+                       dest="${project.build.directory}">
+                  <patternset><include name="transactions-tck/bin/ts.jtx"/></patternset>
+                  <mapper type="merge" to="transactions-tck/bin/ts.jtx.orig"/>
+                </unzip>
                 <concat destfile="${tck.home}/bin/ts.jtx" fixlastline="true">
                   <file file="${tck.home}/bin/ts.jtx.orig"/>
                   <file file="${tck.exclusions.file}"/>

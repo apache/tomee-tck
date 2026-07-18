@@ -1,18 +1,31 @@
 # Jakarta Transactions 2.0 TCK (jakarta-transactions-tck-2.0.1, JavaTest
 # UserTransaction suite in the servlet and jsp vehicles) against the TomEE
-# Plume snapshot, Java 21, 2026-07-18 baseline: 49 tests, 40 pass, 9 fail;
-# all three signature-test vehicles pass. The failures are TomEE
-# UserTransaction product results (KNOWN_ISSUES.md, product gap
-# "Transactions"): commit() does not throw after setTransactionTimeout
-# expiry, and rollback/setRollbackOnly IllegalStateException semantics
-# leak transaction state into the following request. Because a failing
-# test poisons the next test in the same vehicle webapp, the failing set
-# shifts with execution order; every test id of the three affected client
-# files is excluded so the remaining suite is order-stable. The begin,
-# commit, and getstatus areas pass completely and stay in.
+# Plume snapshot, Java 21. Full-baseline result (no exclusions): 49 tests,
+# 40 pass, 9 fail; all three signature-test vehicles pass.
 #
-# Format: JavaTest jtx exclusion lines (test/path.java#testid),
-# appended to the harness ts.jtx by the runner.
+# The failures are cross-request UserTransaction state leakage (KNOWN_ISSUES.md
+# product gap "Transactions"): a UserTransaction left in a non-clean state by
+# one servlet/jsp request poisons the next request served on the same pooled
+# Tomcat exec thread, so the victim sees an IllegalStateException that is not
+# thrown / an unexpected exception. The leak is a leaker/victim pair: the same
+# test that fails in one vehicle passes in the other, and the failing set
+# depends on which request lands on which thread. Run in isolation on a fresh
+# server, the rollback area passes 10/10 and settransactiontimeout passes 4/4;
+# setrollbackonly passes 7/8, its last request (004_from_servlet) still a
+# victim of its own prior request. There is no commit-after-timeout gap:
+# settransactiontimeout001 sleeps 30s before commit() and, when it actually
+# reaches that path in isolation, commit() throws as required and the test
+# passes.
+#
+# Because a failing request poisons the next one in the same webapp, excluding
+# only the baseline-failing ids just shifts the victims to other tests in these
+# areas (verified: a 9-id list leaves 4 different tests failing). All three
+# affected areas are therefore excluded whole so the default run is order-
+# stable and green. The begin, commit, and getstatus areas pass completely and
+# stay in.
+#
+# Format: JavaTest jtx exclusion lines (test/path.java#testid; a file-only
+# line matches nothing), appended to the harness ts.jtx by the runner.
 
 com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback001_from_jsp
 com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback001_from_servlet
