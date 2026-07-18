@@ -1,0 +1,24 @@
+# Jakarta JSON Binding 3.0 TCK (jakarta.json.bind-tck 3.0.0) against Apache
+# Johnzon 2.1.0 (the version bundled in the TomEE distribution), Java 21,
+# 2026-07-18 baseline: 295 tests, 4 failures, 2 errors, 5 skipped
+# (the skips are the TCK's own @Disabled tests).
+#
+# TCK-vs-JDK locale data: since CLDR 34 the JDK formats the French thousands
+# grouping separator as U+202F (narrow no-break space); the TCK still expects
+# the pre-JDK-13 U+00A0. Not a Johnzon defect.
+**/ee/jakarta/tck/json/bind/customizedmapping/numberformat/NumberFormatCustomizationTest.java#testNumberFormatField
+**/ee/jakarta/tck/json/bind/customizedmapping/numberformat/NumberFormatCustomizationTest.java#testNumberFormatAccessors
+#
+# Johnzon 2.1.0 gaps to triage upstream (see KNOWN_ISSUES.md):
+# BigDecimal/BigInteger values inside the IEEE-754 exact range must be
+# serialized as JSON numbers (JSON Binding 3.0 §3.4.1); Johnzon always
+# writes them as JSON strings.
+**/ee/jakarta/tck/json/bind/defaultmapping/specifictypes/SpecificTypesMappingTest.java#testBigDecimalMapping
+**/ee/jakarta/tck/json/bind/defaultmapping/specifictypes/SpecificTypesMappingTest.java#testBigIntegerMapping
+# JsonbDeserializer instances are not resolved through CDI, so their
+# @Inject fields stay null (the matching adapter and serializer CDI tests
+# pass).
+**/ee/jakarta/tck/json/bind/cdi/customizedmapping/serializers/SerializersCustomizationCDITest.java#testCDISupport
+# @JsonbDateFormat on a @JsonbCreator constructor parameter is ignored
+# during polymorphic (@JsonbTypeInfo) deserialization.
+**/ee/jakarta/tck/json/bind/defaultmapping/polymorphictypes/AnnotationTypeInfoTest.java#testCreatorDeserialization

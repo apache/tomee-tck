@@ -1,0 +1,5 @@
+# Jakarta Debugging Support for Other Languages 2.0 TCK (2.0.0) against the
+# Jasper JSP compiler bundled in the TomEE distribution, Java 21,
+# 2026-07-18: both testclient.war JSPs compile with valid SMAPs (embedded
+# SourceDebugExtension and dumped .smap files all pass VerifySMAP).
+# No reviewed exclusions.

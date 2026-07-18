@@ -26,7 +26,7 @@ usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
 Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet,
-         validation, security, authentication, faces
+         validation, jsonp, jsonb, debugging, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
 EOF
   exit 2
@@ -42,7 +42,9 @@ case "$ID" in
     MODULES="runner-standalone/servlet-install,runner-standalone/servlet" ;;
   validation)
     MODULES="runner-standalone/validation-install,runner-standalone/validation" ;;
-  concurrency|data|cdi|cdi-ee)
+  debugging)
+    MODULES="runner-standalone/debugging-install,runner-standalone/debugging" ;;
+  concurrency|data|cdi|cdi-ee|jsonp|jsonb)
     MODULES="runner-standalone/$ID" ;;
   security|authentication|faces)
     # These TCK reactors manage their own TomEE; they need the full Maven

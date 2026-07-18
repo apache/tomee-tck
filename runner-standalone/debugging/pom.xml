@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-debugging</artifactId>
+  <name>Jakarta Debugging Support 2.0 TCK runner</name>
+  <description>
+    Runs the Jakarta Debugging Support for Other Languages 2.0 TCK against
+    the Jasper JSP compiler shipped by the selected TomEE distribution. The
+    runner precompiles the TCK's testclient.war JSPs offline with SMAP
+    generation enabled and validates every generated SMAP with the TCK's
+    VerifySMAP tool; no server is started.
+  </description>
+
+  <properties>
+    <!-- The JSP compiler runs offline: no TomEE container or Derby
+         lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <debugging.tck.version>2.0.0</debugging.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/debugging.txt</tck.exclusions.file>
+  </properties>
+
+  <dependencies>
+    <!-- Jasper's JspC extends the Ant Task class; Tomcat's own JspC
+         launcher puts Ant on the classpath the same way. -->
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.10.15</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-lib</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <!-- The full server library directory: Jasper, the Eclipse
+                     compiler, and the APIs exactly as TomEE ships them. -->
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/*.jar,**/bin/*.jar</includes>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>jakartatck</groupId>
+                  <artifactId>jakarta-debugging-tck</artifactId>
+                  <version>${debugging.tck.version}</version>
+                  <classifier>testclient</classifier>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}/testclient</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <includes>
+            <include>**/DebuggingTckTest.java</include>
+          </includes>
+          <systemPropertyVariables>
+            <debugging.tomee.dir>${project.build.directory}/tomee</debugging.tomee.dir>
+            <debugging.testclient.dir>${project.build.directory}/testclient</debugging.testclient.dir>
+            <debugging.output.dir>${project.build.directory}/jsp-classes</debugging.output.dir>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- These artifacts come from the EFTL distribution installed by the
+           matching -install module; keep them out of the default reactor so
+           a fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakartatck</groupId>
+          <artifactId>jakarta-debugging-tck</artifactId>
+          <version>${debugging.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

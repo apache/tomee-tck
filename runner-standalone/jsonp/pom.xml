@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-jsonp</artifactId>
+  <name>Jakarta JSON Processing 2.1 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta JSON Processing 2.1 TCK (functional tests,
+    pluggability tests, and the signature test) against Apache Johnzon, the
+    JSON-P provider shipped by TomEE. The TCK runs in the local JVM; no
+    server is started. The signature test checks the jakarta.json packages
+    of the jakartaee-api jar bundled in the selected TomEE distribution.
+  </description>
+
+  <properties>
+    <!-- Provider-level TCK: no TomEE container or Derby lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <jsonp.tck.version>2.1.1</jsonp.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/jsonp.txt</tck.exclusions.file>
+  </properties>
+
+  <dependencies>
+    <!-- The provider under test, exactly the version bundled in the TomEE
+         distribution (the bundled jars are the Central release bytes with
+         re-stamped zip entries). -->
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Johnzon declares the API as provided; this is the version Johnzon
+         2.1.0 is built against. -->
+    <dependency>
+      <groupId>jakarta.json</groupId>
+      <artifactId>jakarta.json-api</artifactId>
+      <version>2.1.3</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- com.sun.tdk classes used by the TCK's bundled signature test driver. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/jakartaee-api-*.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="tomee-api-jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="jsonp.sig.api.jar"
+                             refid="tomee-api-jar"/>
+                <!-- The signature test scans every class below jakarta.json
+                     on its classpath, so the JSON-P packages must be
+                     separated from the JSON Binding spec's jakarta.json.bind
+                     subpackage that the uber API jar also carries. -->
+                <unzip src="${jsonp.sig.api.jar}"
+                       dest="${project.build.directory}/api-classes">
+                  <patternset>
+                    <include name="jakarta/json/**"/>
+                    <exclude name="jakarta/json/bind/**"/>
+                  </patternset>
+                </unzip>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <systemPropertyVariables>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <signature.sigTestClasspath>${project.build.directory}/api-classes${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</signature.sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+        <executions>
+          <!-- Functional and signature tests run against Johnzon; the
+               pluggability tests jar must stay off this classpath because it
+               registers its own jakarta.json.spi.JsonProvider service. -->
+          <execution>
+            <id>default-test</id>
+            <goals><goal>test</goal></goals>
+            <configuration>
+              <dependenciesToScan>
+                <dependency>jakarta.json:jakarta.json-tck-tests</dependency>
+              </dependenciesToScan>
+              <classpathDependencyExcludes>
+                <classpathDependencyExclude>jakarta.json:jakarta.json-tck-tests-pluggability</classpathDependencyExclude>
+              </classpathDependencyExcludes>
+            </configuration>
+          </execution>
+          <!-- The pluggability tests load the TCK's own provider through the
+               ServiceLoader, so the real provider must stay off the
+               classpath (mirrors the upstream tck-tests-pluggability
+               module). -->
+          <execution>
+            <id>pluggability-tests</id>
+            <goals><goal>test</goal></goals>
+            <configuration>
+              <dependenciesToScan>
+                <dependency>jakarta.json:jakarta.json-tck-tests-pluggability</dependency>
+              </dependenciesToScan>
+              <classpathDependencyExcludes>
+                <classpathDependencyExclude>jakarta.json:jakarta.json-tck-tests</classpathDependencyExclude>
+                <classpathDependencyExclude>org.apache.johnzon:johnzon-core</classpathDependencyExclude>
+              </classpathDependencyExcludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- The TCK artifacts resolve from Maven Central (byte-identical to
+           the EFTL distribution zip; see environment/versions.env for the
+           zip checksum), but stay out of the default reactor so a default
+           build downloads no TCK material. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.json</groupId>
+          <artifactId>jakarta.json-tck-tests</artifactId>
+          <version>${jsonp.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.json</groupId>
+          <artifactId>jakarta.json-tck-tests-pluggability</artifactId>
+          <version>${jsonp.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,4 @@
+# Jakarta JSON Processing 2.1 TCK (jakarta.json-tck 2.1.1) against Apache
+# Johnzon 2.1.0 (the version bundled in the TomEE distribution), Java 21,
+# 2026-07-18: 179 functional + signature tests and 18 pluggability tests,
+# all passing. No reviewed exclusions.

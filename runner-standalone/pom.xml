@@ -40,6 +40,10 @@
     <module>servlet</module>
     <module>validation-install</module>
     <module>validation</module>
+    <module>jsonp</module>
+    <module>jsonb</module>
+    <module>debugging-install</module>
+    <module>debugging</module>
     <module>security</module>
     <module>authentication</module>
     <module>faces</module>
