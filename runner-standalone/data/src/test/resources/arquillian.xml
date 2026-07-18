@@ -26,7 +26,11 @@
       <property name="simpleLog">true</property>
       <!-- The Data TCK relies on auto-detected JUnit extensions inside the
            container and extracts the JDK image for its signature test. -->
-      <property name="catalina_opts">-Djunit.jupiter.extensions.autodetection.enabled=true -Djimage.dir=${project.build.directory}/jimage --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+      <!-- jakarta.tck.database.type gates Data 1.0.1's keyword-support
+           assertions; EntityTests runs in-container and reads it from the
+           container JVM. RELATIONAL matches the embedded-Derby default
+           persistence unit. -->
+      <property name="catalina_opts">-Djunit.jupiter.extensions.autodetection.enabled=true -Djimage.dir=${project.build.directory}/jimage -Djakarta.tck.database.type=RELATIONAL --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
       <!-- Declares the java:comp/Default* resource-env-refs (incl.
            DefaultDataSource used by the generated persistence.xml); without
            it @Resource(lookup="java:comp/Default...") injections stay null

@@ -4,6 +4,17 @@
      overlay tomee.xml so the TCK's jdbc/DataTCK datasource is available in
      addition to the standard TCK datasources. -->
 <openejb>
+  <!-- The generated persistence unit's <jta-data-source> is
+       java:comp/DefaultDataSource. Define it explicitly on embedded Derby
+       (engine jar staged into tomee-overlay/lib by the runner) so the
+       auto-link resolves here instead of falling through to the first
+       network-Derby DataSource below. It is listed first so TomEE's
+       first-matching-DataSource auto-link also picks it. -->
+  <Resource id="DefaultDataSource" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.EmbeddedDriver
+    JdbcUrl jdbc:derby:${project.build.directory}/derby/dataTckDB;create=true
+  </Resource>
+
   <Resource id="jdbc/DB1" type="DataSource">
     JdbcDriver org.apache.derby.jdbc.ClientDriver
     JdbcUrl jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true

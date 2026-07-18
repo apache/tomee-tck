@@ -24,7 +24,10 @@
   </description>
 
   <properties>
-    <data.tck.version>1.0.0</data.tck.version>
+    <!-- 1.0.1 is the current service release required for certification; it
+         adds the RELATIONAL jakarta.tck.database.type gate and the enum-sort
+         rewrite (NaturalNumber @Enumerated(STRING) + numTypeOrdinal). -->
+    <data.tck.version>1.0.1</data.tck.version>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/data.txt</tck.exclusions.file>
@@ -76,8 +79,10 @@
       <scope>test</scope>
     </dependency>
     <!-- The generated persistence unit runs on java:comp/DefaultDataSource,
-         which TomEE materializes on embedded Derby; the engine jar is not
-         part of the shared client-only Derby staging. -->
+         which src/tomee-conf-filtered/tomee.xml defines as an explicit
+         embedded-Derby resource; that engine jar is staged into
+         tomee-overlay/lib here (the shared parent stages only the Derby
+         client). -->
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
@@ -195,6 +200,13 @@
           <systemPropertyVariables>
             <jakarta.tck.profile>core</jakarta.tck.profile>
             <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
+            <!-- Data 1.0.1 gates its keyword-support assertions on the
+                 database type; RELATIONAL matches the Derby-backed default
+                 persistence unit. The in-container EntityTests read this from
+                 the container JVM (set via arquillian.xml catalina_opts); it
+                 is repeated here for the client-side deployment/signature
+                 executions. -->
+            <jakarta.tck.database.type>RELATIONAL</jakarta.tck.database.type>
             <jimage.dir>${project.build.directory}/jimage</jimage.dir>
             <signature.sigTestClasspath>${data.sig.api.jar}</signature.sigTestClasspath>
           </systemPropertyVariables>

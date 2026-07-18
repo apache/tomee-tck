@@ -24,7 +24,7 @@ Detail lives next to each runner:
 | annotations | passes | — | — |
 | di | 50/50 pass | — | — |
 | concurrency | 197 tests, 0 F + 0 E (14 TCK skips), signature passes | — | — |
-| data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation |
+| data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation (cursored pagination, JDQL translation, derived-query/ignoreCase, static-metamodel + sort ordering, update queries) |
 | servlet | 1,706 tests, 12 E | 2 classes (12 methods) | TomEE aborts context startup on a missing referenced servlet/filter class |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 2 F + 1 E | 3 tests | Feature/DynamicFeature `META-INF/services` discovery (TOMEE-4321/CXF-9005) + 405-vs-404 matching |
@@ -50,11 +50,17 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 
 1. **Jakarta Data query generation (openejb-jakarta-data)** — repositories
    materialize and inject correctly; the gaps sit in the queries the
-   provider generates for 36 `standalone.entity.EntityTests` methods:
-   `ignoreCase` state-field paths that EclipseLink cannot resolve,
-   literal/`NOT`/`OR`/parenthesis handling in `@Query` JDQL, empty/partial
-   query generation, cursored pagination, and static-metamodel sorts. All
-   entries in [data.txt](runner-standalone/exclusions/data.txt).
+   provider generates for 36 `standalone.entity.EntityTests` methods (Data
+   TCK 1.0.1), grouped by feature: cursored pagination returns a plain
+   `PageRecord` where the repository declares `CursoredPage` (6);
+   literal/`NOT`/`OR`/parenthesis/empty/partial `@Query` JDQL translates to
+   malformed EclipseLink JPQL (8); derived-query bodies and `ignoreCase`
+   state-field paths fail to compile (6); static-metamodel and find-first
+   derived methods do not resolve (4); `Sort`/`Order`/`PageRequest` sort
+   precedence — including the 1.0.1 enum-ordinal sort — is not applied and
+   multi-column projections come back as `Object[]` (10); and update `@Query`
+   methods run as selects (2). All entries, per group, in
+   [data.txt](runner-standalone/exclusions/data.txt).
 2. **Servlet 6.1 deployment strictness** — TomEE aborts the whole context
    startup when a war references a servlet or filter class it does not
    package: the pluggability `RegistrationTests` deployment declares filter
