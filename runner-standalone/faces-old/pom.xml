@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-faces-old</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Faces 4.1 TCK runner (legacy JavaTest old-tck)</name>
+  <description>
+    Runs the legacy JavaTest half of the Jakarta Faces 4.1 TCK (~5,500
+    HTTP-client tests under com/sun/ts/tests/jsf) against TomEE. The old-tck
+    is first built from the sources bundled in the TCK distribution, then
+    deployed through the TCK's own "tomcat" deployment handler, which copies
+    the test WARs into the container's webapps directory - no GlassFish
+    asadmin involvement. TomEE is provisioned and started by this module
+    (the modern Arquillian half lives in runner-standalone-faces).
+    Run with: run-standalone-suite.sh faces-old
+    Single test directory: -Dtck.test=com/sun/ts/tests/jsf/api/jakarta_faces/component/uiinput
+  </description>
+
+  <properties>
+    <!-- This module provisions and starts its own TomEE; skip the shared
+         Arquillian-oriented container lifecycle (including Derby, which the
+         Faces tests never touch). -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+
+    <faces.tck.version>4.1.2</faces.tck.version>
+    <faces.tck.url>https://download.eclipse.org/jakartaee/faces/4.1/jakarta-faces-tck-${faces.tck.version}.zip</faces.tck.url>
+    <faces.tck.sha256>0827e2c9c635940643aaefb2a2f063959b0cab2fa1d633a7008b9fa04c5109de</faces.tck.sha256>
+    <faces.tck.dir>${project.build.directory}/jakarta-faces-tck-${faces.tck.version}/faces-tck-${faces.tck.version}/tck</faces.tck.dir>
+    <oldtck.source.dir>${faces.tck.dir}/old-tck/source</oldtck.source.dir>
+    <oldtck.build.zip>${oldtck.source.dir}/release/JSF_BUILD/latest/faces-tck.zip</oldtck.build.zip>
+
+    <!-- The version the old-tck's own build/run poms pin; the harness's ant
+         scripts are known to work with it. -->
+    <tck.ant.version>1.10.2</tck.ant.version>
+    <tck.ant.home>${project.build.directory}/apache-ant-${tck.ant.version}</tck.ant.home>
+    <tck.ant.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${tck.ant.version}-bin.zip</tck.ant.url>
+    <tck.ant.sha512>2b6b3b1769a38e0037c8f3825ffeb2094fbb2985128f3b03d1b10d792e75850d13cf04513a0c59a8ca89f1a446ca509def0bd5c2f2644f51054f56f2007a29d9</tck.ant.sha512>
+
+    <!-- Unpacked from the built old-tck bundle. -->
+    <tck.home>${project.build.directory}/faces-tck</tck.home>
+    <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+    <!-- standalone = web-container mode (ts.jtx.standalone excludes the
+         platform-only tests); the TCK's own GlassFish run uses the same. -->
+    <tck.mode>standalone</tck.mode>
+
+    <tomee.home>${project.build.directory}/tomee/apache-tomee-${tomee.classifier}-${tomee.version}</tomee.home>
+    <!-- Defaults match the fixed harness catalog (environment/README.md);
+         override to run beside another TomEE instance. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
+    <!-- JavaTest client-side log listener. -->
+    <tck.harness.log.port>2000</tck.harness.log.port>
+    <!-- Seconds per archive the tomcat deployment handler waits for the
+         container to expand a copied WAR (or remove an undeployed one);
+         re-runs against a container that redeploys the full 245-webapp
+         estate on startup need the headroom. -->
+    <tck.deploy.timeout.multiplier>60</tck.deploy.timeout.multiplier>
+
+    <!-- Reviewed known-gap exclusions in JavaTest jtx line format
+         (test/path#testid); appended to the mode's ts.jtx. Point at
+         exclusions/none.txt for a full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/faces-old.txt</tck.exclusions.file>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Stage the TomEE distribution this runner manages itself. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-tomee-distribution</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+
+          <!-- Step 1: download and verify the TCK distribution and the Ant
+               version the JavaTest harness is driven with. -->
+          <execution>
+            <id>download-tck-and-ant</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <get skipexisting="true" src="${faces.tck.url}" dest="${project.build.directory}/jakarta-faces-tck-${faces.tck.version}.zip"/>
+                <checksum file="${project.build.directory}/jakarta-faces-tck-${faces.tck.version}.zip" algorithm="SHA-256" property="${faces.tck.sha256}" verifyProperty="faces.tck.checksum.matches"/>
+                <fail message="Checksum mismatch for the Jakarta Faces TCK distribution">
+                  <condition><isfalse value="${faces.tck.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/jakarta-faces-tck-${faces.tck.version}.zip" dest="${project.build.directory}/jakarta-faces-tck-${faces.tck.version}" overwrite="false"/>
+
+                <get skipexisting="true" src="${tck.ant.url}" dest="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip"/>
+                <checksum file="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" algorithm="SHA-512" property="${tck.ant.sha512}" verifyProperty="tck.ant.checksum.matches"/>
+                <fail message="Checksum mismatch for the Apache Ant distribution">
+                  <condition><isfalse value="${tck.ant.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" dest="${project.build.directory}" overwrite="false"/>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tck.ant.home}/bin" includes="ant,antRun"/>
+                </chmod>
+
+                <!-- The build script invokes a bare `mvn`; route it through
+                     the repository's Maven wrapper instead. -->
+                <replace file="${oldtck.source.dir}/docker/build_oldtck.sh" token="mvn -f" value="&quot;$MVNW&quot; -f"/>
+                <!-- Anchor the wrapper's multi-module root inside the TCK
+                     sources so its path properties resolve against the TCK,
+                     not this repository. -->
+                <mkdir dir="${oldtck.source.dir}/.mvn"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 2: build the old-tck bundle from source (the distribution
+               only ships sources for this half). Skipped when the bundle from
+               a previous run is still present. -->
+          <execution>
+            <id>build-old-tck</id>
+            <phase>process-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <available file="${oldtck.build.zip}" property="oldtck.already.built"/>
+                <exec executable="bash" dir="${oldtck.source.dir}" failonerror="true" unless:set="oldtck.already.built" xmlns:unless="ant:unless">
+                  <arg value="-xe"/>
+                  <arg value="${oldtck.source.dir}/docker/build_oldtck.sh"/>
+                  <arg value="${oldtck.source.dir}"/>
+                  <arg value="${tck.ant.home}"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                  <env key="MVNW" value="${maven.multiModuleProjectDirectory}/mvnw"/>
+                  <env key="PATH" value="${tck.ant.home}/bin:${java.home}/bin:${env.PATH}"/>
+                </exec>
+                <unzip src="${oldtck.build.zip}" dest="${project.build.directory}" overwrite="false"/>
+                <!-- The release packaging only keeps the glassfish and none
+                     deployment handlers; restore the tomcat handler from the
+                     TCK sources - it is the one this runner drives. -->
+                <copy todir="${tck.home}/bin/xml/impl/tomcat">
+                  <fileset dir="${oldtck.source.dir}/bin/xml/impl/tomcat"/>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 3: point the harness configuration at TomEE. -->
+          <execution>
+            <id>configure-tck</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <macrodef name="tck-setting">
+                  <attribute name="key"/><attribute name="value"/>
+                  <sequential>
+                    <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                   match="@{key}=.*" replace="@{key}=@{value}"/>
+                  </sequential>
+                </macrodef>
+
+                <!-- Web-container (standalone) versus platform exclusions. -->
+                <copy file="${tck.home}/bin/ts.jtx.${tck.mode}" tofile="${tck.home}/bin/ts.jtx" overwrite="true"/>
+                <!-- Reviewed TomEE known-gap exclusions on top. -->
+                <concat destfile="${tck.home}/bin/ts.jtx" append="true" fixlastline="true">
+                  <file file="${tck.exclusions.file}"/>
+                </concat>
+
+                <!-- Classpaths handed to the JavaTest client JVMs: the Faces
+                     implementation under test plus the container's
+                     Servlet/Pages/EL stack. -->
+                <pathconvert property="tck.jsf.classes" pathsep="${path.separator}">
+                  <fileset dir="${tomee.home}/lib">
+                    <include name="jakarta.faces-*.jar"/>
+                    <include name="jakartaee-api-*.jar"/>
+                    <include name="taglibs-shade-*.jar"/>
+                  </fileset>
+                </pathconvert>
+                <pathconvert property="tck.jspservlet.classes" pathsep="${path.separator}">
+                  <fileset dir="${tomee.home}/lib">
+                    <include name="servlet-api.jar"/>
+                    <include name="jsp-api.jar"/>
+                    <include name="el-api.jar"/>
+                    <include name="jasper.jar"/>
+                    <include name="jasper-el.jar"/>
+                  </fileset>
+                </pathconvert>
+
+                <tck-setting key="webServerHost" value="localhost"/>
+                <tck-setting key="webServerPort" value="${tomee.http.port}"/>
+                <tck-setting key="webServerHome" value="${tomee.home}"/>
+                <tck-setting key="impl.vi" value="tomcat"/>
+                <tck-setting key="impl.vi.deploy.dir" value="${tomee.home}/webapps"/>
+                <tck-setting key="impl.deploy.timeout.multiplier" value="${tck.deploy.timeout.multiplier}"/>
+                <tck-setting key="jsf.classes" value="${tck.jsf.classes}"/>
+                <tck-setting key="jspservlet.classes" value="${tck.jspservlet.classes}"/>
+                <tck-setting key="harness.log.port" value="${tck.harness.log.port}"/>
+                <tck-setting key="report.dir" value="${project.build.directory}/facesreport/faces"/>
+                <tck-setting key="work.dir" value="${project.build.directory}/faceswork/faces"/>
+
+                <mkdir dir="${project.build.directory}/facesreport/faces"/>
+                <mkdir dir="${project.build.directory}/faceswork/faces"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 4: configure and start TomEE, then deploy every test WAR
+               through the TCK's tomcat handler (plain webapps copy). -->
+          <execution>
+            <id>start-tomee-and-deploy</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <!-- Shared harness configuration, minus tomee.xml: the Derby
+                     datasources it defines are never used by the Faces tests
+                     and Derby is not started for this suite. -->
+                <copy todir="${tomee.home}/conf" overwrite="true">
+                  <fileset dir="${maven.multiModuleProjectDirectory}/environment/tomee/conf"
+                           includes="server.xml,system.properties,tomcat-users.xml"/>
+                </copy>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8005&quot;" value="port=&quot;${tomee.shutdown.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8080&quot;" value="port=&quot;${tomee.http.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="8443" value="${tomee.https.port}"/>
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/certificates/generate-test-certificates.sh"/>
+                  <arg value="${tomee.home}/conf"/>
+                </exec>
+                <!-- Hundreds of Faces webapps live in the container at once. -->
+                <echo file="${tomee.home}/bin/setenv.sh">CATALINA_OPTS="-Xmx4g -XX:MaxMetaspaceSize=1g -Djava.awt.headless=true"
+</echo>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tomee.home}/bin" includes="*.sh"/>
+                </chmod>
+
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">
+                  <arg value="start"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+                <waitfor maxwait="180" maxwaitunit="second" timeoutproperty="tomee.start.timeout">
+                  <socket server="localhost" port="${tomee.http.port}"/>
+                </waitfor>
+                <fail message="TomEE did not open port ${tomee.http.port} within 180s">
+                  <condition><isset property="tomee.start.timeout"/></condition>
+                </fail>
+
+                <!-- Deploy a single test directory... -->
+                <sequential if:set="tck.test">
+                  <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/src/${tck.test}" failonerror="true">
+                    <arg value="-Dutil.dir=${tck.home}"/>
+                    <arg value="deploy"/>
+                    <env key="ANT_HOME" value="${tck.ant.home}"/>
+                    <env key="JAVA_HOME" value="${java.home}"/>
+                  </exec>
+                </sequential>
+                <!-- ...or everything. -->
+                <sequential unless:set="tck.test">
+                  <exec executable="${tck.ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
+                    <arg value="-Dutil.dir=${tck.home}"/>
+                    <arg value="deploy.all"/>
+                    <env key="ANT_HOME" value="${tck.ant.home}"/>
+                    <env key="JAVA_HOME" value="${java.home}"/>
+                  </exec>
+                </sequential>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 5: run JavaTest. Failures do not fail the build; the
+               summary is in target/facesreport/faces (convention shared with
+               the other source-reactor runners). -->
+          <execution>
+            <id>run-tck</id>
+            <phase>integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="tck.run.result">
+                  <arg value="-Dutil.dir=${tck.home}"/>
+                  <arg value="-Dmultiple.tests=${tck.test}" if:set="tck.test"/>
+                  <arg value="runclient" if:set="tck.test"/>
+                  <arg value="run.all" unless:set="tck.test"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                  <env key="LC_ALL" value="C"/>
+                </exec>
+                <echo message="JavaTest finished with exit code ${tck.run.result}"/>
+                <echo message="Report: ${project.build.directory}/facesreport/faces"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 6: always stop the container. -->
+          <execution>
+            <id>stop-tomee</id>
+            <phase>post-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="false">
+                  <arg value="stop"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

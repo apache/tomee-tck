@@ -1,0 +1,5 @@
+# Reviewed known-gap exclusions for the legacy Jakarta Faces 4.1 old-tck
+# (JavaTest) run against TomEE. Lines use the JavaTest jtx format
+# (test/dir/path#testid) and are appended to the mode's ts.jtx by the
+# runner-standalone-faces-old module. Empty until a triaged baseline exists;
+# see KNOWN_ISSUES.md.

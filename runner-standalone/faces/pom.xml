@@ -18,17 +18,22 @@
 
   <artifactId>runner-standalone-faces</artifactId>
   <packaging>pom</packaging>
-  <name>Jakarta Faces 4.1 TCK runner (modern modules)</name>
+  <name>Jakarta Faces 4.1 TCK runner (modern modules + signature test)</name>
   <description>
     Runs the modern Arquillian modules of the Jakarta Faces 4.1 TCK
-    (faces22/23/40/41 and util, roughly 319 tests) against TomEE Plume,
-    which ships Mojarra. The legacy JavaTest old-tck half (~5,500 tests) is
-    wired to GlassFish asadmin deployment and remains an open port; the
-    faces-signaturetest module likewise stays GlassFish-bound. Run with:
-    run-standalone-suite.sh faces
+    (faces22/23/40/41 and util, roughly 319 tests) plus the
+    faces-signaturetest module against TomEE Plume, which ships Mojarra.
+    The signature test checks the Mojarra artifact TomEE bundles
+    (faces.impl.version below must track the jakarta.faces jar in the
+    distribution's lib directory). The legacy JavaTest old-tck half lives in
+    runner-standalone-faces-old. Run with: run-standalone-suite.sh faces
   </description>
 
   <properties>
+    <!-- The Faces implementation under test: org.glassfish:jakarta.faces as
+         bundled in TomEE Plume's lib directory. Keep in sync with the TomEE
+         distribution (lib/jakarta.faces-<version>.jar). -->
+    <faces.impl.version>4.1.9</faces.impl.version>
     <!-- The TCK reactor starts its own server; skip the shared lifecycle. -->
     <tck.standalone.container.skip>true</tck.standalone.container.skip>
     <faces.tck.version>4.1.2</faces.tck.version>
@@ -164,6 +169,7 @@
                 <pomInclude>faces23/pom.xml</pomInclude>
                 <pomInclude>faces40/pom.xml</pomInclude>
                 <pomInclude>faces41/pom.xml</pomInclude>
+                <pomInclude>faces-signaturetest/pom.xml</pomInclude>
               </pomIncludes>
             </configuration>
           </execution>

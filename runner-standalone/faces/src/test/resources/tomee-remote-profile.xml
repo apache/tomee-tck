@@ -13,6 +13,16 @@
 <profile>
     <id>tomee-remote</id>
 
+    <properties>
+        <!-- The faces-signaturetest module verifies the Faces API signatures
+             of the implementation the vendor ships; point it at the Mojarra
+             artifact bundled in TomEE Plume (see faces.impl.version in the
+             runner pom). -->
+        <sigtest.api.groupId>org.glassfish</sigtest.api.groupId>
+        <sigtest.api.artifactId>jakarta.faces</sigtest.api.artifactId>
+        <sigtest.api.version>${faces.impl.version}</sigtest.api.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>apache.snapshots</id>
