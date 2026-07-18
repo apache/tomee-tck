@@ -305,15 +305,17 @@
             </configuration>
           </execution>
 
-          <!-- Step 5: run JavaTest. Failures do not fail the build; the
-               summary is in target/facesreport/faces (convention shared with
-               the other source-reactor runners). -->
+          <!-- Step 5: run JavaTest. The exit code is checked after the
+               container has been stopped (verify phase) so a red run still
+               shuts TomEE down; the summary is in target/facesreport/faces
+               (convention shared with the other source-reactor runners). -->
           <execution>
             <id>run-tck</id>
             <phase>integration-test</phase>
             <goals><goal>run</goal></goals>
             <configuration>
               <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
               <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                 <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="tck.run.result">
                   <arg value="-Dutil.dir=${tck.home}"/>
@@ -342,6 +344,25 @@
                   <arg value="stop"/>
                   <env key="JAVA_HOME" value="${java.home}"/>
                 </exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 7: a default run is expected green; surface a JavaTest
+               failure as a build failure so CI treats it as the regression
+               it is. -->
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <fail message="JavaTest finished with exit code ${tck.run.result}; see ${project.build.directory}/facesreport/faces">
+                  <condition>
+                    <not><equals arg1="${tck.run.result}" arg2="0"/></not>
+                  </condition>
+                </fail>
               </target>
             </configuration>
           </execution>
