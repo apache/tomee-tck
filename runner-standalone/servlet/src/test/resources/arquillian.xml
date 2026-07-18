@@ -5,10 +5,12 @@
   <engine>
     <property name="deploymentExportPath">target/deployments</property>
   </engine>
-  <!-- The reference runner defines an http/https container group; the TCK
-       addresses a dedicated https deployment through the second qualifier.
-       TomEE serves both connectors from one instance, so both qualifiers
-       point at the same server; the https qualifier is not started twice. -->
+  <!-- The reference runner defines an http/https container pair; the TCK
+       addresses a dedicated https deployment through @TargetsContainer
+       ("https"). TomEE serves both connectors from one instance, and the
+       remote adapter attaches to an already-running server on the same
+       http port, so the second qualifier reuses the first one's TomEE. -->
+  <group qualifier="tomee" default="true">
   <container qualifier="http" default="true">
     <configuration>
       <property name="groupId">org.apache.tomee</property>
@@ -28,4 +30,24 @@
       <property name="catalina_opts">-Djimage.dir=${project.build.directory}/jimage --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
     </configuration>
   </container>
+  <container qualifier="https">
+    <configuration>
+      <property name="groupId">org.apache.tomee</property>
+      <property name="artifactId">apache-tomee</property>
+      <property name="version">${tomee.version}</property>
+      <property name="classifier">${tomee.classifier}</property>
+      <property name="type">zip</property>
+      <property name="conf">${project.build.directory}/tomee-overlay/conf</property>
+      <property name="lib">${project.build.directory}/tomee-overlay/lib</property>
+      <property name="host">localhost</property>
+      <property name="httpPort">8080</property>
+      <property name="httpsPort">8443</property>
+      <property name="stopPort">8005</property>
+      <property name="cleanOnStartUp">false</property>
+      <property name="removeUnusedWebapps">true</property>
+      <property name="simpleLog">true</property>
+      <property name="catalina_opts">-Djimage.dir=${project.build.directory}/jimage --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+    </configuration>
+  </container>
+  </group>
 </arquillian>

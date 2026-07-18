@@ -71,6 +71,14 @@
 
                 <!-- Deactivate the GlassFish profile's default activation. -->
                 <replace file="${faces.tck.dir}/pom.xml" token="&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;" value="&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;"/>
+
+                <!-- The distribution references an unpublished API snapshot. -->
+                <replace file="${faces.tck.dir}/pom.xml" token="&lt;faces.version&gt;4.1.3-SNAPSHOT&lt;/faces.version&gt;" value="&lt;faces.version&gt;4.1.2&lt;/faces.version&gt;"/>
+
+                <!-- Anchor the Maven wrapper's multi-module root inside the
+                     extracted TCK so its internal path properties resolve
+                     against the TCK, not this repository. -->
+                <mkdir dir="${faces.tck.dir}/.mvn"/>
               </target>
             </configuration>
           </execution>

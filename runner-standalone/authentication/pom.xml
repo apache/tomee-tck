@@ -79,6 +79,15 @@
                 <!-- The signature module resolves the vendor API jar through
                      GlassFish-only coordinates. -->
                 <replace file="${authentication.tck.dir}/pom.xml" token="&lt;module&gt;authentication-signaturetest&lt;/module&gt;" value="&lt;!-- module&gt;authentication-signaturetest&lt;/module --&gt;"/>
+
+                <!-- The result-printer groovy step reads a summary file that
+                     does not exist during the parent-only install. -->
+                <replace file="${authentication.tck.dir}/pom.xml" token="&lt;phase&gt;verify&lt;/phase&gt;" value="&lt;phase&gt;none&lt;/phase&gt;"/>
+
+                <!-- Anchor the Maven wrapper's multi-module root inside the
+                     extracted TCK so its internal path properties resolve
+                     against the TCK, not this repository. -->
+                <mkdir dir="${authentication.tck.dir}/.mvn"/>
               </target>
             </configuration>
           </execution>
