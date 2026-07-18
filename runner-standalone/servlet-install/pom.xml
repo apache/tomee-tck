@@ -60,10 +60,9 @@
         <executions>
           <execution>
             <id>install-servlet-tck-pom</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-${servlet.tck.version}.pom</file>
               <groupId>jakarta.tck</groupId>
               <artifactId>servlet-tck</artifactId>
@@ -73,10 +72,9 @@
           </execution>
           <execution>
             <id>install-servlet-tck-runtime</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-runtime-${servlet.tck.version}.jar</file>
               <groupId>jakarta.tck</groupId>
               <artifactId>servlet-tck-runtime</artifactId>
@@ -86,10 +84,9 @@
           </execution>
           <execution>
             <id>install-servlet-tck-util</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-util-${servlet.tck.version}.jar</file>
               <groupId>jakarta.tck</groupId>
               <artifactId>servlet-tck-util</artifactId>

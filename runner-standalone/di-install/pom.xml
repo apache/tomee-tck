@@ -60,10 +60,9 @@
         <executions>
           <execution>
             <id>install-di-tck</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/jakarta.inject-tck-${di.tck.version}/jakarta.inject-tck-${di.tck.version}.jar</file>
               <groupId>jakarta.inject</groupId>
               <artifactId>jakarta.inject-tck</artifactId>

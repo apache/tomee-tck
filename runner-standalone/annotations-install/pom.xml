@@ -60,10 +60,9 @@
         <executions>
           <execution>
             <id>install-annotations-tck</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/annotations-tck/artifacts/jakarta-annotations-tck-${annotations.tck.version}.jar</file>
               <groupId>jakartatck</groupId>
               <artifactId>jakarta-annotations-tck</artifactId>

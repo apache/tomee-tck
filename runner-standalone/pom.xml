@@ -49,6 +49,10 @@
     <!-- TCK execution is opt-in; the default reactor must stay fast. -->
     <tck.standalone>false</tck.standalone>
     <tck.standalone.skip>true</tck.standalone.skip>
+    <!-- install-file has no skip parameter, so the -install modules bind
+         their executions to this phase: unbound by default, activated by
+         the standalone-tck profile. -->
+    <tck.standalone.install.phase>none</tck.standalone.install.phase>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
   </properties>
@@ -281,6 +285,7 @@
       </activation>
       <properties>
         <tck.standalone.skip>false</tck.standalone.skip>
+        <tck.standalone.install.phase>process-resources</tck.standalone.install.phase>
       </properties>
     </profile>
   </profiles>

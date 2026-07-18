@@ -60,10 +60,9 @@
         <executions>
           <execution>
             <id>install-validation-tck-tests</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/validation-tck-tests-${validation.tck.version}.jar</file>
               <groupId>jakarta.validation</groupId>
               <artifactId>validation-tck-tests</artifactId>
@@ -73,10 +72,9 @@
           </execution>
           <execution>
             <id>install-validation-tck-suite</id>
-            <phase>process-resources</phase>
+            <phase>${tck.standalone.install.phase}</phase>
             <goals><goal>install-file</goal></goals>
             <configuration>
-              <skip>${tck.standalone.skip}</skip>
               <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/tck-tests.xml</file>
               <groupId>jakarta.validation</groupId>
               <artifactId>validation-tck-tests</artifactId>
