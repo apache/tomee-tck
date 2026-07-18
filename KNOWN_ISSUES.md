@@ -162,9 +162,11 @@ Need triage/fixes in the upstream projects TomEE ships.
 
 Not product bugs — gaps in this repository's coverage.
 
-- **Faces reactors not in CI**: the faces and faces-old runners run locally
-  via `run-standalone-suite.sh`; they join the Jenkins branch list once
-  their baseline and exclusion wiring have a verified green run.
+- **Modern faces reactor not in CI**: the `faces` runner (modern Arquillian
+  modules plus the signature test) runs locally via
+  `run-standalone-suite.sh`; it joins the Jenkins branch list once its
+  baseline and exclusion wiring have a verified green run. The `faces-old`
+  JavaTest half runs in CI.
 
 ## What CI runs
 
@@ -173,8 +175,10 @@ Platform catalog on Plume plus `persistence-javatest` on the webprofile ZIP,
 and the standalone suites `annotations`, `di`, `el`, `concurrency`, `data`,
 `servlet`, `pages`, `rest`, `validation`, `websocket`, `jsonp`, `jsonb`,
 `debugging`, `persistence`, `transactions`, `cdi`, `cdi-ee`, `security`,
-`authentication` — all with default exclusions, all expected green. The
-`junit`/archive globs also ingest the surefire/failsafe reports inside the
-extracted TCK reactors that the source-reactor runners drive through the
-Maven invoker, plus the JavaTest report directories. The faces reactors
-join once their baseline has a verified green run.
+`authentication`, `faces-old` — all with default exclusions, all expected
+green (a red JavaTest run fails the `faces-old` and `transactions` builds
+through their `verify-tck-result` step). The `junit`/archive globs also
+ingest the surefire/failsafe reports inside the extracted TCK reactors that
+the source-reactor runners drive through the Maven invoker, plus the
+JavaTest report directories. The modern `faces` reactor joins once its
+baseline has a verified green run.
