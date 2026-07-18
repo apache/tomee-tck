@@ -286,7 +286,7 @@
         <version>3.0.0</version>
         <configuration>
           <driver>org.apache.derby.jdbc.ClientDriver</driver>
-          <url>jdbc:derby://localhost:1527/derbyDB;create=true</url>
+          <url>${tck.jdbc.url}</url>
           <username>CTS1</username>
           <password>CTS1</password>
           <autocommit>true</autocommit>
@@ -380,7 +380,7 @@
             <webServerPort>${tck.http.port}</webServerPort>
             <user>j2ee</user>
             <password>j2ee</password>
-            <jstl.db.url>jdbc:derby://localhost:1527/derbyDB;create=true</jstl.db.url>
+            <jstl.db.url>${tck.jdbc.url}</jstl.db.url>
             <jstl.db.user>cts1</jstl.db.user>
             <jstl.db.password>cts1</jstl.db.password>
             <jstl.db.driver>org.apache.derby.jdbc.ClientDriver</jstl.db.driver>
@@ -419,6 +419,8 @@
     <tck.http.port>8080</tck.http.port>
     <tck.trace>false</tck.trace>
     <tck.ts.home>${java.io.tmpdir}</tck.ts.home>
+    <!-- Matches the datasources in environment/tomee/conf/tomee.xml. -->
+    <tck.jdbc.url>jdbc:derby://localhost:1527/derbyDB;create=true</tck.jdbc.url>
   </properties>
 
   <profiles>
@@ -537,28 +539,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>sql-maven-plugin</artifactId>
-            <version>3.0.0</version>
-            <configuration>
-              <driver>org.apache.derby.jdbc.ClientDriver</driver>
-              <url>jdbc:derby://localhost:1527/derbyDB;create=true</url>
-              <username>CTS1</username>
-              <password>CTS1</password>
-              <autocommit>true</autocommit>
-              <delimiter>;</delimiter>
-              <onError>abort</onError>
-            </configuration>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derbyclient</artifactId>
-                <version>${derby.version}</version>
-              </dependency>
-              <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derbytools</artifactId>
-                <version>${derby.version}</version>
-              </dependency>
-            </dependencies>
             <executions>
               <execution>
                 <id>initialize-jdbc-tck-database</id>
