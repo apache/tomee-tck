@@ -28,6 +28,10 @@
     <!-- Injector-level TCK: no TomEE container or Derby lifecycle. -->
     <tck.standalone.container.skip>true</tck.standalone.container.skip>
     <di.tck.version>2.0.2</di.tck.version>
+    <!-- The extension compiles against TCK classes that only exist after the
+         di-install module ran, so the default reactor must not compile the
+         test sources. -->
+    <maven.test.skip>${tck.standalone.skip}</maven.test.skip>
   </properties>
 
   <dependencies>
