@@ -28,16 +28,20 @@
 
   <properties>
     <pages.tck.version>4.0.0</pages.tck.version>
-    <tck.support.version>11.0.0-M1</tck.support.version>
+    <!-- The TCK pom pins 11.0.0-M1, but that line still couples the test
+         base classes to the unpublished javatest:javatest harness; 11.1.1
+         (the line Apache Tomcat's TCK runners use) has the same API without
+         the JavaTest references. -->
+    <tck.support.version>11.1.1</tck.support.version>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/pages.txt</tck.exclusions.file>
     <!-- Defaults match the fixed harness catalog (environment/README.md);
-         override all four to run beside another TomEE/Derby instance. -->
+         override these three plus derby.port (inherited, default 1527) to
+         run beside another TomEE/Derby instance. -->
     <tomee.http.port>8080</tomee.http.port>
     <tomee.https.port>8443</tomee.https.port>
     <tomee.shutdown.port>8005</tomee.shutdown.port>
-    <derby.port>1527</derby.port>
   </properties>
 
   <dependencies>
@@ -72,10 +76,12 @@
       <version>${tck.support.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- The 11.1.x SigTestDriver passes -BootCp/-IgnoreJDKClasses, which
+         need the 2.6 sigtest line (2.2, the TCK pom's pin, rejects them). -->
     <dependency>
       <groupId>jakarta.tck</groupId>
       <artifactId>sigtest-maven-plugin</artifactId>
-      <version>2.2</version>
+      <version>2.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -126,7 +132,7 @@
                   <classifier>${tomee.classifier}</classifier>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}/tomee</outputDirectory>
-                  <includes>**/lib/jsp-api.jar,**/lib/el-api.jar,**/lib/servlet-api.jar</includes>
+                  <includes>**/lib/jsp-api.jar,**/lib/el-api.jar,**/lib/servlet-api.jar,**/conf/web.xml</includes>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -156,6 +162,19 @@
                 <pathconvert pathsep="${path.separator}"
                              property="pages.sig.api.jars"
                              refid="pages-api-jars"/>
+                <!-- TomEE's global conf/web.xml pins the request/response
+                     character encodings to UTF-8; the Pages TCK asserts the
+                     specification default (ISO-8859-1) when a page declares
+                     nothing, so the overlay ships the distribution's own
+                     web.xml with those two overrides removed. -->
+                <copy todir="${project.build.directory}/tomee-overlay/conf"
+                      overwrite="true" flatten="true">
+                  <fileset dir="${project.build.directory}/tomee"
+                           includes="**/conf/web.xml"/>
+                </copy>
+                <replaceregexp file="${project.build.directory}/tomee-overlay/conf/web.xml"
+                               match="^\s*&lt;(request|response)-character-encoding&gt;UTF-8&lt;/\1-character-encoding&gt;\s*$"
+                               replace="" byline="true"/>
               </target>
             </configuration>
           </execution>
@@ -164,60 +183,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <!-- The inherited Derby lifecycle is redeclared with the
-               module's ${derby.port} so it can move off 1527. -->
-          <execution>
-            <id>require-free-derby-port</id>
-            <configuration>
-              <arguments>
-                <argument>${maven.multiModuleProjectDirectory}/environment/database/require-derby-port-free.sh</argument>
-                <argument>${java.home}/bin/java</argument>
-                <classpath/>
-                <argument>${derby.port}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>start-derby</id>
-            <configuration>
-              <arguments>
-                <argument>-Dderby.system.home=${project.build.directory}/derby</argument>
-                <argument>-cp</argument>
-                <classpath/>
-                <argument>org.apache.derby.drda.NetworkServerControl</argument>
-                <argument>start</argument>
-                <argument>-h</argument><argument>localhost</argument>
-                <argument>-p</argument><argument>${derby.port}</argument>
-                <argument>-noSecurityManager</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>wait-for-derby</id>
-            <configuration>
-              <arguments>
-                <argument>${maven.multiModuleProjectDirectory}/environment/database/wait-for-derby.sh</argument>
-                <argument>${java.home}/bin/java</argument>
-                <classpath/>
-                <argument>${derby.port}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>stop-derby</id>
-            <configuration>
-              <arguments>
-                <argument>-cp</argument>
-                <classpath/>
-                <argument>org.apache.derby.drda.NetworkServerControl</argument>
-                <argument>shutdown</argument>
-                <argument>-h</argument><argument>localhost</argument>
-                <argument>-p</argument><argument>${derby.port}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
