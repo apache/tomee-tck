@@ -23,8 +23,8 @@ Detail lives next to each runner:
 | Platform `persistence-javatest` (webprofile ZIP) | 201/450 classes retained | 249 classes | OpenJPA gaps; none reproduce on Plume/EclipseLink |
 | annotations | passes | — | — |
 | di | 50/50 pass | — | — |
-| concurrency | 197 tests, 0 F + 0 E (14 TCK skips, signature passes) | — | — (the previous 94 exclusions were harness misconfiguration, fixed in the runner; see [concurrency.txt](runner-standalone/exclusions/concurrency.txt)) |
-| data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation (the previous 95 blanket exclusions were harness misconfiguration) |
+| concurrency | 197 tests, 0 F + 0 E (14 TCK skips), signature passes | — | — |
+| data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation |
 | servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
@@ -35,7 +35,7 @@ Detail lives next to each runner:
 | persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
 | transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
 | jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
-| jsonb | 295 tests, 2 F + 2 E | 4 tests | 2 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations (BigDecimal/BigInteger now pass via Johnzon's spec-compat switches) |
+| jsonb | 295 tests, 2 F + 2 E | 4 tests | 2 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations |
 | debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
 | authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
@@ -47,15 +47,12 @@ Detail lives next to each runner:
 Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 
 1. **Jakarta Data query generation (openejb-jakarta-data)** — repositories
-   materialize and inject fine once the deployment carries the
-   `persistence.xml`/`beans.xml` the Data runtime is expected to provide
-   (the earlier "every repository injection is null" finding was harness
-   misconfiguration, fixed in the runner). What remains is 36
-   `standalone.entity.EntityTests` methods: `ignoreCase` state-field paths
-   that EclipseLink cannot resolve, literal/`NOT`/`OR`/parenthesis handling
-   in `@Query` JDQL, empty/partial query generation, cursored pagination,
-   and static-metamodel sorts. All entries in
-   [data.txt](runner-standalone/exclusions/data.txt).
+   materialize and inject correctly; the gaps sit in the queries the
+   provider generates for 36 `standalone.entity.EntityTests` methods:
+   `ignoreCase` state-field paths that EclipseLink cannot resolve,
+   literal/`NOT`/`OR`/parenthesis handling in `@Query` JDQL, empty/partial
+   query generation, cursored pagination, and static-metamodel sorts. All
+   entries in [data.txt](runner-standalone/exclusions/data.txt).
 2. **Servlet 6.1 behavioral differences** — async dispatch connection
    handling (`DispatchTests` and async-context classes) and a set of
    response-content mismatches. 69 entries in
@@ -147,12 +144,13 @@ Need triage/fixes in the upstream projects TomEE ships.
    during polymorphic (`@JsonbTypeInfo`) deserialization. 2 excluded tests
    in [jsonb.txt](runner-standalone/exclusions/jsonb.txt); the other 2
    entries there are the TCK's pre-CLDR-34 French locale expectations, a
-   JDK-data mismatch rather than a Johnzon defect. Johnzon's
-   BigDecimal/BigInteger-as-string default is not a defect: the runner sets
-   the spec-compat switches `johnzon.use-bigdecimal-stringadapter=false` /
+   JDK-data mismatch rather than a Johnzon defect. The runner runs Johnzon
+   with the spec-compat switches
+   `johnzon.use-bigdecimal-stringadapter=false` /
    `johnzon.use-biginteger-stringadapter=false` (same as apache/tomee
-   `tck/jsonb-standalone`) and both mapping tests pass. JSON-P
-   (johnzon-core) passes its TCK completely.
+   `tck/jsonb-standalone`), so BigDecimal/BigInteger serialize as the JSON
+   numbers §3.4.1 requires instead of Johnzon's precision-preserving string
+   default. JSON-P (johnzon-core) passes its TCK completely.
 7. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
    none reproduce on Plume/EclipseLink, tracked partly as
    [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).

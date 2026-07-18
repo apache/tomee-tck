@@ -2,14 +2,14 @@
 # group) on the TomEE Plume snapshot, Java 21, 2026-07-18: 197 tests, 0
 # failures, 0 errors, 14 skipped (the TCK's own skips) — no exclusions.
 #
-# The previous list excluded 94 tests as "TomEE Concurrency 3.1
-# implementation gaps"; all of them were harness misconfiguration, fixed in
-# the runner:
+# The clean run depends on three runner provisions; removing any of them
+# reintroduces failures that look like product gaps:
 # - openejb.environment.default=true (arquillian.xml container properties)
-#   declares the java:comp/Default* resource-env-refs; without it every
-#   @Resource(lookup="java:comp/DefaultContextService") etc. in the api and
-#   forbiddenapi/inheritedapi tests silently injected null.
-# - The runner's ConcurrencyTckArchiveProcessor adds a beans.xml
+#   declares the java:comp/Default* resource-env-refs (Concurrency
+#   §3.x.4.3); without it every @Resource(lookup="java:comp/Default...")
+#   in the api/forbiddenapi/inheritedapi tests silently injects null
+#   (BuiltInEnvironmentEntries in openejb-core).
+# - ConcurrencyTckArchiveProcessor adds a beans.xml
 #   (bean-discovery-mode="annotated") to each TCK WAR so OWB activates the
 #   TCK's @Priority AsynchronousInterceptor (same as apache/tomee
 #   tck/concurrency-standalone).

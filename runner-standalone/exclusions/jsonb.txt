@@ -5,8 +5,7 @@
 # johnzon.use-bigdecimal-stringadapter=false and
 # johnzon.use-biginteger-stringadapter=false so BigDecimal/BigInteger
 # serialize as JSON numbers per spec §3.4.1 instead of Johnzon's
-# precision-preserving string default; with those flags the BigDecimal/
-# BigInteger mapping tests pass and are no longer excluded.
+# precision-preserving string default, which the mapping tests require.
 #
 # TCK-vs-JDK locale data: since CLDR 34 the JDK formats the French thousands
 # grouping separator as U+202F (narrow no-break space); the TCK still expects

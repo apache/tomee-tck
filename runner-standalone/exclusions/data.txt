@@ -4,18 +4,17 @@
 # classes (CDI, persistence-entity, signature, servlet example, transaction,
 # validation) pass completely.
 #
-# The previous list excluded 95 tests across 5 classes as "TomEE's Jakarta
-# Data provider does not materialize repository implementations"; that was
-# harness misconfiguration. The runner's DataTckArchiveProcessor now
-# completes the TCK deployments the way the Jakarta Data runtime is expected
-# to (a persistence.xml on java:comp/DefaultDataSource and a beans.xml with
-# bean-discovery-mode="all" so @Repository interfaces are scanned; same as
-# apache/tomee tck/data-standalone), the container declares the
-# java:comp/Default* refs via openejb.environment.default=true, and the
-# Derby engine jar is staged for the embedded DefaultDataSource. With those
-# in place repositories materialize and inject fine.
+# The runner's DataTckArchiveProcessor completes the TCK deployments the
+# way the Jakarta Data runtime is expected to (a persistence.xml on
+# java:comp/DefaultDataSource and a beans.xml with
+# bean-discovery-mode="all" so @Repository interfaces are scanned and
+# materialized; same as apache/tomee tck/data-standalone), the container
+# declares the java:comp/Default* refs via openejb.environment.default=true,
+# and the Derby engine jar is staged for the embedded DefaultDataSource.
+# Removing any of these fails whole deployments or nulls every repository
+# injection.
 #
-# The 36 remaining EntityTests methods are genuine openejb-jakarta-data
+# The 36 excluded EntityTests methods are openejb-jakarta-data
 # gaps in query generation/translation for the unmapped-superclass entity:
 # ignoreCase state-field paths, literal/parenthesis/NOT/OR handling in
 # @Query JDQL, cursored pagination, empty/partial queries, and static
