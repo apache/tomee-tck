@@ -147,6 +147,11 @@
             <configuration>
               <goals><goal>verify</goal></goals>
               <profiles><profile>tomee-remote</profile></profiles>
+              <!-- Each include is a multi-module reactor; collect the whole
+                   baseline instead of stopping at the first failing module. -->
+              <properties>
+                <maven.test.failure.ignore>true</maven.test.failure.ignore>
+              </properties>
               <pomIncludes>
                 <pomInclude>faces22/pom.xml</pomInclude>
                 <pomInclude>faces23/pom.xml</pomInclude>

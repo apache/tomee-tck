@@ -14,5 +14,6 @@ public class ServletTckExtension implements LoadableExtension {
     @Override
     public void register(final ExtensionBuilder builder) {
         builder.service(ApplicationArchiveProcessor.class, ServletTckArchiveProcessor.class);
+        builder.observer(HttpsPortMetaDataObserver.class);
     }
 }

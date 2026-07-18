@@ -16,4 +16,8 @@
   <user username="javajoe" password="javajoe" roles="guest,Manager,Employee"/>
   <user username="j2ee" password="j2ee" roles="staff,mgr,asadmin,Administrator,Employee"/>
   <user username="j2ee_ri" password="j2ee_ri" roles="staff"/>
+  <!-- CLIENT-CERT identity of the certificate bundled with the Servlet TCK;
+       Tomcat resolves the subject DN against this user database. -->
+  <user username="CN=CTS, OU=Java Software, O=Sun Microsystems Inc., L=Burlington, ST=MA, C=US"
+        password="" roles="Administrator"/>
 </tomcat-users>
