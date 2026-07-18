@@ -38,6 +38,8 @@ pipeline {
           sh -n environment/database/wait-for-derby.sh
           sh -n environment/certificates/generate-test-certificates.sh
           sh -n runner-webprofile/run-platform-suite.sh
+          sh -n runner-standalone/run-standalone-suite.sh
+          sh -n runner-standalone/verify-invoker-result.sh
         '''
         sh '''python3 -c '
 from pathlib import Path
@@ -153,10 +155,12 @@ from xml.etree import ElementTree
           // Standalone specification TCK runners. Every suite runs with its
           // reviewed exclusion list from runner-standalone/exclusions/, so a
           // red branch is a regression, not a known gap. The source-reactor
-          // runners (security, authentication) drive the downloaded TCK
-          // reactors through the Maven invoker; their surefire/failsafe
-          // reports live inside the extracted TCK module targets, which the
-          // deep globs below ingest. The faces-old runner drives the legacy
+          // runners (security, authentication, faces) drive the downloaded
+          // TCK reactors through the Maven invoker; their surefire/failsafe
+          // reports live inside the extracted TCK module targets (one level
+          // deep for security/authentication, two for the faces reactor's
+          // per-submodule layout), which the recursive tck/** globs below
+          // ingest. The faces-old runner drives the legacy
           // JavaTest half of the Faces TCK; its report lands in the
           // target/*report glob and a red JavaTest run fails the Maven build.
           // The modern faces reactor joins once its baseline is confirmed;
@@ -177,11 +181,11 @@ from xml.etree import ElementTree
                     }
                   } finally {
                     archiveArtifacts(
-                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/failsafe-reports/**/*,runner-standalone/*/target/*/tck/*/target/surefire-reports/**/*,runner-standalone/*/target/*/tck/*/target/failsafe-reports/**/*,runner-standalone/*/target/**/logs/**/*,runner-standalone/*/target/*report/**/*',
+                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/failsafe-reports/**/*,runner-standalone/*/target/**/tck/**/surefire-reports/**/*,runner-standalone/*/target/**/tck/**/failsafe-reports/**/*,runner-standalone/*/target/**/logs/**/*,runner-standalone/*/target/*report/**/*',
                       allowEmptyArchive: true
                     )
                     junit(
-                      testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/failsafe-reports/TEST-*.xml,runner-standalone/*/target/*/tck/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/*/tck/*/target/failsafe-reports/TEST-*.xml',
+                      testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/failsafe-reports/TEST-*.xml,runner-standalone/*/target/**/tck/**/surefire-reports/TEST-*.xml,runner-standalone/*/target/**/tck/**/failsafe-reports/TEST-*.xml',
                       allowEmptyResults: true
                     )
                     deleteDir()
