@@ -1,0 +1,8 @@
+# Jakarta Persistence 3.2 TCK (persistence-tck-spec-tests 3.2.1, standalone
+# vehicle) against the EclipseLink build bundled in the TomEE Plume
+# distribution, Derby, Java 21, 2026-07-18: 2,135 tests (including the
+# signature test and the no-Bean-Validation EntityManagerFactory split run),
+# 0 failures, 0 errors, 4 skipped. Full pass - no reviewed exclusions.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).

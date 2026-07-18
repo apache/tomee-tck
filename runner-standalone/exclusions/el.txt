@@ -1,0 +1,27 @@
+# Jakarta Expression Language 6.0 TCK (jakarta-expression-language-tck
+# 6.0.1) against Apache Tomcat's Jasper EL 11.0.23 (the implementation
+# bundled in the TomEE distribution), Java 21, 2026-07-18: 361 tests,
+# 9 errors, signature test passing. The 9 tests below are the provider-level
+# confirmation of the two Tomcat EL 6.0 gaps already visible in the
+# Platform catalog's expression-language partition (see KNOWN_ISSUES.md,
+# upstream provider gaps): they are product results, not compatibility
+# passes.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
+
+# MethodExpression overload selection: Jasper EL resolves overloaded
+# method invocations (exact/coercion/varargs preference order) differently
+# from the EL 6.0 resolution algorithm.
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingAmbiguousTest
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingCoercionBeatsExactVarArgsTest
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingExactPreferredTest
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingOverloadBeatsCoercionTest
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingOverloadBeatsExactVarArgsTest
+**/com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClientIT.java#methodExpressionMatchingVarArgsTest
+
+# Tomcat's StandardELContext returns null from getVariableMapper(); the
+# TCK expects a usable VariableMapper on the default context.
+**/com/sun/ts/tests/el/api/jakarta_el/methodreference/ELClientIT.java#methodReferenceTest
+**/com/sun/ts/tests/el/api/jakarta_el/variablemapper/ELClientIT.java#variableMapperTest
+**/com/sun/ts/tests/el/spec/mapper/ELClientIT.java#ELVariableBindingTest

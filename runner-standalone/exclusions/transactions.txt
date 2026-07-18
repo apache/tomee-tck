@@ -1,0 +1,38 @@
+# Jakarta Transactions 2.0 TCK (jakarta-transactions-tck-2.0.1, JavaTest
+# UserTransaction suite in the servlet and jsp vehicles) against the TomEE
+# Plume snapshot, Java 21, 2026-07-18 baseline: 49 tests, 40 pass, 9 fail;
+# all three signature-test vehicles pass. The failures are TomEE
+# UserTransaction product results (KNOWN_ISSUES.md, product gap
+# "Transactions"): commit() does not throw after setTransactionTimeout
+# expiry, and rollback/setRollbackOnly IllegalStateException semantics
+# leak transaction state into the following request. Because a failing
+# test poisons the next test in the same vehicle webapp, the failing set
+# shifts with execution order; every test id of the three affected client
+# files is excluded so the remaining suite is order-stable. The begin,
+# commit, and getstatus areas pass completely and stay in.
+#
+# Format: JavaTest jtx exclusion lines (test/path.java#testid),
+# appended to the harness ts.jtx by the runner.
+
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback001_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback001_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback002_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback002_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback003_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback003_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback004_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback004_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback005_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/rollback/UserRollbackClient.java#testUserRollback005_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly001_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly001_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly002_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly002_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly003_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly003_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly004_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/setrollbackonly/UserSetRollbackOnlyClient.java#testUserSetRollbackOnly004_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClient.java#testUserSetTransactionTimeout001_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClient.java#testUserSetTransactionTimeout001_from_servlet
+com/sun/ts/tests/jta/ee/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClient.java#testUserSetTransactionTimeout002_from_jsp
+com/sun/ts/tests/jta/ee/usertransaction/settransactiontimeout/UserSetTransactionTimeoutClient.java#testUserSetTransactionTimeout002_from_servlet

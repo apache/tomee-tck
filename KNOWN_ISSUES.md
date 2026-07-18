@@ -23,19 +23,22 @@ Detail lives next to each runner:
 | Platform `persistence-javatest` (webprofile ZIP) | 201/450 classes retained | 249 classes | OpenJPA gaps; none reproduce on Plume/EclipseLink |
 | annotations | passes | — | — |
 | di | 50/50 pass | — | — |
-| concurrency | 187 tests, 45 F + 49 E | 94 tests | TomEE Concurrency 3.1 gaps |
-| data | 99 tests, 73 F + 22 E | 95 tests (5 classes) | TomEE Jakarta Data provider |
+| concurrency | 197 tests, 0 F + 0 E (14 TCK skips, signature passes) | — | — (the previous 94 exclusions were harness misconfiguration, fixed in the runner; see [concurrency.txt](runner-standalone/exclusions/concurrency.txt)) |
+| data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation (the previous 95 blanket exclusions were harness misconfiguration) |
 | servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
 | validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
+| el | 361 tests, 9 E | 9 tests | Tomcat EL 6.0 gaps (provider-level confirmation of the Platform findings) |
+| persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
+| transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
 | jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
-| jsonb | 295 tests, 4 F + 2 E | 6 tests | 4 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations |
+| jsonb | 295 tests, 2 F + 2 E | 4 tests | 2 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations (BigDecimal/BigInteger now pass via Johnzon's spec-compat switches) |
 | debugging | passes (4 SMAPs validated) | — | — |
-| security | 132 tests, 5 F + 2 E | 7 tests | TomEE Jakarta Security |
-| authentication | 105 tests, 50 F | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
+| security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
+| authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
 | websocket | 715 tests, 30 E | 25 classes + 5 methods | Tomcat halts webapp deploy on invalid endpoints; extension/timeout behavior |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
 
@@ -43,17 +46,17 @@ Detail lives next to each runner:
 
 Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 
-1. **Concurrency 3.1 implementation** — resources declared with
-   `@ManagedExecutorDefinition`, `@ManagedScheduledExecutorDefinition`,
-   `@ManagedThreadFactoryDefinition`, and `@ContextServiceDefinition` are
-   injected as `null`, context propagation to unmanaged threads is
-   incomplete, and ContextService/transaction interplay differs from spec.
-   94 excluded tests in [concurrency.txt](runner-standalone/exclusions/concurrency.txt).
-2. **Jakarta Data provider** — repository interfaces are never materialized
-   inside deployments, so every repository injection is `null`. One fix
-   should clear essentially all 95 entries in
+1. **Jakarta Data query generation (openejb-jakarta-data)** — repositories
+   materialize and inject fine once the deployment carries the
+   `persistence.xml`/`beans.xml` the Data runtime is expected to provide
+   (the earlier "every repository injection is null" finding was harness
+   misconfiguration, fixed in the runner). What remains is 36
+   `standalone.entity.EntityTests` methods: `ignoreCase` state-field paths
+   that EclipseLink cannot resolve, literal/`NOT`/`OR`/parenthesis handling
+   in `@Query` JDQL, empty/partial query generation, cursored pagination,
+   and static-metamodel sorts. All entries in
    [data.txt](runner-standalone/exclusions/data.txt).
-3. **Servlet 6.1 behavioral differences** — async dispatch connection
+2. **Servlet 6.1 behavioral differences** — async dispatch connection
    handling (`DispatchTests` and async-context classes) and a set of
    response-content mismatches. 69 entries in
    [servlet.txt](runner-standalone/exclusions/servlet.txt).
@@ -86,7 +89,12 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
 9. **Transactions** — CDI `@Transactional` interceptors fail propagation,
    rollback-rule, and `TransactionScoped` assertions; `UserTransaction`
-   rollback/timeout semantics leak state between requests.
+   rollback/timeout semantics leak state between requests. Confirmed by the
+   standalone Transactions 2.0 TCK web vehicles: `commit()` does not throw
+   after `setTransactionTimeout` expiry, and rollback/`setRollbackOnly`
+   `IllegalStateException` semantics poison the following request — 22
+   entries in
+   [transactions.txt](runner-standalone/exclusions/transactions.txt).
 10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak
@@ -122,24 +130,29 @@ Need triage/fixes in the upstream projects TomEE ships.
    [authentication.txt](runner-standalone/exclusions/authentication.txt).
 4. **Tomcat EL 6.0** — `MethodExpression` overload selection and the missing
    `StandardELContext` `VariableMapper` (webprofile `expression-language`
-   partition).
+   partition). Confirmed at provider level by the standalone EL 6.0 TCK:
+   the same two gaps account for all 9 errors in
+   [el.txt](runner-standalone/exclusions/el.txt); the other 352 tests and
+   the signature test pass.
 5. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
    fields, JSON-P scalar writers, Bean Validation interceptors, and CDI
    resource-class handling in the REST stack
    ([TOMEE-4436](https://issues.apache.org/jira/browse/TOMEE-4436),
    [TOMEE-4166](https://issues.apache.org/jira/browse/TOMEE-4166)).
 6. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
-   by the standalone JSON-B TCK: BigDecimal/BigInteger values inside the
-   IEEE-754 exact range are serialized as JSON strings where the spec
-   (§3.4.1) requires JSON numbers; `JsonbDeserializer` instances are not
+   by the standalone JSON-B TCK: `JsonbDeserializer` instances are not
    resolved through CDI, leaving `@Inject` fields null (the adapter and
    serializer CDI tests pass — the deserializer half of TOMEE-4436);
    `@JsonbDateFormat` on a `@JsonbCreator` constructor parameter is ignored
-   during polymorphic (`@JsonbTypeInfo`) deserialization. 4 excluded tests
+   during polymorphic (`@JsonbTypeInfo`) deserialization. 2 excluded tests
    in [jsonb.txt](runner-standalone/exclusions/jsonb.txt); the other 2
    entries there are the TCK's pre-CLDR-34 French locale expectations, a
-   JDK-data mismatch rather than a Johnzon defect. JSON-P (johnzon-core)
-   passes its TCK completely.
+   JDK-data mismatch rather than a Johnzon defect. Johnzon's
+   BigDecimal/BigInteger-as-string default is not a defect: the runner sets
+   the spec-compat switches `johnzon.use-bigdecimal-stringadapter=false` /
+   `johnzon.use-biginteger-stringadapter=false` (same as apache/tomee
+   `tck/jsonb-standalone`) and both mapping tests pass. JSON-P
+   (johnzon-core) passes its TCK completely.
 7. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
    none reproduce on Plume/EclipseLink, tracked partly as
    [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).
@@ -153,28 +166,32 @@ Not product bugs — gaps in this repository's coverage.
   GlassFish-wired (asadmin deployment) and unported; `faces-signaturetest`
   is GlassFish-bound too. The faces baseline (263 tests on record) covers
   only the modern Arquillian modules.
-- **Signature modules disabled** in the security and authentication source
-  reactors (GlassFish-only coordinates).
-- **Standalone TCKs not yet scaffolded**: Expression Language, Transactions,
-  Persistence — the Platform catalog covers their integration halves only,
-  and only Expression Language is a Web Profile certification input.
-- **Source-reactor suites not in CI**: security, authentication, and faces
-  run locally via `run-standalone-suite.sh`; their exclusion wiring
-  (invoker-passed `excludesFile`) still needs a verified end-to-end run, and
-  the Jenkins `junit`/archive globs do not yet ingest the inner-reactor
-  report paths.
+- **Faces reactors not in CI**: the faces and faces-old runners run locally
+  via `run-standalone-suite.sh`; they join the Jenkins branch list once
+  their baseline and exclusion wiring have a verified green run.
 - **Exclusion lists need a confirming run**: all lists were generated from
   the 2026-07-18 surefire/TestNG reports. The mechanisms (surefire
   `excludesFile`, TestNG annotation transformer) are verified, but only a
   full green run of each suite confirms no order-dependent or flaky
   failures remain — the servlet async-dispatch area is the likeliest
-  candidate for flakiness.
+  candidate for flakiness. Confirmed green with default exclusions so far:
+  `annotations`, `di`, `el`, `concurrency` (no exclusions), `data`,
+  `servlet` (1,637 run, 0 failures — the async-dispatch area held),
+  `pages` (no exclusions), `rest`, `validation` (925 run after the
+  exclusion listener learned to match inherited test methods by their
+  concrete class), `cdi` (1,216 run), `websocket`, `jsonp` (no
+  exclusions), `jsonb`, `debugging`, `persistence` (no exclusions), and
+  `transactions` (2026-07-18).
 
 ## What CI runs
 
 `Jenkinsfile` stages: environment validation, smoke (JDK 17/21), the full
 Platform catalog on Plume plus `persistence-javatest` on the webprofile ZIP,
-and the standalone suites `annotations`, `di`, `concurrency`, `data`,
-`servlet`, `validation`, `cdi`, `cdi-ee` — all with default exclusions, all
-expected green. Source-reactor suites join once their exclusion wiring has a
-verified run.
+and the standalone suites `annotations`, `di`, `el`, `concurrency`, `data`,
+`servlet`, `pages`, `rest`, `validation`, `websocket`, `jsonp`, `jsonb`,
+`debugging`, `persistence`, `transactions`, `cdi`, `cdi-ee`, `security`,
+`authentication` — all with default exclusions, all expected green. The
+`junit`/archive globs also ingest the surefire/failsafe reports inside the
+extracted TCK reactors that the source-reactor runners drive through the
+Maven invoker, plus the JavaTest report directories. The faces reactors
+join once their baseline has a verified green run.
