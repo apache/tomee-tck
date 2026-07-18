@@ -256,6 +256,17 @@
                   <fileset dir="${tomee.home}/bin" includes="*.sh"/>
                 </chmod>
 
+                <!-- Fail fast if any container port is already bound: the
+                     waitfor below only proves *something* answers on the HTTP
+                     port, and a foreign server left on 8080 would let this
+                     suite deploy against and test the wrong container. -->
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh"/>
+                  <arg value="${tomee.http.port}"/>
+                  <arg value="${tomee.https.port}"/>
+                  <arg value="${tomee.shutdown.port}"/>
+                </exec>
+
                 <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">
                   <arg value="start"/>
                   <env key="JAVA_HOME" value="${java.home}"/>
@@ -265,6 +276,17 @@
                 </waitfor>
                 <fail message="TomEE did not open port ${tomee.http.port} within 180s">
                   <condition><isset property="tomee.start.timeout"/></condition>
+                </fail>
+                <!-- Confirm the container that answered is the TomEE this
+                     module just started, bound to the expected HTTP port,
+                     rather than a pre-existing server the port pre-check
+                     could not have seen from a race. -->
+                <waitfor maxwait="60" maxwaitunit="second" timeoutproperty="tomee.connector.timeout">
+                  <resourcecontains resource="${tomee.home}/logs/catalina.out"
+                                    substring="Starting ProtocolHandler [&quot;http-nio-${tomee.http.port}&quot;]"/>
+                </waitfor>
+                <fail message="Started TomEE did not report its HTTP connector on port ${tomee.http.port}; see ${tomee.home}/logs/catalina.out">
+                  <condition><isset property="tomee.connector.timeout"/></condition>
                 </fail>
 
                 <!-- Deploy a single test directory... -->

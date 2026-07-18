@@ -36,6 +36,7 @@ pipeline {
           sh -n environment/reset-generated-test-environment.sh
           sh -n environment/database/require-derby-port-free.sh
           sh -n environment/database/wait-for-derby.sh
+          sh -n environment/tomee/require-tomee-ports-free.sh
           sh -n environment/certificates/generate-test-certificates.sh
           sh -n runner-webprofile/run-platform-suite.sh
           sh -n runner-standalone/run-standalone-suite.sh
