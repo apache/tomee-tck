@@ -69,7 +69,7 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    fail to start and every method in each class errors on the missing
    deployment URL. 2 class entries (12 methods) in
    [servlet.txt](runner-standalone/exclusions/servlet.txt).
-4. **RESTful Web Services 4.0** — REST 3.1 `META-INF/services` discovery of
+3. **RESTful Web Services 4.0** — REST 3.1 `META-INF/services` discovery of
    `Feature`/`DynamicFeature` is not implemented (TOMEE-4321, CXF-9005), and
    a request to a path only matching the superclass `@Path` answers 405
    where the spec requires 404. 3 entries in
@@ -82,7 +82,7 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    conduit's no-entity handling, tracked upstream as
    [CXF-9039](https://issues.apache.org/jira/browse/CXF-9039), otherwise
    fails the `getLength()`/`hasEntity()` assertions.
-5. **Faces (Mojarra on TomEE)** — five distinct integration behaviors, all in
+4. **Faces (Mojarra on TomEE)** — five distinct integration behaviors, all in
    [faces.txt](runner-standalone/exclusions/faces.txt):
    - *faces-config parsing (product gap):* TomEE's `faces-config.xml`
      unmarshaller (`ReadDescriptors.readFacesConfig`) rejects the unexpected
@@ -111,20 +111,23 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
      inline "Init called" script a different number of times than expected; the
      TCK source itself notes this appears under Chrome and passes under HtmlUnit
      (`Issue2162IT`).
-6. **Jakarta Security** — the BASIC mechanism answers 401 for valid
+5. **Jakarta Security** — the BASIC mechanism answers 401 for valid
    credentials in the decorated/custom-handler variants, and both OpenID
    default modules fail token validation.
-   [security.txt](runner-standalone/exclusions/security.txt).
-7. **Persistence integration** — undeploy calls `close()` on an
+   [security.txt](runner-standalone/exclusions/security.txt). The runner drives
+   the reactor's modern Arquillian app modules plus the signature test; the
+   reactor's `old-tck` module (~68 legacy JavaTest tests) is not wired into
+   the runner, so the recorded totals cover the modern suite only.
+6. **Persistence integration** — undeploy calls `close()` on an
    already-closed `EntityManagerFactory` (fails the
    `entityManagerFactoryCloseExceptions` vehicles), and the Jakarta
    Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/
    `EntityManager` etc. from `persistence.xml`) are not registered
    (`ServletEMLookupTest`). Affects Plume and webprofile alike.
-8. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
+7. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
    replacement Jakarta Tags 3.0 jar are not exposed to applications; all 50
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
-9. **Transactions — cross-request `UserTransaction` state leakage across
+8. **Transactions — cross-request `UserTransaction` state leakage across
    pooled servlet requests.** A `UserTransaction` a servlet/jsp request leaves
    in a non-clean state poisons the next request served on the same pooled
    Tomcat exec thread; the victim sees an `IllegalStateException` that is not
@@ -145,14 +148,14 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    [transactions.txt](runner-standalone/exclusions/transactions.txt). The
    Platform catalog additionally shows CDI `@Transactional` interceptors
    failing propagation, rollback-rule, and `TransactionScoped` assertions.
-10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
+9. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak
    deployment IDs (`DuplicateDeploymentIdException` in later apps).
-11. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
+10. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
-12. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
+11. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
     configurator reports the extensions the client requested and negotiated.
     TomEE's client-side WebSocket container (Tomcat's `tomcat-websocket`)
     always advertises its built-in `permessage-deflate` extension in the
@@ -165,7 +168,7 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
     and pass: the runner's Arquillian extension tolerates the deployment
     failure so each client probe still runs.
     [websocket.txt](runner-standalone/exclusions/websocket.txt).
-13. **Bean Validation XML config broken on stock Plume** — the Plume
+12. **Bean Validation XML config broken on stock Plume** — the Plume
     distribution ships EclipseLink MOXy (`eclipselink-5.0.1.jar`) and the JAXB
     RI (`jaxb-runtime-4.0.4.jar`) side by side. EclipseLink registers a
     `jakarta.xml.bind.JAXBContextFactory` service and wins ServiceLoader
@@ -235,7 +238,7 @@ Need triage/fixes in the upstream projects TomEE ships.
    `tck/jsonb-standalone`), so BigDecimal/BigInteger serialize as the JSON
    numbers §3.4.1 requires instead of Johnzon's precision-preserving string
    default. JSON-P (johnzon-core) passes its TCK completely.
-6. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
+5. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
    none reproduce on Plume/EclipseLink, tracked partly as
    [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).
    Kept visible via the `persistence-javatest (webprofile)` CI branch.
@@ -262,8 +265,12 @@ and the standalone suites `annotations`, `di`, `el`, `concurrency`, `data`,
 `servlet`, `pages`, `rest`, `validation`, `websocket`, `jsonp`, `jsonb`,
 `debugging`, `persistence`, `transactions`, `cdi`, `cdi-ee`, `security`,
 `authentication`, `faces-old` — all with default exclusions, all expected
-green (a red JavaTest run fails the `faces-old` and `transactions` builds
-through their `verify-tck-result` step). The `junit`/archive globs also
+green. Each runner fails its own build on a red result through a
+`verify-tck-result` step: the JavaTest runners (`faces-old`, `transactions`)
+check the harness exit code, and the invoker-driven source reactors
+(`security`, `authentication`, `faces`) aggregate the inner surefire/failsafe
+reports and fail on any failure, error, or module that built but never ran
+its tests. The `junit`/archive globs also
 ingest the surefire/failsafe reports inside the extracted TCK reactors that
 the source-reactor runners drive through the Maven invoker, plus the
 JavaTest report directories. The modern `faces` reactor joins once its
