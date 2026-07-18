@@ -31,6 +31,7 @@ Detail lives next to each runner:
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
 | security | 132 tests, 5 F + 2 E | 7 tests | TomEE Jakarta Security |
 | authentication | 105 tests, 50 F | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
+| websocket | 715 tests, 30 E | 25 classes + 5 methods | Tomcat halts webapp deploy on invalid endpoints; extension/timeout behavior |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
 
 ## TomEE product gaps
@@ -78,6 +79,14 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 10. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
+11. **WebSocket 2.2 behavior (Tomcat)** — a WAR containing an invalid
+    server endpoint fails the whole webapp deployment (the spec-required
+    deployment halt, but the TCK's Arquillian harness reports the failed
+    deploy as an error; 25 negative-deployment classes), the server-side
+    configurator observes Tomcat's built-in `permessage-deflate` in the
+    requested/negotiated extension lists (3 tests), and two idle-timeout/
+    close-code assertions differ.
+    [websocket.txt](runner-standalone/exclusions/websocket.txt).
 
 ## Upstream provider gaps
 
@@ -120,8 +129,8 @@ Not product bugs — gaps in this repository's coverage.
 - **Signature modules disabled** in the security and authentication source
   reactors (GlassFish-only coordinates).
 - **Standalone TCKs not yet scaffolded**: Expression Language, JSON
-  Processing, JSON Binding, Pages, WebSocket, REST, Transactions,
-  Persistence — the Platform catalog covers their integration halves only.
+  Processing, JSON Binding, Pages, REST, Transactions, Persistence — the
+  Platform catalog covers their integration halves only.
 - **Source-reactor suites not in CI**: security, authentication, and faces
   run locally via `run-standalone-suite.sh`; their exclusion wiring
   (invoker-passed `excludesFile`) still needs a verified end-to-end run, and
