@@ -78,6 +78,19 @@
     <tomee.http.port>8080</tomee.http.port>
     <tomee.https.port>8443</tomee.https.port>
     <tomee.shutdown.port>8005</tomee.shutdown.port>
+    <!-- Faces TCK distribution shared by the faces and faces-old runners;
+         both halves must test the same zip. -->
+    <faces.tck.version>4.1.2</faces.tck.version>
+    <faces.tck.url>https://download.eclipse.org/jakartaee/faces/4.1/jakarta-faces-tck-${faces.tck.version}.zip</faces.tck.url>
+    <faces.tck.sha256>0827e2c9c635940643aaefb2a2f063959b0cab2fa1d633a7008b9fa04c5109de</faces.tck.sha256>
+    <faces.tck.dir>${project.build.directory}/jakarta-faces-tck-${faces.tck.version}/faces-tck-${faces.tck.version}/tck</faces.tck.dir>
+    <!-- Ant pin for the JavaTest-driven runners (faces-old, transactions);
+         the version the old-tck build/run poms and harness scripts are
+         known to work with. -->
+    <tck.ant.version>1.10.2</tck.ant.version>
+    <tck.ant.home>${project.build.directory}/apache-ant-${tck.ant.version}</tck.ant.home>
+    <tck.ant.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${tck.ant.version}-bin.zip</tck.ant.url>
+    <tck.ant.sha512>2b6b3b1769a38e0037c8f3825ffeb2094fbb2985128f3b03d1b10d792e75850d13cf04513a0c59a8ca89f1a446ca509def0bd5c2f2644f51054f56f2007a29d9</tck.ant.sha512>
   </properties>
 
   <dependencies>

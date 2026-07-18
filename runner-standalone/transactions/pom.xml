@@ -44,12 +44,7 @@
     <transactions.tck.url>https://download.eclipse.org/jakartaee/transactions/2.0/jakarta-transactions-tck-${transactions.tck.version}.zip</transactions.tck.url>
     <transactions.tck.sha256>5655dd55f23cbc883a4fbc95edd543857b41b24cbd42a3a5fe2d3b1f91c6e27c</transactions.tck.sha256>
 
-    <!-- The Ant version the JavaTest harness scripts are known to work
-         with (same pin as the faces-old runner). -->
-    <tck.ant.version>1.10.2</tck.ant.version>
-    <tck.ant.home>${project.build.directory}/apache-ant-${tck.ant.version}</tck.ant.home>
-    <tck.ant.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${tck.ant.version}-bin.zip</tck.ant.url>
-    <tck.ant.sha512>2b6b3b1769a38e0037c8f3825ffeb2094fbb2985128f3b03d1b10d792e75850d13cf04513a0c59a8ca89f1a446ca509def0bd5c2f2644f51054f56f2007a29d9</tck.ant.sha512>
+    <!-- tck.ant.* is inherited from the parent pom. -->
 
     <tck.home>${project.build.directory}/transactions-tck</tck.home>
     <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>

@@ -37,19 +37,9 @@
          Faces tests never touch). -->
     <tck.standalone.container.skip>true</tck.standalone.container.skip>
 
-    <faces.tck.version>4.1.2</faces.tck.version>
-    <faces.tck.url>https://download.eclipse.org/jakartaee/faces/4.1/jakarta-faces-tck-${faces.tck.version}.zip</faces.tck.url>
-    <faces.tck.sha256>0827e2c9c635940643aaefb2a2f063959b0cab2fa1d633a7008b9fa04c5109de</faces.tck.sha256>
-    <faces.tck.dir>${project.build.directory}/jakarta-faces-tck-${faces.tck.version}/faces-tck-${faces.tck.version}/tck</faces.tck.dir>
+    <!-- faces.tck.* and tck.ant.* are inherited from the parent pom. -->
     <oldtck.source.dir>${faces.tck.dir}/old-tck/source</oldtck.source.dir>
     <oldtck.build.zip>${oldtck.source.dir}/release/JSF_BUILD/latest/faces-tck.zip</oldtck.build.zip>
-
-    <!-- The version the old-tck's own build/run poms pin; the harness's ant
-         scripts are known to work with it. -->
-    <tck.ant.version>1.10.2</tck.ant.version>
-    <tck.ant.home>${project.build.directory}/apache-ant-${tck.ant.version}</tck.ant.home>
-    <tck.ant.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${tck.ant.version}-bin.zip</tck.ant.url>
-    <tck.ant.sha512>2b6b3b1769a38e0037c8f3825ffeb2094fbb2985128f3b03d1b10d792e75850d13cf04513a0c59a8ca89f1a446ca509def0bd5c2f2644f51054f56f2007a29d9</tck.ant.sha512>
 
     <!-- Unpacked from the built old-tck bundle. -->
     <tck.home>${project.build.directory}/faces-tck</tck.home>
