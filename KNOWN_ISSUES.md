@@ -26,6 +26,7 @@ Detail lives next to each runner:
 | concurrency | 187 tests, 45 F + 49 E | 94 tests | TomEE Concurrency 3.1 gaps |
 | data | 99 tests, 73 F + 22 E | 95 tests (5 classes) | TomEE Jakarta Data provider |
 | servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
+| rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
 | validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
@@ -51,31 +52,41 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    handling (`DispatchTests` and async-context classes) and a set of
    response-content mismatches. 69 entries in
    [servlet.txt](runner-standalone/exclusions/servlet.txt).
-4. **Faces descriptor parsing** — TomEE's `faces-config.xml` unmarshaller
+4. **RESTful Web Services 4.0** — TomEE refuses to deploy an application
+   bundling a `@ConstrainedTo(RuntimeType.CLIENT)` provider
+   (`IllegalArgumentException: ... is not a SERVER provider` from
+   `TomeeJaxRsService`) where the spec requires ignoring it; REST 3.1
+   `META-INF/services` discovery of `Feature`/`DynamicFeature` is not
+   implemented; `ContainerRequestContext.getLength()`/`HttpHeaders
+   .getLength()` no-entity semantics differ; the CXF client answers
+   `hasEntity() == true` for entity-less responses; and an unmatched
+   subresource path answers 405 where 404 is required. 14 entries in
+   [rest.txt](runner-standalone/exclusions/rest.txt).
+5. **Faces descriptor parsing** — TomEE's `faces-config.xml` unmarshaller
    rejects the `xsi:schemaLocation` attribute that Faces 4.1 descriptors
    carry, so affected applications never deploy. Dominant cause of the 31
    class exclusions in [faces.txt](runner-standalone/exclusions/faces.txt).
-5. **Jakarta Security** — the BASIC mechanism answers 401 for valid
+6. **Jakarta Security** — the BASIC mechanism answers 401 for valid
    credentials in the decorated/custom-handler variants, and both OpenID
    default modules fail token validation.
    [security.txt](runner-standalone/exclusions/security.txt).
-6. **Persistence integration** — undeploy calls `close()` on an
+7. **Persistence integration** — undeploy calls `close()` on an
    already-closed `EntityManagerFactory` (fails the
    `entityManagerFactoryCloseExceptions` vehicles), and the Jakarta
    Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/
    `EntityManager` etc. from `persistence.xml`) are not registered
    (`ServletEMLookupTest`). Affects Plume and webprofile alike.
-7. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
+8. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
    replacement Jakarta Tags 3.0 jar are not exposed to applications; all 50
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
-8. **Transactions** — CDI `@Transactional` interceptors fail propagation,
+9. **Transactions** — CDI `@Transactional` interceptors fail propagation,
    rollback-rule, and `TransactionScoped` assertions; `UserTransaction`
    rollback/timeout semantics leak state between requests.
-9. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
+10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak
    deployment IDs (`DuplicateDeploymentIdException` in later apps).
-10. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
+11. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
 
