@@ -1,129 +1,22 @@
 # Jakarta Servlet 6.1 TCK (jakarta.tck:servlet-tck-runtime:6.1.0) on the TomEE
-# Plume snapshot, Java 21, 2026-07-18: 1,706 tests, 69 errors, 7 skipped.
-# The harness itself is complete (https, client-cert, signature all pass).
-# The errors cluster in async dispatch connection handling (DispatchTests and
-# the async-context classes drop or reset connections mid-dispatch) and in
-# response-content mismatches in the request/response wrapper and http tests.
-# These are Tomcat/TomEE behavioral differences to triage as product results.
-# Reviewed exclusions keep the remaining suite runnable; they are not
-# compatibility passes.
+# Plume snapshot, Java 21, 2026-07-18: 1,706 tests, 12 errors, 7 skipped.
+# The harness is complete (https, client-cert, signature, cross-context
+# dispatch, spec-default encoding, request trailers, and the STRICT_SERVLET_
+# COMPLIANCE subset are all configured). The remaining errors are two
+# deployment behavioral differences: TomEE aborts context startup when a
+# programmatically or declaratively referenced servlet/filter class is not
+# packaged in the war, where the TCK expects the container to tolerate it.
 #
 # Format: maven-surefire excludesFile patterns, applied through
 # -Dtck.exclusions.file (see runner-standalone/README.md).
 
-# DispatchTests: 14 of 38 executed methods fail
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#dispatchAfterCommitTest4
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#dispatchAfterCommitTest5
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#dispatchReturnTest4
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#dispatchReturnTest5
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#negativeDispatchTest12
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#negativeDispatchTest13
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#negativeDispatchTest8
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#negativeDispatchTest9
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest12
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest13
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest14
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest15
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest16
-**/servlet/tck/api/jakarta_servlet/dispatchtest/DispatchTests.java#startAsyncAgainTest17
-
-# ServletContextTests: 1 of 28 executed methods fail
-**/servlet/tck/api/jakarta_servlet/servletcontext/ServletContextTests.java#GetResource_2Test
-
-# ServletRequestTests: 2 of 39 executed methods fail
-**/servlet/tck/api/jakarta_servlet/servletrequest/ServletRequestTests.java#getCharacterEncodingNullTest
-**/servlet/tck/api/jakarta_servlet/servletrequest/ServletRequestTests.java#setCharacterEncodingTest1
-
-# ServletRequestWrapperTests: 1 of 32 executed methods fail
-**/servlet/tck/api/jakarta_servlet/servletrequestwrapper/ServletRequestWrapperTests.java#setCharacterEncodingTest1
-
-# ServletResponseTests: 3 of 32 executed methods fail
-**/servlet/tck/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getCharacterEncodingDefaultTest
-**/servlet/tck/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getContentTypeTest
-**/servlet/tck/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getWriterTest
-
-# ServletResponseWrapperTests: 3 of 20 executed methods fail
-**/servlet/tck/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#getContentTypeTest
-**/servlet/tck/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#getWriterTest
-**/servlet/tck/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#setCharacterEncodingTest
-
-# HttpServletRequestTests: 3 of 70 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#getCharacterEncodingTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#sessionTimeoutTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#setCharacterEncodingTest1
-
-# HttpServletRequest40Tests: 1 of 11 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpservletrequest40/HttpServletRequest40Tests.java#TrailerTest
-
-# HttpServletRequestWrapperTests: 1 of 60 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpservletrequestwrapper/HttpServletRequestWrapperTests.java#setCharacterEncodingTest1
-
-# HttpServletResponseTests: 5 of 44 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#getCharacterEncodingDefaultTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#getWriterTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#sendRedirectWithLeadingSlashTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#sendRedirectWithoutLeadingSlashTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#setCharacterEncodingTest
-
-# HttpServletResponseWrapperTests: 4 of 34 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#getContentTypeTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#getWriterTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#sendRedirectTest
-**/servlet/tck/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#setCharacterEncodingTest
-
-# HttpSessionxTests: 4 of 8 executed methods fail
-**/servlet/tck/api/jakarta_servlet_http/httpsessionx/HttpSessionxTests.java#expireHttpSessionxrfTest
-**/servlet/tck/api/jakarta_servlet_http/httpsessionx/HttpSessionxTests.java#expireHttpSessionxri1Test
-**/servlet/tck/api/jakarta_servlet_http/httpsessionx/HttpSessionxTests.java#expireHttpSessionxriTest
-**/servlet/tck/api/jakarta_servlet_http/httpsessionx/HttpSessionxTests.java#invalidateHttpSessionxTest
-
-# RegistrationTests: 1 failing
+# RegistrationTests (pluggability): the deployment declares filter
+# AddFilterString without bundling
+# servlet.tck.api.jakarta_servlet.servletcontext30.AddFilterString, so TomEE
+# fails the whole context startup and every method errors on the missing URL.
 **/servlet/tck/pluggability/api/jakarta_servlet/registration/RegistrationTests.java
 
-# ServletContextTests: 1 of 24 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet/servletcontext/ServletContextTests.java#GetResource_2Test
-
-# ServletRequestTests: 2 of 39 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet/servletrequest/ServletRequestTests.java#getCharacterEncodingNullTest
-**/servlet/tck/pluggability/api/jakarta_servlet/servletrequest/ServletRequestTests.java#setCharacterEncodingTest1
-
-# ServletRequestWrapperTests: 1 of 32 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet/servletrequestwrapper/ServletRequestWrapperTests.java#setCharacterEncodingTest1
-
-# ServletResponseTests: 3 of 32 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getCharacterEncodingDefaultTest
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getContentTypeTest
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponse/ServletResponseTests.java#getWriterTest
-
-# ServletResponseWrapperTests: 3 of 20 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#getContentTypeTest
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#getWriterTest
-**/servlet/tck/pluggability/api/jakarta_servlet/servletresponsewrapper/ServletResponseWrapperTests.java#setCharacterEncodingTest
-
-# HttpServletRequestTests: 3 of 70 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#getCharacterEncodingTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#sessionTimeoutTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletrequest/HttpServletRequestTests.java#setCharacterEncodingTest1
-
-# HttpServletRequestWrapperTests: 1 of 58 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletrequestwrapper/HttpServletRequestWrapperTests.java#setCharacterEncodingTest1
-
-# HttpServletResponseTests: 5 of 44 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#getCharacterEncodingDefaultTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#getWriterTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#sendRedirectWithLeadingSlashTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#sendRedirectWithoutLeadingSlashTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponse/HttpServletResponseTests.java#setCharacterEncodingTest
-
-# HttpServletResponseWrapperTests: 4 of 34 executed methods fail
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#getContentTypeTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#getWriterTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#sendRedirectTest
-**/servlet/tck/pluggability/api/jakarta_servlet_http/httpservletresponsewrapper/HttpServletResponseWrapperTests.java#setCharacterEncodingTest
-
-# DefaultMappingTests: 1 failing
+# DefaultMappingTests (spec): the deployment declares servlet
+# servlet.tck.spec.requestmap.TestServlet1 without bundling it, so TomEE
+# fails the whole context startup and both methods error on the missing URL.
 **/servlet/tck/spec/defaultmapping/DefaultMappingTests.java
-
-# EncodingTests: 2 of 3 executed methods fail
-**/servlet/tck/spec/i18n/encoding/EncodingTests.java#spec2Test
-**/servlet/tck/spec/i18n/encoding/EncodingTests.java#spec3Test

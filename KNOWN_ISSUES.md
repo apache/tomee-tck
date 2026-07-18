@@ -25,7 +25,7 @@ Detail lives next to each runner:
 | di | 50/50 pass | — | — |
 | concurrency | 197 tests, 0 F + 0 E (14 TCK skips), signature passes | — | — |
 | data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation |
-| servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
+| servlet | 1,706 tests, 12 E | 2 classes (12 methods) | TomEE aborts context startup on a missing referenced servlet/filter class |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
 | validation | 1,049 tests, 0 F (incl. signature test) | — | — (server pins the JAXB RI; see product gaps) |
@@ -55,9 +55,13 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    literal/`NOT`/`OR`/parenthesis handling in `@Query` JDQL, empty/partial
    query generation, cursored pagination, and static-metamodel sorts. All
    entries in [data.txt](runner-standalone/exclusions/data.txt).
-2. **Servlet 6.1 behavioral differences** — async dispatch connection
-   handling (`DispatchTests` and async-context classes) and a set of
-   response-content mismatches. 69 entries in
+2. **Servlet 6.1 deployment strictness** — TomEE aborts the whole context
+   startup when a war references a servlet or filter class it does not
+   package: the pluggability `RegistrationTests` deployment declares filter
+   `AddFilterString` and the spec `DefaultMappingTests` deployment declares
+   servlet `TestServlet1` without bundling either class, so both contexts
+   fail to start and every method in each class errors on the missing
+   deployment URL. 2 class entries (12 methods) in
    [servlet.txt](runner-standalone/exclusions/servlet.txt).
 4. **RESTful Web Services 4.0** — TomEE refuses to deploy an application
    bundling a `@ConstrainedTo(RuntimeType.CLIENT)` provider

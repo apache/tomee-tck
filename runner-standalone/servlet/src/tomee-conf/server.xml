@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Fixed single-worker ports; see environment/README.md. The Arquillian
+     remote adapter rewrites these ports from the tomee.*.port properties, so
+     the literal values here only serve side-by-side runs. This module-local
+     copy overrides the shared environment/tomee/conf/server.xml to add
+     allowedTrailerHeaders, which HttpServletRequest40Tests#TrailerTest needs
+     to read request trailer fields. -->
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.tomee.catalina.ServerListener"/>
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener"/>
+
+  <GlobalNamingResources>
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml"/>
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000" allowTrace="true"
+               allowedTrailerHeaders="myTrailer,myTrailer2"
+               redirectPort="8443"/>
+
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               SSLEnabled="true" scheme="https" secure="true">
+      <SSLHostConfig protocols="TLSv1.2"
+                     certificateVerification="optional"
+                     truststoreFile="conf/server-truststore.p12"
+                     truststorePassword="changeit"
+                     truststoreType="PKCS12">
+        <Certificate certificateKeystoreFile="conf/server.p12"
+                     certificateKeystorePassword="changeit"
+                     certificateKeystoreType="PKCS12"
+                     certificateKeyAlias="server"
+                     type="RSA"/>
+      </SSLHostConfig>
+    </Connector>
+
+    <Engine name="Catalina" defaultHost="localhost">
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+      <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+        <Valve className="org.apache.catalina.valves.AccessLogValve"
+               directory="logs" prefix="localhost_access_log." suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
+      </Host>
+    </Engine>
+  </Service>
+</Server>

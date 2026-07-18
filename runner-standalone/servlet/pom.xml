@@ -102,7 +102,7 @@
                   <classifier>${tomee.classifier}</classifier>
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}/tomee</outputDirectory>
-                  <includes>**/lib/servlet-api.jar</includes>
+                  <includes>**/lib/servlet-api.jar,**/conf/web.xml</includes>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -149,6 +149,26 @@
                 <pathconvert pathsep="${path.separator}"
                              property="servlet.sig.api.jar"
                              refid="servlet-api-jar"/>
+                <!-- TomEE's global conf/web.xml pins the request/response
+                     character encodings to UTF-8; the Servlet TCK asserts the
+                     specification defaults (null request encoding, ISO-8859-1
+                     response) when a war declares nothing, so the overlay ships
+                     the distribution's own web.xml with those two overrides
+                     removed. It also lacks the ja->Shift_Jis locale mapping the
+                     setLocale-driven encoding tests expect (Tomcat no longer
+                     carries a built-in default), so inject one into the same
+                     global descriptor. -->
+                <copy todir="${project.build.directory}/tomee-overlay/conf"
+                      overwrite="true" flatten="true">
+                  <fileset dir="${project.build.directory}/tomee"
+                           includes="**/conf/web.xml"/>
+                </copy>
+                <replaceregexp file="${project.build.directory}/tomee-overlay/conf/web.xml"
+                               match="^\s*&lt;(request|response)-character-encoding&gt;UTF-8&lt;/\1-character-encoding&gt;\s*$"
+                               replace="" byline="true"/>
+                <replaceregexp file="${project.build.directory}/tomee-overlay/conf/web.xml"
+                               match="&lt;/web-app&gt;"
+                               replace="  &lt;locale-encoding-mapping-list&gt;${line.separator}    &lt;locale-encoding-mapping&gt;${line.separator}      &lt;locale&gt;ja&lt;/locale&gt;${line.separator}      &lt;encoding&gt;Shift_Jis&lt;/encoding&gt;${line.separator}    &lt;/locale-encoding-mapping&gt;${line.separator}  &lt;/locale-encoding-mapping-list&gt;${line.separator}&lt;/web-app&gt;"/>
               </target>
             </configuration>
           </execution>
@@ -189,7 +209,10 @@
           </dependenciesToScan>
           <excludesFile>${tck.exclusions.file}</excludesFile>
           <systemPropertyVariables>
-            <servlet.tck.support.crossContext>false</servlet.tck.support.crossContext>
+            <!-- Cross-context dispatch is enabled through the module's
+                 conf/context.xml (crossContext="true"), so the client asserts
+                 the full DispatchTests/HttpSessionxTests expectations instead
+                 of skipping them. -->
             <servlet.tck.support.http2Push>false</servlet.tck.support.http2Push>
             <servlet.tck.slf4jimpl>org.slf4j:slf4j-simple</servlet.tck.slf4jimpl>
             <javax.net.ssl.keyStore>${project.build.directory}/certificates/clientcert.jks</javax.net.ssl.keyStore>
