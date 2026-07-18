@@ -77,6 +77,15 @@
       <version>${cxf.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- CXF auto-registers its JSON-P/JSON-B providers when this extension
+         is present, which the client half of the JSON-B context-provider
+         tests requires (the server ships it in TomEE's lib). -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-extension-providers</artifactId>
+      <version>${cxf.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-transports-http-jetty</artifactId>
