@@ -20,7 +20,9 @@
       <property name="cleanOnStartUp">true</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>
-      <property name="catalina_opts">--add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+      <!-- The suite deploys and undeploys hundreds of archives in one server
+           lifetime; size the heap like the reference runner. -->
+      <property name="catalina_opts">-Xmx2048m -XX:MaxMetaspaceSize=1g --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
       <!-- CDI TCK tuning lives in src/tomee-conf/system.properties, which
            replaces the shared overlay system.properties for this module.
            The porting SPI implementations reach each deployment through
