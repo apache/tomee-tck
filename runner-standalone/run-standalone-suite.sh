@@ -7,10 +7,13 @@
 
 # Runs one standalone specification TCK runner against TomEE.
 #
-#   runner-standalone/run-standalone-suite.sh <id>
+#   runner-standalone/run-standalone-suite.sh <id> [extra mvn args]
 #
 # Container-based runners use fixed ports 8080/8443/8005/1527; run one at a
 # time. TOMEE_CLASSIFIER selects the distribution (default: plume).
+# The reviewed exclusion list in runner-standalone/exclusions/<id>.txt is
+# applied by default; append -Dtck.exclusions.file=... to override (see
+# exclusions/none.txt for full baseline runs).
 
 set -eu
 
@@ -21,7 +24,7 @@ TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 
 usage() {
   cat >&2 <<'EOF'
-Usage: run-standalone-suite.sh <id>
+Usage: run-standalone-suite.sh <id> [extra mvn args]
 Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet,
          validation, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
@@ -44,15 +47,17 @@ case "$ID" in
   security|authentication|faces)
     # These TCK reactors manage their own TomEE; they need the full Maven
     # lifecycle up to verify for their invoker runs.
+    shift
     exec "$ROOT_DIR/mvnw" -B -ntp \
       -pl "runner-standalone/$ID" -am \
       -Dtck.standalone=true \
-      verify ;;
+      verify "$@" ;;
   *) usage ;;
 esac
 
+shift
 exec "$ROOT_DIR/mvnw" -B -ntp \
   -pl "$MODULES" -am \
   -Dtck.standalone=true \
   "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
-  test
+  test "$@"
