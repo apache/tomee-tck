@@ -32,12 +32,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>jakarta.inject</groupId>
-      <artifactId>jakarta.inject-tck</artifactId>
-      <version>${di.tck.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.openwebbeans</groupId>
       <artifactId>openwebbeans-se</artifactId>
       <version>${openwebbeans.version}</version>
@@ -92,4 +86,28 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <!-- These artifacts come from the EFTL distribution installed by the
+           matching -install module; keep them out of the default reactor so
+           a fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.inject</groupId>
+          <artifactId>jakarta.inject-tck</artifactId>
+          <version>${di.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
+

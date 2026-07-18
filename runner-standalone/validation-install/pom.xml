@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-validation-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Validation 3.1 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Validation TCK distribution and installs the
+    jakarta.validation:validation-tck-tests artifact (jar and TestNG suite)
+    into the local repository.
+  </description>
+
+  <properties>
+    <validation.tck.version>3.1.1</validation.tck.version>
+    <validation.tck.zip>validation-tck-dist-${validation.tck.version}.zip</validation.tck.zip>
+    <validation.tck.url>https://download.eclipse.org/jakartaee/bean-validation/3.1/${validation.tck.zip}</validation.tck.url>
+    <validation.tck.sha256>bda9de47960845a7c73aa9a1616e4bbed3e346de3516f768819cf5af77bf969f</validation.tck.sha256>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+        <version>1.13.0</version>
+        <executions>
+          <execution>
+            <id>download-validation-tck</id>
+            <phase>generate-resources</phase>
+            <goals><goal>wget</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <url>${validation.tck.url}</url>
+              <sha256>${validation.tck.sha256}</sha256>
+              <unpack>true</unpack>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.4</version>
+        <executions>
+          <execution>
+            <id>install-validation-tck-tests</id>
+            <phase>process-resources</phase>
+            <goals><goal>install-file</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/validation-tck-tests-${validation.tck.version}.jar</file>
+              <groupId>jakarta.validation</groupId>
+              <artifactId>validation-tck-tests</artifactId>
+              <version>${validation.tck.version}</version>
+              <packaging>jar</packaging>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-validation-tck-suite</id>
+            <phase>process-resources</phase>
+            <goals><goal>install-file</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/tck-tests.xml</file>
+              <groupId>jakarta.validation</groupId>
+              <artifactId>validation-tck-tests</artifactId>
+              <version>${validation.tck.version}</version>
+              <classifier>suite</classifier>
+              <packaging>xml</packaging>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

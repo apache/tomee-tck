@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<!-- Jakarta Validation TCK suite, following the reference runner. -->
+<suite name="Jakarta-Validation-TCK" verbose="1">
+  <listeners>
+    <!-- Required: avoid randomly mixed test method execution. -->
+    <listener class-name="org.jboss.cdi.tck.impl.testng.SingleTestClassMethodInterceptor"/>
+    <listener class-name="org.testng.reporters.XMLReporter"/>
+    <listener class-name="org.testng.reporters.FailedReporter"/>
+  </listeners>
+  <test name="Jakarta-Validation-TCK">
+    <method-selectors>
+      <method-selector>
+        <selector-class name="org.hibernate.beanvalidation.tck.util.IntegrationTestsMethodSelector" priority="1"/>
+      </method-selector>
+      <method-selector>
+        <selector-class name="org.hibernate.beanvalidation.tck.util.JavaFXTestsMethodSelector" priority="2"/>
+      </method-selector>
+    </method-selectors>
+    <packages>
+      <package name="org.hibernate.beanvalidation.tck.tests.*"/>
+    </packages>
+  </test>
+</suite>

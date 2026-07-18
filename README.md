@@ -91,6 +91,24 @@ by default) and the remote Arquillian adapter into the same Maven repository
 first. Development runs intentionally consume the mutable snapshot without a
 checksum lock.
 
+## Standalone specification TCKs
+
+`runner-standalone/` gathers the independently published TCKs that Jakarta EE
+11 Web Profile certification requires in addition to the Platform catalog:
+Servlet, Faces, CDI (with Interceptors), Dependency Injection, Annotations,
+Validation, Security, Authentication, Concurrency, and Data. Run one at a
+time with:
+
+```sh
+runner-standalone/run-standalone-suite.sh concurrency
+```
+
+See [runner-standalone/README.md](runner-standalone/README.md) for the
+per-specification status: Annotations and Dependency Injection pass, CDI and
+Concurrency and Data run with recorded gaps, and the source-reactor TCKs
+(Security, Authentication, Faces) are download scaffolds with documented
+porting steps.
+
 ## Environment templates
 
 `environment/tomee/conf` contains a clean TomEE overlay rather than a copy of

@@ -150,6 +150,39 @@ from xml.etree import ElementTree
           branches['javatest - persistence-javatest (webprofile)'] =
             catalogBranch('javatest - persistence-javatest (webprofile)', 'javatest', 'persistence-javatest', 'webprofile')
 
+          // Standalone specification TCK runners that are validated so far.
+          // The remaining runners join as their harnesses are completed; see
+          // runner-standalone/README.md for status.
+          def standaloneBranch = { String id ->
+            {
+              stage("standalone - ${id}") {
+                node('ubuntu && ephemeral') {
+                  deleteDir()
+                  checkout scm
+                  def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
+
+                  try {
+                    timeout(time: 240, unit: 'MINUTES') {
+                      withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin"]) {
+                        sh "runner-standalone/run-standalone-suite.sh ${id}"
+                      }
+                    }
+                  } finally {
+                    archiveArtifacts(
+                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/**/logs/**/*',
+                      allowEmptyArchive: true
+                    )
+                    junit(testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml', allowEmptyResults: true)
+                    deleteDir()
+                  }
+                }
+              }
+            }
+          }
+          for (id in ['annotations', 'di']) {
+            branches["standalone - ${id}"] = standaloneBranch(id)
+          }
+
           parallel branches
         }
       }

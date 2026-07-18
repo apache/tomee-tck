@@ -33,6 +33,12 @@
     <module>data</module>
     <module>di-install</module>
     <module>di</module>
+    <module>cdi</module>
+    <module>cdi-ee</module>
+    <module>servlet-install</module>
+    <module>servlet</module>
+    <module>validation-install</module>
+    <module>validation</module>
   </modules>
 
   <properties>

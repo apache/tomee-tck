@@ -32,12 +32,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>jakartatck</groupId>
-      <artifactId>jakarta-annotations-tck</artifactId>
-      <version>${annotations.tck.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>jakarta.tck</groupId>
       <artifactId>sigtest-maven-plugin</artifactId>
       <version>2.6</version>
@@ -133,4 +127,28 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <!-- These artifacts come from the EFTL distribution installed by the
+           matching -install module; keep them out of the default reactor so
+           a fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakartatck</groupId>
+          <artifactId>jakarta-annotations-tck</artifactId>
+          <version>${annotations.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
+

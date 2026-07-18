@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-cdi-ee</artifactId>
+  <name>Jakarta CDI 4.1 TCK runner (EE integration)</name>
+  <description>
+    Runs the Jakarta EE integration part of the CDI 4.1 TCK
+    (jakarta.tck:cdi-tck-ee-impl, which also carries the EJB-facing Jakarta
+    Interceptors 2.2 tests) against the TomEE distribution selected by
+    tomee.classifier.
+  </description>
+
+  <properties>
+    <cdi.tck.version>4.1.0</cdi.tck.version>
+    <cdi.tck.ee.version>${jakarta.tck.version}</cdi.tck.ee.version>
+    <testng.version>7.9.0</testng.version>
+  </properties>
+
+  <dependencies>
+    <!-- TomEE remote Arquillian adapter and client-side runtime. -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>arquillian-tomee-remote</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>cdi-tck-ee-impl</artifactId>
+      <version>${cdi.tck.ee.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>cdi-tck-api</artifactId>
+      <version>${cdi.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-porting</artifactId>
+      <version>${openwebbeans.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.testng</groupId>
+      <artifactId>arquillian-testng-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+      <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+      <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Inherit the shared TomEE/Derby container lifecycle. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-cdi-ee-suite</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>cdi-tck-ee-impl</artifactId>
+                  <version>${cdi.tck.ee.version}</version>
+                  <includes>tck-tests.xml</includes>
+                  <outputDirectory>${project.build.directory}/suites</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stage-cdi-tck-ext-lib</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>jakarta.enterprise</groupId>
+                  <artifactId>cdi-tck-ext-lib</artifactId>
+                  <version>${cdi.tck.version}</version>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/tomee-overlay/lib</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stage-library-directory</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.openwebbeans</groupId>
+                  <artifactId>openwebbeans-porting</artifactId>
+                  <version>${openwebbeans.version}</version>
+                </artifactItem>
+              </artifactItems>
+              <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <suiteXmlFiles>
+            <suiteXmlFile>${project.build.directory}/suites/tck-tests.xml</suiteXmlFile>
+          </suiteXmlFiles>
+          <dependenciesToScan>
+            <dependency>jakarta.tck:cdi-tck-ee-impl</dependency>
+          </dependenciesToScan>
+          <!-- Web Profile selection per the CDI TCK configuration guide. -->
+          <excludedGroups>javaee-full,se</excludedGroups>
+          <systemPropertyVariables>
+            <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
+            <org.jboss.cdi.tck.testDataSource>openejb:Resource/jdbc/DB1</org.jboss.cdi.tck.testDataSource>
+          </systemPropertyVariables>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-testng</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>
