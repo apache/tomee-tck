@@ -162,31 +162,9 @@ Need triage/fixes in the upstream projects TomEE ships.
 
 Not product bugs — gaps in this repository's coverage.
 
-- **Faces old-tck**: the ~5,500-test JavaTest `old-tck` half runs through
-  the `faces-old` runner (the TCK's own `tomcat` deployment handler against
-  a runner-provisioned TomEE) and passes 5,391/5,391 in standalone mode with
-  no exclusions; `exclusions/faces-old.txt` stays empty. The
-  `faces-signaturetest` module runs in the faces invoker pass and passes
-  against Plume's Mojarra. The faces baseline (263 tests on record) covers
-  the modern Arquillian modules.
 - **Faces reactors not in CI**: the faces and faces-old runners run locally
   via `run-standalone-suite.sh`; they join the Jenkins branch list once
   their baseline and exclusion wiring have a verified green run.
-- **Exclusion lists confirmed**: every wired suite has had a full run with
-  its default exclusion list and came back green (2026-07-18):
-  `annotations`, `di`, `el`, `concurrency` (no exclusions), `data`,
-  `servlet` (1,637 run, 0 failures — the async-dispatch area held),
-  `pages` (no exclusions), `rest`, `validation` (925 run after the
-  exclusion listener learned to match inherited test methods by their
-  concrete class), `cdi` (1,216 run), `cdi-ee` (1,620 run), `websocket`,
-  `jsonp` (no exclusions), `jsonb`, `debugging`, `persistence` (no
-  exclusions), `transactions`, `security` (all 27 invoker projects
-  including the signature test; the invoker-passed `excludesFile` wiring
-  is verified), and `authentication` (all 13 projects, 0 failures,
-  signature test included). Note for side-by-side runs: overriding
-  `tck.derby.port` breaks the suites whose deployments use the shared
-  `tomee.xml` datasources on 1527 (cdi-ee's persistence-context tests) —
-  override the TomEE ports, keep Derby on 1527.
 
 ## What CI runs
 
