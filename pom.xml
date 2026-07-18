@@ -15,8 +15,8 @@
   <version>11.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>TomEE Jakarta EE 11 TCK Runner</name>
-  <description>Jakarta EE 11 Web Profile TCK runner for Apache TomEE 11</description>
+  <name>Apache TomEE Jakarta EE TCK Harness</name>
+  <description>Jakarta EE 11 TCK harness for Apache TomEE 11 (Plume and Web Profile distributions)</description>
 
   <modules>
     <module>tomee-porting</module>

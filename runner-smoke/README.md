@@ -1,9 +1,9 @@
 # TomEE Jakarta EE 11 Web Profile smoke runner
 
-This module is the first migration gate for the Jakarta EE 11 Platform TCK. It
-uses JUnit 5, Arquillian, the TomEE 11 remote adapter, and the TomEE 11 Web
-Profile distribution. Versions are controlled by the root Maven reactor and
-the Jakarta TCK artifacts BOM.
+This module is the harness's fast adapter check for the Jakarta EE 11 Platform
+TCK. It uses JUnit 5, Arquillian, the TomEE 11 remote adapter, and the TomEE
+distribution selected by `tomee.classifier` (Plume by default). Versions are
+controlled by the root Maven reactor and the Jakarta TCK artifacts BOM.
 
 The selected test is
 `com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT` from
@@ -15,9 +15,9 @@ requests to it, undeploy it, and stop TomEE.
 ## Prerequisites
 
 - JDK 17 or newer.
-- The current `11.0.0-SNAPSHOT` TomEE remote adapter and Web Profile
-  distribution, available from the Apache snapshot repository or the local
-  Maven repository.
+- The current `11.0.0-SNAPSHOT` TomEE remote adapter and the distribution
+  under test (Plume by default), available from the Apache snapshot repository
+  or the local Maven repository.
 - Network access to Maven Central, which publishes
   `jakarta.tck:rest-platform-tck:11.0.3`, or that artifact already cached in
   the local Maven repository.

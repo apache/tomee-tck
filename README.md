@@ -1,11 +1,16 @@
-# Jakarta EE 11 Web Profile TCK runner
+# Apache TomEE Jakarta EE TCK harness
 
-This is the replacement path for running the Jakarta EE 11 Web Profile TCK
-against TomEE 11. It uses the TCK's published Maven artifacts, JUnit 5 and
-Arquillian; it does not use the old Ant launcher, `TSDeployment`, or a
-checked-in TCK distribution. A small smoke module checks the TomEE adapter,
-while the partitioned Platform runner executes the Web Profile-tagged tests and
-keeps a reviewed list of known compatibility gaps.
+This repository is the harness for running the Jakarta EE TCKs against Apache
+TomEE — currently the Jakarta EE 11 Web Profile TCK against TomEE 11. Runs
+target the TomEE Plume distribution by default; set
+`TOMEE_CLASSIFIER=webprofile` to test the Web Profile distribution instead.
+
+The harness uses the TCK's published Maven artifacts, JUnit 5 and Arquillian;
+there is no Ant launcher, `TSDeployment`, or checked-in TCK distribution. A
+small smoke module checks the TomEE adapter, the partitioned Platform runner
+executes the Web Profile-tagged tests and keeps a reviewed list of known
+compatibility gaps, and `runner-standalone/` drives the independently
+published per-specification TCKs.
 
 ## Reproducible inputs
 
@@ -21,8 +26,8 @@ The build uses these centrally managed inputs:
 | TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | mutable development snapshot; not locked yet |
 | Derby runtime | `derbyclient`, `derbynet`, `derbyshared`, and `derbytools` `10.15.2.0` | per-jar SHA-256 values in `environment/versions.env` |
 
-TomEE is temporarily sourced from the snapshot repository because this work
-targets active TomEE 11 development after the 11.0.0-M1 milestone. Maven always
+TomEE is sourced from the snapshot repository while the harness tracks active
+TomEE 11 development after the 11.0.0-M1 milestone. Maven always
 uses the current `11.0.0-SNAPSHOT`; CI does not pin or checksum those changing
 bytes. A timestamped version and checksum should only be added when the harness
 needs a stable qualification candidate.
@@ -104,15 +109,15 @@ runner-standalone/run-standalone-suite.sh concurrency
 ```
 
 See [runner-standalone/README.md](runner-standalone/README.md) for the
-per-specification status: Annotations and Dependency Injection pass, CDI and
-Concurrency and Data run with recorded gaps, and the source-reactor TCKs
-(Security, Authentication, Faces) are download scaffolds with documented
-porting steps.
+per-specification status: Annotations and Dependency Injection pass, and every
+other suite — including the source-reactor TCKs (Security, Authentication,
+Faces) — executes end to end with dated result counts and the remaining
+TomEE or provider gaps recorded for triage.
 
 ## Environment templates
 
-`environment/tomee/conf` contains a clean TomEE overlay rather than a copy of
-the old harness configuration:
+`environment/tomee/conf` contains a minimal TomEE overlay carrying only what
+the TCK requires:
 
 - `tomee.xml` declares `jdbc/DB1`, `jdbc/DB2`, and `jdbc/DBTimer` using the
   TCK-documented Derby test account `cts1`.
@@ -163,11 +168,11 @@ validation and all servlet- and JavaTest-protocol partitions represented by
 those artifacts. Known TomEE compatibility gaps remain visible as reviewed
 class or method exclusions; they are not compatibility passes.
 
-This repository replaces the old Jakarta EE *Platform TCK* harness. It does not
-bundle or claim results for each specification project's independently
-published standalone TCK. Those independent suites are additional inputs to a
-formal Jakarta EE compatibility certification, not missing Platform artifact
-partitions in this runner.
+The Platform catalog does not bundle or claim results for each specification
+project's independently published standalone TCK. Those independent suites are
+additional inputs to a formal Jakarta EE compatibility certification, not
+missing Platform artifact partitions; they run from `runner-standalone/` as
+separate suites with their own status tracking.
 
 ## Authoritative references
 

@@ -82,12 +82,12 @@ not require.
 
 ## Certification boundary
 
-This runner replaces the old Jakarta EE Platform TCK harness and covers the
-Platform integration artifacts above. Passing its retained catalog is not by
-itself a Jakarta EE compatibility result: the independently published TCK for
-each required Web Profile specification, plus the formal challenge/exclusion
-review, must also pass for certification. Those standalone TCKs deliberately
-remain outside this repository's Platform artifact catalog.
+This runner covers the Platform integration artifacts above. Passing its
+retained catalog is not by itself a Jakarta EE compatibility result: the
+independently published TCK for each required Web Profile specification, plus
+the formal challenge/exclusion review, must also pass for certification. Those
+standalone TCKs deliberately stay outside the Platform artifact catalog; they
+run from `runner-standalone/`.
 
 The Jakarta EE 11 Web Profile specification (section 2.1) requires 22
 component specifications. Mapped against this catalog:
