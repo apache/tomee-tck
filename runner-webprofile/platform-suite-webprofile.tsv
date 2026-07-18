@@ -1,18 +1,5 @@
-# Jakarta EE Platform TCK 11.0.3 artifact inventory for the OpenJPA-based
-# TomEE webprofile distribution (TOMEE_CLASSIFIER=webprofile). Only the
-# persistence expectations differ from the default Plume manifest.
+# Per-partition overrides applied on top of platform-suite.tsv when
+# TOMEE_CLASSIFIER=webprofile (the OpenJPA-based ZIP). Rows replace the base
+# row with the same id; only the persistence expectations differ.
 # id	artifact	protocol	junit_tag_expression	source_classes	expected_executed_classes	failsafe_include
-jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152	152	**/*JSP.java,**/*Servlet.java
-enterprise-beans-30	ejb30	javatest	web & tck-javatest	282	170	**/*Test.java
-enterprise-beans-32	ejb32	javatest	web & tck-javatest	72	48	**/*Test.java
-expression-language	el-platform-tck	javatest	web & tck-javatest	72	66	**/*Test.java
-json-binding	jsonb-platform-tck	javatest	web & tck-javatest	6	4	**/*Test.java
-json-processing	jsonp-platform-tck	javatest	web & tck-javatest	4	4	**/*Test.java
-pages	pages-platform-tck	servlet	web & !tck-javatest	2	2	**/*IT.java
-persistence-servlet	persistence-platform-tck-tests	servlet	web & !tck-javatest	1	0	**/*Test.java
 persistence-javatest	persistence-platform-tck-tests	javatest	web & tck-javatest	450	201	**/*Test.java
-rest	rest-platform-tck	servlet	web & !tck-javatest	18	15	**/*IT.java
-tags	tags-tck	servlet	web & !tck-javatest	50	0	**/*IT.java
-transactions	transactions-tck	javatest	web & tck-javatest	16	6	**/*Test.java
-websocket-platform	websocket-tck-platform-tests	servlet	web & !tck-javatest	5	5	**/*IT.java
-signature	signaturevalidation	javatest	web	2	0	**/ClientSignatureJspTest.java,**/ClientSignatureServletTest.java

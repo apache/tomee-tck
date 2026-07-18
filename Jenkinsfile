@@ -65,45 +65,32 @@ from xml.etree import ElementTree
     // Each branch requests a single-executor ephemeral agent. TomEE and Derby
     // use fixed localhost ports, so two partitions must never share a host.
     stage('Smoke') {
-      parallel {
-        stage('JDK 17') {
-          agent { label 'ubuntu && ephemeral' }
-          tools { jdk 'jdk_17_latest' }
-          options { timeout(time: 30, unit: 'MINUTES') }
-          steps {
-            deleteDir()
-            checkout scm
-            sh './mvnw -B -ntp -pl runner-smoke -am verify'
-          }
-          post {
-            always {
-              archiveArtifacts(
-                artifacts: 'runner-smoke/target/surefire-reports/**/*,runner-smoke/target/failsafe-reports/**/*,runner-smoke/target/**/logs/**/*,runner-smoke/target/*.log',
-                allowEmptyArchive: true
-              )
-              junit(testResults: 'runner-smoke/target/**/TEST-*.xml', allowEmptyResults: true)
-              deleteDir()
-            }
+      matrix {
+        axes {
+          axis {
+            name 'SMOKE_JDK'
+            values 'jdk_17_latest', 'jdk_21_latest'
           }
         }
-
-        stage('JDK 21') {
-          agent { label 'ubuntu && ephemeral' }
-          tools { jdk 'jdk_21_latest' }
-          options { timeout(time: 30, unit: 'MINUTES') }
-          steps {
-            deleteDir()
-            checkout scm
-            sh './mvnw -B -ntp -pl runner-smoke -am verify'
-          }
-          post {
-            always {
-              archiveArtifacts(
-                artifacts: 'runner-smoke/target/surefire-reports/**/*,runner-smoke/target/failsafe-reports/**/*,runner-smoke/target/**/logs/**/*,runner-smoke/target/*.log',
-                allowEmptyArchive: true
-              )
-              junit(testResults: 'runner-smoke/target/**/TEST-*.xml', allowEmptyResults: true)
+        stages {
+          stage('smoke') {
+            agent { label 'ubuntu && ephemeral' }
+            tools { jdk "${SMOKE_JDK}" }
+            options { timeout(time: 30, unit: 'MINUTES') }
+            steps {
               deleteDir()
+              checkout scm
+              sh './mvnw -B -ntp -pl runner-smoke -am verify'
+            }
+            post {
+              always {
+                archiveArtifacts(
+                  artifacts: 'runner-smoke/target/surefire-reports/**/*,runner-smoke/target/failsafe-reports/**/*,runner-smoke/target/**/logs/**/*,runner-smoke/target/*.log',
+                  allowEmptyArchive: true
+                )
+                junit(testResults: 'runner-smoke/target/**/TEST-*.xml', allowEmptyResults: true)
+                deleteDir()
+              }
             }
           }
         }

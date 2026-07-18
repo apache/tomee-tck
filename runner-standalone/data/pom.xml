@@ -97,27 +97,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <!-- Replaces the shared tomee.xml (fixed Derby port 1527) with a
-                 filtered copy honouring ${tck.derby.port}; runs after the
-                 inherited stage-tomee-configuration execution. -->
-            <id>stage-port-aware-tomee-configuration</id>
-            <phase>process-test-resources</phase>
-            <goals><goal>copy-resources</goal></goals>
-            <configuration>
-              <skip>${tck.standalone.container.skip}</skip>
-              <overwrite>true</overwrite>
-              <outputDirectory>${project.build.directory}/tomee-overlay/conf</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/src/tomee-conf-filtered</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

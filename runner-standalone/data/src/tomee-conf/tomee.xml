@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Port-aware test-only TomEE resources for the Jakarta Data TCK; ${tck.derby.port}
-     is substituted while staging the overlay. Replaces the shared
+<!-- Test-only TomEE resources for the Jakarta Data TCK; replaces the shared
      overlay tomee.xml so the TCK's jdbc/DataTCK datasource is available in
-     addition to the standard TCK datasources. -->
+     addition to the standard TCK datasources. ${tck.derby.port} is
+     substituted while staging the overlay. -->
 <openejb>
   <!-- The generated persistence unit's <jta-data-source> is
        java:comp/DefaultDataSource. Define it explicitly on embedded Derby
