@@ -28,7 +28,7 @@ Detail lives next to each runner:
 | servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
-| validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
+| validation | 1,049 tests, 0 F (incl. signature test) | — | — (server pins the JAXB RI; see product gaps) |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
 | el | 361/361 pass (incl. signature test) | — | — |
@@ -109,6 +109,17 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
     requested/negotiated extension lists (3 tests), and two idle-timeout/
     close-code assertions differ.
     [websocket.txt](runner-standalone/exclusions/websocket.txt).
+13. **Bean Validation XML config broken on stock Plume** — the Plume
+    distribution ships EclipseLink MOXy (`eclipselink-5.0.1.jar`) and the JAXB
+    RI (`jaxb-runtime-4.0.4.jar`) side by side. EclipseLink registers a
+    `jakarta.xml.bind.JAXBContextFactory` service and wins ServiceLoader
+    discovery, but MOXy rejects the namespace rewriting Apache BVal performs
+    while parsing `validation.xml`/constraint-mapping descriptors, so every
+    Bean Validation XML-configuration path fails on an out-of-the-box Plume
+    server. The validation runner works around it by pinning the JAXB RI as the
+    `jakarta.xml.bind.JAXBContextFactory` system property in the server JVM;
+    TomEE should pin the factory itself so applications relying on Bean
+    Validation XML config work on stock Plume.
 
 ## Upstream provider gaps
 
@@ -119,20 +130,15 @@ Need triage/fixes in the upstream projects TomEE ships.
    not implemented; assorted observer/interceptor edge cases. Drives the
    [cdi.txt](runner-standalone/exclusions/cdi.txt) and most of the
    [cdi-ee.txt](runner-standalone/exclusions/cdi-ee.txt) lists.
-2. **Apache BVal** — `validation.xml`/constraint-mapping XML parsing fails
-   ("Unable to parse null", "Failed to parse XML deployment descriptor
-   file"), 118 of the 124 validation failures; the rest are
-   method-validation/metadata gaps.
-   [validation.txt](runner-standalone/exclusions/validation.txt).
-3. **Tomcat Jakarta Authentication SPI** — `ServletProfileSPITest` fails 50
+2. **Tomcat Jakarta Authentication SPI** — `ServletProfileSPITest` fails 50
    of 57 AuthConfigFactory/ServerAuthConfig conformance assertions.
    [authentication.txt](runner-standalone/exclusions/authentication.txt).
-4. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
+3. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
    fields, JSON-P scalar writers, Bean Validation interceptors, and CDI
    resource-class handling in the REST stack
    ([TOMEE-4436](https://issues.apache.org/jira/browse/TOMEE-4436),
    [TOMEE-4166](https://issues.apache.org/jira/browse/TOMEE-4166)).
-5. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
+4. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
    by the standalone JSON-B TCK: `JsonbDeserializer` instances are not
    resolved through CDI, leaving `@Inject` fields null (the adapter and
    serializer CDI tests pass — the deserializer half of TOMEE-4436);

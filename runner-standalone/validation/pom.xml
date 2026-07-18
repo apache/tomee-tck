@@ -92,6 +92,13 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Drives the mandatory Validation API signature check; the jakarta.tck
+         fork understands JDK 21 class files. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -104,6 +111,81 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <!-- Stage the uber API jar the TomEE distribution ships so the
+               signature test checks the jakarta.validation packages actually
+               deployed, not the TCK's own copy. -->
+          <execution>
+            <id>stage-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/jakartaee-api-*.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <!-- The TCK ships the reference API signatures at its jar root. -->
+          <execution>
+            <id>stage-validation-sig</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>jakarta.validation</groupId>
+                  <artifactId>validation-tck-tests</artifactId>
+                  <version>${validation.tck.version}</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/sig</outputDirectory>
+                  <includes>validation-api-jdk17.sig</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <!-- The uber API jar carries every Jakarta EE spec package; the
+               signature check must see only jakarta.validation, so extract that
+               subtree into its own directory. -->
+          <execution>
+            <id>extract-validation-api-classes</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <path id="tomee-api-jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert property="validation.sig.api.jar"
+                             refid="tomee-api-jar"/>
+                <unzip src="${validation.sig.api.jar}"
+                       dest="${project.build.directory}/api-classes">
+                  <patternset>
+                    <include name="jakarta/validation/**"/>
+                  </patternset>
+                </unzip>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -164,6 +246,32 @@
         </dependency>
 
       </dependencies>
+      <build>
+        <plugins>
+          <!-- Mandatory Validation API signature test. The TCK ships the
+               reference signatures as validation-api-jdk17.sig at the root of
+               validation-tck-tests; the jakarta.validation packages checked
+               are the ones the staged TomEE uber API jar carries. -->
+          <plugin>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${sigtest.maven.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>validation-api-signature-check</id>
+                <phase>test</phase>
+                <goals><goal>check</goal></goals>
+                <configuration>
+                  <sigfile>${project.build.directory}/sig/validation-api-jdk17.sig</sigfile>
+                  <packages>jakarta.validation</packages>
+                  <classes>${project.build.directory}/api-classes</classes>
+                  <release>17</release>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
