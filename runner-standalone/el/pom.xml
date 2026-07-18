@@ -130,6 +130,10 @@
           <systemPropertyVariables>
             <jimage.dir>${project.build.directory}/jimage</jimage.dir>
             <sigTestClasspath>${el.sig.api.jar}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</sigTestClasspath>
+            <!-- Vendor VariableMapper implementation the TCK's
+                 VarMapperELContext instantiates; Tomcat's Jasper EL provides
+                 it in the bundled tomcat-jasper-el jar. -->
+            <variable.mapper>org.apache.el.lang.VariableMapperImpl</variable.mapper>
           </systemPropertyVariables>
         </configuration>
       </plugin>

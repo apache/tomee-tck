@@ -31,7 +31,7 @@ Detail lives next to each runner:
 | validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
-| el | 361 tests, 9 E | 9 tests | Tomcat EL 6.0 gaps (provider-level confirmation of the Platform findings) |
+| el | 361/361 pass (incl. signature test) | — | — |
 | persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
 | transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
 | jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
@@ -127,18 +127,12 @@ Need triage/fixes in the upstream projects TomEE ships.
 3. **Tomcat Jakarta Authentication SPI** — `ServletProfileSPITest` fails 50
    of 57 AuthConfigFactory/ServerAuthConfig conformance assertions.
    [authentication.txt](runner-standalone/exclusions/authentication.txt).
-4. **Tomcat EL 6.0** — `MethodExpression` overload selection and the missing
-   `StandardELContext` `VariableMapper` (webprofile `expression-language`
-   partition). Confirmed at provider level by the standalone EL 6.0 TCK:
-   the same two gaps account for all 9 errors in
-   [el.txt](runner-standalone/exclusions/el.txt); the other 352 tests and
-   the signature test pass.
-5. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
+4. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
    fields, JSON-P scalar writers, Bean Validation interceptors, and CDI
    resource-class handling in the REST stack
    ([TOMEE-4436](https://issues.apache.org/jira/browse/TOMEE-4436),
    [TOMEE-4166](https://issues.apache.org/jira/browse/TOMEE-4166)).
-6. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
+5. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
    by the standalone JSON-B TCK: `JsonbDeserializer` instances are not
    resolved through CDI, leaving `@Inject` fields null (the adapter and
    serializer CDI tests pass — the deserializer half of TOMEE-4436);
@@ -153,7 +147,7 @@ Need triage/fixes in the upstream projects TomEE ships.
    `tck/jsonb-standalone`), so BigDecimal/BigInteger serialize as the JSON
    numbers §3.4.1 requires instead of Johnzon's precision-preserving string
    default. JSON-P (johnzon-core) passes its TCK completely.
-7. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
+6. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
    none reproduce on Plume/EclipseLink, tracked partly as
    [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).
    Kept visible via the `persistence-javatest (webprofile)` CI branch.
