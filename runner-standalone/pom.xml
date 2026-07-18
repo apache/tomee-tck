@@ -67,11 +67,17 @@
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
-    <!-- Derby network server port; override together with the runner's
-         tomee.*.port properties to run a suite next to another harness
-         instance. The shared tomee.xml datasources stay on 1527, which only
-         matters for suites that actually touch the database. -->
+    <!-- Derby network server port; override together with the tomee.*.port
+         properties below to run a suite next to another harness instance.
+         The shared tomee.xml datasources stay on 1527, which only matters
+         for suites that actually touch the database. -->
     <tck.derby.port>1527</tck.derby.port>
+    <!-- Harness catalog defaults for the TomEE container; the remote
+         adapter otherwise attaches to whatever already answers on the http
+         port. Modules that pin fixed ports simply ignore these. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
   </properties>
 
   <dependencies>

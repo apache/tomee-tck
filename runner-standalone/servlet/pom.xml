@@ -28,12 +28,6 @@
 
   <properties>
     <servlet.tck.version>6.1.0</servlet.tck.version>
-    <!-- Defaults match the fixed harness catalog; override to run beside
-         another TomEE instance (the remote adapter attaches to any server
-         already answering on the http port). -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/servlet.txt</tck.exclusions.file>

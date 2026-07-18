@@ -32,10 +32,6 @@
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/rest.txt</tck.exclusions.file>
-    <!-- Harness default ports; override for concurrent side-by-side runs. -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
   </properties>
 
   <dependencies>

@@ -25,11 +25,6 @@
 
   <properties>
     <concurrency.tck.version>3.1.1</concurrency.tck.version>
-    <!-- Overridable to run next to another harness instance; the Arquillian
-         adapter otherwise attaches to whatever already answers on 8080. -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/concurrency.txt</tck.exclusions.file>

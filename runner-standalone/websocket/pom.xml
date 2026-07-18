@@ -32,12 +32,6 @@
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/websocket.txt</tck.exclusions.file>
-    <!-- Container ports; the TomEE remote adapter rewrites the staged
-         conf/server.xml to these values, so overriding the properties is
-         enough to relocate the whole suite. -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Response wait used by the TCK clients, in seconds (ts.jte ws_wait). -->
     <websocket.tck.ws.wait>5</websocket.tck.ws.wait>
   </properties>

@@ -36,12 +36,6 @@
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/pages.txt</tck.exclusions.file>
-    <!-- Defaults match the fixed harness catalog (environment/README.md);
-         override these three plus tck.derby.port (inherited, default 1527) to
-         run beside another TomEE/Derby instance. -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
   </properties>
 
   <dependencies>

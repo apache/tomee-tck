@@ -59,11 +59,6 @@
     <tck.mode>standalone</tck.mode>
 
     <tomee.home>${project.build.directory}/tomee/apache-tomee-${tomee.classifier}-${tomee.version}</tomee.home>
-    <!-- Defaults match the fixed harness catalog (environment/README.md);
-         override to run beside another TomEE instance. -->
-    <tomee.http.port>8080</tomee.http.port>
-    <tomee.https.port>8443</tomee.https.port>
-    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- JavaTest client-side log listener. -->
     <tck.harness.log.port>2000</tck.harness.log.port>
     <!-- Seconds per archive the tomcat deployment handler waits for the
