@@ -27,6 +27,7 @@
   </description>
 
   <modules>
+    <module>tck-common</module>
     <module>annotations-install</module>
     <module>annotations</module>
     <module>concurrency</module>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-tck-common</artifactId>
+  <name>Standalone TCK runner support</name>
+  <description>
+    Shared support classes for the standalone TCK runners. Currently the
+    TestNG annotation transformer that applies the reviewed exclusion lists
+    in runner-standalone/exclusions/ to the TestNG-based TCKs (cdi, cdi-ee,
+    validation), whose suite-XML runs ignore surefire's excludesFile.
+  </description>
+
+  <properties>
+    <testng.version>7.9.0</testng.version>
+  </properties>
+
+  <dependencies>
+    <!-- Provided: the consuming runner supplies its own TestNG version. -->
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
