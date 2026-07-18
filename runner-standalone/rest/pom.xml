@@ -202,6 +202,11 @@
           </includes>
           <excludesFile>${tck.exclusions.file}</excludesFile>
           <systemPropertyVariables>
+            <!-- Force the CXF JAX-RS client onto the HttpURLConnection conduit
+                 for TCK runs, matching apache/tomee's TCK module and the
+                 webprofile runner; the async HTTP conduit mis-handles some
+                 no-entity response cases the assertions probe. -->
+            <org.apache.cxf.transport.http.forceURLConnection>true</org.apache.cxf.transport.http.forceURLConnection>
             <!-- TomEE materializes web.xml servlet entries whose init-param
                  jakarta.ws.rs.Application names the app through its own CXF
                  adaptor servlet, like the Platform TCK runner does. -->

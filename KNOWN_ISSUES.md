@@ -27,7 +27,7 @@ Detail lives next to each runner:
 | data | 99 tests, 7 F + 29 E | 36 methods (EntityTests only) | openejb-jakarta-data query generation |
 | servlet | 1,706 tests, 12 E | 2 classes (12 methods) | TomEE aborts context startup on a missing referenced servlet/filter class |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
-| rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
+| rest | 2,803 tests, 2 F + 1 E | 3 tests | Feature/DynamicFeature `META-INF/services` discovery (TOMEE-4321/CXF-9005) + 405-vs-404 matching |
 | validation | 1,049 tests, 0 F (incl. signature test) | — | — (server pins the JAXB RI; see product gaps) |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
@@ -63,16 +63,19 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    fail to start and every method in each class errors on the missing
    deployment URL. 2 class entries (12 methods) in
    [servlet.txt](runner-standalone/exclusions/servlet.txt).
-4. **RESTful Web Services 4.0** — TomEE refuses to deploy an application
-   bundling a `@ConstrainedTo(RuntimeType.CLIENT)` provider
-   (`IllegalArgumentException: ... is not a SERVER provider` from
-   `TomeeJaxRsService`) where the spec requires ignoring it; REST 3.1
-   `META-INF/services` discovery of `Feature`/`DynamicFeature` is not
-   implemented; `ContainerRequestContext.getLength()`/`HttpHeaders
-   .getLength()` no-entity semantics differ; the CXF client answers
-   `hasEntity() == true` for entity-less responses; and an unmatched
-   subresource path answers 405 where 404 is required. 14 entries in
-   [rest.txt](runner-standalone/exclusions/rest.txt).
+4. **RESTful Web Services 4.0** — REST 3.1 `META-INF/services` discovery of
+   `Feature`/`DynamicFeature` is not implemented (TOMEE-4321, CXF-9005), and
+   a request to a path only matching the superclass `@Path` answers 405
+   where the spec requires 404. 3 entries in
+   [rest.txt](runner-standalone/exclusions/rest.txt). The runner sets
+   `openejb.jaxrs.fail-on-constrainedto=false` in the server JVM — TomEE's
+   strict default rejects deployments bundling a
+   `@ConstrainedTo(RuntimeType.CLIENT)` provider where the spec requires
+   ignoring it — and pins the CXF client to the `HttpURLConnection` conduit
+   (`org.apache.cxf.transport.http.forceURLConnection=true`); the async
+   conduit's no-entity handling, tracked upstream as
+   [CXF-9039](https://issues.apache.org/jira/browse/CXF-9039), otherwise
+   fails the `getLength()`/`hasEntity()` assertions.
 5. **Faces descriptor parsing** — TomEE's `faces-config.xml` unmarshaller
    rejects the `xsi:schemaLocation` attribute that Faces 4.1 descriptors
    carry, so affected applications never deploy. Dominant cause of the 31

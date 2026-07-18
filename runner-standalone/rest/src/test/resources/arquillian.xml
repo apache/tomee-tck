@@ -26,8 +26,12 @@
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>
       <!-- The suite deploys and undeploys more than a hundred archives in
-           one server lifetime. -->
-      <property name="catalina_opts">-Xmx2048m -XX:MaxMetaspaceSize=1g --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+           one server lifetime. openejb.jaxrs.fail-on-constrainedto=false makes
+           TomEE's CxfRsHttpListener ignore a bundled @ConstrainedTo(CLIENT)
+           provider (the spec-required behavior) instead of rejecting the
+           deployment; this is a server-JVM property, so it rides catalina_opts
+           into the remote container rather than the surefire client JVM. -->
+      <property name="catalina_opts">-Xmx2048m -XX:MaxMetaspaceSize=1g -Dopenejb.jaxrs.fail-on-constrainedto=false --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
     </configuration>
   </container>
 </arquillian>
