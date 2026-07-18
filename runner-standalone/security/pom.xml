@@ -159,6 +159,52 @@
               </arguments>
             </configuration>
           </execution>
+          <!-- Step 4: the invoker runs with ignoreFailures=true to collect the
+           whole baseline, so Maven exits 0 regardless of the result. With the
+           reviewed exclusions applied the run is expected green; aggregate the
+           inner surefire/failsafe reports and fail the build on any
+           failure/error or on a module that built but never ran its tests. -->
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${project.basedir}/../verify-invoker-result.sh</argument>
+                <argument>${tck.dir}</argument>
+                <argument>${project.build.directory}/invoker-reports</argument>
+                <argument>app-securitycontext</argument>
+                <argument>app-securitycontext-auth</argument>
+                <argument>app-securitycontext-customprincipal</argument>
+                <argument>app-mem</argument>
+                <argument>app-db</argument>
+                <argument>app-ldap</argument>
+                <argument>app-ldap2</argument>
+                <argument>app-ldap3</argument>
+                <argument>app-custom</argument>
+                <argument>app-multiple-store</argument>
+                <argument>app-multiple-store-backup</argument>
+                <argument>app-mem-basic</argument>
+                <argument>app-mem-basic-decorate</argument>
+                <argument>app-mem-form</argument>
+                <argument>app-mem-customform</argument>
+                <argument>app-openid</argument>
+                <argument>app-openid2</argument>
+                <argument>app-openid3</argument>
+                <argument>app-custom-session</argument>
+                <argument>app-custom-rememberme</argument>
+                <argument>app-custom-identity-store-handler</argument>
+                <argument>app-custom-authentication-mechanism-handler</argument>
+                <argument>app-custom-authentication-mechanism-handler2</argument>
+                <argument>app-jaxrs</argument>
+                <argument>app-mem-policy</argument>
+                <argument>app-mem-policy2</argument>
+                <argument>security-signaturetest</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -225,58 +271,6 @@
         </executions>
       </plugin>
 
-      <!-- Step 4: the invoker runs with ignoreFailures=true to collect the
-           whole baseline, so Maven exits 0 regardless of the result. With the
-           reviewed exclusions applied the run is expected green; aggregate the
-           inner surefire/failsafe reports and fail the build on any
-           failure/error or on a module that built but never ran its tests. -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>verify-tck-result</id>
-            <phase>verify</phase>
-            <goals><goal>exec</goal></goals>
-            <configuration>
-              <skip>${tck.standalone.skip}</skip>
-              <executable>sh</executable>
-              <arguments>
-                <argument>${project.basedir}/../verify-invoker-result.sh</argument>
-                <argument>${tck.dir}</argument>
-                <argument>${project.build.directory}/invoker-reports</argument>
-                <argument>app-securitycontext</argument>
-                <argument>app-securitycontext-auth</argument>
-                <argument>app-securitycontext-customprincipal</argument>
-                <argument>app-mem</argument>
-                <argument>app-db</argument>
-                <argument>app-ldap</argument>
-                <argument>app-ldap2</argument>
-                <argument>app-ldap3</argument>
-                <argument>app-custom</argument>
-                <argument>app-multiple-store</argument>
-                <argument>app-multiple-store-backup</argument>
-                <argument>app-mem-basic</argument>
-                <argument>app-mem-basic-decorate</argument>
-                <argument>app-mem-form</argument>
-                <argument>app-mem-customform</argument>
-                <argument>app-openid</argument>
-                <argument>app-openid2</argument>
-                <argument>app-openid3</argument>
-                <argument>app-custom-session</argument>
-                <argument>app-custom-rememberme</argument>
-                <argument>app-custom-identity-store-handler</argument>
-                <argument>app-custom-authentication-mechanism-handler</argument>
-                <argument>app-custom-authentication-mechanism-handler2</argument>
-                <argument>app-jaxrs</argument>
-                <argument>app-mem-policy</argument>
-                <argument>app-mem-policy2</argument>
-                <argument>security-signaturetest</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>

@@ -125,6 +125,32 @@
               </arguments>
             </configuration>
           </execution>
+          <!-- Step 4: the invoker runs with ignoreFailures=true (and the modules
+           with maven.test.failure.ignore=true) to collect the whole baseline,
+           so Maven exits 0 regardless of the result. With the reviewed
+           exclusions applied the run is expected green; aggregate the inner
+           surefire/failsafe reports (each include is a multi-module reactor
+           whose reports live two levels deeper) and fail the build on any
+           failure/error or on a module that built but never ran its tests. -->
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${project.basedir}/../verify-invoker-result.sh</argument>
+                <argument>${faces.tck.dir}</argument>
+                <argument>${project.build.directory}/invoker-reports</argument>
+                <argument>faces22</argument>
+                <argument>faces23</argument>
+                <argument>faces40</argument>
+                <argument>faces41</argument>
+                <argument>faces-signaturetest</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -170,38 +196,6 @@
         </executions>
       </plugin>
 
-      <!-- Step 4: the invoker runs with ignoreFailures=true (and the modules
-           with maven.test.failure.ignore=true) to collect the whole baseline,
-           so Maven exits 0 regardless of the result. With the reviewed
-           exclusions applied the run is expected green; aggregate the inner
-           surefire/failsafe reports (each include is a multi-module reactor
-           whose reports live two levels deeper) and fail the build on any
-           failure/error or on a module that built but never ran its tests. -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>verify-tck-result</id>
-            <phase>verify</phase>
-            <goals><goal>exec</goal></goals>
-            <configuration>
-              <skip>${tck.standalone.skip}</skip>
-              <executable>sh</executable>
-              <arguments>
-                <argument>${project.basedir}/../verify-invoker-result.sh</argument>
-                <argument>${faces.tck.dir}</argument>
-                <argument>${project.build.directory}/invoker-reports</argument>
-                <argument>faces22</argument>
-                <argument>faces23</argument>
-                <argument>faces40</argument>
-                <argument>faces41</argument>
-                <argument>faces-signaturetest</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>
