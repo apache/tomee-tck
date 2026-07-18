@@ -49,14 +49,12 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.13.0</version>
             <executions>
               <execution>
                 <id>download-validation-tck</id>
                 <phase>generate-resources</phase>
                 <goals><goal>wget</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <url>${validation.tck.url}</url>
                   <sha256>${validation.tck.sha256}</sha256>
                   <unpack>true</unpack>
@@ -68,14 +66,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
-            <version>3.1.4</version>
             <executions>
               <execution>
                 <id>install-validation-tck-tests</id>
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/validation-tck-tests-${validation.tck.version}.jar</file>
                   <groupId>jakarta.validation</groupId>
                   <artifactId>validation-tck-tests</artifactId>
@@ -88,7 +84,6 @@
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/validation-tck-dist-${validation.tck.version}/artifacts/tck-tests.xml</file>
                   <groupId>jakarta.validation</groupId>
                   <artifactId>validation-tck-tests</artifactId>

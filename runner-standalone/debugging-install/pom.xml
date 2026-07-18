@@ -50,14 +50,12 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.13.0</version>
             <executions>
               <execution>
                 <id>download-debugging-tck</id>
                 <phase>generate-resources</phase>
                 <goals><goal>wget</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <url>${debugging.tck.url}</url>
                   <sha256>${debugging.tck.sha256}</sha256>
                   <unpack>true</unpack>
@@ -70,14 +68,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
-            <version>3.1.4</version>
             <executions>
               <execution>
                 <id>install-debugging-tck</id>
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/debugging-tck/debugging-tck-${debugging.tck.version}.jar</file>
                   <groupId>jakartatck</groupId>
                   <artifactId>jakarta-debugging-tck</artifactId>
@@ -90,7 +86,6 @@
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/debugging-tck/testclient.war</file>
                   <groupId>jakartatck</groupId>
                   <artifactId>jakarta-debugging-tck</artifactId>

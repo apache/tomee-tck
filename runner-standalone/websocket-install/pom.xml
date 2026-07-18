@@ -51,7 +51,6 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.13.0</version>
             <executions>
               <execution>
                 <id>download-websocket-tck</id>
@@ -69,7 +68,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
-            <version>3.1.4</version>
             <executions>
               <execution>
                 <id>install-websocket-tck-parent-pom</id>

@@ -34,7 +34,6 @@
     <dependency>
       <groupId>jakarta.tck</groupId>
       <artifactId>sigtest-maven-plugin</artifactId>
-      <version>2.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -69,7 +68,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.1.0</version>
         <executions>
           <execution>
             <id>locate-tomee-api-jar</id>

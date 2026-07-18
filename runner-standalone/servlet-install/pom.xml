@@ -49,14 +49,12 @@
           <plugin>
             <groupId>com.googlecode.maven-download-plugin</groupId>
             <artifactId>download-maven-plugin</artifactId>
-            <version>1.13.0</version>
             <executions>
               <execution>
                 <id>download-servlet-tck</id>
                 <phase>generate-resources</phase>
                 <goals><goal>wget</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <url>${servlet.tck.url}</url>
                   <sha256>${servlet.tck.sha256}</sha256>
                   <unpack>true</unpack>
@@ -68,14 +66,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-install-plugin</artifactId>
-            <version>3.1.4</version>
             <executions>
               <execution>
                 <id>install-servlet-tck-pom</id>
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-${servlet.tck.version}.pom</file>
                   <groupId>jakarta.tck</groupId>
                   <artifactId>servlet-tck</artifactId>
@@ -88,7 +84,6 @@
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-runtime-${servlet.tck.version}.jar</file>
                   <groupId>jakarta.tck</groupId>
                   <artifactId>servlet-tck-runtime</artifactId>
@@ -101,7 +96,6 @@
                 <phase>process-resources</phase>
                 <goals><goal>install-file</goal></goals>
                 <configuration>
-                  <skip>${tck.standalone.skip}</skip>
                   <file>${project.build.directory}/servlet-tck/artifacts/servlet-tck-util-${servlet.tck.version}.jar</file>
                   <groupId>jakarta.tck</groupId>
                   <artifactId>servlet-tck-util</artifactId>
