@@ -22,6 +22,7 @@
     <module>tomee-porting</module>
     <module>runner-smoke</module>
     <module>runner-webprofile</module>
+    <module>runner-standalone</module>
   </modules>
 
   <properties>

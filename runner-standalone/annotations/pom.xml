@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-annotations</artifactId>
+  <name>Jakarta Annotations 3.0 TCK runner</name>
+  <description>
+    Runs the Jakarta Annotations 3.0 TCK signature test against the
+    jakarta.annotation packages shipped by the selected TomEE distribution.
+    The TCK runs in the local JVM; no server is started.
+  </description>
+
+  <properties>
+    <!-- Signature-only TCK: no TomEE container or Derby lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <annotations.tck.version>3.0.0</annotations.tck.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakartatck</groupId>
+      <artifactId>jakarta-annotations-tck</artifactId>
+      <version>${annotations.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/jakartaee-api-*.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="tomee-api-jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="annotations.sig.api.jar"
+                             refid="tomee-api-jar"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <dependenciesToScan>
+            <dependency>jakartatck:jakarta-annotations-tck</dependency>
+          </dependenciesToScan>
+          <!-- The TCK ships its signature test as *IT. -->
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+          <systemPropertyVariables>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <sigTestClasspath>${annotations.sig.api.jar}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</sigTestClasspath>
+            <ca.sig.generated>true</ca.sig.generated>
+            <!-- ManagedBeans were pruned from Jakarta EE 11. -->
+            <ca.sig.managedbean>false</ca.sig.managedbean>
+            <ca.sig.postconstruct>true</ca.sig.postconstruct>
+            <ca.sig.priority>true</ca.sig.priority>
+            <ca.sig.predestroy>true</ca.sig.predestroy>
+            <ca.sig.resource>true</ca.sig.resource>
+            <ca.sig.resources>true</ca.sig.resources>
+            <ca.sig.securitydeclareroles>true</ca.sig.securitydeclareroles>
+            <ca.sig.securitydenyall>true</ca.sig.securitydenyall>
+            <ca.sig.securitypermitall>true</ca.sig.securitypermitall>
+            <ca.sig.securityrolesallowed>true</ca.sig.securityrolesallowed>
+            <ca.sig.securityrunas>true</ca.sig.securityrunas>
+            <ca.sig.sqldatasourcedefinition>true</ca.sig.sqldatasourcedefinition>
+            <ca.sig.sqldatasourcedefinitions>true</ca.sig.sqldatasourcedefinitions>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

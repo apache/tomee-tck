@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-annotations-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Annotations 3.0 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Annotations TCK distribution and installs the
+    contained jakartatck:jakarta-annotations-tck artifact into the local
+    repository. The distribution is not published to Maven Central.
+  </description>
+
+  <properties>
+    <annotations.tck.version>3.0.0</annotations.tck.version>
+    <annotations.tck.zip>jakarta-annotations-tck-${annotations.tck.version}.zip</annotations.tck.zip>
+    <annotations.tck.url>https://download.eclipse.org/jakartaee/annotations/3.0/${annotations.tck.zip}</annotations.tck.url>
+    <annotations.tck.sha256>9421c6ca66274d32dfb408848f75a42d57f120599fe0d8403c5c5c1141d5ac4d</annotations.tck.sha256>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+        <version>1.13.0</version>
+        <executions>
+          <execution>
+            <id>download-annotations-tck</id>
+            <phase>generate-resources</phase>
+            <goals><goal>wget</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <url>${annotations.tck.url}</url>
+              <sha256>${annotations.tck.sha256}</sha256>
+              <unpack>true</unpack>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.4</version>
+        <executions>
+          <execution>
+            <id>install-annotations-tck</id>
+            <phase>process-resources</phase>
+            <goals><goal>install-file</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <file>${project.build.directory}/annotations-tck/artifacts/jakarta-annotations-tck-${annotations.tck.version}.jar</file>
+              <groupId>jakartatck</groupId>
+              <artifactId>jakarta-annotations-tck</artifactId>
+              <version>${annotations.tck.version}</version>
+              <packaging>jar</packaging>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

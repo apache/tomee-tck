@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-di-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Dependency Injection 2.0 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Dependency Injection (atinject) TCK
+    distribution and installs jakarta.inject:jakarta.inject-tck into the
+    local repository; the distribution is not published to Maven Central.
+  </description>
+
+  <properties>
+    <di.tck.version>2.0.2</di.tck.version>
+    <di.tck.zip>jakarta.inject-tck-${di.tck.version}-bin.zip</di.tck.zip>
+    <di.tck.url>https://download.eclipse.org/jakartaee/dependency-injection/2.0/${di.tck.zip}</di.tck.url>
+    <di.tck.sha256>23bce4317ca061c3de648566cdf65c74b57e1264d6891f366567955d6b834972</di.tck.sha256>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+        <version>1.13.0</version>
+        <executions>
+          <execution>
+            <id>download-di-tck</id>
+            <phase>generate-resources</phase>
+            <goals><goal>wget</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <url>${di.tck.url}</url>
+              <sha256>${di.tck.sha256}</sha256>
+              <unpack>true</unpack>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>3.1.4</version>
+        <executions>
+          <execution>
+            <id>install-di-tck</id>
+            <phase>process-resources</phase>
+            <goals><goal>install-file</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <file>${project.build.directory}/jakarta.inject-tck-${di.tck.version}/jakarta.inject-tck-${di.tck.version}.jar</file>
+              <groupId>jakarta.inject</groupId>
+              <artifactId>jakarta.inject-tck</artifactId>
+              <version>${di.tck.version}</version>
+              <packaging>jar</packaging>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-di</artifactId>
+  <name>Jakarta Dependency Injection 2.0 TCK runner</name>
+  <description>
+    Runs the Jakarta Dependency Injection (atinject) TCK against
+    Apache OpenWebBeans, the injector used by TomEE. The TCK validates a
+    fully injected object graph in the local JVM; no server is started.
+  </description>
+
+  <properties>
+    <!-- Injector-level TCK: no TomEE container or Derby lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <di.tck.version>2.0.2</di.tck.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-tck</artifactId>
+      <version>${di.tck.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-se</artifactId>
+      <version>${openwebbeans.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <version>4.1.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.interceptor</groupId>
+      <artifactId>jakarta.interceptor-api</artifactId>
+      <version>2.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>3.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <includes>
+            <include>**/DependencyInjectionTckTest.java</include>
+          </includes>
+        </configuration>
+        <dependencies>
+          <!-- The TCK is a JUnit 3 suite; the JUnit4 provider invokes
+               suite() exactly once, which the CDI SE bootstrap requires. -->
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit47</artifactId>
+            <version>${maven.surefire.plugin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>
