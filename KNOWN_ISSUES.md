@@ -38,7 +38,7 @@ Detail lives next to each runner:
 | jsonb | 295 tests, 1 F + 1 E | 2 tests | 2 Johnzon 2.1.0 gaps |
 | debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
-| authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
+| authentication | 106 tests, 1 F; signature test passes | 1 method (spi `CheckMsgInfoKey`) | TCK challenge #219 (hard-codes a JACC requirement) |
 | websocket | 737 tests, 3 E | 3 methods | Client container advertises permessage-deflate in the negotiated extension lists |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
 | faces-old (JavaTest) | 5,391 tests, all pass (recorded run: 5 F from a foreign server answering :8080 mid-run; pass on re-run) | — | — (standalone mode, no exclusions) |
@@ -142,9 +142,21 @@ Need triage/fixes in the upstream projects TomEE ships.
    not implemented; assorted observer/interceptor edge cases. Drives the
    [cdi.txt](runner-standalone/exclusions/cdi.txt) and most of the
    [cdi-ee.txt](runner-standalone/exclusions/cdi-ee.txt) lists.
-2. **Tomcat Jakarta Authentication SPI** — `ServletProfileSPITest` fails 50
-   of 57 AuthConfigFactory/ServerAuthConfig conformance assertions.
-   [authentication.txt](runner-standalone/exclusions/authentication.txt).
+2. **Jakarta Authentication SPI (`ServletProfileSPITest`)** — the runner
+   registers the TCK's test `AuthConfigProvider` under Tomcat's JASPIC
+   app-context naming (`Catalina/localhost /spitests_servlet_web`, the value
+   `getVirtualServerName() + " " + contextPath` yields), so Tomcat's
+   `AuthConfigFactory` hands the request to the test SAM and 56 of the 57
+   servlet-profile SPI assertions pass against Tomcat's implementation. The
+   patch rewrites the GlassFish-style `server /...` app-context-ids in
+   `spi/common/ProviderConfiguration.xml` and sets the matching
+   `logical.hostname.servlet` for the client-side assertions
+   (jakartaee/authentication#220). The one exclusion,
+   `ServletProfileSPITest#CheckMsgInfoKey`, is a TCK challenge
+   (jakartaee/authentication#219): it hard-codes a Jakarta Authorization
+   (JACC) requirement — it expects the HttpServlet `MessageInfo` to carry the
+   `jakarta.security.jacc.PolicyContext` key — which the Web Profile does not
+   mandate. [authentication.txt](runner-standalone/exclusions/authentication.txt).
 3. **Johnzon/CXF integration** — CDI injection into `@JsonbTypeDeserializer`
    fields, JSON-P scalar writers, Bean Validation interceptors, and CDI
    resource-class handling in the REST stack

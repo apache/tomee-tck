@@ -96,6 +96,20 @@
                      does not exist during the parent-only install. -->
                 <replace file="${authentication.tck.dir}/pom.xml" token="&lt;phase&gt;verify&lt;/phase&gt;" value="&lt;phase&gt;none&lt;/phase&gt;"/>
 
+                <!-- The spi module registers its test AuthConfigProvider under
+                     GlassFish app-context-ids ("server /spitests_servlet_web").
+                     Tomcat derives the JASPIC app-context-id from
+                     getVirtualServerName() + " " + contextPath, i.e.
+                     "Catalina/localhost /spitests_servlet_web", so no provider
+                     matches and the server-side SAM never runs. Rewrite the
+                     HttpServlet registrations to Tomcat's naming (see
+                     jakartaee/authentication#220). logical.hostname.servlet in
+                     the tomee-remote profile carries the matching client-side
+                     value. -->
+                <replace file="${authentication.tck.dir}/spi/common/ProviderConfiguration.xml"
+                         token="server /spitests_servlet_web"
+                         value="Catalina/localhost /spitests_servlet_web"/>
+
                 <!-- Anchor the Maven wrapper's multi-module root inside the
                      extracted TCK so its internal path properties resolve
                      against the TCK, not this repository. -->

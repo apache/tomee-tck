@@ -88,7 +88,7 @@
                         <log.file.name.test>authentication-tck-test.log</log.file.name.test>
                         <log.file.name.webapp>authentication-tck-webapp.log</log.file.name.webapp>
                         <log.file.location>${authentication.tck.logs}</log.file.location>
-                        <logical.hostname.servlet>server</logical.hostname.servlet>
+                        <logical.hostname.servlet>Catalina/localhost</logical.hostname.servlet>
                         <tomee.catalina_opts>-Dj2eelogin.name=j2ee -Dj2eelogin.password=j2ee -Dprovider.configuration.file=${authentication.tck.dir}/spi/common/ProviderConfiguration.xml -Dvendor.authconfig.factory=org.apache.catalina.authenticator.jaspic.AuthConfigFactoryImpl -Dlog.file.location=${authentication.tck.logs} -Dlog.file.name.webapp=authentication-tck-webapp.log</tomee.catalina_opts>
                         <tomee.properties>openejb.environment.default=true</tomee.properties>
                     </systemPropertyVariables>

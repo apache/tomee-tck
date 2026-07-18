@@ -1,64 +1,17 @@
 # Jakarta Authentication 3.1 TCK source reactor (3.1.2) driven by the Maven
-# invoker against TomEE, Java 21, 2026-07-18: 12 Web Profile modules, 105
-# tests. Eleven modules pass cleanly; the spi module's ServletProfileSPITest
-# fails 50 of its 57 SPI conformance assertions against Tomcat's
-# AuthConfigFactory/ServerAuthConfig implementation (missing per-message
-# callbacks, wrong message-info keys, absent module-chain behavior).
-# These are product results against Tomcat's Jakarta Authentication SPI.
-# The 7 passing assertions stay enabled.
+# invoker against TomEE, Java 21: 12 Web Profile modules plus the signature
+# test, 106 tests. The spi module registers its test AuthConfigProvider under
+# Tomcat's app-context naming (Catalina/localhost /spitests_servlet_web), so
+# the server-side SAM runs and ServletProfileSPITest passes 56 of its 57
+# assertions. The single remaining exclusion is a TCK challenge.
 #
 # Format: maven-surefire/failsafe excludesFile patterns; the runner passes
 # this file to every TCK module through the invoker as
 # -Dsurefire.excludesFile/-Dfailsafe.excludesFile.
 
-# ServletProfileSPITest: 50 of 57 executed methods fail
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFDetachListener
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFGetFactory
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFGetRegistrationContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFGetRegistrationIDs
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFInMemoryNotifyOnUnReg
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFInMemoryPrecedenceRules
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFInMemoryRegisterOnlyOneACP
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFPersistentNotifyOnUnReg
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFPersistentPrecedenceRules
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFPersistentRegisterOnlyOneACP
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFRemoveRegistration
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFRemoveRegistrationWithBadId
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFSwitchFactorys
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#ACFUnregisterACP
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#AuthConfigFactoryRegistration
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckACFVerifyPersistence
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckACPConfigObjAppContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckACPContextObjAppContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckAuthContextId
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckCallbackSupport
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckMPRCallsGetAuthContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckMessageInfo
+# ServletProfileSPITest#CheckMsgInfoKey hard-codes a Jakarta Authorization
+# (JACC) requirement: it asserts the HttpServlet MessageInfo carries the
+# jakarta.security.jacc.PolicyContext key. The Web Profile does not require
+# Jakarta Authorization, so the key is absent on TomEE. Open TCK challenge
+# jakartaee/authentication#219.
 **/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckMsgInfoKey
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckRegistrationContextId
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckSecureRespForMandatoryAuth
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckSecureRespForOptionalAuth
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckServletAppContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckValidateReqAlwaysCalled
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckValidateReqAuthException
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckforNonNullAuthContext
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#CheckforNonNullCallback
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#VerifyClientSubjects
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#VerifyMessageInfoObjects
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#VerifyRequestDispatchedProperly
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#VerifySAContextVerifyReqIsCalled
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#checkSACValidateRequestWithVaryingAccess
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testACFComesFromSecFile
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testAuthenAfterLogout
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testAuthenIsUserInRole
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testAuthenResultsOnHttpServlet
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testGPCGetAuthType
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testGPCGetRemoteUser
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testGPCGetUserPrincipal
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testGPCIsUserInRole
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testGPCWithNoRequiredAuth
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testRemoteUserCorrespondsToPrin
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testRequestWrapper
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testResponseWrapper
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#testSecRespCalledAfterSvcInvoc
-**/ee/jakarta/tck/authentication/test/basic/ServletProfileSPITest.java#verifyRuntimeCallOrder
