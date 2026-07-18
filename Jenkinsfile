@@ -156,10 +156,12 @@ from xml.etree import ElementTree
           // runners (security, authentication) drive the downloaded TCK
           // reactors through the Maven invoker; their surefire/failsafe
           // reports live inside the extracted TCK module targets, which the
-          // deep globs below ingest. The faces reactors join once their
-          // baseline is confirmed; see runner-standalone/README.md and
-          // KNOWN_ISSUES.md.
-          def standaloneBranch = { String id ->
+          // deep globs below ingest. The faces-old runner drives the legacy
+          // JavaTest half of the Faces TCK; its report lands in the
+          // target/*report glob and a red JavaTest run fails the Maven build.
+          // The modern faces reactor joins once its baseline is confirmed;
+          // see runner-standalone/README.md and KNOWN_ISSUES.md.
+          def standaloneBranch = { String id, int timeoutMinutes ->
             {
               stage("standalone - ${id}") {
                 node('ubuntu && ephemeral') {
@@ -168,7 +170,7 @@ from xml.etree import ElementTree
                   def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
 
                   try {
-                    timeout(time: 240, unit: 'MINUTES') {
+                    timeout(time: timeoutMinutes, unit: 'MINUTES') {
                       withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin"]) {
                         sh "runner-standalone/run-standalone-suite.sh ${id}"
                       }
@@ -189,8 +191,12 @@ from xml.etree import ElementTree
             }
           }
           for (id in ['annotations', 'di', 'el', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'jsonp', 'jsonb', 'debugging', 'persistence', 'transactions', 'cdi', 'cdi-ee', 'security', 'authentication']) {
-            branches["standalone - ${id}"] = standaloneBranch(id)
+            branches["standalone - ${id}"] = standaloneBranch(id, 240)
           }
+          // ~5,400 JavaTest tests plus an old-tck source build and a
+          // 245-webapp deployment: a full run takes ~2.5 h on a warm
+          // workstation, so give it more headroom than the other suites.
+          branches['standalone - faces-old'] = standaloneBranch('faces-old', 420)
 
           parallel branches
         }
