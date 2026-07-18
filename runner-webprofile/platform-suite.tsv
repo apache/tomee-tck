@@ -1,6 +1,6 @@
 # Jakarta EE Platform TCK 11.0.3 artifact inventory for the default TomEE
 # Plume distribution (EclipseLink). platform-suite-webprofile.tsv carries the
-# expectations for the OpenJPA-based webprofile ZIP.
+# per-partition overrides for the OpenJPA-based webprofile ZIP.
 # id	artifact	protocol	junit_tag_expression	source_classes	expected_executed_classes	failsafe_include
 jdbc	jdbc-platform-tck	javatest	web & tck-javatest	152	152	**/*JSP.java,**/*Servlet.java
 enterprise-beans-30	ejb30	javatest	web & tck-javatest	282	170	**/*Test.java

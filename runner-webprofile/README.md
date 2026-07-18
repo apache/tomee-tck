@@ -15,7 +15,8 @@ example `runner-webprofile/run-platform-suite.sh servlet rest`.
 The EclipseLink-based TomEE Plume distribution is the default target under
 test; 448 of the 450 Jakarta Persistence javatest classes pass there. Set
 `TOMEE_CLASSIFIER=webprofile` to test the OpenJPA-based `webprofile` ZIP
-instead. The script then reads `platform-suite-webprofile.tsv` and prefers
+instead. The script then merges the per-partition overrides from
+`platform-suite-webprofile.tsv` over the base manifest and prefers
 partition exclusions from `exclusions/webprofile/` where they exist — the
 OpenJPA provider blocks 249 of the 450 persistence classes there (see
 `KNOWN_FAILURES.md`):

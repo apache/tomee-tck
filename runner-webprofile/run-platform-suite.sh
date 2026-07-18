@@ -18,8 +18,17 @@ ONLY_PARTITION=${2:-}
 # platform-suite-webprofile.tsv counts and exclusions/webprofile overrides.
 TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 MANIFEST="$SCRIPT_DIR/platform-suite.tsv"
-if [ -f "$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv" ]; then
-  MANIFEST="$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv"
+# A classifier-specific manifest carries only the rows that differ; merge it
+# over the base manifest by partition id.
+OVERRIDES="$SCRIPT_DIR/platform-suite-$TOMEE_CLASSIFIER.tsv"
+if [ -f "$OVERRIDES" ]; then
+  MERGED=$(mktemp "${TMPDIR:-/tmp}/platform-suite.XXXXXX")
+  trap 'rm -f "$MERGED"' EXIT HUP INT TERM
+  awk -F'\t' '
+    NR == FNR { if ($0 !~ /^(#|$)/) override[$1] = $0; next }
+    { print ($1 in override ? override[$1] : $0) }
+  ' "$OVERRIDES" "$MANIFEST" > "$MERGED"
+  MANIFEST="$MERGED"
 fi
 
 if [ "$PROTOCOL" != "servlet" ] && [ "$PROTOCOL" != "javatest" ]; then
