@@ -35,6 +35,9 @@
     <faces.tck.url>https://download.eclipse.org/jakartaee/faces/4.1/jakarta-faces-tck-${faces.tck.version}.zip</faces.tck.url>
     <faces.tck.sha256>0827e2c9c635940643aaefb2a2f063959b0cab2fa1d633a7008b9fa04c5109de</faces.tck.sha256>
     <faces.tck.dir>${project.build.directory}/jakarta-faces-tck-${faces.tck.version}/faces-tck-${faces.tck.version}/tck</faces.tck.dir>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/faces.txt</tck.exclusions.file>
   </properties>
 
   <build>
@@ -148,9 +151,13 @@
               <goals><goal>verify</goal></goals>
               <profiles><profile>tomee-remote</profile></profiles>
               <!-- Each include is a multi-module reactor; collect the whole
-                   baseline instead of stopping at the first failing module. -->
+                   baseline instead of stopping at the first failing module.
+                   The reviewed exclusion list is applied inside every TCK
+                   module's surefire/failsafe execution. -->
               <properties>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
+                <surefire.excludesFile>${tck.exclusions.file}</surefire.excludesFile>
+                <failsafe.excludesFile>${tck.exclusions.file}</failsafe.excludesFile>
               </properties>
               <pomIncludes>
                 <pomInclude>faces22/pom.xml</pomInclude>

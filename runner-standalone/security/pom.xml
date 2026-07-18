@@ -38,6 +38,9 @@
          distribution apache/tomee validates it against. -->
     <security.tomee.classifier>plus</security.tomee.classifier>
     <version.arquillian-protocol-servlet-jakarta>10.0.0.Final</version.arquillian-protocol-servlet-jakarta>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/security.txt</tck.exclusions.file>
   </properties>
 
   <build>
@@ -166,6 +169,12 @@
             <configuration>
               <goals><goal>verify</goal></goals>
               <profiles><profile>tomee-remote</profile></profiles>
+              <!-- Apply the reviewed exclusion list inside every TCK app
+                   module's surefire/failsafe execution. -->
+              <properties>
+                <surefire.excludesFile>${tck.exclusions.file}</surefire.excludesFile>
+                <failsafe.excludesFile>${tck.exclusions.file}</failsafe.excludesFile>
+              </properties>
               <pomIncludes>
                 <pomInclude>app-securitycontext/pom.xml</pomInclude>
                 <pomInclude>app-securitycontext-auth/pom.xml</pomInclude>

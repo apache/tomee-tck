@@ -38,6 +38,9 @@
     <authentication.tck.sha256>10ce29dd5ea4001d5ec7e2ffe81683996f01590ef4482a06ec1372731178c1dd</authentication.tck.sha256>
     <authentication.tck.dir>${project.build.directory}/authentication-tck-${authentication.tck.version}/tck</authentication.tck.dir>
     <authentication.tck.logs>${project.build.directory}/authentication-logs</authentication.tck.logs>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/authentication.txt</tck.exclusions.file>
   </properties>
 
   <build>
@@ -156,6 +159,12 @@
             <configuration>
               <goals><goal>verify</goal></goals>
               <profiles><profile>tomee-remote</profile></profiles>
+              <!-- Apply the reviewed exclusion list inside every TCK
+                   module's surefire/failsafe execution. -->
+              <properties>
+                <surefire.excludesFile>${tck.exclusions.file}</surefire.excludesFile>
+                <failsafe.excludesFile>${tck.exclusions.file}</failsafe.excludesFile>
+              </properties>
               <pomIncludes>
                 <pomInclude>basic-authentication/pom.xml</pomInclude>
                 <pomInclude>custom-principal/pom.xml</pomInclude>
