@@ -36,6 +36,22 @@
 
     <properties>
         <glassfish.root>${project.build.directory}</glassfish.root>
+
+        <!-- app-openid2/3 import their freshly minted server certs into the
+             shared truststore through keytool-maven-plugin, whose
+             configuration reads these GlassFish-profile properties; without
+             them keytool falls back to an interactive ~/.keystore prompt
+             and the module build fails. -->
+        <trustStore.path>${glassfish.root}/glassfish8/glassfish/domains/domain1/config/cacerts.jks</trustStore.path>
+        <trustStore.password>changeit</trustStore.password>
+
+        <!-- The signature test verifies the Security API classes the vendor
+             ships; TomEE bundles the -tomcat repackaging of this artifact as
+             lib/jakartaee-api-*-tomcat.jar (security.vendor.api.version in
+             the runner pom, expanded at load time). -->
+        <sigtest.api.groupId>org.apache.tomee</sigtest.api.groupId>
+        <sigtest.api.artifactId>jakartaee-api</sigtest.api.artifactId>
+        <sigtest.api.version>${security.vendor.api.version}</sigtest.api.version>
     </properties>
 
     <repositories>

@@ -20,6 +20,14 @@
         <skipEJB>true</skipEJB>
         <skipJACC>true</skipJACC>
         <skipSOAP>true</skipSOAP>
+
+        <!-- The signature test verifies the Authentication API jar the
+             vendor ships; TomEE bundles Tomcat's build of it
+             (lib/jaspic-api.jar, tracked by tomcat.version in the
+             repository root pom). -->
+        <sigtest.api.groupId>org.apache.tomcat</sigtest.api.groupId>
+        <sigtest.api.artifactId>tomcat-jaspic-api</sigtest.api.artifactId>
+        <sigtest.api.version>${tomcat.version}</sigtest.api.version>
     </properties>
 
     <repositories>

@@ -37,6 +37,11 @@
     <!-- The security TCK exercises full-profile features; TomEE Plus is the
          distribution apache/tomee validates it against. -->
     <security.tomee.classifier>plus</security.tomee.classifier>
+    <!-- The artifact whose -tomcat repackaging TomEE ships as
+         lib/jakartaee-api-*-tomcat.jar; its jakarta.security.enterprise
+         classes are byte-identical to the distribution jar. Keep in sync
+         with the TomEE distribution. -->
+    <security.vendor.api.version>11.0.0-M1</security.vendor.api.version>
     <version.arquillian-protocol-servlet-jakarta>10.0.0.Final</version.arquillian-protocol-servlet-jakarta>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
@@ -61,6 +66,14 @@
                 <get skipexisting="true" src="${security.tck.url}" dest="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip"/>
                 <unzip src="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip" dest="${project.build.directory}"/>
 
+                <!-- Reports from a previous run in the same target tree:
+                     failsafe's verify goal reads the last summary, and a
+                     module whose tests are now all excluded would fail on
+                     the stale one. -->
+                <delete quiet="true" includeemptydirs="true">
+                  <fileset dir="${tck.dir}" includes="*/target/failsafe-reports/**,*/target/surefire-reports/**"/>
+                </delete>
+
                 <!-- Overlay the TomEE arquillian.xml into the TCK common resources. -->
                 <copy file="${project.basedir}/src/test/resources/arquillian.xml" tofile="${tck.dir}/common/src/main/resources/arquillian.xml" overwrite="true"/>
 
@@ -72,10 +85,7 @@
                 </loadfile>
                 <replace file="${tck.dir}/pom.xml" token="&lt;/profiles&gt;" value="${line.separator}${tomee.remote.profile}${line.separator} &lt;/profiles&gt;"/>
 
-                <!-- The signature module uses GlassFish-only properties. -->
-                <replace file="${tck.dir}/pom.xml" token="&lt;module&gt;security-signaturetest&lt;/module&gt;" value="&lt;!-- module&gt;security-signaturetest&lt;/module --&gt;"/>
-
-                <!-- Deactivate the GlassFish profile's default activation. -->
+<!-- Deactivate the GlassFish profile's default activation. -->
                 <replace file="${tck.dir}/pom.xml" token="&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;" value="&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;"/>
 
                 <!-- The TCK still references the javax-era servlet protocol. -->
@@ -202,6 +212,7 @@
                 <pomInclude>app-jaxrs/pom.xml</pomInclude>
                 <pomInclude>app-mem-policy/pom.xml</pomInclude>
                 <pomInclude>app-mem-policy2/pom.xml</pomInclude>
+                <pomInclude>security-signaturetest/pom.xml</pomInclude>
               </pomIncludes>
             </configuration>
           </execution>

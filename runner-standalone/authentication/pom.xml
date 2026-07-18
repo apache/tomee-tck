@@ -68,6 +68,14 @@
                 <unzip src="${project.build.directory}/jakarta-authentication-tck-${authentication.tck.version}.zip" dest="${project.build.directory}"/>
                 <mkdir dir="${authentication.tck.logs}"/>
 
+                <!-- Reports from a previous run in the same target tree:
+                     failsafe's verify goal reads the last summary, and a
+                     module whose tests are now all excluded would fail on
+                     the stale one. -->
+                <delete quiet="true" includeemptydirs="true">
+                  <fileset dir="${authentication.tck.dir}" includes="*/target/failsafe-reports/**,*/target/surefire-reports/**"/>
+                </delete>
+
                 <!-- Inject the tomee-remote profile into the TCK parent pom. -->
                 <loadfile property="tomee.remote.profile" srcFile="${project.basedir}/src/test/resources/tomee-remote-profile.xml" encoding="UTF-8">
                   <filterchain>
@@ -79,9 +87,11 @@
                 <!-- Deactivate the GlassFish profile's default activation. -->
                 <replace file="${authentication.tck.dir}/pom.xml" token="&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;" value="&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;"/>
 
-                <!-- The signature module resolves the vendor API jar through
-                     GlassFish-only coordinates. -->
-                <replace file="${authentication.tck.dir}/pom.xml" token="&lt;module&gt;authentication-signaturetest&lt;/module&gt;" value="&lt;!-- module&gt;authentication-signaturetest&lt;/module --&gt;"/>
+                <!-- Tomcat's build of AuthConfigFactory hard-references its
+                     default factory implementation class; the reflection half
+                     of the signature test needs it linkable on the module's
+                     test classpath. -->
+                <replace file="${authentication.tck.dir}/authentication-signaturetest/pom.xml" token="&lt;dependencies&gt;" value="&lt;dependencies&gt;&lt;dependency&gt;&lt;groupId&gt;org.apache.tomcat&lt;/groupId&gt;&lt;artifactId&gt;tomcat-catalina&lt;/artifactId&gt;&lt;version&gt;${tomcat.version}&lt;/version&gt;&lt;scope&gt;test&lt;/scope&gt;&lt;/dependency&gt;"/>
 
                 <!-- The result-printer groovy step reads a summary file that
                      does not exist during the parent-only install. -->
@@ -178,6 +188,7 @@
                 <pomInclude>dispatching-jsf-cdi/pom.xml</pomInclude>
                 <pomInclude>invoke-ejb-cdi/pom.xml</pomInclude>
                 <pomInclude>spi/pom.xml</pomInclude>
+                <pomInclude>authentication-signaturetest/pom.xml</pomInclude>
               </pomIncludes>
             </configuration>
           </execution>
