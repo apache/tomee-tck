@@ -221,12 +221,14 @@
                 <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                 <arguments>
                   <argument>-Dderby.system.home=${project.build.directory}/derby</argument>
+                  <!-- The port is passed as a system property because the
+                       exec plugin swallows the value of a -p argument. -->
+                  <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
                   <argument>start</argument>
                   <argument>-h</argument><argument>localhost</argument>
-                  <argument>-p</argument><argument>${tck.derby.port}</argument>
                   <argument>-noSecurityManager</argument>
                 </arguments>
               </configuration>
@@ -256,12 +258,12 @@
                 <executable>${java.home}/bin/java</executable>
                 <classpathScope>test</classpathScope>
                 <arguments>
+                  <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
                   <argument>shutdown</argument>
                   <argument>-h</argument><argument>localhost</argument>
-                  <argument>-p</argument><argument>${tck.derby.port}</argument>
                 </arguments>
               </configuration>
             </execution>

@@ -60,10 +60,18 @@
       <scope>test</scope>
     </dependency>
     <!-- Client-side jakarta.websocket container: the TCK clients look up
-         ContainerProvider, and TomEE's WebSocket implementation is Tomcat's. -->
+         ContainerProvider, and TomEE's WebSocket implementation is Tomcat's.
+         tomcat-api supplies InstanceManagerBindings, which the client
+         container requires but tomcat-websocket does not declare. -->
     <dependency>
       <groupId>org.apache.tomcat</groupId>
       <artifactId>tomcat-websocket</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-api</artifactId>
+      <version>${tomcat.version}</version>
       <scope>test</scope>
     </dependency>
     <!-- The signature test framework (jakarta.tck:signaturetest) drives the
