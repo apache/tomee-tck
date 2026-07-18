@@ -12,6 +12,11 @@ executes the Web Profile-tagged tests and keeps a reviewed list of known
 compatibility gaps, and `runner-standalone/` drives the independently
 published per-specification TCKs.
 
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md) is the central triage list of everything
+that is currently broken — TomEE product gaps, upstream provider gaps, and
+remaining harness work — with pointers to the reviewed per-suite exclusion
+lists that keep the default runs green.
+
 ## Reproducible inputs
 
 The build uses these centrally managed inputs:

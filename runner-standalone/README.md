@@ -15,9 +15,19 @@ runner-standalone/run-standalone-suite.sh concurrency
 Maven build compiles these modules but runs nothing; execution requires
 `-Dtck.standalone=true` (the script passes it).
 
+Every wired runner applies the reviewed known-gap exclusion list from
+[exclusions/](exclusions/README.md) by default, so a default run is expected
+green and a failure is a regression. Pass
+`-Dtck.exclusions.file=.../exclusions/none.txt` (or `=none` for the
+TestNG-based runners) to collect the full compatibility baseline instead.
+The excluded gaps are triaged centrally in
+[KNOWN_ISSUES.md](../KNOWN_ISSUES.md).
+
 ## Status per required Web Profile 11 specification
 
-Dates refer to runs against the TomEE Plume snapshot on Java 21.
+Dates refer to runs against the TomEE Plume snapshot on Java 21. The failure
+counts are the recorded full-baseline results that the exclusion lists were
+derived from; with the default exclusions applied these suites run green.
 
 | Specification | TCK source | Runner | Status |
 |---|---|---|---|
@@ -41,6 +51,13 @@ Dates refer to runs against the TomEE Plume snapshot on Java 21.
 
 ## Layout conventions
 
+- `exclusions/<id>.txt` holds the reviewed known-gap exclusions applied by
+  default through each runner's `tck.exclusions.file` property. JUnit-based
+  runners use surefire's `excludesFile`; the TestNG-based runners (cdi,
+  cdi-ee, validation) register the `ExclusionsAnnotationTransformer` from
+  `tck-common` because suite-XML runs ignore `excludesFile`; the
+  source-reactor runners pass the file into every inner TCK module as
+  `-Dsurefire.excludesFile`/`-Dfailsafe.excludesFile` through the invoker.
 - `<id>-install` modules download an EFTL distribution zip (SHA-256 pinned)
   and install its artifacts into the local repository; run them once before
   the matching runner (`run-standalone-suite.sh` chains them).
