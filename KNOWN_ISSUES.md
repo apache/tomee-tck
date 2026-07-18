@@ -41,6 +41,8 @@ Detail lives next to each runner:
 | authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
 | websocket | 715 tests, 30 E | 25 classes + 5 methods | Tomcat halts webapp deploy on invalid endpoints; extension/timeout behavior |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
+| faces-old (JavaTest) | 5,391 tests, all pass (recorded run: 5 F from a foreign server answering :8080 mid-run; pass on re-run) | — | — (standalone mode, no exclusions) |
+| faces-signaturetest | passes against Plume's Mojarra (org.glassfish:jakarta.faces 4.1.9) | — | — |
 
 ## TomEE product gaps
 
@@ -160,26 +162,31 @@ Need triage/fixes in the upstream projects TomEE ships.
 
 Not product bugs — gaps in this repository's coverage.
 
-- **Faces legacy halves**: the ~5,500-test JavaTest `old-tck` reactor is
-  GlassFish-wired (asadmin deployment) and unported; `faces-signaturetest`
-  is GlassFish-bound too. The faces baseline (263 tests on record) covers
-  only the modern Arquillian modules.
+- **Faces old-tck**: the ~5,500-test JavaTest `old-tck` half runs through
+  the `faces-old` runner (the TCK's own `tomcat` deployment handler against
+  a runner-provisioned TomEE) and passes 5,391/5,391 in standalone mode with
+  no exclusions; `exclusions/faces-old.txt` stays empty. The
+  `faces-signaturetest` module runs in the faces invoker pass and passes
+  against Plume's Mojarra. The faces baseline (263 tests on record) covers
+  the modern Arquillian modules.
 - **Faces reactors not in CI**: the faces and faces-old runners run locally
   via `run-standalone-suite.sh`; they join the Jenkins branch list once
   their baseline and exclusion wiring have a verified green run.
-- **Exclusion lists need a confirming run**: all lists were generated from
-  the 2026-07-18 surefire/TestNG reports. The mechanisms (surefire
-  `excludesFile`, TestNG annotation transformer) are verified, but only a
-  full green run of each suite confirms no order-dependent or flaky
-  failures remain — the servlet async-dispatch area is the likeliest
-  candidate for flakiness. Confirmed green with default exclusions so far:
+- **Exclusion lists confirmed**: every wired suite has had a full run with
+  its default exclusion list and came back green (2026-07-18):
   `annotations`, `di`, `el`, `concurrency` (no exclusions), `data`,
   `servlet` (1,637 run, 0 failures — the async-dispatch area held),
   `pages` (no exclusions), `rest`, `validation` (925 run after the
   exclusion listener learned to match inherited test methods by their
-  concrete class), `cdi` (1,216 run), `websocket`, `jsonp` (no
-  exclusions), `jsonb`, `debugging`, `persistence` (no exclusions), and
-  `transactions` (2026-07-18).
+  concrete class), `cdi` (1,216 run), `cdi-ee` (1,620 run), `websocket`,
+  `jsonp` (no exclusions), `jsonb`, `debugging`, `persistence` (no
+  exclusions), `transactions`, `security` (all 27 invoker projects
+  including the signature test; the invoker-passed `excludesFile` wiring
+  is verified), and `authentication` (all 13 projects, 0 failures,
+  signature test included). Note for side-by-side runs: overriding
+  `tck.derby.port` breaks the suites whose deployments use the shared
+  `tomee.xml` datasources on 1527 (cdi-ee's persistence-context tests) —
+  override the TomEE ports, keep Derby on 1527.
 
 ## What CI runs
 

@@ -150,12 +150,14 @@ from xml.etree import ElementTree
           branches['javatest - persistence-javatest (webprofile)'] =
             catalogBranch('javatest - persistence-javatest (webprofile)', 'javatest', 'persistence-javatest', 'webprofile')
 
-          // Standalone specification TCK runners. Every container-based suite
-          // runs with its reviewed exclusion list from
-          // runner-standalone/exclusions/, so a red branch is a regression,
-          // not a known gap. The source-reactor runners (security,
-          // authentication, faces) stay out until a full run has verified
-          // their exclusion wiring; see runner-standalone/README.md and
+          // Standalone specification TCK runners. Every suite runs with its
+          // reviewed exclusion list from runner-standalone/exclusions/, so a
+          // red branch is a regression, not a known gap. The source-reactor
+          // runners (security, authentication) drive the downloaded TCK
+          // reactors through the Maven invoker; their surefire/failsafe
+          // reports live inside the extracted TCK module targets, which the
+          // deep globs below ingest. The faces reactors join once their
+          // baseline is confirmed; see runner-standalone/README.md and
           // KNOWN_ISSUES.md.
           def standaloneBranch = { String id ->
             {
@@ -173,17 +175,20 @@ from xml.etree import ElementTree
                     }
                   } finally {
                     archiveArtifacts(
-                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/**/logs/**/*',
+                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/failsafe-reports/**/*,runner-standalone/*/target/*/tck/*/target/surefire-reports/**/*,runner-standalone/*/target/*/tck/*/target/failsafe-reports/**/*,runner-standalone/*/target/**/logs/**/*,runner-standalone/*/target/*report/**/*',
                       allowEmptyArchive: true
                     )
-                    junit(testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml', allowEmptyResults: true)
+                    junit(
+                      testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/failsafe-reports/TEST-*.xml,runner-standalone/*/target/*/tck/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/*/tck/*/target/failsafe-reports/TEST-*.xml',
+                      allowEmptyResults: true
+                    )
                     deleteDir()
                   }
                 }
               }
             }
           }
-          for (id in ['annotations', 'di', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'jsonp', 'jsonb', 'debugging', 'cdi', 'cdi-ee']) {
+          for (id in ['annotations', 'di', 'el', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'jsonp', 'jsonb', 'debugging', 'persistence', 'transactions', 'cdi', 'cdi-ee', 'security', 'authentication']) {
             branches["standalone - ${id}"] = standaloneBranch(id)
           }
 
