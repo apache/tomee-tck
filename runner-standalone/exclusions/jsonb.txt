@@ -1,19 +1,14 @@
 # Jakarta JSON Binding 3.0 TCK (jakarta.json.bind-tck 3.0.0) against Apache
-# Johnzon 2.1.0 (the version bundled in the TomEE distribution), Java 21,
-# 2026-07-18 baseline: 295 tests, 2 failures, 2 errors, 5 skipped
+# Johnzon 2.1.0 (the version bundled in the TomEE distribution), Java 21:
+# 295 tests, 2 non-passing (the two Johnzon 2.1.0 gaps below), 5 skipped
 # (the skips are the TCK's own @Disabled tests). The runner sets
 # johnzon.use-bigdecimal-stringadapter=false and
 # johnzon.use-biginteger-stringadapter=false so BigDecimal/BigInteger
 # serialize as JSON numbers per spec §3.4.1 instead of Johnzon's
 # precision-preserving string default, which the mapping tests require.
 #
-# TCK-vs-JDK locale data: since CLDR 34 the JDK formats the French thousands
-# grouping separator as U+202F (narrow no-break space); the TCK still expects
-# the pre-JDK-13 U+00A0. Not a Johnzon defect.
-**/ee/jakarta/tck/json/bind/customizedmapping/numberformat/NumberFormatCustomizationTest.java#testNumberFormatField
-**/ee/jakarta/tck/json/bind/customizedmapping/numberformat/NumberFormatCustomizationTest.java#testNumberFormatAccessors
-#
-# Johnzon 2.1.0 gaps to triage upstream (see KNOWN_ISSUES.md):
+# This file excludes exactly the two Johnzon 2.1.0 gaps to triage upstream
+# (see KNOWN_ISSUES.md):
 # JsonbDeserializer instances are not resolved through CDI, so their
 # @Inject fields stay null (the matching adapter and serializer CDI tests
 # pass).

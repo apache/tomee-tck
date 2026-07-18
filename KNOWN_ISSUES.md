@@ -35,7 +35,7 @@ Detail lives next to each runner:
 | persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
 | transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
 | jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
-| jsonb | 295 tests, 2 F + 2 E | 4 tests | 2 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations |
+| jsonb | 295 tests, 1 F + 1 E | 2 tests | 2 Johnzon 2.1.0 gaps |
 | debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
 | authentication | 105 tests, 50 F; signature test passes | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
@@ -137,12 +137,14 @@ Need triage/fixes in the upstream projects TomEE ships.
    resolved through CDI, leaving `@Inject` fields null (the adapter and
    serializer CDI tests pass — the deserializer half of TOMEE-4436);
    `@JsonbDateFormat` on a `@JsonbCreator` constructor parameter is ignored
-   during polymorphic (`@JsonbTypeInfo`) deserialization. 2 excluded tests
-   in [jsonb.txt](runner-standalone/exclusions/jsonb.txt); the other 2
-   entries there are the TCK's pre-CLDR-34 French locale expectations, a
-   JDK-data mismatch rather than a Johnzon defect. The runner runs Johnzon
-   with the spec-compat switches
-   `johnzon.use-bigdecimal-stringadapter=false` /
+   during polymorphic (`@JsonbTypeInfo`) deserialization. These are the 2
+   excluded tests in
+   [jsonb.txt](runner-standalone/exclusions/jsonb.txt). The runner passes
+   `-Djava.locale.providers=COMPAT` (same as Apache Johnzon's jakartaee TCK
+   run) so the JVM uses the pre-CLDR-34 locale data the TCK's French
+   number-format tests expect (U+00A0 as the grouping separator rather than
+   the U+202F CLDR 34+/JDK 13+ emit). It also runs Johnzon with the
+   spec-compat switches `johnzon.use-bigdecimal-stringadapter=false` /
    `johnzon.use-biginteger-stringadapter=false` (same as apache/tomee
    `tck/jsonb-standalone`), so BigDecimal/BigInteger serialize as the JSON
    numbers §3.4.1 requires instead of Johnzon's precision-preserving string

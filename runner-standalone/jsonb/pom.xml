@@ -154,6 +154,14 @@
         <configuration>
           <skip>${tck.standalone.skip}</skip>
           <excludesFile>${tck.exclusions.file}</excludesFile>
+          <!-- The COMPAT locale provider restores the pre-CLDR-34 locale
+               data the TCK expects (e.g. U+00A0 as the French grouping
+               separator, which CLDR 34+/JDK 13+ replace with U+202F). Same
+               setup as Apache Johnzon's jakartaee TCK run. Locale providers
+               are read at JVM init, so this must be an argLine flag, not a
+               systemPropertyVariables entry. Note: the COMPAT provider is
+               removed in JDK 23+. -->
+          <argLine>-Djava.locale.providers=COMPAT</argLine>
           <dependenciesToScan>
             <dependency>jakarta.json.bind:jakarta.json.bind-tck</dependency>
           </dependenciesToScan>
