@@ -28,6 +28,9 @@
     <!-- Injector-level TCK: no TomEE container or Derby lifecycle. -->
     <tck.standalone.container.skip>true</tck.standalone.container.skip>
     <di.tck.version>2.0.2</di.tck.version>
+    <!-- The test sources compile against the profile-gated TCK jar, so the
+         default reactor must not compile them either. -->
+    <maven.test.skip>${tck.standalone.skip}</maven.test.skip>
   </properties>
 
   <dependencies>
