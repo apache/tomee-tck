@@ -53,6 +53,10 @@
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
+    <!-- Derby network server port for the shared datasource lifecycle; the
+         default matches the fixed harness catalog (environment/README.md).
+         Modules that parameterize their whole port set (pages) let it move. -->
+    <derby.port>1527</derby.port>
   </properties>
 
   <dependencies>
@@ -187,6 +191,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/require-derby-port-free.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -216,6 +221,10 @@
                 <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                 <arguments>
                   <argument>-Dderby.system.home=${project.build.directory}/derby</argument>
+                  <!-- The port travels as a system property because
+                       exec-maven-plugin swallows the value after a literal
+                       -p argument (it treats -p as the JVM module path). -->
+                  <argument>-Dderby.drda.portNumber=${derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
@@ -236,6 +245,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/wait-for-derby.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -249,6 +259,7 @@
                 <executable>${java.home}/bin/java</executable>
                 <classpathScope>test</classpathScope>
                 <arguments>
+                  <argument>-Dderby.drda.portNumber=${derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
