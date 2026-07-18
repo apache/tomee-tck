@@ -35,8 +35,9 @@
     <security.tck.url>https://download.eclipse.org/jakartaee/security/4.0/jakarta-security-tck-${security.tck.version}.zip</security.tck.url>
     <tck.dir>${project.build.directory}/security-tck-${security.tck.version}/tck</tck.dir>
     <!-- The security TCK exercises full-profile features; TomEE Plus is the
-         distribution apache/tomee validates it against. -->
-    <security.tomee.classifier>plus</security.tomee.classifier>
+         distribution apache/tomee validates it against. The plus classifier
+         is set in src/test/resources/arquillian.xml and
+         tomee-remote-profile.xml. -->
     <!-- The artifact whose -tomcat repackaging TomEE ships as
          lib/jakartaee-api-*-tomcat.jar; its jakarta.security.enterprise
          classes are byte-identical to the distribution jar. Keep in sync

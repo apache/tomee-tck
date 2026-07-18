@@ -30,9 +30,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.release>17</maven.compiler.release>
 
-    <jakarta.ee.version>11.0.0</jakarta.ee.version>
     <jakarta.tck.version>11.0.3</jakarta.tck.version>
-    <tck.version>${jakarta.tck.version}</tck.version>
     <jakarta.tck.arquillian.version>11.1.3</jakarta.tck.arquillian.version>
     <arquillian.version>1.9.4.Final</arquillian.version>
     <junit.version>5.11.4</junit.version>

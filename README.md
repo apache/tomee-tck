@@ -37,7 +37,9 @@ uses the current `11.0.0-SNAPSHOT`; CI does not pin or checksum those changing
 bytes. A timestamped version and checksum should only be added when the harness
 needs a stable qualification candidate.
 
-Verify the immutable TCK BOM metadata without downloading TomEE:
+Verify the immutable TCK BOM metadata only (a plain
+`sh environment/verify-inputs.sh` also downloads and verifies the pinned
+Derby jars):
 
 ```sh
 sh environment/verify-inputs.sh --metadata-only

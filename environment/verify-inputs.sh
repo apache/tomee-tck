@@ -6,7 +6,12 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 # shellcheck disable=SC1091
 . "$SCRIPT_DIR/versions.env"
 
-if [ -n "${1:-}" ] && [ "${1:-}" != "--metadata-only" ]; then
+# --metadata-only verifies just the TCK BOM; the full mode also downloads
+# and verifies the Derby jars.
+metadata_only=false
+if [ "${1:-}" = "--metadata-only" ]; then
+  metadata_only=true
+elif [ -n "${1:-}" ]; then
   echo "usage: $0 [--metadata-only]" >&2
   exit 2
 fi
@@ -40,6 +45,10 @@ trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
 
 curl -fsSL "$JAKARTA_TCK_BOM_URL" -o "$tmp_dir/artifacts-bom.pom"
 assert_hash 256 "$JAKARTA_TCK_BOM_SHA256" "$tmp_dir/artifacts-bom.pom"
+
+if [ "$metadata_only" = true ]; then
+  exit 0
+fi
 
 derby_base="https://repo1.maven.org/maven2/org/apache/derby"
 curl -fsSL "$derby_base/derbyclient/$DERBY_VERSION/derbyclient-$DERBY_VERSION.jar" -o "$tmp_dir/derbyclient.jar"

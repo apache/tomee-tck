@@ -62,8 +62,8 @@
   </modules>
 
   <properties>
-    <!-- TCK execution is opt-in; the default reactor must stay fast. -->
-    <tck.standalone>false</tck.standalone>
+    <!-- TCK execution is opt-in (-Dtck.standalone=true activates the
+         standalone-tck profile); the default reactor must stay fast. -->
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
