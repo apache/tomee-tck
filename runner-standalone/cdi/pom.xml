@@ -29,6 +29,11 @@
 
   <properties>
     <cdi.tck.version>4.1.0</cdi.tck.version>
+    <!-- Defaults match the fixed harness catalog; override to run beside
+         another TomEE instance (the remote adapter attaches to any server
+         already answering on the http port). -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <testng.version>7.9.0</testng.version>
     <!-- Reviewed known-gap exclusions; -Dtck.exclusions.file=none for a
          full baseline run. -->

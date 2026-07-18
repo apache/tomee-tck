@@ -11,8 +11,11 @@
 #
 # Container-based runners default to ports 8080/8443/8005/1527; run one at
 # a time. -Dtck.derby.port overrides the Derby port everywhere, and the
-# rest runner also honors -Dtomee.http.port/-Dtomee.https.port/
-# -Dtomee.shutdown.port for side-by-side runs.
+# concurrency, data, servlet, validation, cdi, cdi-ee, pages, rest,
+# websocket, and transactions runners also honor -Dtomee.http.port/
+# -Dtomee.https.port/-Dtomee.shutdown.port for side-by-side runs. Use them
+# whenever anything else may hold 8080: the Arquillian adapter silently
+# attaches to any server already on the port.
 # TOMEE_CLASSIFIER selects the distribution (default: plume).
 # The reviewed exclusion list in runner-standalone/exclusions/<id>.txt is
 # applied by default; append -Dtck.exclusions.file=... to override (see
@@ -28,9 +31,10 @@ TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
-Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet, pages,
-         rest, validation, websocket, jsonp, jsonb, debugging, security,
-         authentication, faces
+Runners: annotations, concurrency, data, di, el, cdi, cdi-ee, servlet,
+         pages, rest, validation, websocket, jsonp, jsonb, debugging,
+         persistence, transactions, security, authentication, faces,
+         faces-old
 See runner-standalone/README.md for per-TCK status.
 EOF
   exit 2
@@ -42,6 +46,10 @@ case "$ID" in
     MODULES="runner-standalone/annotations-install,runner-standalone/annotations" ;;
   di)
     MODULES="runner-standalone/di-install,runner-standalone/di" ;;
+  el)
+    MODULES="runner-standalone/el-install,runner-standalone/el" ;;
+  persistence)
+    MODULES="runner-standalone/persistence-install,runner-standalone/persistence" ;;
   servlet)
     MODULES="runner-standalone/servlet-install,runner-standalone/servlet" ;;
   pages)
@@ -56,9 +64,9 @@ case "$ID" in
     MODULES="runner-standalone/debugging-install,runner-standalone/debugging" ;;
   concurrency|data|cdi|cdi-ee|jsonp|jsonb)
     MODULES="runner-standalone/$ID" ;;
-  security|authentication|faces)
+  security|authentication|faces|faces-old|transactions)
     # These TCK reactors manage their own TomEE; they need the full Maven
-    # lifecycle up to verify for their invoker runs.
+    # lifecycle up to verify for their invoker/JavaTest runs.
     shift
     exec "$ROOT_DIR/mvnw" -B -ntp \
       -pl "runner-standalone/$ID" -am \

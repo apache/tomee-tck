@@ -28,6 +28,12 @@
 
   <properties>
     <servlet.tck.version>6.1.0</servlet.tck.version>
+    <!-- Defaults match the fixed harness catalog; override to run beside
+         another TomEE instance (the remote adapter attaches to any server
+         already answering on the http port). -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
          full baseline run. -->
     <tck.exclusions.file>${project.basedir}/../exclusions/servlet.txt</tck.exclusions.file>
@@ -197,7 +203,8 @@
             <javax.net.ssl.keyStore>${project.build.directory}/certificates/clientcert.jks</javax.net.ssl.keyStore>
             <javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
             <javax.net.ssl.keyStoreType>JKS</javax.net.ssl.keyStoreType>
-            <securedWebServicePort>8443</securedWebServicePort>
+            <securedWebServicePort>${tomee.https.port}</securedWebServicePort>
+            <servlet.tck.httpsPort>${tomee.https.port}</servlet.tck.httpsPort>
             <javax.net.ssl.trustStore>${project.build.directory}/tomee-overlay/conf/client-truststore.p12</javax.net.ssl.trustStore>
             <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
             <javax.net.ssl.trustStoreType>PKCS12</javax.net.ssl.trustStoreType>

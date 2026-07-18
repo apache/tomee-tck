@@ -21,9 +21,9 @@
       <property name="conf">${project.build.directory}/tomee-overlay/conf</property>
       <property name="lib">${project.build.directory}/tomee-overlay/lib</property>
       <property name="host">localhost</property>
-      <property name="httpPort">8080</property>
-      <property name="httpsPort">8443</property>
-      <property name="stopPort">8005</property>
+      <property name="httpPort">${tomee.http.port}</property>
+      <property name="httpsPort">${tomee.https.port}</property>
+      <property name="stopPort">${tomee.shutdown.port}</property>
       <property name="cleanOnStartUp">true</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>
@@ -40,9 +40,9 @@
       <property name="conf">${project.build.directory}/tomee-overlay/conf</property>
       <property name="lib">${project.build.directory}/tomee-overlay/lib</property>
       <property name="host">localhost</property>
-      <property name="httpPort">8080</property>
-      <property name="httpsPort">8443</property>
-      <property name="stopPort">8005</property>
+      <property name="httpPort">${tomee.http.port}</property>
+      <property name="httpsPort">${tomee.https.port}</property>
+      <property name="stopPort">${tomee.shutdown.port}</property>
       <property name="cleanOnStartUp">false</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>

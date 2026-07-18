@@ -26,6 +26,11 @@
 
   <properties>
     <validation.tck.version>3.1.1</validation.tck.version>
+    <!-- Defaults match the fixed harness catalog; override to run beside
+         another TomEE instance (the remote adapter attaches to any server
+         already answering on the http port). -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
     <cdi.tck.version>4.1.0</cdi.tck.version>
     <testng.version>7.9.0</testng.version>
     <!-- The Jakarta Validation provider shipped by TomEE. -->
