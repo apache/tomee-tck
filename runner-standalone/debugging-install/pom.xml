@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-debugging-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Debugging Support 2.0 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Debugging Support for Other Languages TCK
+    distribution and installs the VerifySMAP jar and the testclient.war JSP
+    test application into the local repository. The distribution is not
+    published to Maven Central.
+  </description>
+
+  <properties>
+    <debugging.tck.version>2.0.0</debugging.tck.version>
+    <debugging.tck.zip>jakarta-debugging-tck-${debugging.tck.version}.zip</debugging.tck.zip>
+    <debugging.tck.url>https://download.eclipse.org/jakartaee/debugging/2.0/${debugging.tck.zip}</debugging.tck.url>
+    <debugging.tck.sha256>71999815418799837dc6f3d0dc40c3dcc4144cd90c7cdfd06aa69270483d78bc</debugging.tck.sha256>
+  </properties>
+
+  <!-- The download/install work only happens in TCK mode: install-file has
+       no skip parameter, so binding it in the default build would break a
+       fresh checkout's plain reactor. -->
+  <profiles>
+    <profile>
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.13.0</version>
+            <executions>
+              <execution>
+                <id>download-debugging-tck</id>
+                <phase>generate-resources</phase>
+                <goals><goal>wget</goal></goals>
+                <configuration>
+                  <skip>${tck.standalone.skip}</skip>
+                  <url>${debugging.tck.url}</url>
+                  <sha256>${debugging.tck.sha256}</sha256>
+                  <unpack>true</unpack>
+                  <!-- The zip has no top-level directory. -->
+                  <outputDirectory>${project.build.directory}/debugging-tck</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>3.1.4</version>
+            <executions>
+              <execution>
+                <id>install-debugging-tck</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <skip>${tck.standalone.skip}</skip>
+                  <file>${project.build.directory}/debugging-tck/debugging-tck-${debugging.tck.version}.jar</file>
+                  <groupId>jakartatck</groupId>
+                  <artifactId>jakarta-debugging-tck</artifactId>
+                  <version>${debugging.tck.version}</version>
+                  <packaging>jar</packaging>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-debugging-tck-testclient</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <skip>${tck.standalone.skip}</skip>
+                  <file>${project.build.directory}/debugging-tck/testclient.war</file>
+                  <groupId>jakartatck</groupId>
+                  <artifactId>jakarta-debugging-tck</artifactId>
+                  <version>${debugging.tck.version}</version>
+                  <classifier>testclient</classifier>
+                  <packaging>war</packaging>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

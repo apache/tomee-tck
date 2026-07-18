@@ -46,6 +46,10 @@
     <module>validation</module>
     <module>websocket-install</module>
     <module>websocket</module>
+    <module>jsonp</module>
+    <module>jsonb</module>
+    <module>debugging-install</module>
+    <module>debugging</module>
     <module>security</module>
     <module>authentication</module>
     <module>faces</module>
@@ -226,14 +230,9 @@
                 <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                 <arguments>
                   <argument>-Dderby.system.home=${project.build.directory}/derby</argument>
-<<<<<<< HEAD
                   <!-- The port travels as a system property because
                        exec-maven-plugin swallows the value after a literal
                        -p argument (module-path handling). -->
-=======
-                  <!-- The port is passed as a system property because the
-                       exec plugin swallows the value of a -p argument. -->
->>>>>>> worktree-agent-afdba4638712e0e2f
                   <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
                   <argument>-cp</argument>
                   <classpath/>
@@ -269,15 +268,7 @@
                 <executable>${java.home}/bin/java</executable>
                 <classpathScope>test</classpathScope>
                 <arguments>
-<<<<<<< HEAD
-<<<<<<< HEAD
                   <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
-=======
-                  <argument>-Dderby.drda.portNumber=${derby.port}</argument>
->>>>>>> worktree-agent-a4951d317a53c31de
-=======
-                  <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
->>>>>>> worktree-agent-afdba4638712e0e2f
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>

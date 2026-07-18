@@ -51,11 +51,12 @@ derived from; with the default exclusions applied these suites run green.
 | Security 4.0 | Source reactor zip 4.0.1 | `security` (Maven module) | **Runs: 26 app modules, 132 tests, 5 failures, 2 errors** (2026-07-18). The runner downloads and patches the reactor, injects a tomee-remote profile, and drives every module through the Maven invoker; the failures (e.g. BASIC auth mechanism answering 401 for valid credentials, two OpenID modules) are TomEE Jakarta Security results to triage |
 | Authentication 3.1 | Source reactor zip 3.1.2 | `authentication` (Maven module) | **Runs: 11 of 12 Web Profile modules pass cleanly (45 tests, 0 failures)** (2026-07-18). The spi module executes with the full property wiring but fails 50 of 57 SPI conformance assertions against Tomcat's AuthConfigFactory — product results to triage. EJB/JACC/SOAP modules are outside the Web Profile scope |
 | Faces 4.1 | Source reactor zip 4.1.2 | `faces` (Maven module) | **Runs: modern Arquillian modules complete — 315 tests, 45 failures, 46 errors** (2026-07-18) on Plume's Mojarra. A recurring product finding: TomEE's faces-config.xml unmarshaller rejects the `xsi:schemaLocation` attribute used by Faces 4.1 descriptors, failing those deployments. The ~5,500-test legacy JavaTest `old-tck` half is GlassFish-wired (asadmin deployment) and remains the one open port, as does the GlassFish-bound faces-signaturetest module |
+| JSON Processing 2.1 | `jakarta.json:jakarta.json-tck-*:2.1.1` (Maven Central; byte-identical to the EFTL zip pinned in `environment/versions.env`) | `jsonp` | **Passes 197/197** (2026-07-18) against Apache Johnzon 2.1.0, the JSON-P provider bundled in the TomEE Plume snapshot: 179 functional + signature tests and 18 pluggability tests. The signature test checks the `jakarta.json` packages of the distribution's `jakartaee-api` jar |
+| JSON Binding 3.0 | `jakarta.json.bind:jakarta.json.bind-tck:3.0.0` (Maven Central; byte-identical to the EFTL zip pinned in `environment/versions.env`) | `jsonb` | **Runs: 295 tests, 4 failures, 2 errors, 5 skipped** (2026-07-18) against Apache Johnzon 2.1.0 with OpenWebBeans as the CDI SE container (the runner boots it because the TCK's own private `@BeforeAll` bootstrap is ignored by JUnit). The signature test passes; 2 failures are the TCK's pre-CLDR-34 French locale expectations (JDK data, not Johnzon), the other 4 are Johnzon 2.1.0 gaps: BigDecimal/BigInteger serialized as JSON strings instead of numbers, `JsonbDeserializer` instances not resolved through CDI, and `@JsonbDateFormat` ignored on a `@JsonbCreator` parameter during polymorphic deserialization |
+| Debugging Support 2.0 | EFTL zip (installed as `jakartatck:jakarta-debugging-tck:2.0.0`) | `debugging` | **Passes** (2026-07-18). The runner compiles the TCK's `testclient.war` JSPs offline with the Jasper compiler bundled in the TomEE distribution (SMAP generation and dumping enabled, no server needed) and the TCK's `VerifySMAP` validates the embedded `SourceDebugExtension` of both generated classes plus both dumped `.smap` files. The Platform catalog's Pages debugging classes also pass |
 | Enterprise Beans 4.0 Lite | Covered by the Platform TCK catalog (`runner-webprofile`, `ejb30`/`ejb32`) | — | See `runner-webprofile/KNOWN_FAILURES.md` |
 | Standard Tag Library 3.0 | Covered by the Platform TCK catalog (`tags-tck`) | — | Blocked by the Jakarta Tags TLD registration gap |
-| Debugging Support 2.0 | Covered by the Platform TCK catalog (Pages debugging classes) | — | Passing |
 | Expression Language 6.0 | Standalone EL TCK (Maven Central `jakarta.el:...`-tck) | not yet scaffolded | Platform EL integration already runs in `runner-webprofile` |
-| JSON Processing 2.1 / JSON Binding 3.0 | Standalone TCKs on Maven Central | not yet scaffolded | Platform integration already runs in `runner-webprofile` |
 | Transactions 2.0 / Persistence 3.2 | Standalone TCKs (zip or Maven Central) | not yet scaffolded | Platform integration already runs in `runner-webprofile`; not Web Profile certification inputs |
 
 ## Layout conventions
@@ -69,11 +70,20 @@ derived from; with the default exclusions applied these suites run green.
   `-Dsurefire.excludesFile`/`-Dfailsafe.excludesFile` through the invoker.
 - `<id>-install` modules download an EFTL distribution zip (SHA-256 pinned)
   and install its artifacts into the local repository; run them once before
-  the matching runner (`run-standalone-suite.sh` chains them).
+  the matching runner (`run-standalone-suite.sh` chains them). Their whole
+  download/install pipeline lives inside the `standalone-tck` profile
+  because the install-file goal has no skip parameter and would otherwise
+  break the default reactor.
+  TCKs whose Maven Central artifacts are byte-identical to the EFTL zip
+  (jsonp, jsonb) skip the install module and resolve Central coordinates
+  directly; the zip checksums stay recorded in `environment/versions.env`.
 - Container-based runners inherit the TomEE overlay, Derby, and certificate
   lifecycle from the shared parent; `src/tomee-conf/` files replace
   same-named files from `environment/tomee/conf`.
-- Signature-only runners (annotations, di) set
-  `tck.standalone.container.skip=true` and run in the local JVM.
+- Runners that need no server (annotations, di, jsonp, jsonb, debugging)
+  set `tck.standalone.container.skip=true` and run in the local JVM; the
+  provider-level suites (jsonp, jsonb) test the exact Johnzon version the
+  TomEE distribution bundles, and debugging drives the distribution's own
+  Jasper compiler offline.
 - TestNG-based TCKs (cdi, cdi-ee, validation) force the surefire TestNG
   provider; JUnit-based ones use the JUnit Platform or JUnit 4 provider.
