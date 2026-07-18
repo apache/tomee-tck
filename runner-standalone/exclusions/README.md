@@ -9,7 +9,8 @@ triage list for everything these files exclude.
 
 Two formats, depending on how the runner executes tests:
 
-- **JUnit-based runners** (`concurrency`, `data`, `servlet`) and the
+- **JUnit-based runners** (`concurrency`, `data`, `servlet`, `jsonp`,
+  `jsonb`, `debugging`) and the
   **source-reactor runners** (`security`, `authentication`, `faces`):
   maven-surefire/failsafe `excludesFile` patterns —
   `**/path/to/Class.java` excludes a class, `**/path/to/Class.java#method`

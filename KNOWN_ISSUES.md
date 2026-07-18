@@ -29,6 +29,9 @@ Detail lives next to each runner:
 | validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
 | cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
+| jsonp | 197/197 pass (incl. pluggability + signature) | — | — |
+| jsonb | 295 tests, 4 F + 2 E | 6 tests | 4 Johnzon 2.1.0 gaps + 2 TCK pre-CLDR-34 locale expectations |
+| debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E | 7 tests | TomEE Jakarta Security |
 | authentication | 105 tests, 50 F | 50 methods (spi) | Tomcat AuthConfigFactory SPI |
 | faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
@@ -104,7 +107,19 @@ Need triage/fixes in the upstream projects TomEE ships.
    resource-class handling in the REST stack
    ([TOMEE-4436](https://issues.apache.org/jira/browse/TOMEE-4436),
    [TOMEE-4166](https://issues.apache.org/jira/browse/TOMEE-4166)).
-6. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
+6. **Apache Johnzon 2.1.0 (JSON Binding 3.0)** — confirmed at provider level
+   by the standalone JSON-B TCK: BigDecimal/BigInteger values inside the
+   IEEE-754 exact range are serialized as JSON strings where the spec
+   (§3.4.1) requires JSON numbers; `JsonbDeserializer` instances are not
+   resolved through CDI, leaving `@Inject` fields null (the adapter and
+   serializer CDI tests pass — the deserializer half of TOMEE-4436);
+   `@JsonbDateFormat` on a `@JsonbCreator` constructor parameter is ignored
+   during polymorphic (`@JsonbTypeInfo`) deserialization. 4 excluded tests
+   in [jsonb.txt](runner-standalone/exclusions/jsonb.txt); the other 2
+   entries there are the TCK's pre-CLDR-34 French locale expectations, a
+   JDK-data mismatch rather than a Johnzon defect. JSON-P (johnzon-core)
+   passes its TCK completely.
+7. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
    none reproduce on Plume/EclipseLink, tracked partly as
    [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).
    Kept visible via the `persistence-javatest (webprofile)` CI branch.
@@ -119,9 +134,10 @@ Not product bugs — gaps in this repository's coverage.
   only the modern Arquillian modules.
 - **Signature modules disabled** in the security and authentication source
   reactors (GlassFish-only coordinates).
-- **Standalone TCKs not yet scaffolded**: Expression Language, JSON
-  Processing, JSON Binding, Pages, WebSocket, REST, Transactions,
-  Persistence — the Platform catalog covers their integration halves only.
+- **Standalone TCKs not yet scaffolded**: Expression Language, Pages,
+  WebSocket, REST, Transactions, Persistence — the Platform catalog covers
+  their integration halves only. (JSON Processing, JSON Binding, and
+  Debugging Support now run from `runner-standalone/`.)
 - **Source-reactor suites not in CI**: security, authentication, and faces
   run locally via `run-standalone-suite.sh`; their exclusion wiring
   (invoker-passed `excludesFile`) still needs a verified end-to-end run, and

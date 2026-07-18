@@ -106,18 +106,19 @@ checksum lock.
 `runner-standalone/` gathers the independently published TCKs that Jakarta EE
 11 Web Profile certification requires in addition to the Platform catalog:
 Servlet, Faces, CDI (with Interceptors), Dependency Injection, Annotations,
-Validation, Security, Authentication, Concurrency, and Data. Run one at a
-time with:
+Validation, Security, Authentication, Concurrency, Data, JSON Processing,
+JSON Binding, and Debugging Support. Run one at a time with:
 
 ```sh
 runner-standalone/run-standalone-suite.sh concurrency
 ```
 
 See [runner-standalone/README.md](runner-standalone/README.md) for the
-per-specification status: Annotations and Dependency Injection pass, and every
-other suite — including the source-reactor TCKs (Security, Authentication,
-Faces) — executes end to end with dated result counts and the remaining
-TomEE or provider gaps recorded for triage.
+per-specification status: Annotations, Dependency Injection, JSON Processing
+(197/197 on Apache Johnzon), and Debugging Support pass, and every other
+suite — including the source-reactor TCKs (Security, Authentication, Faces)
+— executes end to end with dated result counts and the remaining TomEE or
+provider gaps recorded for triage.
 
 ## Environment templates
 
