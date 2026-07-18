@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replaces the shared overlay tomcat-users.xml for the REST TCK runner.
+     The SecurityContext and ContainerRequestContext security tests protect
+     their resources with the container roles DIRECTOR (j2ee) and OTHERROLE
+     (javajoe); Tomcat has no principal-to-role mapping descriptor, so the
+     roles are granted directly to the TCK identities here. -->
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+  <role rolename="staff"/>
+  <role rolename="guest"/>
+  <role rolename="mgr"/>
+  <role rolename="asadmin"/>
+  <role rolename="Administrator"/>
+  <role rolename="Manager"/>
+  <role rolename="Employee"/>
+  <role rolename="DIRECTOR"/>
+  <role rolename="OTHERROLE"/>
+
+  <user username="j2ee_vi" password="j2ee_vi" roles="staff"/>
+  <user username="javajoe" password="javajoe" roles="guest,Manager,Employee,OTHERROLE"/>
+  <user username="j2ee" password="j2ee" roles="staff,mgr,asadmin,Administrator,Employee,DIRECTOR"/>
+  <user username="j2ee_ri" password="j2ee_ri" roles="staff"/>
+</tomcat-users>

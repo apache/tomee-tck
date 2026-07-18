@@ -1,0 +1,5 @@
+# Jakarta RESTful Web Services 4.0 TCK (jakarta.ws.rs:jakarta-restful-ws-tck:
+# 4.0.1) on the TomEE Plume snapshot, Java 21. Baseline pending.
+#
+# Format: maven-surefire excludesFile patterns, applied through
+# -Dtck.exclusions.file (see runner-standalone/README.md).
