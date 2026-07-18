@@ -206,6 +206,45 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Step 4: the invoker runs with ignoreFailures=true to collect the
+           whole baseline, so Maven exits 0 regardless of the result. With the
+           reviewed exclusions applied the run is expected green; aggregate the
+           inner surefire/failsafe reports and fail the build on any
+           failure/error or on a module that built but never ran its tests. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${project.basedir}/../verify-invoker-result.sh</argument>
+                <argument>${authentication.tck.dir}</argument>
+                <argument>${project.build.directory}/invoker-reports</argument>
+                <argument>basic-authentication</argument>
+                <argument>custom-principal</argument>
+                <argument>programmatic-authentication</argument>
+                <argument>lifecycle</argument>
+                <argument>wrapping</argument>
+                <argument>register-session</argument>
+                <argument>async-authentication</argument>
+                <argument>status-codes</argument>
+                <argument>dispatching</argument>
+                <argument>dispatching-jsf-cdi</argument>
+                <argument>invoke-ejb-cdi</argument>
+                <argument>spi</argument>
+                <argument>authentication-signaturetest</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
