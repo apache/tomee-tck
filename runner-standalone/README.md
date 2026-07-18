@@ -22,7 +22,10 @@ fixed TomEE ports).
 Overriding the ports matters beyond convenience: the Arquillian remote
 adapter attaches to whatever server already answers on the configured http
 port, so a leftover or foreign TomEE on 8080 silently absorbs the
-deployments.
+deployments. For side-by-side runs, override the TomEE ports but keep Derby
+on 1527: overriding `tck.derby.port` breaks the suites whose deployments use
+the shared `tomee.xml` datasources on 1527 (cdi-ee's persistence-context
+tests).
 
 `TOMEE_CLASSIFIER` selects the distribution, default `plume`. The default
 Maven build compiles these modules but runs nothing; execution requires
