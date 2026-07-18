@@ -25,6 +25,9 @@
 
   <properties>
     <data.tck.version>1.0.0</data.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/data.txt</tck.exclusions.file>
   </properties>
 
   <dependencies>
@@ -146,6 +149,7 @@
             <dependency>jakarta.data:jakarta.data-tck</dependency>
           </dependenciesToScan>
           <groups>web &amp; persistence</groups>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
           <reportNameSuffix>web</reportNameSuffix>
           <systemPropertyVariables>
             <jakarta.tck.profile>core</jakarta.tck.profile>

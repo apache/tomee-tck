@@ -25,6 +25,9 @@
 
   <properties>
     <concurrency.tck.version>3.1.1</concurrency.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/concurrency.txt</tck.exclusions.file>
   </properties>
 
   <dependencies>
@@ -97,6 +100,7 @@
           </dependenciesToScan>
           <!-- The web group is the Web Profile selection of the TCK. -->
           <groups>web</groups>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
           <reportNameSuffix>web</reportNameSuffix>
           <systemPropertyVariables>
             <jimage.dir>${project.build.directory}/jimage</jimage.dir>

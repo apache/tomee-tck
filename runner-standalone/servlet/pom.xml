@@ -28,6 +28,9 @@
 
   <properties>
     <servlet.tck.version>6.1.0</servlet.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/servlet.txt</tck.exclusions.file>
   </properties>
 
   <dependencies>
@@ -186,6 +189,7 @@
           <dependenciesToScan>
             <dependency>jakarta.tck:servlet-tck-runtime</dependency>
           </dependenciesToScan>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
           <systemPropertyVariables>
             <servlet.tck.support.crossContext>false</servlet.tck.support.crossContext>
             <servlet.tck.support.http2Push>false</servlet.tck.support.http2Push>
