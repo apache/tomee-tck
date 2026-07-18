@@ -34,6 +34,8 @@
     <module>data</module>
     <module>di-install</module>
     <module>di</module>
+    <module>el-install</module>
+    <module>el</module>
     <module>cdi</module>
     <module>cdi-ee</module>
     <module>servlet-install</module>
@@ -50,9 +52,13 @@
     <module>jsonb</module>
     <module>debugging-install</module>
     <module>debugging</module>
+    <module>persistence-install</module>
+    <module>persistence</module>
+    <module>transactions</module>
     <module>security</module>
     <module>authentication</module>
     <module>faces</module>
+    <module>faces-old</module>
   </modules>
 
   <properties>

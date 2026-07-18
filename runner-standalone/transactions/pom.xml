@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-transactions</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Transactions 2.0 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta Transactions 2.0 TCK (the JavaTest
+    UserTransaction suite plus the in-container signature test) against
+    TomEE. The distribution ships the harness and every test archive
+    prebuilt as servlet and jsp vehicle WARs; this module provisions TomEE,
+    copies the WARs into webapps (the TCK's "none" deployment handler), and
+    drives JavaTest in the web vehicles. The "standalone" (no-container)
+    vehicle is dropped: it requires the reference implementation's local
+    JTA stack and tests nothing of TomEE. Not a Web Profile certification
+    input - the Platform catalog covers the wider jta test tree - but it
+    exercises UserTransaction in the web container directly.
+    Run with: run-standalone-suite.sh transactions
+    Single test directory: -Dtck.test=com/sun/ts/tests/jta/ee/usertransaction/begin
+  </description>
+
+  <properties>
+    <!-- This module provisions and starts its own TomEE; skip the shared
+         Arquillian-oriented container lifecycle (including Derby, which the
+         UserTransaction tests never touch). -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+
+    <transactions.tck.version>2.0.1</transactions.tck.version>
+    <transactions.tck.url>https://download.eclipse.org/jakartaee/transactions/2.0/jakarta-transactions-tck-${transactions.tck.version}.zip</transactions.tck.url>
+    <transactions.tck.sha256>5655dd55f23cbc883a4fbc95edd543857b41b24cbd42a3a5fe2d3b1f91c6e27c</transactions.tck.sha256>
+
+    <!-- The Ant version the JavaTest harness scripts are known to work
+         with (same pin as the faces-old runner). -->
+    <tck.ant.version>1.10.2</tck.ant.version>
+    <tck.ant.home>${project.build.directory}/apache-ant-${tck.ant.version}</tck.ant.home>
+    <tck.ant.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${tck.ant.version}-bin.zip</tck.ant.url>
+    <tck.ant.sha512>2b6b3b1769a38e0037c8f3825ffeb2094fbb2985128f3b03d1b10d792e75850d13cf04513a0c59a8ca89f1a446ca509def0bd5c2f2644f51054f56f2007a29d9</tck.ant.sha512>
+
+    <tck.home>${project.build.directory}/transactions-tck</tck.home>
+    <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+
+    <tomee.home>${project.build.directory}/tomee/apache-tomee-${tomee.classifier}-${tomee.version}</tomee.home>
+    <!-- Defaults match the fixed harness catalog (environment/README.md);
+         override to run beside another TomEE instance. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
+    <!-- JavaTest client-side log listener. -->
+    <tck.harness.log.port>2000</tck.harness.log.port>
+
+    <!-- Reviewed known-gap exclusions in JavaTest jtx line format
+         (test/path#testid); appended to ts.jtx. Point at
+         exclusions/none.txt for a full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/transactions.txt</tck.exclusions.file>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Stage the TomEE distribution this runner manages itself. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-tomee-distribution</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+
+          <!-- Step 1: download and verify the TCK distribution and the Ant
+               version the JavaTest harness is driven with. -->
+          <execution>
+            <id>download-tck-and-ant</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <get skipexisting="true" src="${transactions.tck.url}" dest="${project.build.directory}/jakarta-transactions-tck-${transactions.tck.version}.zip"/>
+                <checksum file="${project.build.directory}/jakarta-transactions-tck-${transactions.tck.version}.zip" algorithm="SHA-256" property="${transactions.tck.sha256}" verifyProperty="transactions.tck.checksum.matches"/>
+                <fail message="Checksum mismatch for the Jakarta Transactions TCK distribution">
+                  <condition><isfalse value="${transactions.tck.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/jakarta-transactions-tck-${transactions.tck.version}.zip" dest="${project.build.directory}" overwrite="false"/>
+
+                <get skipexisting="true" src="${tck.ant.url}" dest="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip"/>
+                <checksum file="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" algorithm="SHA-512" property="${tck.ant.sha512}" verifyProperty="tck.ant.checksum.matches"/>
+                <fail message="Checksum mismatch for the Apache Ant distribution">
+                  <condition><isfalse value="${tck.ant.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" dest="${project.build.directory}" overwrite="false"/>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tck.ant.home}/bin" includes="ant,antRun"/>
+                </chmod>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 2: point the harness configuration at TomEE. -->
+          <execution>
+            <id>configure-tck</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <!-- JDK 11+ variant: jimage bundles instead of rt.jar. -->
+                <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"/>
+                <!-- Join the multi-line property continuations so the
+                     byline replacements below always see whole values. -->
+                <replaceregexp file="${tck.home}/bin/ts.jte" match="\\[\r\n]+[ \t]*" replace="" flags="gs"/>
+
+                <!-- JavaTest installs its own SecurityManager; JDK 17+ only
+                     allows that with the explicit allow switch in the forked
+                     harness JVM. -->
+                <replace file="${tck.home}/bin/xml/ts.top.import.xml"
+                         token="fork=&quot;yes&quot; &gt;"
+                         value="fork=&quot;yes&quot;&gt;&lt;jvmarg value=&quot;-Djava.security.manager=allow&quot;/&gt;"/>
+
+                <macrodef name="tck-setting">
+                  <attribute name="key"/><attribute name="value"/>
+                  <sequential>
+                    <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                   match="@{key}=.*" replace="@{key}=@{value}"/>
+                  </sequential>
+                </macrodef>
+
+                <!-- Reviewed TomEE known-gap exclusions on top of the TCK's
+                     own exclude list; rebuilt from the pristine copy so
+                     re-runs never accumulate duplicates. -->
+                <copy file="${tck.home}/bin/ts.jtx" tofile="${tck.home}/bin/ts.jtx.orig" overwrite="false"/>
+                <concat destfile="${tck.home}/bin/ts.jtx" fixlastline="true">
+                  <file file="${tck.home}/bin/ts.jtx.orig"/>
+                  <file file="${tck.exclusions.file}"/>
+                </concat>
+
+                <!-- The Jakarta APIs the client JVM needs to load the test
+                     classes: the combined API jar of the TomEE distribution. -->
+                <pathconvert property="tck.jta.classes" pathsep="${path.separator}">
+                  <fileset dir="${tomee.home}/lib">
+                    <include name="jakartaee-api-*.jar"/>
+                  </fileset>
+                </pathconvert>
+
+                <tck-setting key="webServerHost" value="localhost"/>
+                <tck-setting key="webServerPort" value="${tomee.http.port}"/>
+                <tck-setting key="webServerHome" value="${tomee.home}"/>
+                <tck-setting key="jtaJarClasspath" value="${tck.jta.classes}"/>
+                <tck-setting key="jta.classes" value="${tck.jta.classes}"/>
+                <tck-setting key="extension.dir" value="${tomee.home}/lib"/>
+                <tck-setting key="impl.vi" value="none"/>
+                <tck-setting key="impl.vi.deploy.dir" value="${tomee.home}/webapps"/>
+                <tck-setting key="harness.log.port" value="${tck.harness.log.port}"/>
+                <tck-setting key="work.dir" value="${project.build.directory}/txwork/transactions"/>
+                <tck-setting key="report.dir" value="${project.build.directory}/txreport/transactions"/>
+
+                <mkdir dir="${project.build.directory}/txreport/transactions"/>
+                <mkdir dir="${project.build.directory}/txwork/transactions"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 3: configure TomEE, predeploy every prebuilt vehicle WAR
+               (the TCK's "none" handler leaves deployment to the vendor),
+               and start the container. -->
+          <execution>
+            <id>start-tomee-and-deploy</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <!-- Shared harness configuration, minus tomee.xml: the Derby
+                     datasources it defines are never used by these tests and
+                     Derby is not started for this suite. -->
+                <copy todir="${tomee.home}/conf" overwrite="true">
+                  <fileset dir="${maven.multiModuleProjectDirectory}/environment/tomee/conf"
+                           includes="server.xml,system.properties,tomcat-users.xml"/>
+                </copy>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8005&quot;" value="port=&quot;${tomee.shutdown.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8080&quot;" value="port=&quot;${tomee.http.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="8443" value="${tomee.https.port}"/>
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/certificates/generate-test-certificates.sh"/>
+                  <arg value="${tomee.home}/conf"/>
+                </exec>
+                <echo file="${tomee.home}/bin/setenv.sh">CATALINA_OPTS="-Xmx2g -Djava.awt.headless=true"
+</echo>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tomee.home}/bin" includes="*.sh"/>
+                </chmod>
+
+                <!-- The vehicle WARs only bundle the test classes; the rest
+                     of the JavaTest harness (RemoteStatus, TestUtil, ...)
+                     is expected on the container classpath - the classic
+                     CTS extension-directory contract. -->
+                <copy file="${tck.home}/lib/tsharness.jar" todir="${tomee.home}/lib"/>
+                <copy file="${tck.home}/lib/sigtest.jar" todir="${tomee.home}/lib"/>
+
+                <!-- Drop archives and exploded copies from a previous run so
+                     the fresh archives always win (and the incremental zip
+                     step below always rebuilds). -->
+                <delete includeemptydirs="true" quiet="true">
+                  <fileset dir="${tomee.home}/webapps" includes="*_vehicle_web.war,*_vehicle_web/**,*_vehicle_web"/>
+                </delete>
+
+                <!-- Every test WAR, flattened into webapps: the archive name
+                     (minus .war) is the context root the harness requests. -->
+                <copy todir="${tomee.home}/webapps" flatten="true" overwrite="true">
+                  <fileset dir="${tck.home}/dist" includes="**/*.war" excludes="**/JTASigTest_*.war"/>
+                </copy>
+                <!-- The signature-test WARs bundle their own sigtest.jar,
+                     which duplicates the JavaTest classes now on the common
+                     classloader and trips a LinkageError; repack them
+                     against the container copy instead. -->
+                <zip destfile="${tomee.home}/webapps/JTASigTest_servlet_vehicle_web.war">
+                  <zipfileset src="${tck.home}/dist/com/sun/ts/tests/signaturetest/jta/JTASigTest_servlet_vehicle_web.war" excludes="WEB-INF/lib/sigtest.jar"/>
+                </zip>
+                <zip destfile="${tomee.home}/webapps/JTASigTest_jsp_vehicle_web.war">
+                  <zipfileset src="${tck.home}/dist/com/sun/ts/tests/signaturetest/jta/JTASigTest_jsp_vehicle_web.war" excludes="WEB-INF/lib/sigtest.jar"/>
+                </zip>
+
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">
+                  <arg value="start"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+                <waitfor maxwait="180" maxwaitunit="second" timeoutproperty="tomee.start.timeout">
+                  <socket server="localhost" port="${tomee.http.port}"/>
+                </waitfor>
+                <fail message="TomEE did not open port ${tomee.http.port} within 180s">
+                  <condition><isset property="tomee.start.timeout"/></condition>
+                </fail>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 4: run JavaTest. The exit code is checked after the
+               container has been stopped (verify phase) so a red run still
+               shuts TomEE down; the summary is in
+               target/txreport/transactions. -->
+          <execution>
+            <id>run-tck</id>
+            <phase>integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="tck.run.result">
+                  <arg value="-Dutil.dir=${tck.home}"/>
+                  <!-- The distribution ships servlet and jsp vehicle
+                       archives; the no-container "standalone" vehicle of the
+                       UserTransaction tests needs the RI's local JTA stack
+                       and tests nothing of TomEE. The signature test's
+                       standalone run checks the distribution API jar in the
+                       local JVM and stays in. -->
+                  <arg value="-Dkeywords=signaturetest|!standalone_vehicle"/>
+                  <arg value="-Dmultiple.tests=${tck.test}" if:set="tck.test"/>
+                  <arg value="runclient" if:set="tck.test"/>
+                  <arg value="run.all" unless:set="tck.test"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                  <env key="LC_ALL" value="C"/>
+                </exec>
+                <echo message="JavaTest finished with exit code ${tck.run.result}"/>
+                <echo message="Report: ${project.build.directory}/txreport/transactions"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 5: always stop the container. -->
+          <execution>
+            <id>stop-tomee</id>
+            <phase>post-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="false">
+                  <arg value="stop"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 6: with the reviewed exclusions applied a default run is
+               expected green; surface a JavaTest failure as a build failure
+               so CI treats it as the regression it is. -->
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <fail message="JavaTest finished with exit code ${tck.run.result}; see ${project.build.directory}/txreport/transactions">
+                  <condition>
+                    <not><equals arg1="${tck.run.result}" arg2="0"/></not>
+                  </condition>
+                </fail>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

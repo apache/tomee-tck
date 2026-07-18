@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-el</artifactId>
+  <name>Jakarta Expression Language 6.0 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta Expression Language 6.0 TCK (functional
+    tests and the signature test) against Apache Tomcat's EL implementation,
+    the one bundled in every TomEE distribution (lib/el-api.jar and
+    lib/jasper-el.jar, resolved here at the same tomcat.version). The TCK
+    runs in the local JVM; no server is started. The signature test checks
+    the jakarta.el package of the el-api jar staged from the selected TomEE
+    distribution.
+  </description>
+
+  <properties>
+    <!-- Provider-level TCK: no TomEE container or Derby lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <el.tck.version>6.0.1</el.tck.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/el.txt</tck.exclusions.file>
+  </properties>
+
+  <dependencies>
+    <!-- The implementation under test: Tomcat's Jasper EL at the version
+         the TomEE distribution bundles (tomcat.version in the repository
+         root pom tracks the distribution's lib/jasper-el.jar). -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-jasper-el</artifactId>
+      <version>${tomcat.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-el-api</artifactId>
+      <version>${tomcat.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- com.sun.tdk classes invoked by the TCK's bundled signature test
+         driver; the jakarta.tck fork understands JDK 21 class files. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-el-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/el-api.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-tomee-el-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="tomee-el-api-jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/el-api.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="el.sig.api.jar"
+                             refid="tomee-el-api-jar"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <dependenciesToScan>
+            <dependency>jakarta.tck:jakarta-expression-language-tck</dependency>
+          </dependenciesToScan>
+          <!-- The TCK ships its tests as *IT. -->
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+          <systemPropertyVariables>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <sigTestClasspath>${el.sig.api.jar}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- The TCK artifact comes from the EFTL distribution installed by the
+           matching -install module; keep it out of the default reactor so a
+           fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>jakarta-expression-language-tck</artifactId>
+          <version>${el.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

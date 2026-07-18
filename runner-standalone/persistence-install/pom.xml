@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-persistence-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Persistence 3.2 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Persistence TCK distribution and installs
+    the contained jakarta.tck:persistence-tck artifacts (parent pom, common,
+    spec-tests, dbprocedures) into the local repository with their
+    distribution poms; the distribution is not published to Maven Central.
+    The whole download/install pipeline lives in the standalone-tck profile
+    because maven-install-plugin's install-file goal cannot be skipped; the
+    default reactor must not touch the network.
+  </description>
+
+  <properties>
+    <persistence.tck.version>3.2.1</persistence.tck.version>
+    <persistence.tck.zip>jakarta-persistence-tck-${persistence.tck.version}.zip</persistence.tck.zip>
+    <persistence.tck.url>https://download.eclipse.org/jakartaee/persistence/3.2/${persistence.tck.zip}</persistence.tck.url>
+    <persistence.tck.sha256>1d282675f43fa13cf8ab2537d6dbfb1e1c95f7b838ab7cdd053e185c363a6519</persistence.tck.sha256>
+    <persistence.tck.artifacts>${project.build.directory}/persistence-tck/artifacts</persistence.tck.artifacts>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.13.0</version>
+            <executions>
+              <execution>
+                <id>download-persistence-tck</id>
+                <phase>generate-resources</phase>
+                <goals><goal>wget</goal></goals>
+                <configuration>
+                  <url>${persistence.tck.url}</url>
+                  <sha256>${persistence.tck.sha256}</sha256>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>3.1.4</version>
+            <executions>
+              <execution>
+                <id>install-persistence-tck-parent-pom</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <file>${persistence.tck.artifacts}/persistence-tck-${persistence.tck.version}.pom</file>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>persistence-tck</artifactId>
+                  <version>${persistence.tck.version}</version>
+                  <packaging>pom</packaging>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-persistence-tck-common</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <file>${persistence.tck.artifacts}/persistence-tck-common-${persistence.tck.version}.jar</file>
+                  <pomFile>${persistence.tck.artifacts}/persistence-tck-common-${persistence.tck.version}.pom</pomFile>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>persistence-tck-common</artifactId>
+                  <version>${persistence.tck.version}</version>
+                  <packaging>jar</packaging>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-persistence-tck-spec-tests</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <file>${persistence.tck.artifacts}/persistence-tck-spec-tests-${persistence.tck.version}.jar</file>
+                  <pomFile>${persistence.tck.artifacts}/persistence-tck-spec-tests-${persistence.tck.version}.pom</pomFile>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>persistence-tck-spec-tests</artifactId>
+                  <version>${persistence.tck.version}</version>
+                  <packaging>jar</packaging>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install-persistence-tck-dbprocedures</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <file>${persistence.tck.artifacts}/dbprocedures-${persistence.tck.version}.jar</file>
+                  <pomFile>${persistence.tck.artifacts}/dbprocedures-${persistence.tck.version}.pom</pomFile>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>dbprocedures</artifactId>
+                  <version>${persistence.tck.version}</version>
+                  <packaging>jar</packaging>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

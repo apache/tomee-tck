@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-persistence</artifactId>
+  <name>Jakarta Persistence 3.2 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta Persistence 3.2 TCK in its standalone
+    (SE) vehicle against EclipseLink, the persistence provider bundled in
+    the TomEE Plume distribution, on the harness Derby database. The
+    provider and API jars are staged from the distribution zip so exactly
+    the bundled bytes are under test; the signature test checks the
+    jakarta.persistence packages of the distribution's combined API jar.
+    Not a Web Profile certification input - the Platform catalog covers
+    the EE integration half - but it isolates provider-level results from
+    container integration. Run with: run-standalone-suite.sh persistence
+  </description>
+
+  <properties>
+    <persistence.tck.version>3.2.1</persistence.tck.version>
+    <persistence.tck.zip>jakarta-persistence-tck-${persistence.tck.version}.zip</persistence.tck.zip>
+    <persistence.tck.url>https://download.eclipse.org/jakartaee/persistence/3.2/${persistence.tck.zip}</persistence.tck.url>
+    <persistence.tck.sha256>1d282675f43fa13cf8ab2537d6dbfb1e1c95f7b838ab7cdd053e185c363a6519</persistence.tck.sha256>
+    <!-- Platform TCK support line published to Maven Central (the TCK's
+         own pins reference unpublished JavaTest-era artifacts). -->
+    <tck.support.version>11.1.1</tck.support.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/persistence.txt</tck.exclusions.file>
+    <tck.derby.url>jdbc:derby://localhost:${tck.derby.port}/derbyDB;create=true</tck.derby.url>
+    <tck.derby.user>cts1</tck.derby.user>
+    <tck.derby.password>cts1</tck.derby.password>
+  </properties>
+
+  <dependencies>
+    <!-- com.sun.tdk classes invoked by the TCK's bundled signature test
+         driver; the jakarta.tck fork understands JDK 21 class files. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Platform TCK support libraries used by the TCK client classes and
+         the signature-test framework; published to Maven Central. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>common</artifactId>
+      <version>${tck.support.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>signaturetest</artifactId>
+      <version>${tck.support.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- The TCK client classes reference Arquillian/ShrinkWrap types even
+         in the standalone vehicle; JUnit discovery needs them loadable
+         (same dependencies as the TCK's own runner template). -->
+    <dependency>
+      <groupId>org.jboss.arquillian.junit5</groupId>
+      <artifactId>arquillian-junit5-container</artifactId>
+      <version>1.9.1.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit5</groupId>
+      <artifactId>arquillian-junit5-core</artifactId>
+      <version>1.9.1.Final</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Shared Derby/network-environment lifecycle from the parent; the
+           TomEE distribution is only staged, never started. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-persistence-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/eclipselink-*.jar,**/lib/asm-*.jar,**/lib/jakartaee-api-*.jar,**/lib/bval-jsr-*.jar,**/lib/el-api.jar,**/lib/jasper-el.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.googlecode.maven-download-plugin</groupId>
+        <artifactId>download-maven-plugin</artifactId>
+        <version>1.13.0</version>
+        <executions>
+          <execution>
+            <id>download-persistence-tck-sql</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>wget</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <url>${persistence.tck.url}</url>
+              <sha256>${persistence.tck.sha256}</sha256>
+              <unpack>true</unpack>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-tomee-persistence-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <!-- Comma-separated: surefire additionalClasspathElements. -->
+                <pathconvert pathsep="," property="persistence.provider.classpath">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/eclipselink-*.jar"/>
+                    <!-- EclipseLink 5 weaving resolves its ASM abstraction
+                         against the distribution's OW2 ASM jars. -->
+                    <include name="**/lib/asm-*.jar"/>
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                    <include name="**/lib/el-api.jar"/>
+                    <include name="**/lib/jasper-el.jar"/>
+                  </fileset>
+                </pathconvert>
+                <pathconvert pathsep="," property="persistence.validator.classpath">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/bval-jsr-*.jar"/>
+                  </fileset>
+                </pathconvert>
+                <pathconvert pathsep="${path.separator}" property="persistence.sig.api.jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                  </fileset>
+                </pathconvert>
+              </target>
+            </configuration>
+          </execution>
+          <!-- Create the TCK schema and stored procedures once Derby is up
+               (the parent starts it in this phase; plugin order keeps this
+               after the exec-maven-plugin executions). The dbprocedures jar
+               is on Derby's server classpath as a test dependency. -->
+          <execution>
+            <id>init-persistence-schema</id>
+            <phase>process-test-classes</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <sql autocommit="true" delimiter=";" onerror="continue"
+                     driver="org.apache.derby.jdbc.ClientDriver"
+                     url="${tck.derby.url}"
+                     userid="${tck.derby.user}" password="${tck.derby.password}"
+                     classpathref="maven.test.classpath">
+                  <transaction src="${project.build.directory}/persistence-tck/sql/derby/derby.ddl.persistence.sql"/>
+                </sql>
+                <sql autocommit="true" delimiter=";" onerror="continue"
+                     driver="org.apache.derby.jdbc.ClientDriver"
+                     url="${tck.derby.url}"
+                     userid="${tck.derby.user}" password="${tck.derby.password}"
+                     classpathref="maven.test.classpath">
+                  <transaction src="${project.build.directory}/persistence-tck/sql/derby/derby.ddl.persistence.sprocs.sql"/>
+                </sql>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <dependenciesToScan>
+            <dependency>jakarta.tck:persistence-tck-spec-tests</dependency>
+          </dependenciesToScan>
+          <includes>
+            <include>**/Client*.java</include>
+            <include>**/*JPASigTest*.java</include>
+          </includes>
+          <argLine>-Xmx2g</argLine>
+          <additionalClasspathElements>
+            <additionalClasspathElement>${persistence.provider.classpath}</additionalClasspathElement>
+            <additionalClasspathElement>${persistence.validator.classpath}</additionalClasspathElement>
+          </additionalClasspathElements>
+          <systemPropertyVariables>
+            <platform.mode>standalone</platform.mode>
+            <vehicle>standalone</vehicle>
+            <persistence.unit.name>JPATCK</persistence.unit.name>
+            <persistence.unit.name.2>JPATCK2</persistence.unit.name.2>
+            <jakarta.persistence.provider>org.eclipse.persistence.jpa.PersistenceProvider</jakarta.persistence.provider>
+            <jakarta.persistence.jdbc.driver>org.apache.derby.jdbc.ClientDriver</jakarta.persistence.jdbc.driver>
+            <jakarta.persistence.jdbc.url>${tck.derby.url}</jakarta.persistence.jdbc.url>
+            <jakarta.persistence.jdbc.user>${tck.derby.user}</jakarta.persistence.jdbc.user>
+            <jakarta.persistence.jdbc.password>${tck.derby.password}</jakarta.persistence.jdbc.password>
+            <jpa.provider.implementation.specific.properties>eclipselink.logging.level=OFF</jpa.provider.implementation.specific.properties>
+            <persistence.second.level.caching.supported>true</persistence.second.level.caching.supported>
+            <db.supports.sequence>true</db.supports.sequence>
+            <jdbc.db>derby</jdbc.db>
+            <Insert_Jpa_Purchase_Order>INSERT INTO PURCHASE_ORDER(ID, TOTAL, DESCRIPTION) VALUES(?, ?, null)</Insert_Jpa_Purchase_Order>
+            <Select_Jpa_Purchase_Order>SELECT ID, TOTAL FROM PURCHASE_ORDER WHERE ID=?</Select_Jpa_Purchase_Order>
+            <log.file.location>${project.build.directory}</log.file.location>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <sigTestClasspath>${persistence.sig.api.jar}${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <goals><goal>test</goal></goals>
+            <configuration>
+              <!-- This one test asserts EntityManagerFactory creation with
+                   no Bean Validation provider present; it runs in the second
+                   execution without the validator classpath. -->
+              <test>!ee.jakarta.tck.persistence.se.entityManagerFactory.Client2#createEntityManagerFactoryNoBeanValidatorTest</test>
+            </configuration>
+          </execution>
+          <execution>
+            <id>persistence-no-validator-test</id>
+            <goals><goal>test</goal></goals>
+            <configuration>
+              <test>ee.jakarta.tck.persistence.se.entityManagerFactory.Client2#createEntityManagerFactoryNoBeanValidatorTest</test>
+              <additionalClasspathElements>
+                <additionalClasspathElement>${persistence.provider.classpath}</additionalClasspathElement>
+              </additionalClasspathElements>
+              <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- The TCK artifacts come from the EFTL distribution installed by
+           the matching -install module; keep them out of the default
+           reactor so a fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>persistence-tck-spec-tests</artifactId>
+          <version>${persistence.tck.version}</version>
+          <scope>test</scope>
+          <exclusions>
+            <!-- The API under test is the distribution's combined jar. -->
+            <exclusion>
+              <groupId>jakarta.persistence</groupId>
+              <artifactId>jakarta.persistence-api</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>persistence-tck-common</artifactId>
+          <version>${persistence.tck.version}</version>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>jakarta.persistence</groupId>
+              <artifactId>jakarta.persistence-api</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <!-- Stored procedures loaded by the Derby network server (the
+             parent starts it with this module's test classpath). -->
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>dbprocedures</artifactId>
+          <version>${persistence.tck.version}</version>
+          <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>jakarta.persistence</groupId>
+              <artifactId>jakarta.persistence-api</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

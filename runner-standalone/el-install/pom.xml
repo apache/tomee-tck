@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-el-install</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Expression Language 6.0 TCK installer</name>
+  <description>
+    Downloads the EFTL Jakarta Expression Language TCK distribution and
+    installs the contained jakarta.tck:jakarta-expression-language-tck
+    artifact (the coordinates of the jar's own embedded pom) into the local
+    repository. The distribution is not published to Maven Central.
+  </description>
+
+  <properties>
+    <el.tck.version>6.0.1</el.tck.version>
+    <el.tck.zip>jakarta-expression-language-tck-${el.tck.version}.zip</el.tck.zip>
+    <el.tck.url>https://download.eclipse.org/jakartaee/expression-language/6.0/${el.tck.zip}</el.tck.url>
+    <el.tck.sha256>8ca4339e1b93c8f490c38b5888d8a54d09f7d12257b222bff2d44d665f323cee</el.tck.sha256>
+  </properties>
+
+  <!-- The download/install work only happens in TCK mode: install-file has
+       no skip parameter, so binding it in the default build would break a
+       fresh checkout's plain reactor. -->
+  <profiles>
+    <profile>
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.13.0</version>
+            <executions>
+              <execution>
+                <id>download-el-tck</id>
+                <phase>generate-resources</phase>
+                <goals><goal>wget</goal></goals>
+                <configuration>
+                  <skip>${tck.standalone.skip}</skip>
+                  <url>${el.tck.url}</url>
+                  <sha256>${el.tck.sha256}</sha256>
+                  <unpack>true</unpack>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>3.1.4</version>
+            <executions>
+              <execution>
+                <id>install-el-tck</id>
+                <phase>process-resources</phase>
+                <goals><goal>install-file</goal></goals>
+                <configuration>
+                  <skip>${tck.standalone.skip}</skip>
+                  <file>${project.build.directory}/el-tck/artifacts/jakarta-expression-language-tck-${el.tck.version}.jar</file>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>jakarta-expression-language-tck</artifactId>
+                  <version>${el.tck.version}</version>
+                  <packaging>jar</packaging>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
