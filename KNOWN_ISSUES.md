@@ -40,7 +40,7 @@ Detail lives next to each runner:
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
 | authentication | 106 tests, 1 F; signature test passes | 1 method (spi `CheckMsgInfoKey`) | TCK challenge #219 (hard-codes a JACC requirement) |
 | websocket | 737 tests, 3 E | 3 methods | Client container advertises permessage-deflate in the negotiated extension lists |
-| faces (modern modules) | 263 tests on record, 9 F + 30 E | 39 tests | TomEE faces-config parsing + Mojarra integration |
+| faces (modern modules) | 327 tests, 45 F + 6 E (failsafe reruns inflate the counts; 10 distinct failing classes) | 10 classes | 1 TomEE faces-config gap + Mojarra/TomEE CDI-injection, whole-bean/method validation, and one Chrome ajax quirk |
 | faces-old (JavaTest) | 5,391 tests, all pass (recorded run: 5 F from a foreign server answering :8080 mid-run; pass on re-run) | — | — (standalone mode, no exclusions) |
 | faces-signaturetest | passes against Plume's Mojarra (org.glassfish:jakarta.faces 4.1.9) | — | — |
 
@@ -76,10 +76,35 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    conduit's no-entity handling, tracked upstream as
    [CXF-9039](https://issues.apache.org/jira/browse/CXF-9039), otherwise
    fails the `getLength()`/`hasEntity()` assertions.
-5. **Faces descriptor parsing** — TomEE's `faces-config.xml` unmarshaller
-   rejects the `xsi:schemaLocation` attribute that Faces 4.1 descriptors
-   carry, so affected applications never deploy. Dominant cause of the 31
-   class exclusions in [faces.txt](runner-standalone/exclusions/faces.txt).
+5. **Faces (Mojarra on TomEE)** — five distinct integration behaviors, all in
+   [faces.txt](runner-standalone/exclusions/faces.txt):
+   - *faces-config parsing (product gap):* TomEE's `faces-config.xml`
+     unmarshaller (`ReadDescriptors.readFacesConfig`) rejects the unexpected
+     `{https://www.w3.org/2001/XMLSchema-instance}schemaLocation` attribute the
+     Faces 4.1 descriptors declare on the nonstandard *https* XSI namespace, so
+     the deployment fails to unmarshall. Only descriptors with child content
+     hit the strict path: `faces41/headAndBodyRenderer/Spec1760IT` (its
+     `faces-config.xml` carries a `<faces-config-extension>`) is the single
+     class affected — the sibling `uiRepeat/Spec1263IT` and
+     `uuidConverter/Spec1819IT` modules carry the same https namespace on an
+     empty `<faces-config>` and deploy and pass. A TomEE fix and/or TCK
+     challenge candidate.
+   - *Faces CDI implicit-object injection:* `@Inject` with a Faces qualifier
+     (`@RequestCookieMap`/`@SessionMap`/`@ViewMap`) yields a `Map` that renders
+     non-empty where the TCK asserts the page contains `{}` — Mojarra's
+     implicit-object CDI producers do not resolve to the empty map under
+     OpenWebBeans (`Issue3729IT`/`Issue3730IT`/`Issue3731IT`,
+     `Spec1582RequestCookieMap2IT`/`Spec1582ViewMap2IT`).
+   - *Whole-bean / cross-field validation:* `<f:validateWholeBean>` does not
+     emit the expected "Password fields must match" message
+     (`multiFieldValidation/Spec1IT`, `validateWholeBean/Issue4083IT`).
+   - *CDI method-level validation:* a `@FooConstraint` method constraint does
+     not surface its violation message on the rendered page under TomEE's
+     BVal/OpenWebBeans method-validation integration (`MethodValidationIT`).
+   - *Mojarra ajax re-init under Chrome:* the ajax response re-executes an
+     inline "Init called" script a different number of times than expected; the
+     TCK source itself notes this appears under Chrome and passes under HtmlUnit
+     (`Issue2162IT`).
 6. **Jakarta Security** — the BASIC mechanism answers 401 for valid
    credentials in the decorated/custom-handler variants, and both OpenID
    default modules fail token validation.
@@ -193,6 +218,10 @@ Not product bugs — gaps in this repository's coverage.
   `run-standalone-suite.sh`; it joins the Jenkins branch list once its
   baseline and exclusion wiring have a verified green run. The `faces-old`
   JavaTest half runs in CI.
+- **Faces `old-tck-selenium` module uncovered**: the extracted TCK reactor
+  ships an `old-tck-selenium` module (22 tests) that neither the `faces`
+  runner (which drives faces22/23/40/41 + faces-signaturetest) nor the
+  `faces-old` JavaTest runner executes; wire it into one of them.
 
 ## What CI runs
 

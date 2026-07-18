@@ -57,8 +57,14 @@
 
     <build>
         <plugins>
+            <!-- The TCK's modern modules run every IT (and the signature test)
+                 through the failsafe plugin, so the Arquillian remote container
+                 configuration and its TomEE system properties must live in the
+                 failsafe execution, not surefire; a surefire block never
+                 reaches the integration-test fork and the adapter falls back to
+                 its defaults (webprofile classifier, ephemeral working dir). -->
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
                         <tomee.stopPort>-1</tomee.stopPort>
@@ -71,6 +77,19 @@
                              was developed against. -->
                         <tomee.classifier>plume</tomee.classifier>
                         <tomee.properties>openejb.environment.default=true</tomee.properties>
+                        <!-- The faces40/41 WARs bundle util-4.1.2.jar, whose
+                             BaseITNG @Deployment method references ShrinkWrap
+                             types (org.jboss.shrinkwrap.api.Archive) that the
+                             WARs do not package. OpenWebBeans loads every
+                             annotated class while scanning for CDI beans and
+                             aborts the deployment with a
+                             ClassNotFoundException where GlassFish/Weld
+                             tolerates the unloadable type. Stage the ShrinkWrap
+                             API the TCK's util module already resolves (1.2.6)
+                             into the server so the scan succeeds. -->
+                        <tomee.additionalLibs>mvn:org.jboss.shrinkwrap:shrinkwrap-api:1.2.6
+mvn:org.jboss.shrinkwrap:shrinkwrap-spi:1.2.6
+mvn:org.jboss.shrinkwrap:shrinkwrap-impl-base:1.2.6</tomee.additionalLibs>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
