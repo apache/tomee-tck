@@ -39,6 +39,9 @@
     <module>servlet</module>
     <module>validation-install</module>
     <module>validation</module>
+    <module>security</module>
+    <module>authentication</module>
+    <module>faces</module>
   </modules>
 
   <properties>

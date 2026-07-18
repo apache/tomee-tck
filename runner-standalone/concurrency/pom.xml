@@ -44,6 +44,14 @@
       <artifactId>arquillian-junit5-container</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- Deployment failures serialized by the server may reference Catalina
+         classes; keep them resolvable on the client for readable reports. -->
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
+      <version>${tomcat.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>jakarta.enterprise.concurrent</groupId>
       <artifactId>jakarta.enterprise.concurrent-tck</artifactId>

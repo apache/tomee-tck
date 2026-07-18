@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-security</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Security 4.0 TCK runner</name>
+  <description>
+    Runs the Jakarta Security 4.0 TCK source reactor against TomEE, following
+    the apache/tomee tck/security-standalone approach: download the EFTL
+    distribution, inject a tomee-remote Arquillian profile into the TCK
+    parent, install the TCK parent and common module, then drive every app
+    module through the Maven invoker. The TCK manages its own TomEE instance
+    on random ports. Run with: run-standalone-suite.sh security
+  </description>
+
+  <properties>
+    <!-- The TCK reactor starts its own server; skip the shared lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <security.tck.version>4.0.1</security.tck.version>
+    <security.tck.url>https://download.eclipse.org/jakartaee/security/4.0/jakarta-security-tck-${security.tck.version}.zip</security.tck.url>
+    <tck.dir>${project.build.directory}/security-tck-${security.tck.version}/tck</tck.dir>
+    <!-- The security TCK exercises full-profile features; TomEE Plus is the
+         distribution apache/tomee validates it against. -->
+    <security.tomee.classifier>plus</security.tomee.classifier>
+    <version.arquillian-protocol-servlet-jakarta>10.0.0.Final</version.arquillian-protocol-servlet-jakarta>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Step 1: download, unpack, and patch the Security TCK. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>download-tck</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <get skipexisting="true" src="${security.tck.url}" dest="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip"/>
+                <unzip src="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip" dest="${project.build.directory}"/>
+
+                <!-- Overlay the TomEE arquillian.xml into the TCK common resources. -->
+                <copy file="${project.basedir}/src/test/resources/arquillian.xml" tofile="${tck.dir}/common/src/main/resources/arquillian.xml" overwrite="true"/>
+
+                <!-- Inject the tomee-remote profile into the TCK parent pom. -->
+                <loadfile property="tomee.remote.profile" srcFile="${project.basedir}/src/test/resources/tomee-remote-profile.xml" encoding="UTF-8">
+                  <filterchain>
+                    <expandproperties/>
+                  </filterchain>
+                </loadfile>
+                <replace file="${tck.dir}/pom.xml" token="&lt;/profiles&gt;" value="${line.separator}${tomee.remote.profile}${line.separator} &lt;/profiles&gt;"/>
+
+                <!-- The signature module uses GlassFish-only properties. -->
+                <replace file="${tck.dir}/pom.xml" token="&lt;module&gt;security-signaturetest&lt;/module&gt;" value="&lt;!-- module&gt;security-signaturetest&lt;/module --&gt;"/>
+
+                <!-- Deactivate the GlassFish profile's default activation. -->
+                <replace file="${tck.dir}/pom.xml" token="&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;" value="&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;"/>
+
+                <!-- The TCK still references the javax-era servlet protocol. -->
+                <replace file="${tck.dir}/pom.xml" token="&lt;artifactId&gt;arquillian-protocol-servlet&lt;/artifactId&gt;" value="&lt;artifactId&gt;arquillian-protocol-servlet-jakarta&lt;/artifactId&gt;${line.separator} &lt;version&gt;${version.arquillian-protocol-servlet-jakarta}&lt;/version&gt;"/>
+
+                <!-- Seed the shared truststore appended to by app-openid2/3.
+                     The glassfish8 path is a TCK leftover; no GlassFish runs. -->
+                <mkdir dir="${project.build.directory}/glassfish8/glassfish/domains/domain1/config"/>
+                <delete file="${project.build.directory}/glassfish8/glassfish/domains/domain1/config/cacerts.jks" quiet="true"/>
+                <copy file="${java.home}/lib/security/cacerts" tofile="${project.build.directory}/glassfish8/glassfish/domains/domain1/config/cacerts.jks"/>
+
+                <!-- The TCK ships self-signed OpenID HTTPS certs that expired
+                     in 2023; mint fresh ones. -->
+                <exec executable="bash" failonerror="true">
+                  <arg value="-c"/>
+                  <arg value="set -euo pipefail; for d in &quot;${tck.dir}&quot;/app-openid*/; do if [ -f &quot;$d/localhost-rsa.jks&quot; ]; then rm -f &quot;$d/localhost-rsa.jks&quot; &quot;$d/tomcat.cert&quot;; keytool -genkeypair -alias tomcat -keyalg RSA -keysize 2048 -validity 3650 -dname 'CN=localhost, OU=jakarta, O=eclipse, L=amsterdam, ST=holland, C=nl' -storetype PKCS12 -storepass changeit -keypass changeit -keystore &quot;$d/localhost-rsa.jks&quot;; keytool -exportcert -alias tomcat -storepass changeit -keystore &quot;$d/localhost-rsa.jks&quot; -file &quot;$d/tomcat.cert&quot;; fi; done"/>
+                </exec>
+
+                <!-- Unique truststore aliases per sequential OpenID module. -->
+                <exec executable="bash" failonerror="true">
+                  <arg value="-c"/>
+                  <arg value="set -euo pipefail; for p in &quot;${tck.dir}&quot;/app-openid*/pom.xml; do name=$(basename &quot;$(dirname &quot;$p&quot;)&quot;); suffix=${name#app-openid}; if [ -n &quot;$suffix&quot; ]; then sed -i.bak -e &quot;s|&lt;alias&gt;tomcat&lt;/alias&gt;|&lt;alias&gt;tomcat-openid${suffix}&lt;/alias&gt;|&quot; &quot;$p&quot;; rm -f &quot;$p.bak&quot;; fi; done"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Step 2: install the TCK parent pom and common module. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>install-tck-parent</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>${maven.multiModuleProjectDirectory}/mvnw</executable>
+              <workingDirectory>${tck.dir}</workingDirectory>
+              <arguments>
+                <argument>-B</argument><argument>-ntp</argument>
+                <argument>install</argument>
+                <argument>-N</argument>
+                <argument>-Ptomee-remote</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-tck-common</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>${maven.multiModuleProjectDirectory}/mvnw</executable>
+              <workingDirectory>${tck.dir}/common</workingDirectory>
+              <arguments>
+                <argument>-B</argument><argument>-ntp</argument>
+                <argument>install</argument>
+                <argument>-Ptomee-remote</argument>
+                <argument>-DskipTests</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Step 3: run the TCK app modules through the Maven invoker. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <skipInvocation>${tck.standalone.skip}</skipInvocation>
+          <projectsDirectory>${tck.dir}</projectsDirectory>
+          <localRepositoryPath>${settings.localRepository}</localRepositoryPath>
+          <mavenExecutable>${maven.multiModuleProjectDirectory}/mvnw</mavenExecutable>
+          <streamLogs>true</streamLogs>
+          <showErrors>true</showErrors>
+          <!-- Collect the full compatibility baseline instead of stopping at
+               the first failing module. -->
+          <ignoreFailures>true</ignoreFailures>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-security-tck</id>
+            <phase>integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <goals><goal>verify</goal></goals>
+              <profiles><profile>tomee-remote</profile></profiles>
+              <pomIncludes>
+                <pomInclude>app-securitycontext/pom.xml</pomInclude>
+                <pomInclude>app-securitycontext-auth/pom.xml</pomInclude>
+                <pomInclude>app-securitycontext-customprincipal/pom.xml</pomInclude>
+                <pomInclude>app-mem/pom.xml</pomInclude>
+                <pomInclude>app-db/pom.xml</pomInclude>
+                <pomInclude>app-ldap/pom.xml</pomInclude>
+                <pomInclude>app-ldap2/pom.xml</pomInclude>
+                <pomInclude>app-ldap3/pom.xml</pomInclude>
+                <pomInclude>app-custom/pom.xml</pomInclude>
+                <pomInclude>app-multiple-store/pom.xml</pomInclude>
+                <pomInclude>app-multiple-store-backup/pom.xml</pomInclude>
+                <pomInclude>app-mem-basic/pom.xml</pomInclude>
+                <pomInclude>app-mem-basic-decorate/pom.xml</pomInclude>
+                <pomInclude>app-mem-form/pom.xml</pomInclude>
+                <pomInclude>app-mem-customform/pom.xml</pomInclude>
+                <pomInclude>app-openid/pom.xml</pomInclude>
+                <pomInclude>app-openid2/pom.xml</pomInclude>
+                <pomInclude>app-openid3/pom.xml</pomInclude>
+                <pomInclude>app-custom-session/pom.xml</pomInclude>
+                <pomInclude>app-custom-rememberme/pom.xml</pomInclude>
+                <pomInclude>app-custom-identity-store-handler/pom.xml</pomInclude>
+                <pomInclude>app-custom-authentication-mechanism-handler/pom.xml</pomInclude>
+                <pomInclude>app-custom-authentication-mechanism-handler2/pom.xml</pomInclude>
+                <pomInclude>app-jaxrs/pom.xml</pomInclude>
+                <pomInclude>app-mem-policy/pom.xml</pomInclude>
+                <pomInclude>app-mem-policy2/pom.xml</pomInclude>
+              </pomIncludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

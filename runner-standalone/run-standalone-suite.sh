@@ -22,9 +22,8 @@ TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id>
-Maven-module runners: annotations, concurrency, data, di, cdi, cdi-ee,
-                      servlet, validation
-Script-based runners: security, authentication, faces
+Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet,
+         validation, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
 EOF
   exit 2
@@ -43,7 +42,12 @@ case "$ID" in
   concurrency|data|cdi|cdi-ee)
     MODULES="runner-standalone/$ID" ;;
   security|authentication|faces)
-    exec sh "$SCRIPT_DIR/$ID/run-$ID-tck.sh" ;;
+    # These TCK reactors manage their own TomEE; they need the full Maven
+    # lifecycle up to verify for their invoker runs.
+    exec "$ROOT_DIR/mvnw" -B -ntp \
+      -pl "runner-standalone/$ID" -am \
+      -Dtck.standalone=true \
+      verify ;;
   *) usage ;;
 esac
 

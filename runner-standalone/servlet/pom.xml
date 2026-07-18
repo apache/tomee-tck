@@ -20,11 +20,10 @@
   <name>Jakarta Servlet 6.1 TCK runner</name>
   <description>
     Runs the standalone Jakarta Servlet 6.1 TCK against the TomEE
-    distribution selected by tomee.classifier. Harness status: the client-cert
-    authentication tests still need a TomEE vendor descriptor equivalent to
-    the reference runner's sun-web.xml principal mapping, and tests addressed
-    at the dedicated https deployment need the second container definition;
-    see the module README notes in runner-standalone/README.md.
+    distribution selected by tomee.classifier. The TCK's bundled client
+    certificate is trusted by the server connector, and its identity is
+    mapped to the required role through a sun-web.xml added by an Arquillian
+    archive processor.
   </description>
 
   <properties>
@@ -65,10 +64,13 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- The TCK's CommonServlets resolves org.slf4j:slf4j-simple at the
+         version of the slf4j-api present on the class path (1.7.36 from the
+         TomEE adapter), so exactly that version must be resolvable. -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>2.0.16</version>
+      <version>1.7.36</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -99,6 +101,26 @@
                   <type>zip</type>
                   <outputDirectory>${project.build.directory}/tomee</outputDirectory>
                   <includes>**/lib/servlet-api.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stage-tck-client-certificates</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <!-- The TCK hardcodes the identity of its bundled client
+                     certificate (CN=CTS, OU=Java Software, ...), so the
+                     bundled keystore must be used, not a generated one. -->
+                <artifactItem>
+                  <groupId>jakarta.tck</groupId>
+                  <artifactId>servlet-tck-runtime</artifactId>
+                  <version>${servlet.tck.version}</version>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <includes>certificates/**</includes>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -134,6 +156,26 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>trust-tck-client-certificate</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>${java.home}/bin/keytool</executable>
+              <arguments>
+                <argument>-importcert</argument>
+                <argument>-noprompt</argument>
+                <argument>-alias</argument><argument>tckcts</argument>
+                <argument>-file</argument><argument>${project.build.directory}/certificates/cts_cert</argument>
+                <argument>-keystore</argument><argument>${project.build.directory}/tomee-overlay/conf/server-truststore.p12</argument>
+                <argument>-storetype</argument><argument>PKCS12</argument>
+                <argument>-storepass</argument><argument>changeit</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -148,9 +190,10 @@
             <servlet.tck.support.crossContext>false</servlet.tck.support.crossContext>
             <servlet.tck.support.http2Push>false</servlet.tck.support.http2Push>
             <servlet.tck.slf4jimpl>org.slf4j:slf4j-simple</servlet.tck.slf4jimpl>
-            <javax.net.ssl.keyStore>${project.build.directory}/tomee-overlay/conf/clientcert.p12</javax.net.ssl.keyStore>
+            <javax.net.ssl.keyStore>${project.build.directory}/certificates/clientcert.jks</javax.net.ssl.keyStore>
             <javax.net.ssl.keyStorePassword>changeit</javax.net.ssl.keyStorePassword>
-            <javax.net.ssl.keyStoreType>PKCS12</javax.net.ssl.keyStoreType>
+            <javax.net.ssl.keyStoreType>JKS</javax.net.ssl.keyStoreType>
+            <securedWebServicePort>8443</securedWebServicePort>
             <javax.net.ssl.trustStore>${project.build.directory}/tomee-overlay/conf/client-truststore.p12</javax.net.ssl.trustStore>
             <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
             <javax.net.ssl.trustStoreType>PKCS12</javax.net.ssl.trustStoreType>

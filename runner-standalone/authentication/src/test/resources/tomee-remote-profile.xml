@@ -1,0 +1,91 @@
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<!--
+    TomEE remote profile fragment for the Jakarta Authentication TCK.
+
+    Not a standalone XML document: the antrun task in the runner module loads
+    it with <expandproperties/> (so ${tomee.version} and the absolute log
+    directory resolve against the runner module) and injects it into the
+    downloaded TCK's parent pom right before </profiles>.
+-->
+<profile>
+    <id>tomee-remote</id>
+
+    <properties>
+        <!-- Full-profile-only modules stay out of the Web Profile run. -->
+        <skipEJB>true</skipEJB>
+        <skipJACC>true</skipJACC>
+        <skipSOAP>true</skipSOAP>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>apache-tomee</artifactId>
+            <version>${tomee.version}</version>
+            <type>zip</type>
+            <classifier>plume</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>arquillian-tomee-remote</artifactId>
+            <version>${tomee.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomee</groupId>
+                    <artifactId>arquillian-openejb-transaction-provider</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- The spi module's unit tests instantiate the vendor
+             AuthConfigFactory locally; TomEE uses Tomcat's implementation. -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <tomee.stopPort>-1</tomee.stopPort>
+                        <tomee.httpPort>8080</tomee.httpPort>
+                        <tomee.ajpPort>-1</tomee.ajpPort>
+                        <tomee.dir>target/tomee/server</tomee.dir>
+                        <tomee.appWorkingDir>target/tomee/arquillian</tomee.appWorkingDir>
+                        <tomee.cleanOnStartUp>true</tomee.cleanOnStartUp>
+                        <tomee.classifier>plume</tomee.classifier>
+                        <provider.configuration.file>${authentication.tck.dir}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
+                        <vendor.authconfig.factory>org.apache.catalina.authenticator.jaspic.AuthConfigFactoryImpl</vendor.authconfig.factory>
+                        <log.file.name.test>authentication-tck-test.log</log.file.name.test>
+                        <log.file.name.webapp>authentication-tck-webapp.log</log.file.name.webapp>
+                        <log.file.location>${authentication.tck.logs}</log.file.location>
+                        <logical.hostname.servlet>server</logical.hostname.servlet>
+                        <tomee.catalina_opts>-Dj2eelogin.name=j2ee -Dj2eelogin.password=j2ee -Dprovider.configuration.file=${authentication.tck.dir}/spi/common/ProviderConfiguration.xml -Dvendor.authconfig.factory=org.apache.catalina.authenticator.jaspic.AuthConfigFactoryImpl -Dlog.file.location=${authentication.tck.logs} -Dlog.file.name.webapp=authentication-tck-webapp.log</tomee.catalina_opts>
+                        <tomee.properties>openejb.environment.default=true</tomee.properties>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</profile>

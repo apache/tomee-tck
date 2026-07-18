@@ -57,6 +57,15 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!-- The published TCK jar is compiled against the old ListAssert
+         covariant signatures; 3.7.0 is the version the reference runner
+         pins for exactly this reason. -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.7.0</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>

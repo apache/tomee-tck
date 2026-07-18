@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-authentication</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Authentication 3.1 TCK runner</name>
+  <description>
+    Runs the Jakarta Authentication 3.1 TCK source reactor against TomEE:
+    downloads the EFTL distribution, injects a tomee-remote Arquillian
+    profile into the TCK parent, installs the parent and common module, then
+    drives the test modules through the Maven invoker. TomEE implements
+    Jakarta Authentication through Tomcat, whose AuthConfigFactory also
+    serves the spi module's local unit tests. The full-profile-only modules
+    (EJB propagation, JACC, SOAP) stay out of the Web Profile run.
+    Run with: run-standalone-suite.sh authentication
+  </description>
+
+  <properties>
+    <!-- The TCK reactor starts its own server; skip the shared lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+    <authentication.tck.version>3.1.2</authentication.tck.version>
+    <authentication.tck.url>https://download.eclipse.org/jakartaee/authentication/3.1/jakarta-authentication-tck-${authentication.tck.version}.zip</authentication.tck.url>
+    <authentication.tck.sha256>10ce29dd5ea4001d5ec7e2ffe81683996f01590ef4482a06ec1372731178c1dd</authentication.tck.sha256>
+    <authentication.tck.dir>${project.build.directory}/authentication-tck-${authentication.tck.version}/tck</authentication.tck.dir>
+    <authentication.tck.logs>${project.build.directory}/authentication-logs</authentication.tck.logs>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- Step 1: download, verify, unpack, and patch the TCK. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>download-tck</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <get skipexisting="true" src="${authentication.tck.url}" dest="${project.build.directory}/jakarta-authentication-tck-${authentication.tck.version}.zip"/>
+                <checksum file="${project.build.directory}/jakarta-authentication-tck-${authentication.tck.version}.zip" algorithm="SHA-256" property="${authentication.tck.sha256}" verifyProperty="authentication.tck.checksum.matches"/>
+                <fail message="Checksum mismatch for the Jakarta Authentication TCK distribution">
+                  <condition>
+                    <isfalse value="${authentication.tck.checksum.matches}"/>
+                  </condition>
+                </fail>
+                <unzip src="${project.build.directory}/jakarta-authentication-tck-${authentication.tck.version}.zip" dest="${project.build.directory}"/>
+                <mkdir dir="${authentication.tck.logs}"/>
+
+                <!-- Inject the tomee-remote profile into the TCK parent pom. -->
+                <loadfile property="tomee.remote.profile" srcFile="${project.basedir}/src/test/resources/tomee-remote-profile.xml" encoding="UTF-8">
+                  <filterchain>
+                    <expandproperties/>
+                  </filterchain>
+                </loadfile>
+                <replace file="${authentication.tck.dir}/pom.xml" token="&lt;/profiles&gt;" value="${line.separator}${tomee.remote.profile}${line.separator} &lt;/profiles&gt;"/>
+
+                <!-- Deactivate the GlassFish profile's default activation. -->
+                <replace file="${authentication.tck.dir}/pom.xml" token="&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;" value="&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;"/>
+
+                <!-- The signature module resolves the vendor API jar through
+                     GlassFish-only coordinates. -->
+                <replace file="${authentication.tck.dir}/pom.xml" token="&lt;module&gt;authentication-signaturetest&lt;/module&gt;" value="&lt;!-- module&gt;authentication-signaturetest&lt;/module --&gt;"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Step 2: install the TCK parent pom and common module. -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>install-tck-parent</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>${maven.multiModuleProjectDirectory}/mvnw</executable>
+              <workingDirectory>${authentication.tck.dir}</workingDirectory>
+              <arguments>
+                <argument>-B</argument><argument>-ntp</argument>
+                <argument>install</argument>
+                <argument>-N</argument>
+                <argument>-Ptomee-remote</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install-tck-common</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>${maven.multiModuleProjectDirectory}/mvnw</executable>
+              <workingDirectory>${authentication.tck.dir}/common</workingDirectory>
+              <arguments>
+                <argument>-B</argument><argument>-ntp</argument>
+                <argument>install</argument>
+                <argument>-Ptomee-remote</argument>
+                <argument>-DskipTests</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Step 3: run the TCK test modules through the Maven invoker. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <skipInvocation>${tck.standalone.skip}</skipInvocation>
+          <projectsDirectory>${authentication.tck.dir}</projectsDirectory>
+          <localRepositoryPath>${settings.localRepository}</localRepositoryPath>
+          <mavenExecutable>${maven.multiModuleProjectDirectory}/mvnw</mavenExecutable>
+          <streamLogs>true</streamLogs>
+          <showErrors>true</showErrors>
+          <ignoreFailures>true</ignoreFailures>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-authentication-tck</id>
+            <phase>integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <goals><goal>verify</goal></goals>
+              <profiles><profile>tomee-remote</profile></profiles>
+              <pomIncludes>
+                <pomInclude>basic-authentication/pom.xml</pomInclude>
+                <pomInclude>custom-principal/pom.xml</pomInclude>
+                <pomInclude>programmatic-authentication/pom.xml</pomInclude>
+                <pomInclude>lifecycle/pom.xml</pomInclude>
+                <pomInclude>wrapping/pom.xml</pomInclude>
+                <pomInclude>register-session/pom.xml</pomInclude>
+                <pomInclude>async-authentication/pom.xml</pomInclude>
+                <pomInclude>status-codes/pom.xml</pomInclude>
+                <pomInclude>dispatching/pom.xml</pomInclude>
+                <pomInclude>dispatching-jsf-cdi/pom.xml</pomInclude>
+                <pomInclude>invoke-ejb-cdi/pom.xml</pomInclude>
+                <pomInclude>spi/pom.xml</pomInclude>
+              </pomIncludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
