@@ -183,7 +183,7 @@ from xml.etree import ElementTree
               }
             }
           }
-          for (id in ['annotations', 'di', 'concurrency', 'data', 'servlet', 'pages', 'validation', 'cdi', 'cdi-ee']) {
+          for (id in ['annotations', 'di', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'cdi', 'cdi-ee']) {
             branches["standalone - ${id}"] = standaloneBranch(id)
           }
 

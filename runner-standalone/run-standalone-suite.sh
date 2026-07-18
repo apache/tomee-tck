@@ -29,7 +29,7 @@ usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
 Runners: annotations, concurrency, data, di, cdi, cdi-ee, servlet, pages,
-         rest, validation, security, authentication, faces
+         rest, validation, websocket, security, authentication, faces
 See runner-standalone/README.md for per-TCK status.
 EOF
   exit 2
@@ -49,6 +49,8 @@ case "$ID" in
     MODULES="runner-standalone/rest-install,runner-standalone/rest" ;;
   validation)
     MODULES="runner-standalone/validation-install,runner-standalone/validation" ;;
+  websocket)
+    MODULES="runner-standalone/websocket-install,runner-standalone/websocket" ;;
   concurrency|data|cdi|cdi-ee)
     MODULES="runner-standalone/$ID" ;;
   security|authentication|faces)
