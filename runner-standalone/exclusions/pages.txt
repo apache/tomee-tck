@@ -1,6 +1,6 @@
 # Jakarta Pages 4.0 TCK (jakarta.tck:jakarta-pages-tck:4.0.0) on the TomEE
-# Plume snapshot, Java 21: no reviewed exclusions yet; populated after the
-# first full baseline run.
+# Plume snapshot, Java 21, 2026-07-18: 682 tests, 0 failures, 0 errors,
+# 0 skipped (signature test included) — no exclusions needed.
 #
 # Format: maven-surefire excludesFile patterns, applied through
 # -Dtck.exclusions.file (see runner-standalone/README.md).
