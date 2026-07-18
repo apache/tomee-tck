@@ -38,6 +38,8 @@
     <module>cdi-ee</module>
     <module>servlet-install</module>
     <module>servlet</module>
+    <module>pages-install</module>
+    <module>pages</module>
     <module>rest-install</module>
     <module>rest</module>
     <module>validation-install</module>
@@ -260,7 +262,11 @@
                 <executable>${java.home}/bin/java</executable>
                 <classpathScope>test</classpathScope>
                 <arguments>
+<<<<<<< HEAD
                   <argument>-Dderby.drda.portNumber=${tck.derby.port}</argument>
+=======
+                  <argument>-Dderby.drda.portNumber=${derby.port}</argument>
+>>>>>>> worktree-agent-a4951d317a53c31de
                   <argument>-cp</argument>
                   <classpath/>
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>

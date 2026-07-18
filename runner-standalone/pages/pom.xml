@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-pages</artifactId>
+  <name>Jakarta Pages 4.0 TCK runner</name>
+  <description>
+    Runs the standalone Jakarta Pages 4.0 TCK (JUnit 5 + Arquillian) against
+    the TomEE distribution selected by tomee.classifier. The TomEE, shutdown,
+    and Derby ports are overridable through tomee.http.port,
+    tomee.https.port, tomee.shutdown.port, and tck.derby.port so the suite can
+    run next to another harness instance.
+  </description>
+
+  <properties>
+    <pages.tck.version>4.0.0</pages.tck.version>
+    <!-- The TCK pom pins 11.0.0-M1, but that line still couples the test
+         base classes to the unpublished javatest:javatest harness; 11.1.1
+         (the line Apache Tomcat's TCK runners use) has the same API without
+         the JavaTest references. -->
+    <tck.support.version>11.1.1</tck.support.version>
+    <!-- Reviewed known-gap exclusions; point at exclusions/none.txt for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/pages.txt</tck.exclusions.file>
+    <!-- Defaults match the fixed harness catalog (environment/README.md);
+         override these three plus tck.derby.port (inherited, default 1527) to
+         run beside another TomEE/Derby instance. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
+  </properties>
+
+  <dependencies>
+    <!-- TomEE remote Arquillian adapter and client-side runtime. -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>arquillian-tomee-remote</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.junit5</groupId>
+      <artifactId>arquillian-junit5-container</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Platform TCK support libraries used by the Pages TCK client classes
+         (BaseUrlClient/WebTestCase and the signature-test framework); these
+         are published to Maven Central, unlike the TCK jar itself. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>common</artifactId>
+      <version>${tck.support.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>signaturetest</artifactId>
+      <version>${tck.support.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- The 11.1.x SigTestDriver passes -BootCp/-IgnoreJDKClasses, which
+         need the 2.6 sigtest line (2.2, the TCK pom's pin, rejects them). -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
+      <version>2.6</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Inherit the shared TomEE/Derby container lifecycle. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <!-- Replaces the shared tomee.xml (fixed Derby port 1527) with a
+                 filtered copy honouring ${tck.derby.port}; runs after the
+                 inherited stage-tomee-configuration execution. -->
+            <id>stage-port-aware-tomee-configuration</id>
+            <phase>process-test-resources</phase>
+            <goals><goal>copy-resources</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.container.skip}</skip>
+              <overwrite>true</overwrite>
+              <outputDirectory>${project.build.directory}/tomee-overlay/conf</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/tomee-conf-filtered</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>stage-tomee-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/jsp-api.jar,**/lib/el-api.jar,**/lib/servlet-api.jar,**/conf/web.xml</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>locate-pages-api-jars</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <path id="pages-api-jars">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jsp-api.jar"/>
+                    <include name="**/lib/el-api.jar"/>
+                    <include name="**/lib/servlet-api.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert pathsep="${path.separator}"
+                             property="pages.sig.api.jars"
+                             refid="pages-api-jars"/>
+                <!-- TomEE's global conf/web.xml pins the request/response
+                     character encodings to UTF-8; the Pages TCK asserts the
+                     specification default (ISO-8859-1) when a page declares
+                     nothing, so the overlay ships the distribution's own
+                     web.xml with those two overrides removed. -->
+                <copy todir="${project.build.directory}/tomee-overlay/conf"
+                      overwrite="true" flatten="true">
+                  <fileset dir="${project.build.directory}/tomee"
+                           includes="**/conf/web.xml"/>
+                </copy>
+                <replaceregexp file="${project.build.directory}/tomee-overlay/conf/web.xml"
+                               match="^\s*&lt;(request|response)-character-encoding&gt;UTF-8&lt;/\1-character-encoding&gt;\s*$"
+                               replace="" byline="true"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>${tck.standalone.skip}</skip>
+          <argLine>-Duser.language=en -Duser.country=US -Djava.locale.providers=COMPAT,CLDR</argLine>
+          <dependenciesToScan>
+            <dependency>jakarta.tck:jakarta-pages-tck</dependency>
+          </dependenciesToScan>
+          <!-- The TCK's test classes use the failsafe *IT naming. -->
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+          <excludesFile>${tck.exclusions.file}</excludesFile>
+          <systemPropertyVariables>
+            <webServerHost>localhost</webServerHost>
+            <webServerPort>${tomee.http.port}</webServerPort>
+            <porting.ts.url.class.1>ee.jakarta.tck.pages.lib.implementation.sun.common.SunRIURL</porting.ts.url.class.1>
+            <jimage.dir>${project.build.directory}/jimage</jimage.dir>
+            <sigTestClasspath>${pages.sig.api.jars}${path.separator}${project.build.directory}/jimage/java.base</sigTestClasspath>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <!-- The TCK jar comes from the EFTL distribution installed by the
+           matching -install module; keep it out of the default reactor so a
+           fresh clone builds without running any TCK. -->
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.tck</groupId>
+          <artifactId>jakarta-pages-tck</artifactId>
+          <version>${pages.tck.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+</project>

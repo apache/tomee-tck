@@ -26,6 +26,7 @@ Detail lives next to each runner:
 | concurrency | 187 tests, 45 F + 49 E | 94 tests | TomEE Concurrency 3.1 gaps |
 | data | 99 tests, 73 F + 22 E | 95 tests (5 classes) | TomEE Jakarta Data provider |
 | servlet | 1,706 tests, 69 E | 69 tests | TomEE/Tomcat behavioral diffs |
+| pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 4 F + 11 E | 14 tests | TomEE/CXF gaps (1 error was a fixed harness classpath gap) |
 | validation | 1,049 tests, 124 F | 124 tests | Apache BVal gaps |
 | cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |

@@ -12,8 +12,8 @@ runner-standalone/run-standalone-suite.sh concurrency
 ```
 
 The Derby port is overridable everywhere through `-Dtck.derby.port`; the
-`rest` runner additionally accepts `-Dtomee.http.port`,
-`-Dtomee.https.port`, and `-Dtomee.shutdown.port`, so it can run next to
+`pages` and `rest` runners additionally accept `-Dtomee.http.port`,
+`-Dtomee.https.port`, and `-Dtomee.shutdown.port`, so they can run next to
 another harness instance (the other container-based runners still assume
 the fixed TomEE ports).
 
@@ -45,6 +45,7 @@ derived from; with the default exclusions applied these suites run green.
 | Data 1.0 | `jakarta.data:jakarta.data-tck:1.0.0` | `data` | **Runs: all 99 tests execute** after the runner's archive processor completes the TCK's own deployments (2026-07-18): 73 failures + 22 errors remain, all null repository injections — TomEE's Jakarta Data provider does not materialize repository implementations |
 | RESTful Web Services 4.0 | EFTL zip (installed as `jakarta.ws.rs:jakarta-restful-ws-tck:4.0.1`) | `rest` | **Runs: 2,803 tests, 4 failures, 11 errors, 128 skipped** (2026-07-18, the skips are the TCK's own `@Disabled` tests) against TomEE's CXF, with the CXF client driving the client half of every test; the signature test passes. One error was a harness classpath gap (the CXF client needs `cxf-rt-rs-extension-providers` for spec-required JSON-B support) and is fixed in the runner; the remaining 14 failing tests are TomEE/CXF product results: deployment rejected for apps bundling `@ConstrainedTo(CLIENT)` providers (8), REST 3.1 `META-INF/services` Feature/DynamicFeature discovery missing (2), `getLength()` no-entity semantics (2), client `Response.hasEntity()` on entity-less responses (1), and 405-instead-of-404 matching (1) |
 | Servlet 6.1 | EFTL zip (installed as `jakarta.tck:servlet-tck-runtime:6.1.0`) | `servlet` | **Runs: 1,706 tests, 69 errors, 7 skipped** (2026-07-18). The harness is complete: slf4j-simple resolves at the TCK-derived version, the TCK's bundled client certificate is trusted and mapped (both client-cert tests pass, including the https-targeted deployment via a metadata observer reporting the TLS port); remaining errors are behavioral differences (async dispatch connection handling, response-content mismatches) to triage as product results |
+| Pages 4.0 | EFTL zip (installed as `jakarta.tck:jakarta-pages-tck:4.0.0`) | `pages` | **Passes 682/682 (0 failures, 0 errors, signature test included, no exclusions)** (2026-07-18). Needs the Central `jakarta.tck:common`/`signaturetest` support line at 11.1.1 with sigtest 2.6 (the TCK pom's own pins depend on the unpublished JavaTest harness), and the overlay removes TomEE's global UTF-8 default encodings from conf/web.xml because the TCK asserts the spec default ISO-8859-1. Its TomEE/Derby ports are overridable (`tomee.http.port`, `tomee.https.port`, `tomee.shutdown.port`, `tck.derby.port`) to run beside another harness instance |
 | Validation 3.1 | EFTL zip (installed as `jakarta.validation:validation-tck-tests:3.1.1`) | `validation` | **Runs: 1,049 tests, 124 failures** (2026-07-18) after pinning AssertJ 3.7.0 (the published TCK jar is compiled against its covariant signatures). 118 of the remaining failures are Apache BVal `validation.xml`/constraint-mapping XML parsing gaps (`Unable to parse null`, `Failed to parse XML deployment descriptor file`) — provider work, not harness |
 | Security 4.0 | Source reactor zip 4.0.1 | `security` (Maven module) | **Runs: 26 app modules, 132 tests, 5 failures, 2 errors** (2026-07-18). The runner downloads and patches the reactor, injects a tomee-remote profile, and drives every module through the Maven invoker; the failures (e.g. BASIC auth mechanism answering 401 for valid credentials, two OpenID modules) are TomEE Jakarta Security results to triage |
 | Authentication 3.1 | Source reactor zip 3.1.2 | `authentication` (Maven module) | **Runs: 11 of 12 Web Profile modules pass cleanly (45 tests, 0 failures)** (2026-07-18). The spi module executes with the full property wiring but fails 50 of 57 SPI conformance assertions against Tomcat's AuthConfigFactory — product results to triage. EJB/JACC/SOAP modules are outside the Web Profile scope |
@@ -54,7 +55,7 @@ derived from; with the default exclusions applied these suites run green.
 | Debugging Support 2.0 | Covered by the Platform TCK catalog (Pages debugging classes) | — | Passing |
 | Expression Language 6.0 | Standalone EL TCK (Maven Central `jakarta.el:...`-tck) | not yet scaffolded | Platform EL integration already runs in `runner-webprofile` |
 | JSON Processing 2.1 / JSON Binding 3.0 | Standalone TCKs on Maven Central | not yet scaffolded | Platform integration already runs in `runner-webprofile` |
-| Pages 4.0 / WebSocket 2.2 / Transactions 2.0 / Persistence 3.2 | Standalone TCKs (zip or Maven Central) | not yet scaffolded | Platform integration already runs in `runner-webprofile` |
+| WebSocket 2.2 / Transactions 2.0 / Persistence 3.2 | Standalone TCKs (zip or Maven Central) | not yet scaffolded | Platform integration already runs in `runner-webprofile` |
 
 ## Layout conventions
 
