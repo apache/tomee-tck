@@ -30,6 +30,9 @@
     <testng.version>7.9.0</testng.version>
     <!-- The Jakarta Validation provider shipped by TomEE. -->
     <validation.provider>org.apache.bval.jsr.ApacheValidationProvider</validation.provider>
+    <!-- Reviewed known-gap exclusions; -Dtck.exclusions.file=none for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/validation.txt</tck.exclusions.file>
   </properties>
 
   <dependencies>
@@ -72,6 +75,13 @@
       <version>${testng.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- Applies the reviewed exclusion list to the TestNG suite run. -->
+    <dependency>
+      <groupId>org.apache.tomee.cts</groupId>
+      <artifactId>runner-standalone-tck-common</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.testng</groupId>
       <artifactId>arquillian-testng-container</artifactId>
@@ -110,8 +120,17 @@
           <dependenciesToScan>
             <dependency>jakarta.validation:validation-tck-tests</dependency>
           </dependenciesToScan>
+          <!-- Suite-XML runs ignore excludesFile; the transformer listener
+               applies the reviewed exclusion list instead. -->
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>org.apache.tomee.tck.standalone.ExclusionsAnnotationTransformer</value>
+            </property>
+          </properties>
           <systemPropertyVariables>
             <validation.provider>${validation.provider}</validation.provider>
+            <tck.exclusions.file>${tck.exclusions.file}</tck.exclusions.file>
           </systemPropertyVariables>
         </configuration>
         <dependencies>

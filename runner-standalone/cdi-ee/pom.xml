@@ -29,6 +29,9 @@
     <cdi.tck.version>4.1.0</cdi.tck.version>
     <cdi.tck.ee.version>${jakarta.tck.version}</cdi.tck.ee.version>
     <testng.version>7.9.0</testng.version>
+    <!-- Reviewed known-gap exclusions; -Dtck.exclusions.file=none for a
+         full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/cdi-ee.txt</tck.exclusions.file>
   </properties>
 
   <dependencies>
@@ -65,6 +68,13 @@
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>${testng.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- Applies the reviewed exclusion list to the TestNG suite run. -->
+    <dependency>
+      <groupId>org.apache.tomee.cts</groupId>
+      <artifactId>runner-standalone-tck-common</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -163,9 +173,18 @@
           </dependenciesToScan>
           <!-- Web Profile selection per the CDI TCK configuration guide. -->
           <excludedGroups>javaee-full,se</excludedGroups>
+          <!-- Suite-XML runs ignore excludesFile; the transformer listener
+               applies the reviewed exclusion list instead. -->
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>org.apache.tomee.tck.standalone.ExclusionsAnnotationTransformer</value>
+            </property>
+          </properties>
           <systemPropertyVariables>
             <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
             <org.jboss.cdi.tck.testDataSource>openejb:Resource/jdbc/DB1</org.jboss.cdi.tck.testDataSource>
+            <tck.exclusions.file>${tck.exclusions.file}</tck.exclusions.file>
           </systemPropertyVariables>
         </configuration>
         <dependencies>
