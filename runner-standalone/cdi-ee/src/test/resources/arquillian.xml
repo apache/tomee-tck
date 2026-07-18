@@ -22,7 +22,7 @@
       <property name="simpleLog">true</property>
       <!-- The suite deploys and undeploys hundreds of archives in one server
            lifetime; size the heap like the reference runner. -->
-      <property name="catalina_opts">-Xmx2048m -XX:MaxMetaspaceSize=1g --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
+      <property name="catalina_opts">-Xmx4096m -XX:MaxMetaspaceSize=2g --add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</property>
       <!-- CDI TCK tuning lives in src/tomee-conf/system.properties, which
            replaces the shared overlay system.properties for this module.
            The porting SPI implementations reach each deployment through
