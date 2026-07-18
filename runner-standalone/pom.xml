@@ -40,6 +40,8 @@
     <module>servlet</module>
     <module>validation-install</module>
     <module>validation</module>
+    <module>websocket-install</module>
+    <module>websocket</module>
     <module>security</module>
     <module>authentication</module>
     <module>faces</module>
@@ -51,6 +53,10 @@
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
+    <!-- Derby network server port for the shared datasource environment.
+         Override together with the container ports (see the websocket runner)
+         to run a suite next to another TomEE instance on the same host. -->
+    <tck.derby.port>1527</tck.derby.port>
   </properties>
 
   <dependencies>
@@ -185,6 +191,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/require-derby-port-free.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${tck.derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -219,6 +226,7 @@
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
                   <argument>start</argument>
                   <argument>-h</argument><argument>localhost</argument>
+                  <argument>-p</argument><argument>${tck.derby.port}</argument>
                   <argument>-noSecurityManager</argument>
                 </arguments>
               </configuration>
@@ -234,6 +242,7 @@
                   <argument>${maven.multiModuleProjectDirectory}/environment/database/wait-for-derby.sh</argument>
                   <argument>${java.home}/bin/java</argument>
                   <classpath/>
+                  <argument>${tck.derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
               </configuration>
@@ -252,6 +261,7 @@
                   <argument>org.apache.derby.drda.NetworkServerControl</argument>
                   <argument>shutdown</argument>
                   <argument>-h</argument><argument>localhost</argument>
+                  <argument>-p</argument><argument>${tck.derby.port}</argument>
                 </arguments>
               </configuration>
             </execution>
