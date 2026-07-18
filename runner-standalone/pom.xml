@@ -36,6 +36,7 @@
     <module>di</module>
     <module>el-install</module>
     <module>el</module>
+    <module>cdi-tck-porting</module>
     <module>cdi</module>
     <module>cdi-ee</module>
     <module>servlet-install</module>

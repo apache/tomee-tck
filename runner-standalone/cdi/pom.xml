@@ -80,6 +80,14 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- TomEE-aware CDI TCK Beans porting SPI, staged into the library
+         directory so it ships inside every deployed archive. -->
+    <dependency>
+      <groupId>org.apache.tomee.cts</groupId>
+      <artifactId>runner-standalone-cdi-tck-porting</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jboss.arquillian.testng</groupId>
       <artifactId>arquillian-testng-container</artifactId>
@@ -93,6 +101,13 @@
     <dependency>
       <groupId>org.jboss.shrinkwrap.resolver</groupId>
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Drives the mandatory CDI API signature check; the jakarta.tck fork
+         understands JDK 21 class files. -->
+    <dependency>
+      <groupId>jakarta.tck</groupId>
+      <artifactId>sigtest-maven-plugin</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -165,6 +180,109 @@
               <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
             </configuration>
           </execution>
+          <!-- Stage the uber API jar the TomEE distribution ships so the
+               signature test checks the jakarta.enterprise/decorator/
+               interceptor packages actually deployed, not the TCK's copy. -->
+          <execution>
+            <id>stage-tomee-api-jar</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                  <includes>**/lib/jakartaee-api-*.jar</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <!-- The CDI TCK ships the reference API signatures at its jar root. -->
+          <execution>
+            <id>stage-cdi-sig</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>jakarta.enterprise</groupId>
+                  <artifactId>cdi-tck-core-impl</artifactId>
+                  <version>${cdi.tck.version}</version>
+                  <type>jar</type>
+                  <outputDirectory>${project.build.directory}/sig</outputDirectory>
+                  <includes>cdi-api-jdk17.sig</includes>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <!-- Stage the TomEE-aware Beans SPI jar (built by the sibling
+               reactor module) into the TCK library directory so it ships
+               inside every deployed archive. Copied from the sibling's build
+               output rather than resolved as an artifact because the reactor
+               dependency-plugin copy cannot stage an as-yet-unpackaged
+               reactor sibling (MDEP-187). -->
+          <execution>
+            <id>stage-cdi-tck-porting-lib</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <copy todir="${project.build.directory}/dependency/lib" flatten="true">
+                  <fileset dir="${project.basedir}/../cdi-tck-porting/target">
+                    <include name="runner-standalone-cdi-tck-porting-*.jar"/>
+                    <exclude name="*-sources.jar"/>
+                    <exclude name="*-javadoc.jar"/>
+                  </fileset>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+          <!-- The uber API jar carries every Jakarta EE spec package; the CDI
+               signature check must see only the packages the reference
+               cdi-api-jdk17.sig declares (jakarta.enterprise minus the
+               unrelated jakarta.enterprise.concurrent subtree, plus
+               jakarta.decorator/inject/interceptor), so extract exactly those
+               into their own directory. -->
+          <execution>
+            <id>extract-cdi-api-classes</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <path id="tomee-api-jar">
+                  <fileset dir="${project.build.directory}/tomee">
+                    <include name="**/lib/jakartaee-api-*.jar"/>
+                  </fileset>
+                </path>
+                <pathconvert property="cdi.sig.api.jar"
+                             refid="tomee-api-jar"/>
+                <unzip src="${cdi.sig.api.jar}"
+                       dest="${project.build.directory}/api-classes">
+                  <patternset>
+                    <include name="jakarta/enterprise/**"/>
+                    <include name="jakarta/decorator/**"/>
+                    <include name="jakarta/inject/**"/>
+                    <include name="jakarta/interceptor/**"/>
+                    <exclude name="jakarta/enterprise/concurrent/**"/>
+                  </patternset>
+                </unzip>
+              </target>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -210,4 +328,47 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>standalone-tck</id>
+      <activation>
+        <property>
+          <name>tck.standalone</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <!-- Mandatory CDI API signature test. The core TCK ships the
+               reference signatures as cdi-api-jdk17.sig at the root of
+               cdi-tck-core-impl; the jakarta.enterprise/decorator/inject/
+               interceptor packages checked are the ones the staged TomEE uber
+               API jar carries. One run covers the whole CDI spec, so only the
+               core runner wires it. -->
+          <plugin>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+            <version>${sigtest.maven.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>cdi-api-signature-check</id>
+                <phase>test</phase>
+                <goals><goal>check</goal></goals>
+                <configuration>
+                  <sigfile>${project.build.directory}/sig/cdi-api-jdk17.sig</sigfile>
+                  <!-- The signature plugin checks each listed package without
+                       recursing into subpackages, so every package the
+                       cdi-api-jdk17.sig declares is enumerated explicitly. -->
+                  <packages>jakarta.decorator,jakarta.enterprise.context,jakarta.enterprise.context.control,jakarta.enterprise.context.spi,jakarta.enterprise.event,jakarta.enterprise.inject,jakarta.enterprise.inject.build.compatible.spi,jakarta.enterprise.inject.literal,jakarta.enterprise.inject.se,jakarta.enterprise.inject.spi,jakarta.enterprise.inject.spi.configurator,jakarta.enterprise.invoke,jakarta.enterprise.lang.model,jakarta.enterprise.lang.model.declarations,jakarta.enterprise.lang.model.types,jakarta.enterprise.util,jakarta.inject,jakarta.interceptor</packages>
+                  <classes>${project.build.directory}/api-classes</classes>
+                  <release>17</release>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

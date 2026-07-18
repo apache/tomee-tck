@@ -29,8 +29,8 @@ Detail lives next to each runner:
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 2 F + 1 E | 3 tests | Feature/DynamicFeature `META-INF/services` discovery (TOMEE-4321/CXF-9005) + 405-vs-404 matching |
 | validation | 1,049 tests, 0 F (incl. signature test) | — | — (server pins the JAXB RI; see product gaps) |
-| cdi (core) | 1,388 run, 90 F | 63 methods + 27 deploy-failing classes | OpenWebBeans 4.1 gaps |
-| cdi-ee | 1,829 run, 117 F | 87 methods + 30 deploy-failing classes | OpenWebBeans 4.1 + EE integration |
+| cdi (core) | 1,388 run, 81 F (incl. signature test) | 54 methods + 27 deploy-failing classes | OpenWebBeans 4.1 build-compatible-extensions gap |
+| cdi-ee | 1,829 run, 106 F | 79 methods + 27 deploy-failing classes | OpenWebBeans 4.1 build-compatible-extensions gap + EE integration |
 | el | 361/361 pass (incl. signature test) | — | — |
 | persistence | 2,135/2,135 pass (incl. signature test) | — | — (standalone/SE vehicle on Plume's EclipseLink) |
 | transactions | 49 tests, 40 pass, 9 F (all 3 signature vehicles pass) | 22 test ids (3 client files) | TomEE UserTransaction rollback/timeout state leaks |
@@ -162,11 +162,23 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 
 Need triage/fixes in the upstream projects TomEE ships.
 
-1. **Apache OpenWebBeans 4.1** — the CDI 4.1 Method Invokers API (~30
-   tests) and build-compatible extensions (~25 deploy-failing classes) are
-   not implemented; assorted observer/interceptor edge cases. Drives the
-   [cdi.txt](runner-standalone/exclusions/cdi.txt) and most of the
-   [cdi-ee.txt](runner-standalone/exclusions/cdi-ee.txt) lists.
+1. **Apache OpenWebBeans 4.1 build-compatible extensions** — OpenWebBeans
+   4.1 ships no `jakarta.enterprise.inject.build.compatible.spi.BuildServices`
+   provider, so CDI 4.1 build-compatible extensions do not run. The CDI 4.1
+   Method Invokers API itself works through portable extensions; the TCK's
+   invoker tests fail only because they register their invokers through a
+   build-compatible extension, which hits the same missing `BuildServices`
+   gap. Deployments that only register a build-compatible extension fail
+   configuration (the whole-class exclusion entries); tests that also assert
+   runtime behavior fail their single method. Assorted
+   observer/specialization/interceptor edge cases round out the lists. Drives
+   the [cdi.txt](runner-standalone/exclusions/cdi.txt) and most of the
+   [cdi-ee.txt](runner-standalone/exclusions/cdi-ee.txt) lists. The runner
+   ships the apache/tomee `tck/cdi-tomee` OpenWebBeans overlay
+   (`strictDynamicValidation`, the spec-default
+   `defaultBeanDiscoveryMode=ANNOTATED`, and the TomEE-aware `Beans` porting
+   SPI) and runs the mandatory CDI API signature check (`cdi-api-jdk17.sig`)
+   in the core runner, which passes.
 2. **Jakarta Authentication SPI (`ServletProfileSPITest`)** — the runner
    registers the TCK's test `AuthConfigProvider` under Tomcat's JASPIC
    app-context naming (`Catalina/localhost /spitests_servlet_web`, the value

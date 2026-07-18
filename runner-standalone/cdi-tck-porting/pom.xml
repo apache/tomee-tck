@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-cdi-tck-porting</artifactId>
+  <name>Standalone CDI TCK porting overlay</name>
+  <description>
+    TomEE-aware implementation of the CDI TCK org.jboss.cdi.tck.spi.Beans
+    porting SPI (ported from the apache/tomee tck/cdi-tomee runner). The cdi
+    and cdi-ee runners stage this jar into org.jboss.cdi.tck.libraryDirectory
+    so it ships inside every deployed TCK archive; the org.apache.openejb.*
+    classes it references resolve from the TomEE server class loader.
+  </description>
+
+  <dependencies>
+    <!-- Provided: the superclass ships with the OpenWebBeans porting package
+         the runners already stage into the library directory. -->
+    <dependency>
+      <groupId>org.apache.openwebbeans</groupId>
+      <artifactId>openwebbeans-porting</artifactId>
+      <version>${openwebbeans.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Provided: IntraVmProxy/IntraVmCopyMonitor are resolved from the TomEE
+         server class loader at runtime, not bundled in this jar. -->
+    <dependency>
+      <groupId>org.apache.tomee</groupId>
+      <artifactId>openejb-core</artifactId>
+      <version>${tomee.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
