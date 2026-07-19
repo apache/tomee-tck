@@ -8,6 +8,23 @@
 
 def platformPartitions = []
 
+// Every test branch runs its suite inside a container so each TomEE, Derby,
+// LDAP and JavaTest port binds a container-private network namespace: nothing
+// else on the host can collide with a chosen port, and no foreign server can
+// answer on one (the Arquillian adapter silently attaches to whatever already
+// listens on its port). The images are pinned by digest like the rest of the
+// repo's inputs. A plain JDK is all an image must provide: the checked-in
+// Maven wrapper bootstraps Maven itself, and the temurin images ship bash for
+// the port scripts' /dev/tcp probe. The in-script free-port selection and
+// require-*-free guards stay as defense in depth and for workstation runs
+// outside a container.
+def jdk21Image =
+  'eclipse-temurin@sha256:35685c7e23352983a48882d97cd9875f5284c228db71d1e2476e5e6c1bab1080' // 21-jdk-noble
+def smokeImages = [
+  jdk17: 'eclipse-temurin@sha256:0386aaf49d6756b4856119f8e037f40cc865c7c8fbdda7c81733cc806f462daf', // 17-jdk-noble
+  jdk21: jdk21Image,
+]
+
 pipeline {
   agent none
 
@@ -66,27 +83,36 @@ from xml.etree import ElementTree
       }
     }
 
-    // Each branch requests a single-executor ephemeral agent. The runner
-    // scripts select free localhost ports at branch start and the
-    // require-*-free guards assert the chosen ports right before the servers
-    // bind them.
+    // Each branch requests a single-executor ephemeral agent and runs its
+    // suite inside a pinned JDK container (see the digests above) whose
+    // private network namespace rules out port collisions with anything else
+    // on the host. Inside the container the image's own JDK is used
+    // (JAVA_HOME=/opt/java/openjdk), never a host tool(...) install, and
+    // checkout/archive/junit/deleteDir stay on the node, around the
+    // container.
     stage('Smoke') {
       matrix {
         axes {
           axis {
             name 'SMOKE_JDK'
-            values 'jdk_17_latest', 'jdk_21_latest'
+            values 'jdk17', 'jdk21'
           }
         }
         stages {
           stage('smoke') {
             agent { label 'ubuntu && ephemeral' }
-            tools { jdk "${SMOKE_JDK}" }
             options { timeout(time: 30, unit: 'MINUTES') }
             steps {
               deleteDir()
               unstash 'source'
-              sh 'runner-smoke/run-smoke-suite.sh'
+              script {
+                docker.image(smokeImages[SMOKE_JDK]).inside {
+                  withEnv(['JAVA_HOME=/opt/java/openjdk',
+                           'PATH+JDK=/opt/java/openjdk/bin']) {
+                    sh 'runner-smoke/run-smoke-suite.sh'
+                  }
+                }
+              }
             }
             post {
               always {
@@ -112,12 +138,15 @@ from xml.etree import ElementTree
                 node('ubuntu && ephemeral') {
                   deleteDir()
                   unstash 'source'
-                  def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
 
                   try {
                     timeout(time: 360, unit: 'MINUTES') {
-                      withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin", "TOMEE_CLASSIFIER=${classifier}"]) {
-                        sh "runner-webprofile/run-platform-suite.sh ${protocol} ${partition}"
+                      docker.image(jdk21Image).inside {
+                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                                 'PATH+JDK=/opt/java/openjdk/bin',
+                                 "TOMEE_CLASSIFIER=${classifier}"]) {
+                          sh "runner-webprofile/run-platform-suite.sh ${protocol} ${partition}"
+                        }
                       }
                     }
                   } finally {
@@ -156,8 +185,8 @@ from xml.etree import ElementTree
           // The modern faces reactor's old-tck-selenium modules drive Chrome
           // through Selenium, and the ASF 'ubuntu && ephemeral' agents ship no
           // browser binary, so its branch runs the suite inside a
-          // Chrome-bundling container (see facesBranch below) instead of on the
-          // bare JDK-tools agent the other standalone suites use.
+          // Chrome-bundling container (see facesBranch below) instead of the
+          // plain JDK container the other standalone suites use.
           // See runner-standalone/README.md and KNOWN_ISSUES.md.
           def standaloneBranch = { String id, int timeoutMinutes ->
             return { ->
@@ -165,12 +194,14 @@ from xml.etree import ElementTree
                 node('ubuntu && ephemeral') {
                   deleteDir()
                   unstash 'source'
-                  def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
-                      withEnv(["JAVA_HOME=${javaHome}", "PATH+JDK=${javaHome}/bin"]) {
-                        sh "runner-standalone/run-standalone-suite.sh ${id}"
+                      docker.image(jdk21Image).inside {
+                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                                 'PATH+JDK=/opt/java/openjdk/bin']) {
+                          sh "runner-standalone/run-standalone-suite.sh ${id}"
+                        }
                       }
                     }
                   } finally {
