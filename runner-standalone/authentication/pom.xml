@@ -200,11 +200,9 @@
                 <argument>lifecycle</argument>
                 <argument>wrapping</argument>
                 <argument>register-session</argument>
-                <argument>async-authentication</argument>
                 <argument>status-codes</argument>
                 <argument>dispatching</argument>
                 <argument>dispatching-jsf-cdi</argument>
-                <argument>invoke-ejb-cdi</argument>
                 <argument>spi</argument>
                 <argument>authentication-signaturetest</argument>
               </arguments>
@@ -240,6 +238,12 @@
                 <surefire.excludesFile>${tck.exclusions.file}</surefire.excludesFile>
                 <failsafe.excludesFile>${tck.exclusions.file}</failsafe.excludesFile>
               </properties>
+              <!-- The EJB-dependent modules (async-authentication,
+                   invoke-ejb-cdi, ejb-propagation, ejb-register-session)
+                   stay out: the tomee-remote profile sets skipEJB=true for
+                   the Web Profile run, so including them only builds
+                   test-skipped wars that the verification step then rejects
+                   as silently green. -->
               <pomIncludes>
                 <pomInclude>basic-authentication/pom.xml</pomInclude>
                 <pomInclude>custom-principal/pom.xml</pomInclude>
@@ -247,11 +251,9 @@
                 <pomInclude>lifecycle/pom.xml</pomInclude>
                 <pomInclude>wrapping/pom.xml</pomInclude>
                 <pomInclude>register-session/pom.xml</pomInclude>
-                <pomInclude>async-authentication/pom.xml</pomInclude>
                 <pomInclude>status-codes/pom.xml</pomInclude>
                 <pomInclude>dispatching/pom.xml</pomInclude>
                 <pomInclude>dispatching-jsf-cdi/pom.xml</pomInclude>
-                <pomInclude>invoke-ejb-cdi/pom.xml</pomInclude>
                 <pomInclude>spi/pom.xml</pomInclude>
                 <pomInclude>authentication-signaturetest/pom.xml</pomInclude>
               </pomIncludes>
