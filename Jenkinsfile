@@ -28,7 +28,9 @@ pipeline {
       options { timeout(time: 15, unit: 'MINUTES') }
       steps {
         deleteDir()
+
         checkout scm
+        stash name: 'source'
 
         sh 'sh environment/verify-inputs.sh --metadata-only'
         sh '''
@@ -79,7 +81,7 @@ from xml.etree import ElementTree
             options { timeout(time: 30, unit: 'MINUTES') }
             steps {
               deleteDir()
-              checkout scm
+              unstash 'source'
               sh './mvnw -B -ntp -pl runner-smoke -am verify'
             }
             post {
@@ -105,7 +107,7 @@ from xml.etree import ElementTree
               stage(branchName) {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  checkout scm
+                  unstash 'source'
                   def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
 
                   try {
@@ -158,7 +160,7 @@ from xml.etree import ElementTree
               stage("standalone - ${id}") {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  checkout scm
+                  unstash 'source'
                   def javaHome = tool(name: 'jdk_21_latest', type: 'hudson.model.JDK')
 
                   try {
@@ -208,7 +210,7 @@ from xml.etree import ElementTree
               stage('standalone - faces') {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  checkout scm
+                  unstash 'source'
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
