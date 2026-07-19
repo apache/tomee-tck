@@ -259,12 +259,16 @@
                 <!-- Fail fast if any container port is already bound: the
                      waitfor below only proves *something* answers on the HTTP
                      port, and a foreign server left on 8080 would let this
-                     suite deploy against and test the wrong container. -->
+                     suite deploy against and test the wrong container. The
+                     harness log port is asserted too: the JavaTest client JVM
+                     opens a ServerSocket on it, and a foreign listener there
+                     would break log collection mid-run. -->
                 <exec executable="sh" failonerror="true">
                   <arg value="${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh"/>
                   <arg value="${tomee.http.port}"/>
                   <arg value="${tomee.https.port}"/>
                   <arg value="${tomee.shutdown.port}"/>
+                  <arg value="${tck.harness.log.port}"/>
                 </exec>
 
                 <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">

@@ -352,12 +352,21 @@
                   <arg value="${tck.derby.port}"/>
                 </exec>
 
-                <!-- Fail fast if any container port is already bound. -->
+                <!-- Fail fast if any container port is already bound. The
+                     harness log port is asserted too (the JavaTest client JVM
+                     opens a ServerSocket on it). Port 11389 is asserted as a
+                     fixed, unmovable port: the in-process UnboundID LDAP server
+                     and the ~95 @LdapIdentityStoreDefinition test servlets in
+                     the built old-tck sources both hardcode
+                     ldap://localhost:11389, so a foreign listener there would
+                     otherwise fail the idstore tests late and opaquely. -->
                 <exec executable="sh" failonerror="true">
                   <arg value="${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh"/>
                   <arg value="${tomee.http.port}"/>
                   <arg value="${tomee.https.port}"/>
                   <arg value="${tomee.shutdown.port}"/>
+                  <arg value="${tck.harness.log.port}"/>
+                  <arg value="11389"/>
                 </exec>
 
                 <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">
