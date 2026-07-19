@@ -101,7 +101,7 @@ from xml.etree import ElementTree
       steps {
         script {
           def catalogBranch = { String branchName, String protocol, String partition, String classifier ->
-            {
+            return { ->
               stage(branchName) {
                 node('ubuntu && ephemeral') {
                   deleteDir()
@@ -154,7 +154,7 @@ from xml.etree import ElementTree
           // bare JDK-tools agent the other standalone suites use.
           // See runner-standalone/README.md and KNOWN_ISSUES.md.
           def standaloneBranch = { String id, int timeoutMinutes ->
-            {
+            return { ->
               stage("standalone - ${id}") {
                 node('ubuntu && ephemeral') {
                   deleteDir()
@@ -204,7 +204,7 @@ from xml.etree import ElementTree
           def facesImage =
             'markhobson/maven-chrome@sha256:90b0a104dd7236b5fcef71c342e4f6392fb204a4df030fad4bbf4c7990aaee00'
           def facesBranch = { int timeoutMinutes ->
-            {
+            return { ->
               stage('standalone - faces') {
                 node('ubuntu && ephemeral') {
                   deleteDir()
