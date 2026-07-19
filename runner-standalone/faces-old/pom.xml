@@ -125,6 +125,22 @@
                 <!-- The build script invokes a bare `mvn`; route it through
                      the repository's Maven wrapper instead. -->
                 <replace file="${oldtck.source.dir}/docker/build_oldtck.sh" token="mvn -f" value="&quot;$MVNW&quot; -f"/>
+                <!-- The bundle packaging execs the native zip binary on unix
+                     platforms, and the CI containers ship none. Renaming the
+                     platform condition's property steers the build onto its
+                     portable ant <zip> fallback (-ant-zip). The native path
+                     additionally chmods unix.sh inside the bundle, but the
+                     bundle is consumed via ant <unzip>, which drops
+                     permissions anyway. -->
+                <replaceregexp file="${oldtck.source.dir}/release/tools/build.xml"
+                               match="property *=&quot;isUnixPlatform&quot;"
+                               replace="property=&quot;isUnixPlatformNativeZip&quot;"/>
+                <!-- The fallback's includes pattern matches only the bundle
+                     directory entry itself, producing an empty zip; recurse
+                     into its contents like the native `zip -r` did. -->
+                <replaceregexp file="${oldtck.source.dir}/release/tools/build.xml"
+                               match="includes=&quot;(\$\{zip\.name\})&quot;"
+                               replace="includes=&quot;\1/**&quot;"/>
                 <!-- Anchor the wrapper's multi-module root inside the TCK
                      sources so its path properties resolve against the TCK,
                      not this repository. -->
