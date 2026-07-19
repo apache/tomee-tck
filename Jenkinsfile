@@ -47,7 +47,6 @@ pipeline {
         deleteDir()
 
         checkout scm
-        stash name: 'source'
 
         sh 'sh environment/verify-inputs.sh --metadata-only'
         sh '''
@@ -109,7 +108,7 @@ from xml.etree import ElementTree
             options { timeout(time: 30, unit: 'MINUTES') }
             steps {
               deleteDir()
-              unstash 'source'
+              checkout scm
               script {
                 docker.image(smokeImages[SMOKE_JDK]).inside {
                   withEnv(["HOME=${env.WORKSPACE}",
@@ -143,7 +142,7 @@ from xml.etree import ElementTree
               stage(branchName) {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  unstash 'source'
+                  checkout scm
 
                   try {
                     timeout(time: 360, unit: 'MINUTES') {
@@ -200,7 +199,7 @@ from xml.etree import ElementTree
               stage("standalone - ${id}") {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  unstash 'source'
+                  checkout scm
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
