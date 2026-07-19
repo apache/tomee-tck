@@ -242,7 +242,7 @@ from xml.etree import ElementTree
               stage('standalone - faces') {
                 node('ubuntu && ephemeral') {
                   deleteDir()
-                  unstash 'source'
+                  checkout scm
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
