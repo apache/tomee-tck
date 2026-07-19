@@ -44,4 +44,26 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <!-- The cdi and cdi-ee runners stop at the test phase, so the default
+           package-phase jar:jar would never run and their antrun copy would
+           stage nothing: the deployed archives would miss BeansImpl and every
+           CDI TCK test would fail its configuration lookup. Bind the jar goal
+           to test-compile as well so the artifact exists by the time the
+           sibling runners' generate-test-resources copy looks for it. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>jar-for-test-phase-runs</id>
+            <phase>test-compile</phase>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

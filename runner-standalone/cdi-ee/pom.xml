@@ -188,6 +188,18 @@
                     <exclude name="*-javadoc.jar"/>
                   </fileset>
                 </copy>
+                <!-- An empty fileset copies nothing and still succeeds, which
+                     would ship archives without BeansImpl and turn every test
+                     into an "Unable to get configuration" failure. Fail here
+                     instead, where the cause is obvious. -->
+                <fail message="No cdi-tck-porting jar staged into the TCK library directory; the sibling module did not package one.">
+                  <condition>
+                    <resourcecount when="equal" count="0">
+                      <fileset dir="${project.build.directory}/dependency/lib"
+                               includes="runner-standalone-cdi-tck-porting-*.jar"/>
+                    </resourcecount>
+                  </condition>
+                </fail>
               </target>
             </configuration>
           </execution>
