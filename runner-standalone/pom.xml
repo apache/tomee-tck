@@ -69,9 +69,14 @@
     <tck.standalone.skip>true</tck.standalone.skip>
     <!-- Modules that only run local signature checks set this to true. -->
     <tck.standalone.container.skip>${tck.standalone.skip}</tck.standalone.container.skip>
+    <!-- Guards the TomEE ports at validate; modules that stage but never
+         start TomEE (persistence) override this to true. -->
+    <tck.tomee.ports.guard.skip>${tck.standalone.container.skip}</tck.tomee.ports.guard.skip>
     <!-- Harness catalog defaults for the TomEE container; the remote
          adapter otherwise attaches to whatever already answers on the http
-         port. Modules that pin fixed ports simply ignore these. -->
+         port. run-standalone-suite.sh selects free values when the defaults
+         are busy and passes them as -D overrides. Modules that pin fixed
+         ports simply ignore these. -->
     <tomee.http.port>8080</tomee.http.port>
     <tomee.https.port>8443</tomee.https.port>
     <tomee.shutdown.port>8005</tomee.shutdown.port>
@@ -223,6 +228,21 @@
                   <argument>${tck.derby.port}</argument>
                 </arguments>
                 <classpathScope>test</classpathScope>
+              </configuration>
+            </execution>
+            <execution>
+              <id>require-free-tomee-ports</id>
+              <phase>validate</phase>
+              <goals><goal>exec</goal></goals>
+              <configuration>
+                <skip>${tck.tomee.ports.guard.skip}</skip>
+                <executable>sh</executable>
+                <arguments>
+                  <argument>${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh</argument>
+                  <argument>${tomee.http.port}</argument>
+                  <argument>${tomee.https.port}</argument>
+                  <argument>${tomee.shutdown.port}</argument>
+                </arguments>
               </configuration>
             </execution>
             <execution>

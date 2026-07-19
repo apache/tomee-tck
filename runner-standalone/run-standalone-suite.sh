@@ -9,13 +9,15 @@
 #
 #   runner-standalone/run-standalone-suite.sh <id> [extra mvn args]
 #
-# Container-based runners default to ports 8080/8443/8005/1527; run one at
-# a time. -Dtck.derby.port overrides the Derby port everywhere, and the
-# container-based runners honor -Dtomee.http.port/-Dtomee.https.port/
-# -Dtomee.shutdown.port for side-by-side runs (the security, authentication,
-# and faces source reactors still assume the fixed ports). Use the overrides
-# whenever anything else may hold 8080: the Arquillian adapter silently
-# attaches to any server already on the port.
+# Container-based runners default to ports 8080/8443/8005/1527. At branch
+# start the script selects free ports for exactly what the chosen runner
+# binds and passes them as the documented -D overrides
+# (-Dtomee.http.port/-Dtomee.https.port/-Dtomee.shutdown.port for the TomEE
+# container, -Dtck.derby.port for Derby, -Dtck.harness.log.port for the
+# JavaTest harness log listener); a caller-supplied -D always wins. The
+# security source reactor still assumes its fixed ports. Selection matters
+# because the Arquillian adapter silently attaches to any server already on
+# the port, so a foreign server on 8080 would make a runner look green.
 # TOMEE_CLASSIFIER selects the distribution (default: plume).
 # The reviewed exclusion list in runner-standalone/exclusions/<id>.txt is
 # applied by default; append -Dtck.exclusions.file=... to override (see
@@ -58,6 +60,59 @@ if [ -f "$SCRIPT_DIR/$ID-install/pom.xml" ]; then
 fi
 
 shift
+
+# Select free ports for exactly what this runner binds and append them as -D
+# overrides. A caller-supplied -D for the same knob always wins; its value
+# still seeds the later picks' avoid lists so a selection can never return a
+# port the caller reserved for another knob. Last match wins, like Maven.
+SELECT_PORT="$ROOT_DIR/environment/ports/select-free-port.sh"
+arg_value() { prefix=$1; shift; v=''; for a in "$@"; do case $a in "$prefix"*) v=${a#"$prefix"} ;; esac; done; printf '%s' "$v"; }
+
+NEED_TOMEE=no NEED_DERBY=no NEED_HARNESS=no NEED_HTTP_ONLY=no HARNESS_PREF=2000
+case "$ID" in
+  concurrency|data|servlet|pages|rest|validation|websocket|cdi|cdi-ee) NEED_TOMEE=yes; NEED_DERBY=yes ;;
+  persistence) NEED_DERBY=yes ;;
+  transactions|faces-old) NEED_TOMEE=yes; NEED_HARNESS=yes ;;
+  security-old) NEED_TOMEE=yes; NEED_DERBY=yes; NEED_HARNESS=yes; HARNESS_PREF=2100 ;;
+  authentication|faces) NEED_HTTP_ONLY=yes ;;
+  # security: the downloaded reactor pins 8080/8443/8005/33389; its pom
+  # asserts them free instead (no selection possible).
+  # annotations, di, el, jsonp, jsonb, debugging: no ports.
+esac
+
+selected=no
+if [ "$NEED_TOMEE" = yes ] || [ "$NEED_HTTP_ONLY" = yes ]; then
+  HTTP=$(arg_value -Dtomee.http.port= "$@")
+  if [ -z "$HTTP" ]; then
+    HTTP=$(sh "$SELECT_PORT" 8080); set -- "$@" "-Dtomee.http.port=$HTTP"; selected=yes
+  fi
+fi
+if [ "$NEED_TOMEE" = yes ]; then
+  HTTPS=$(arg_value -Dtomee.https.port= "$@")
+  if [ -z "$HTTPS" ]; then
+    HTTPS=$(sh "$SELECT_PORT" 8443 ${HTTP:-}); set -- "$@" "-Dtomee.https.port=$HTTPS"; selected=yes
+  fi
+  SHUTDOWN=$(arg_value -Dtomee.shutdown.port= "$@")
+  if [ -z "$SHUTDOWN" ]; then
+    SHUTDOWN=$(sh "$SELECT_PORT" 8005 ${HTTP:-} ${HTTPS:-}); set -- "$@" "-Dtomee.shutdown.port=$SHUTDOWN"; selected=yes
+  fi
+fi
+if [ "$NEED_DERBY" = yes ]; then
+  DERBY=$(arg_value -Dtck.derby.port= "$@")
+  if [ -z "$DERBY" ]; then
+    DERBY=$(sh "$SELECT_PORT" 1527 ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-}); set -- "$@" "-Dtck.derby.port=$DERBY"; selected=yes
+  fi
+fi
+if [ "$NEED_HARNESS" = yes ]; then
+  HARNESS=$(arg_value -Dtck.harness.log.port= "$@")
+  if [ -z "$HARNESS" ]; then
+    HARNESS=$(sh "$SELECT_PORT" "$HARNESS_PREF" ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-} ${DERBY:-}); set -- "$@" "-Dtck.harness.log.port=$HARNESS"; selected=yes
+  fi
+fi
+if [ "$selected" = yes ]; then
+  echo "run-standalone-suite: selected ports http=${HTTP:-} https=${HTTPS:-} shutdown=${SHUTDOWN:-} derby=${DERBY:-} harness=${HARNESS:-}" >&2
+fi
+
 exec "$ROOT_DIR/mvnw" -B -ntp \
   -pl "$MODULES" -am \
   -Dtck.standalone=true \

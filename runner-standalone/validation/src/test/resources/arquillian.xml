@@ -17,6 +17,7 @@
       <property name="host">localhost</property>
       <property name="httpPort">${tomee.http.port}</property>
       <property name="stopPort">${tomee.shutdown.port}</property>
+      <property name="httpsPort">${tomee.https.port}</property>
       <property name="cleanOnStartUp">true</property>
       <property name="removeUnusedWebapps">true</property>
       <property name="simpleLog">true</property>

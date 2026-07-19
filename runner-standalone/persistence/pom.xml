@@ -31,6 +31,11 @@
   </description>
 
   <properties>
+    <!-- The persistence suite runs the SE vehicle against EclipseLink; TomEE
+         jars are staged onto the classpath but no server starts, so the
+         TomEE port guard does not apply (Derby remains its only port, still
+         guarded by require-free-derby-port). -->
+    <tck.tomee.ports.guard.skip>true</tck.tomee.ports.guard.skip>
     <persistence.tck.version>3.2.1</persistence.tck.version>
     <persistence.tck.zip>jakarta-persistence-tck-${persistence.tck.version}.zip</persistence.tck.zip>
     <persistence.tck.url>https://download.eclipse.org/jakartaee/persistence/3.2/${persistence.tck.zip}</persistence.tck.url>
