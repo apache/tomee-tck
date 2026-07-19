@@ -129,7 +129,18 @@
         <configuration>
           <skip>${tck.standalone.skip}</skip>
           <excludesFile>${tck.exclusions.file}</excludesFile>
+          <!-- The JSON-P TCK exercises characters XML cannot represent
+               (U+FFFF among them) and echoes them through java.util.logging
+               at INFO. Surefire copies the captured streams into the report
+               CDATA verbatim, so those records make the XML unparseable:
+               the tests all pass, but Jenkins' junit step cannot read the
+               file and reports it as a failure instead. Send the test output
+               to separate .txt files and raise the TCK logger above INFO so
+               the reports stay well-formed; warnings and failures still
+               surface, and the archive glob keeps the .txt files. -->
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <systemPropertyVariables>
+            <java.util.logging.config.file>${project.build.testOutputDirectory}/logging.properties</java.util.logging.config.file>
             <jimage.dir>${project.build.directory}/jimage</jimage.dir>
             <signature.sigTestClasspath>${project.build.directory}/api-classes${path.separator}${project.build.directory}/jimage/java.base${path.separator}${project.build.directory}/jimage/java.rmi${path.separator}${project.build.directory}/jimage/java.sql${path.separator}${project.build.directory}/jimage/java.naming</signature.sigTestClasspath>
           </systemPropertyVariables>
