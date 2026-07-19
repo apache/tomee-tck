@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements. See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.apache.tomee.cts</groupId>
+    <artifactId>runner-standalone</artifactId>
+    <version>11.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>runner-standalone-security-old</artifactId>
+  <packaging>pom</packaging>
+  <name>Jakarta Security 4.0 TCK runner (legacy JavaTest old-tck)</name>
+  <description>
+    Runs the legacy JavaTest half of the Jakarta Security 4.0 TCK
+    (~65 com.sun.ts.tests.securityapi Client classes over the idstore, ham
+    and securitycontext trees) against TomEE. The old-tck is first built from
+    the sources bundled in the TCK distribution, then deployed through the
+    TCK's own "tomcat" deployment handler, which copies the test WARs into the
+    container's webapps directory - no GlassFish asadmin involvement. TomEE is
+    provisioned and started by this module, along with a Derby network server
+    (for the DatabaseIdentityStore tree) and an embedded UnboundID LDAP server
+    (for the LdapIdentityStore tree, started by the harness itself). The modern
+    Arquillian half lives in runner-standalone-security.
+    Run with: run-standalone-suite.sh security-old
+    Single test directory: -Dtck.test=com/sun/ts/tests/securityapi/securitycontext/authenticate
+  </description>
+
+  <properties>
+    <!-- This module provisions and starts its own TomEE and Derby; skip the
+         shared Arquillian-oriented container lifecycle. -->
+    <tck.standalone.container.skip>true</tck.standalone.container.skip>
+
+    <!-- The old-tck ships inside the same SHA-pinned Security TCK zip the
+         modern runner-standalone-security module drives; download and verify
+         it independently so the two modules stay decoupled. -->
+    <security.tck.version>4.0.1</security.tck.version>
+    <security.tck.url>https://download.eclipse.org/jakartaee/security/4.0/jakarta-security-tck-${security.tck.version}.zip</security.tck.url>
+    <security.tck.sha256>87172900057200e0a30a9f30cb3a75331fe428b9dac42153a093ee5c412b7d6d</security.tck.sha256>
+
+    <oldtck.source.dir>${project.build.directory}/security-tck-${security.tck.version}/tck/old-tck/source</oldtck.source.dir>
+    <oldtck.build.zip>${oldtck.source.dir}/release/SECURITYAPI_BUILD/latest/security-tck.zip</oldtck.build.zip>
+
+    <!-- Unpacked from the built old-tck bundle. -->
+    <tck.home>${project.build.directory}/security-tck</tck.home>
+    <tck.tests.home>${tck.home}/src/com/sun/ts/tests/securityapi</tck.tests.home>
+    <!-- standalone = web-container mode; the TCK's own GlassFish run uses the
+         same ts.jtx.standalone excludes. -->
+    <tck.mode>standalone</tck.mode>
+
+    <tomee.home>${project.build.directory}/tomee/apache-tomee-${tomee.classifier}-${tomee.version}</tomee.home>
+    <!-- JavaTest client-side log listener. -->
+    <tck.harness.log.port>2100</tck.harness.log.port>
+    <!-- Seconds per archive the tomcat deployment handler waits for the
+         container to expand a copied WAR (or remove an undeployed one). -->
+    <tck.deploy.timeout.multiplier>60</tck.deploy.timeout.multiplier>
+
+    <!-- Reviewed known-gap exclusions in JavaTest jtx line format
+         (test/path#testid); appended to the mode's ts.jtx. Point at
+         exclusions/none.txt for a full baseline run. -->
+    <tck.exclusions.file>${project.basedir}/../exclusions/security-old.txt</tck.exclusions.file>
+  </properties>
+
+  <dependencies>
+    <!-- Derby: the network server for the DatabaseIdentityStore tree plus the
+         client driver TomEE's jdbc/securityAPIDB datasource and the harness'
+         init.derby schema task use. Copied into the TomEE lib and onto the
+         Derby launcher classpath below. -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbynet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbyshared</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derbytools</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Stage the TomEE distribution this runner manages itself. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack-tomee-distribution</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>unpack</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.tomee</groupId>
+                  <artifactId>apache-tomee</artifactId>
+                  <version>${tomee.version}</version>
+                  <classifier>${tomee.classifier}</classifier>
+                  <type>zip</type>
+                  <outputDirectory>${project.build.directory}/tomee</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <!-- Copy the Derby jars where the antrun steps can find them: the
+               TomEE lib (so the jdbc/securityAPIDB datasource resolves) and a
+               dedicated dir the Derby network-server launcher uses. -->
+          <execution>
+            <id>copy-derby-jars</id>
+            <phase>process-test-resources</phase>
+            <goals><goal>copy-dependencies</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <includeGroupIds>org.apache.derby</includeGroupIds>
+              <outputDirectory>${project.build.directory}/derby-lib</outputDirectory>
+              <stripVersion>false</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+
+          <!-- Step 1: download and verify the TCK distribution and the Ant
+               version the JavaTest harness is driven with. -->
+          <execution>
+            <id>download-tck-and-ant</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <get skipexisting="true" src="${security.tck.url}" dest="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip"/>
+                <checksum file="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip" algorithm="SHA-256" property="${security.tck.sha256}" verifyProperty="security.tck.checksum.matches"/>
+                <fail message="Checksum mismatch for the Jakarta Security TCK distribution">
+                  <condition><isfalse value="${security.tck.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/jakarta-security-tck-${security.tck.version}.zip" dest="${project.build.directory}" overwrite="false"/>
+
+                <get skipexisting="true" src="${tck.ant.url}" dest="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip"/>
+                <checksum file="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" algorithm="SHA-512" property="${tck.ant.sha512}" verifyProperty="tck.ant.checksum.matches"/>
+                <fail message="Checksum mismatch for the Apache Ant distribution">
+                  <condition><isfalse value="${tck.ant.checksum.matches}"/></condition>
+                </fail>
+                <unzip src="${project.build.directory}/apache-ant-${tck.ant.version}-bin.zip" dest="${project.build.directory}" overwrite="false"/>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tck.ant.home}/bin" includes="ant,antRun"/>
+                </chmod>
+
+                <!-- The build script invokes a bare `mvn`; route it through
+                     the repository's Maven wrapper instead. -->
+                <replace file="${oldtck.source.dir}/docker/build_oldtck.sh" token="mvn -f" value="&quot;$MVNW&quot; -f"/>
+                <!-- Anchor the wrapper's multi-module root inside the TCK
+                     sources so its path properties resolve against the TCK,
+                     not this repository. -->
+                <mkdir dir="${oldtck.source.dir}/.mvn"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 2: build the old-tck bundle from source (the distribution
+               only ships sources for this half). Skipped when the bundle from
+               a previous run is still present. -->
+          <execution>
+            <id>build-old-tck</id>
+            <phase>process-test-resources</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target xmlns:unless="ant:unless">
+                <available file="${oldtck.build.zip}" property="oldtck.already.built"/>
+                <exec executable="bash" dir="${oldtck.source.dir}" failonerror="true" unless:set="oldtck.already.built">
+                  <arg value="-xe"/>
+                  <arg value="${oldtck.source.dir}/docker/build_oldtck.sh"/>
+                  <arg value="${oldtck.source.dir}"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                  <env key="MVNW" value="${maven.multiModuleProjectDirectory}/mvnw"/>
+                  <env key="PATH" value="${tck.ant.home}/bin:${java.home}/bin:${env.PATH}"/>
+                </exec>
+                <unzip src="${oldtck.build.zip}" dest="${project.build.directory}" overwrite="false"/>
+                <!-- The release packaging only keeps the glassfish and none
+                     deployment handlers; restore the tomcat handler from the
+                     TCK sources - it is the one this runner drives. -->
+                <copy todir="${tck.home}/bin/xml/impl/tomcat">
+                  <fileset dir="${oldtck.source.dir}/bin/xml/impl/tomcat"/>
+                </copy>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 3: point the harness configuration at TomEE. -->
+          <execution>
+            <id>configure-tck</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <macrodef name="tck-setting">
+                  <attribute name="key"/><attribute name="value"/>
+                  <sequential>
+                    <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                   match="@{key}=.*" replace="@{key}=@{value}"/>
+                  </sequential>
+                </macrodef>
+
+                <!-- Web-container (standalone) versus platform exclusions. -->
+                <copy file="${tck.home}/bin/ts.jtx.${tck.mode}" tofile="${tck.home}/bin/ts.jtx" overwrite="true"/>
+                <!-- Reviewed TomEE known-gap exclusions on top. -->
+                <concat destfile="${tck.home}/bin/ts.jtx" append="true" fixlastline="true">
+                  <file file="${tck.exclusions.file}"/>
+                </concat>
+
+                <!-- Classpath handed to the JavaTest client JVMs: the Jakarta
+                     Security/Servlet/CDI/Faces API stack the tests compile
+                     against, resolved from the TomEE distribution plus the
+                     harness' own UnboundID jar. -->
+                <pathconvert property="tck.securityapi.classes" pathsep="${path.separator}">
+                  <fileset dir="${tomee.home}/lib">
+                    <include name="jakartaee-api-*.jar"/>
+                    <include name="jakarta.faces-*.jar"/>
+                  </fileset>
+                  <fileset dir="${tck.home}/lib">
+                    <include name="unboundid-ldapsdk.jar"/>
+                  </fileset>
+                </pathconvert>
+
+                <tck-setting key="webServerHost" value="localhost"/>
+                <tck-setting key="webServerPort" value="${tomee.http.port}"/>
+                <tck-setting key="web.home" value="${tomee.home}"/>
+                <tck-setting key="webServerHome" value="${tomee.home}"/>
+                <tck-setting key="impl.vi" value="tomcat"/>
+                <tck-setting key="impl.vi.deploy.dir" value="${tomee.home}/webapps"/>
+                <tck-setting key="impl.deploy.timeout.multiplier" value="${tck.deploy.timeout.multiplier}"/>
+                <tck-setting key="securityapi.classes" value="${tck.securityapi.classes}"/>
+                <tck-setting key="harness.log.port" value="${tck.harness.log.port}"/>
+                <tck-setting key="report.dir" value="${project.build.directory}/securityreport/security"/>
+                <tck-setting key="work.dir" value="${project.build.directory}/securitywork/security"/>
+
+                <!-- Derby network server + client for the DatabaseIdentityStore
+                     tree; the harness' init.derby task connects with these.
+                     derby.classes (used as db.lib) must be a concrete driver
+                     classpath, so resolve the staged Derby jars here. -->
+                <pathconvert property="tck.derby.classes" pathsep="${path.separator}">
+                  <fileset dir="${project.build.directory}/derby-lib" includes="derby*.jar"/>
+                </pathconvert>
+                <tck-setting key="derby.server" value="localhost"/>
+                <tck-setting key="derby.port" value="${tck.derby.port}"/>
+                <tck-setting key="derby.classes" value="${tck.derby.classes}"/>
+
+                <mkdir dir="${project.build.directory}/securityreport/security"/>
+                <mkdir dir="${project.build.directory}/securitywork/security"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 4: start Derby, provision and start TomEE, seed the DB
+               schema, start the embedded LDAP server, then deploy the test
+               WARs through the TCK's tomcat handler. -->
+          <execution>
+            <id>start-servers-and-deploy</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <!-- Derby jars into the TomEE lib so jdbc/securityAPIDB
+                     resolves its client driver. -->
+                <copy todir="${tomee.home}/lib">
+                  <fileset dir="${project.build.directory}/derby-lib" includes="derby*.jar"/>
+                </copy>
+
+                <!-- Shared harness configuration plus the security old-tck
+                     tomee.xml that declares the jdbc/securityAPIDB datasource. -->
+                <copy todir="${tomee.home}/conf" overwrite="true">
+                  <fileset dir="${maven.multiModuleProjectDirectory}/environment/tomee/conf"
+                           includes="server.xml,system.properties,tomcat-users.xml"/>
+                </copy>
+                <copy file="${project.basedir}/src/test/resources/tomee.xml"
+                      tofile="${tomee.home}/conf/tomee.xml" overwrite="true"/>
+                <replace file="${tomee.home}/conf/tomee.xml" token="@derby.port@" value="${tck.derby.port}"/>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8005&quot;" value="port=&quot;${tomee.shutdown.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="port=&quot;8080&quot;" value="port=&quot;${tomee.http.port}&quot;"/>
+                <replace file="${tomee.home}/conf/server.xml" token="8443" value="${tomee.https.port}"/>
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/certificates/generate-test-certificates.sh"/>
+                  <arg value="${tomee.home}/conf"/>
+                </exec>
+                <echo file="${tomee.home}/bin/setenv.sh">CATALINA_OPTS="-Xmx2g -XX:MaxMetaspaceSize=512m -Djava.awt.headless=true"
+</echo>
+                <chmod perm="ugo+x">
+                  <fileset dir="${tomee.home}/bin" includes="*.sh"/>
+                </chmod>
+
+                <!-- Purge any securityapi_* test webapps left in the reused
+                     TomEE by a previous run so the tomcat handler's deploy.all
+                     starts from a clean estate (its undeploy step otherwise
+                     waits on dozens of stale exploded dirs and times out). -->
+                <delete quiet="true" includeemptydirs="true">
+                  <fileset dir="${tomee.home}/webapps" includes="securityapi_*/**"/>
+                  <fileset dir="${tomee.home}/webapps" includes="securityapi_*"/>
+                  <fileset dir="${tomee.home}/webapps" includes="securityapi_*.war"/>
+                </delete>
+
+                <!-- Full Derby classpath (the engine jar carries the classes
+                     NetworkServerControl's ping/shutdown clients need). -->
+                <pathconvert property="derby.classpath" pathsep="${path.separator}">
+                  <fileset dir="${project.build.directory}/derby-lib" includes="derby*.jar"/>
+                </pathconvert>
+
+                <!-- Fail fast if the Derby port is already bound. -->
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/database/require-derby-port-free.sh"/>
+                  <arg value="${java.home}/bin/java"/>
+                  <arg value="${derby.classpath}"/>
+                  <arg value="${tck.derby.port}"/>
+                </exec>
+                <!-- Start the Derby network server. -->
+                <java classname="org.apache.derby.drda.NetworkServerControl" fork="true" spawn="true">
+                  <classpath>
+                    <fileset dir="${project.build.directory}/derby-lib" includes="derby*.jar"/>
+                  </classpath>
+                  <sysproperty key="derby.system.home" value="${project.build.directory}/derby"/>
+                  <sysproperty key="derby.drda.portNumber" value="${tck.derby.port}"/>
+                  <arg value="start"/>
+                  <arg value="-h"/><arg value="localhost"/>
+                  <arg value="-noSecurityManager"/>
+                </java>
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/database/wait-for-derby.sh"/>
+                  <arg value="${java.home}/bin/java"/>
+                  <arg value="${derby.classpath}"/>
+                  <arg value="${tck.derby.port}"/>
+                </exec>
+
+                <!-- Fail fast if any container port is already bound. -->
+                <exec executable="sh" failonerror="true">
+                  <arg value="${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh"/>
+                  <arg value="${tomee.http.port}"/>
+                  <arg value="${tomee.https.port}"/>
+                  <arg value="${tomee.shutdown.port}"/>
+                </exec>
+
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="true">
+                  <arg value="start"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+                <waitfor maxwait="180" maxwaitunit="second" timeoutproperty="tomee.start.timeout">
+                  <socket server="localhost" port="${tomee.http.port}"/>
+                </waitfor>
+                <fail message="TomEE did not open port ${tomee.http.port} within 180s">
+                  <condition><isset property="tomee.start.timeout"/></condition>
+                </fail>
+                <waitfor maxwait="60" maxwaitunit="second" timeoutproperty="tomee.connector.timeout">
+                  <resourcecontains resource="${tomee.home}/logs/catalina.out"
+                                    substring="Starting ProtocolHandler [&quot;http-nio-${tomee.http.port}&quot;]"/>
+                </waitfor>
+                <fail message="Started TomEE did not report its HTTP connector on port ${tomee.http.port}; see ${tomee.home}/logs/catalina.out">
+                  <condition><isset property="tomee.connector.timeout"/></condition>
+                </fail>
+
+                <!-- Seed the DatabaseIdentityStore schema and start the
+                     harness' embedded UnboundID LDAP server (ldap://localhost:11389). -->
+                <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
+                  <arg value="-Dutil.dir=${tck.home}"/>
+                  <arg value="init.derby"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+                <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
+                  <arg value="-Dutil.dir=${tck.home}"/>
+                  <arg value="init.ldap"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+
+                <!-- Deploy a single test directory... -->
+                <sequential if:set="tck.test">
+                  <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/src/${tck.test}" failonerror="true">
+                    <arg value="-Dutil.dir=${tck.home}"/>
+                    <arg value="deploy"/>
+                    <env key="ANT_HOME" value="${tck.ant.home}"/>
+                    <env key="JAVA_HOME" value="${java.home}"/>
+                  </exec>
+                </sequential>
+                <!-- ...or everything. -->
+                <sequential unless:set="tck.test">
+                  <exec executable="${tck.ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
+                    <arg value="-Dutil.dir=${tck.home}"/>
+                    <arg value="deploy.all"/>
+                    <env key="ANT_HOME" value="${tck.ant.home}"/>
+                    <env key="JAVA_HOME" value="${java.home}"/>
+                  </exec>
+                </sequential>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 5: run JavaTest. The exit code is checked after the
+               containers have been stopped (verify phase). -->
+          <execution>
+            <id>run-tck</id>
+            <phase>integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                <exec executable="${tck.ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="tck.run.result">
+                  <arg value="-Dutil.dir=${tck.home}"/>
+                  <arg value="-Dmultiple.tests=${tck.test}" if:set="tck.test"/>
+                  <arg value="runclient" if:set="tck.test"/>
+                  <arg value="run.all" unless:set="tck.test"/>
+                  <env key="ANT_HOME" value="${tck.ant.home}"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                  <env key="LC_ALL" value="C"/>
+                </exec>
+                <echo message="JavaTest finished with exit code ${tck.run.result}"/>
+                <echo message="Report: ${project.build.directory}/securityreport/security"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 6: always stop the containers. -->
+          <execution>
+            <id>stop-servers</id>
+            <phase>post-integration-test</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <exec executable="${tomee.home}/bin/catalina.sh" failonerror="false">
+                  <arg value="stop"/>
+                  <env key="JAVA_HOME" value="${java.home}"/>
+                </exec>
+                <java classname="org.apache.derby.drda.NetworkServerControl" fork="true" failonerror="false">
+                  <classpath>
+                    <fileset dir="${project.build.directory}/derby-lib" includes="derby*.jar"/>
+                  </classpath>
+                  <sysproperty key="derby.drda.portNumber" value="${tck.derby.port}"/>
+                  <arg value="shutdown"/>
+                  <arg value="-h"/><arg value="localhost"/>
+                </java>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Step 7: a default run is expected green; surface a JavaTest
+               failure as a build failure. -->
+          <execution>
+            <id>verify-tck-result</id>
+            <phase>verify</phase>
+            <goals><goal>run</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <target>
+                <fail message="JavaTest finished with exit code ${tck.run.result}; see ${project.build.directory}/securityreport/security">
+                  <condition>
+                    <not><equals arg1="${tck.run.result}" arg2="0"/></not>
+                  </condition>
+                </fail>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

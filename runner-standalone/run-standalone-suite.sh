@@ -33,8 +33,8 @@ usage() {
 Usage: run-standalone-suite.sh <id> [extra mvn args]
 Runners: annotations, concurrency, data, di, el, cdi, cdi-ee, servlet,
          pages, rest, validation, websocket, jsonp, jsonb, debugging,
-         persistence, transactions, security, authentication, faces,
-         faces-old
+         persistence, transactions, security, security-old, authentication,
+         faces, faces-old
 See runner-standalone/README.md for per-TCK status.
 EOF
   exit 2
@@ -47,7 +47,7 @@ EOF
 GOAL=test
 case "$ID" in
   ''|*-install|tck-common|exclusions|*/*|.*) usage ;;
-  security|authentication|faces|faces-old|transactions)
+  security|security-old|authentication|faces|faces-old|transactions)
     GOAL=verify ;;
 esac
 [ -f "$SCRIPT_DIR/$ID/pom.xml" ] || usage

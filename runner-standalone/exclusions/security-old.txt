@@ -1,0 +1,18 @@
+# Reviewed known-gap exclusions for the legacy Jakarta Security 4.0 old-tck
+# (JavaTest) run against TomEE. Lines use the JavaTest jtx format
+# (test/dir/path#testid) and are appended to the mode's ts.jtx by the
+# runner-standalone-security-old module. See KNOWN_ISSUES.md for the
+# rationale behind each entry.
+#
+# Baseline 2026-07-19 (Plume, JDK 21): 83 tests, 82 passed, 1 failed,
+# 0 errors. The single failure below is a TomEE product gap.
+
+# TomEE product gap: SecurityContext.hasAccessToWebResource() returns false
+# for a caller that is authorized for the resource. The servlet reports the
+# correct caller ("context username: tom") and the authentication path works,
+# but the programmatic access check answers "has GET access ... : false" where
+# the spec requires true for user tom (Manager role) against the
+# @HttpMethodConstraint("GET") /protectedServlet. TomEE's SecurityContext is
+# not wired to the servlet authorization/Policy layer for
+# hasAccessToWebResource(). Assertions Security:JAVADOC:7/8, Security:SPEC:4.3-1.
+com/sun/ts/tests/securityapi/securitycontext/callerdata/Client.java#testSecurityContextHasAccessToWebResource

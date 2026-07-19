@@ -24,9 +24,9 @@ Two formats, depending on how the runner executes tests:
   both the declaring class and the concrete runtime class — several TCK
   base classes contribute inherited test methods that only the subclass
   name identifies.
-- **JavaTest-based runners** (`transactions`, `faces-old`): JavaTest jtx
-  exclusion lines (`test/path/File.java#testid`), appended by the runner to
-  the harness `ts.jtx` before the run.
+- **JavaTest-based runners** (`transactions`, `faces-old`, `security-old`):
+  JavaTest jtx exclusion lines (`test/path/File.java#testid`), appended by the
+  runner to the harness `ts.jtx` before the run.
 
 To collect a full compatibility baseline without exclusions, run a suite with
 `-Dtck.exclusions.file=$(pwd)/runner-standalone/exclusions/none.txt` (the

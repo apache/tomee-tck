@@ -38,6 +38,7 @@ Detail lives next to each runner:
 | jsonb | 295 tests, 1 F + 1 E | 2 tests | 2 Johnzon 2.1.0 gaps |
 | debugging | passes (4 SMAPs validated) | — | — |
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
+| security-old (JavaTest) | 83 tests, 82 pass, 1 F | 1 test | TomEE `SecurityContext.hasAccessToWebResource()` returns false for an authorized caller |
 | authentication | 106 tests, 1 F; signature test passes | 1 method (spi `CheckMsgInfoKey`) | TCK challenge #219 (hard-codes a JACC requirement) |
 | websocket | 737 tests, 3 E | 3 methods | Client container advertises permessage-deflate in the negotiated extension lists |
 | faces (modern modules + old-tck-selenium) | 298 tests, 0 F + 0 E, 17 skipped (with exclusions applied) | 10 classes | 1 TomEE faces-config gap + Mojarra/TomEE CDI-injection, whole-bean/method validation, and one Chrome ajax quirk |
@@ -114,20 +115,30 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
 5. **Jakarta Security** — the BASIC mechanism answers 401 for valid
    credentials in the decorated/custom-handler variants, and both OpenID
    default modules fail token validation.
-   [security.txt](runner-standalone/exclusions/security.txt). The runner drives
-   the reactor's modern Arquillian app modules plus the signature test; the
-   reactor's `old-tck` module (~68 legacy JavaTest tests) is not wired into
-   the runner, so the recorded totals cover the modern suite only.
-6. **Persistence integration** — undeploy calls `close()` on an
+   [security.txt](runner-standalone/exclusions/security.txt). The `security`
+   runner drives the reactor's modern Arquillian app modules plus the signature
+   test; the reactor's `old-tck` module (legacy JavaTest suite,
+   `com.sun.ts.tests.securityapi`) is run by the separate `security-old` runner.
+6. **Jakarta Security `SecurityContext.hasAccessToWebResource()`** — the
+   programmatic access check returns `false` for a caller that is authorized
+   for the resource. The old-tck `securitycontext/callerdata` servlet reports
+   the correct caller and role membership, but `hasAccessToWebResource(
+   "/protectedServlet", "GET")` answers `false` where the spec requires `true`
+   for user `tom` (Manager role) against the `@HttpMethodConstraint("GET")`
+   resource; TomEE's `SecurityContext` is not wired to the servlet
+   authorization/`Policy` layer for this call. Excluded in
+   [security-old.txt](runner-standalone/exclusions/security-old.txt)
+   (`securitycontext/callerdata/Client.java#testSecurityContextHasAccessToWebResource`).
+7. **Persistence integration** — undeploy calls `close()` on an
    already-closed `EntityManagerFactory` (fails the
    `entityManagerFactoryCloseExceptions` vehicles), and the Jakarta
    Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/
    `EntityManager` etc. from `persistence.xml`) are not registered
    (`ServletEMLookupTest`). Affects Plume and webprofile alike.
-7. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
+8. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
    replacement Jakarta Tags 3.0 jar are not exposed to applications; all 50
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
-8. **Transactions — cross-request `UserTransaction` state leakage across
+9. **Transactions — cross-request `UserTransaction` state leakage across
    pooled servlet requests.** A `UserTransaction` a servlet/jsp request leaves
    in a non-clean state poisons the next request served on the same pooled
    Tomcat exec thread; the victim sees an `IllegalStateException` that is not
@@ -148,14 +159,14 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    [transactions.txt](runner-standalone/exclusions/transactions.txt). The
    Platform catalog additionally shows CDI `@Transactional` interceptors
    failing propagation, rollback-rule, and `TransactionScoped` assertions.
-9. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
+10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak
    deployment IDs (`DuplicateDeploymentIdException` in later apps).
-10. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
+11. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
-11. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
+12. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
     configurator reports the extensions the client requested and negotiated.
     TomEE's client-side WebSocket container (Tomcat's `tomcat-websocket`)
     always advertises its built-in `permessage-deflate` extension in the
@@ -168,7 +179,7 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
     and pass: the runner's Arquillian extension tolerates the deployment
     failure so each client probe still runs.
     [websocket.txt](runner-standalone/exclusions/websocket.txt).
-12. **Bean Validation XML config broken on stock Plume** — the Plume
+13. **Bean Validation XML config broken on stock Plume** — the Plume
     distribution ships EclipseLink MOXy (`eclipselink-5.0.1.jar`) and the JAXB
     RI (`jaxb-runtime-4.0.4.jar`) side by side. EclipseLink registers a
     `jakarta.xml.bind.JAXBContextFactory` service and wins ServiceLoader
@@ -252,6 +263,10 @@ Not product bugs — gaps in this repository's coverage.
   test) runs locally via `run-standalone-suite.sh`; it joins the Jenkins
   branch list once its baseline and exclusion wiring have a verified green
   run. The `faces-old` JavaTest half runs in CI.
+- **Security `security-old` not in CI**: the `security-old` runner (the
+  reactor's legacy JavaTest `com.sun.ts.tests.securityapi` suite) runs
+  locally via `run-standalone-suite.sh` and is green with the reviewed
+  exclusion; it joins the Jenkins branch list once its baseline has settled.
 
 ## What CI runs
 

@@ -60,6 +60,7 @@
     <module>authentication</module>
     <module>faces</module>
     <module>faces-old</module>
+    <module>security-old</module>
   </modules>
 
   <properties>
