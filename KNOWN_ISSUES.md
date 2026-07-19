@@ -258,20 +258,7 @@ Need triage/fixes in the upstream projects TomEE ships.
 
 Not product bugs — gaps in this repository's coverage.
 
-- **Modern faces reactor stays workstation-only**: the `faces` runner (modern
-  Arquillian modules, the signature test, and the Chrome/Selenium
-  `old-tck-selenium` modules) is green with `exclusions/faces.txt`, but its
-  `old-tck-selenium` modules drive a real Chrome through Selenium. The TCK's
-  `BaseITNG`/`ChromeDevtoolsDriver` runs headless by default (`--headless=new`,
-  `--no-sandbox`) and lets Selenium Manager resolve `chromedriver`, but Selenium
-  Manager still needs a Chrome/Chromium browser binary on the machine. The ASF
-  `ubuntu && ephemeral` agents the Jenkinsfile targets are JDK-tools agents with
-  no browser installed; ASF's own pattern for browser-driven CI is to run inside
-  a Docker image that bundles the browser (e.g. `apache/incubator-kie-tools`),
-  which this pipeline does not use. So `faces` runs locally via
-  `run-standalone-suite.sh`; only a browser on the build agent (or a
-  browser-bundling container image) would let it join CI. The `faces-old`
-  JavaTest half needs no browser and runs in CI.
+_None outstanding._
 
 ## What CI runs
 
@@ -280,17 +267,24 @@ Platform catalog on Plume plus `persistence-javatest` on the webprofile ZIP,
 and the standalone suites `annotations`, `di`, `el`, `concurrency`, `data`,
 `servlet`, `pages`, `rest`, `validation`, `websocket`, `jsonp`, `jsonb`,
 `debugging`, `persistence`, `transactions`, `cdi`, `cdi-ee`, `security`,
-`security-old`, `authentication`, `faces-old` — all with default exclusions,
-all expected green. Each runner fails its own build on a red result through a
-`verify-tck-result` step: the JavaTest runners (`faces-old`, `security-old`,
-`transactions`) check the harness exit code, and the invoker-driven source
-reactors (`security`, `authentication`, `faces`) aggregate the inner
-surefire/failsafe reports and fail on any failure, error, or module that built
-but never ran its tests. The `junit`/archive globs also
+`security-old`, `authentication`, `faces`, `faces-old` — all with default
+exclusions, all expected green. Each runner fails its own build on a red result
+through a `verify-tck-result` step: the JavaTest runners (`faces-old`,
+`security-old`, `transactions`) check the harness exit code, and the
+invoker-driven source reactors (`security`, `authentication`, `faces`) aggregate
+the inner surefire/failsafe reports and fail on any failure, error, or module
+that built but never ran its tests. The `junit`/archive globs also
 ingest the surefire/failsafe reports inside the extracted TCK reactors that
 the source-reactor runners drive through the Maven invoker, plus the
 JavaTest report directories (`security-old` and `faces-old` write theirs to
 `target/securityreport/**` and `target/facesreport/**`, matched by the
-`target/*report/**` archive glob). The modern `faces` reactor stays
-workstation-only because its `old-tck-selenium` modules need a browser the ASF
-agents do not provide (see Harness work remaining).
+`target/*report/**` archive glob).
+
+The modern `faces` branch runs its suite inside a container that bundles JDK 21,
+Maven, and a matching Chrome/chromedriver pair
+(`markhobson/maven-chrome:jdk-21`, pinned by digest in the `Jenkinsfile`),
+because its `old-tck-selenium` modules drive a real Chrome through Selenium and
+the ASF `ubuntu && ephemeral` agents ship no browser binary. The container runs
+with `--shm-size=2g` so headless Chrome has enough shared memory. The
+`faces-old` JavaTest half needs no browser and runs on the bare JDK-tools agent
+like the other suites.

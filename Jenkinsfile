@@ -154,10 +154,11 @@ from xml.etree import ElementTree
           // an in-process UnboundID LDAP server on 11389), builds its old-tck
           // bundle from source on the first run, and lands its JavaTest report
           // in the target/*report glob so a red run fails the Maven build.
-          // The modern faces reactor stays workstation-only: its
-          // old-tck-selenium modules drive Chrome through Selenium, and the ASF
-          // 'ubuntu && ephemeral' agents ship no browser binary (a JDK-tools
-          // agent, not a docker-image agent that could bundle one).
+          // The modern faces reactor's old-tck-selenium modules drive Chrome
+          // through Selenium, and the ASF 'ubuntu && ephemeral' agents ship no
+          // browser binary, so its branch runs the suite inside a
+          // Chrome-bundling container (see facesBranch below) instead of on the
+          // bare JDK-tools agent the other standalone suites use.
           // See runner-standalone/README.md and KNOWN_ISSUES.md.
           def standaloneBranch = { String id, int timeoutMinutes ->
             {
@@ -188,6 +189,58 @@ from xml.etree import ElementTree
               }
             }
           }
+          // The modern faces suite (298 tests) needs a Chrome binary its
+          // old-tck-selenium modules drive through Selenium, so its branch runs
+          // run-standalone-suite.sh inside a container that bundles JDK 21,
+          // Maven, and a matching Chrome/chromedriver pair. Pinned by digest
+          // like the rest of the repo's inputs: markhobson/maven-chrome:jdk-21
+          // ships Temurin JDK 21, Maven 3.9.15, and Chrome + chromedriver
+          // 147 on Ubuntu 24.04 (so Selenium Manager resolves the driver
+          // offline). checkout/archive/junit/deleteDir stay on the node, around
+          // the container. Inside the container we use the image's JDK (its own
+          // JAVA_HOME=/opt/java/openjdk), never the host tool(...) install. The
+          // runner leaves Maven's local repo at the container default: docker
+          // .inside() runs a fresh container per build, so ~/.m2 is populated
+          // from scratch and discarded with the container - the faces runner's
+          // nested install-tck-util/invoker steps must all share one repo, so an
+          // override would only split them apart. --shm-size=2g gives headless
+          // Chrome enough shared memory: the TCK's ChromeDevtoolsDriver sets
+          // --headless=new --no-sandbox --disable-gpu but not
+          // --disable-dev-shm-usage, so the default 64 MB /dev/shm would crash
+          // the renderer.
+          def facesImage =
+            'markhobson/maven-chrome@sha256:90b0a104dd7236b5fcef71c342e4f6392fb204a4df030fad4bbf4c7990aaee00'
+          def facesBranch = { int timeoutMinutes ->
+            {
+              stage('standalone - faces') {
+                node('ubuntu && ephemeral') {
+                  deleteDir()
+                  checkout scm
+
+                  try {
+                    timeout(time: timeoutMinutes, unit: 'MINUTES') {
+                      docker.image(facesImage).inside('--shm-size=2g') {
+                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                                 'PATH+JDK=/opt/java/openjdk/bin']) {
+                          sh 'runner-standalone/run-standalone-suite.sh faces'
+                        }
+                      }
+                    }
+                  } finally {
+                    archiveArtifacts(
+                      artifacts: 'runner-standalone/*/target/surefire-reports/**/*,runner-standalone/*/target/failsafe-reports/**/*,runner-standalone/*/target/**/tck/**/surefire-reports/**/*,runner-standalone/*/target/**/tck/**/failsafe-reports/**/*,runner-standalone/*/target/**/logs/**/*,runner-standalone/*/target/*report/**/*',
+                      allowEmptyArchive: true
+                    )
+                    junit(
+                      testResults: 'runner-standalone/*/target/surefire-reports/TEST-*.xml,runner-standalone/*/target/failsafe-reports/TEST-*.xml,runner-standalone/*/target/**/tck/**/surefire-reports/TEST-*.xml,runner-standalone/*/target/**/tck/**/failsafe-reports/TEST-*.xml',
+                      allowEmptyResults: true
+                    )
+                    deleteDir()
+                  }
+                }
+              }
+            }
+          }
           // security-old shares the plain 240-minute default: even with the
           // one-off old-tck source build it runs only ~83 JavaTest tests
           // (~65 client classes), far below the faces-old sizing that earns
@@ -199,6 +252,12 @@ from xml.etree import ElementTree
           // 245-webapp deployment: a full run takes ~2.5 h on a warm
           // workstation, so give it more headroom than the other suites.
           branches['standalone - faces-old'] = standaloneBranch('faces-old', 420)
+          // The modern faces reactor takes ~45-60 min on a warm workstation
+          // (TCK download, provision, 298 Selenium/Arquillian/sigtest tests).
+          // A cold CI node also pulls the browser image and repopulates the
+          // container-local Maven repo from scratch, so 300 minutes leaves
+          // ample headroom over the observed runtime.
+          branches['standalone - faces'] = facesBranch(300)
 
           parallel branches
         }
