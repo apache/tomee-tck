@@ -148,11 +148,17 @@ from xml.etree import ElementTree
           // reports live inside the extracted TCK module targets (one level
           // deep for security/authentication, two for the faces reactor's
           // per-submodule layout), which the recursive tck/** globs below
-          // ingest. The faces-old runner drives the legacy
-          // JavaTest half of the Faces TCK; its report lands in the
-          // target/*report glob and a red JavaTest run fails the Maven build.
-          // The modern faces reactor joins once its baseline is confirmed;
-          // see runner-standalone/README.md and KNOWN_ISSUES.md.
+          // ingest. The faces-old and security-old runners drive the legacy
+          // JavaTest halves of the Faces and Security TCKs; each provisions and
+          // starts its own TomEE (security-old also a Derby network server and
+          // an in-process UnboundID LDAP server on 11389), builds its old-tck
+          // bundle from source on the first run, and lands its JavaTest report
+          // in the target/*report glob so a red run fails the Maven build.
+          // The modern faces reactor stays workstation-only: its
+          // old-tck-selenium modules drive Chrome through Selenium, and the ASF
+          // 'ubuntu && ephemeral' agents ship no browser binary (a JDK-tools
+          // agent, not a docker-image agent that could bundle one).
+          // See runner-standalone/README.md and KNOWN_ISSUES.md.
           def standaloneBranch = { String id, int timeoutMinutes ->
             {
               stage("standalone - ${id}") {
@@ -182,7 +188,11 @@ from xml.etree import ElementTree
               }
             }
           }
-          for (id in ['annotations', 'di', 'el', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'jsonp', 'jsonb', 'debugging', 'persistence', 'transactions', 'cdi', 'cdi-ee', 'security', 'authentication']) {
+          // security-old shares the plain 240-minute default: even with the
+          // one-off old-tck source build it runs only ~83 JavaTest tests
+          // (~65 client classes), far below the faces-old sizing that earns
+          // the extended timeout below.
+          for (id in ['annotations', 'di', 'el', 'concurrency', 'data', 'servlet', 'pages', 'rest', 'validation', 'websocket', 'jsonp', 'jsonb', 'debugging', 'persistence', 'transactions', 'cdi', 'cdi-ee', 'security', 'security-old', 'authentication']) {
             branches["standalone - ${id}"] = standaloneBranch(id, 240)
           }
           // ~5,400 JavaTest tests plus an old-tck source build and a
