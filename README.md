@@ -78,22 +78,25 @@ TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest per
 ## ASF Jenkins pipeline
 
 The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
-Jenkins `ubuntu` agents and their managed `jdk_17_latest` and `jdk_21_latest`
-tools. The pipeline validates the environment, runs the smoke gate on both
-JDKs in parallel, and then fans out every manifest partition as an independent
-JDK 21 branch against the default TomEE Plume distribution. One additional
-branch runs the Jakarta Persistence javatest partition against the
-OpenJPA-based webprofile distribution to track its reviewed exclusion list.
-Test reports and TomEE logs are archived for 14 days.
+Jenkins `ubuntu` agents. The pipeline validates the environment, runs the
+smoke gate on JDK 17 and JDK 21 in parallel, and then fans out every manifest
+partition as an independent JDK 21 branch against the default TomEE Plume
+distribution. One additional branch runs the Jakarta Persistence javatest
+partition against the OpenJPA-based webprofile distribution to track its
+reviewed exclusion list. Test reports and TomEE logs are archived for 14 days.
 
-Parallel branches request `ubuntu && ephemeral` agents. The current ASF cloud
-workers advertise one executor per host, which isolates the fixed localhost
-ports used by TomEE and Derby. Jenkins queues branches when fewer workers are
-available, so the pipeline uses available capacity without imposing a fixed
-partition count.
+Parallel branches request `ubuntu && ephemeral` agents and run their suites
+inside digest-pinned containers (`eclipse-temurin` JDK images; a
+Chrome-bundling image for the modern `faces` suite), so every TomEE, Derby,
+LDAP and JavaTest port binds a container-private network namespace and cannot
+collide with other jobs on the same host. The runner scripts' free-port
+selection and require-free guards remain as defense in depth and for
+workstation runs outside a container. Jenkins queues branches when fewer
+workers are available, so the pipeline uses available capacity without
+imposing a fixed partition count.
 Configure an ASF Jenkins multibranch Pipeline job to use `Jenkinsfile` from
-SCM; Jenkins supplies the checkout and managed JDKs, while the checked-in Maven
-wrapper supplies Maven 3.9.9.
+SCM; Jenkins supplies the checkout, the container images supply the JDKs, and
+the checked-in Maven wrapper supplies Maven 3.9.9 inside each container.
 
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.

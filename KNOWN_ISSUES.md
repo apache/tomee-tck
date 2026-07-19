@@ -275,11 +275,16 @@ JavaTest report directories (`security-old` and `faces-old` write theirs to
 `target/securityreport/**` and `target/facesreport/**`, matched by the
 `target/*report/**` archive glob).
 
-The modern `faces` branch runs its suite inside a container that bundles JDK 21,
-Maven, and a matching Chrome/chromedriver pair
-(`markhobson/maven-chrome:jdk-21`, pinned by digest in the `Jenkinsfile`),
-because its `old-tck-selenium` modules drive a real Chrome through Selenium and
-the ASF `ubuntu && ephemeral` agents ship no browser binary. The container runs
-with `--shm-size=2g` so headless Chrome has enough shared memory. The
-`faces-old` JavaTest half needs no browser and runs on the bare JDK-tools agent
-like the other suites.
+Every test branch runs its suite inside a container pinned by digest in the
+`Jenkinsfile`, so each TomEE/Derby/LDAP/JavaTest port binds a
+container-private network namespace and cannot collide with anything else on
+the host. Most branches use a plain `eclipse-temurin` JDK image (the smoke
+matrix pairs a JDK 17 and a JDK 21 image; everything else uses JDK 21) — the
+checked-in Maven wrapper bootstraps Maven inside the container. The modern
+`faces` branch instead uses a container that bundles JDK 21, Maven, and a
+matching Chrome/chromedriver pair (`markhobson/maven-chrome:jdk-21`), because
+its `old-tck-selenium` modules drive a real Chrome through Selenium and the
+ASF `ubuntu && ephemeral` agents ship no browser binary; it runs with
+`--shm-size=2g` so headless Chrome has enough shared memory. The `faces-old`
+JavaTest half needs no browser and uses the plain JDK 21 image like the other
+suites.
