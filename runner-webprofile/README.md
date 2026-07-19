@@ -18,8 +18,7 @@ test; 448 of the 450 Jakarta Persistence javatest classes pass there. Set
 instead. The script then merges the per-partition overrides from
 `platform-suite-webprofile.tsv` over the base manifest and prefers
 partition exclusions from `exclusions/webprofile/` where they exist — the
-OpenJPA provider blocks 249 of the 450 persistence classes there (see
-`KNOWN_FAILURES.md`):
+OpenJPA provider blocks 249 of the 450 persistence classes there:
 
 ```shell
 TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest persistence-javatest

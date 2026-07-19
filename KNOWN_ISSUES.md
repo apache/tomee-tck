@@ -20,7 +20,6 @@ Detail lives next to each runner:
 | Suite | Baseline result | Excluded | Root cause |
 |---|---|---|---|
 | Platform catalog (Plume) | all retained partitions pass | reviewed lists per partition | see [KNOWN_FAILURES.md](runner-webprofile/KNOWN_FAILURES.md) |
-| Platform `persistence-javatest` (webprofile ZIP) | 201/450 classes retained | 249 classes | OpenJPA gaps; none reproduce on Plume/EclipseLink |
 | annotations | passes | — | — |
 | di | 50/50 pass | — | — |
 | concurrency | 197 tests, 0 F + 0 E (14 TCK skips), signature passes | — | — |
@@ -249,10 +248,6 @@ Need triage/fixes in the upstream projects TomEE ships.
    `tck/jsonb-standalone`), so BigDecimal/BigInteger serialize as the JSON
    numbers §3.4.1 requires instead of Johnzon's precision-preserving string
    default. JSON-P (johnzon-core) passes its TCK completely.
-5. **OpenJPA** (webprofile classifier only) — 249 persistence classes fail;
-   none reproduce on Plume/EclipseLink, tracked partly as
-   [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940).
-   Kept visible via the `persistence-javatest (webprofile)` CI branch.
 
 ## Harness work remaining
 

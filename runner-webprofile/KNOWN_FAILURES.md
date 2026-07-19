@@ -4,12 +4,10 @@ Exclusions keep the remaining suite runnable; they do not turn a result into a
 compatibility pass. Each entry corresponds to a narrow pattern in `exclusions/`.
 
 The EclipseLink-based TomEE Plume distribution is the default target under
-test. The table below was established on the OpenJPA-based `webprofile`
-distribution; every non-persistence entry is provider-independent container
-behavior. The [TomEE Plume section](#tomee-plume-eclipselink) records the
-persistence results that replace the webprofile persistence exclusions in the
-default suite, and `exclusions/webprofile/` keeps the OpenJPA-specific
-overrides for `TOMEE_CLASSIFIER=webprofile` runs.
+test. The table below reflects the default Plume suite; the persistence
+results are in the [TomEE Plume section](#tomee-plume-eclipselink) below.
+`TOMEE_CLASSIFIER=webprofile` runs use the overrides in
+`exclusions/webprofile/` instead.
 
 The generated TomEE overlay also replaces `taglibs-shade`, which still contains
 legacy JSTL TLD URIs, with the Jakarta Tags 3.0 API and GlassFish
@@ -20,10 +18,6 @@ them, but retaining one method would not constitute useful Tags coverage.
 
 | Partition | Excluded class | Reproduced | Product gap |
 |---|---|---|---|
-| `persistence-javatest` | 90 Criteria API vehicle classes | Java 21, 2026-07-14 | OpenJPA 4.1.1 fails Criteria query/update/delete, join, parameter, metamodel-query, and result-type behavior. Failures include incorrect parameter metadata and missing Jakarta Persistence 3.2 provider methods such as `Query.getSingleResultOrNull()`. |
-| `persistence-javatest` | 105 mapping/model vehicle classes | Java 21, 2026-07-14 | Annotation, override, callback, inheritance, relationship, type, metamodel, derived-ID, EntityGraph, and `PersistenceUnitUtil` tests expose rejected mixed access, absent/enhancement-dependent metadata, converter and lifecycle gaps, and mapping failures. |
-| `persistence-javatest` | 35 query/procedure vehicle classes | Java 21, 2026-07-14 | JPQL parsing and query semantics, stored procedures, repeatable query/graph declarations, and generator behavior are incomplete. The provider reports syntax errors, setup rollbacks, or missing repeatable metadata before assertions complete. |
-| `persistence-javatest` | 19 EntityManager/provider lifecycle vehicle classes | Java 21, 2026-07-14 | The remaining EntityManager, EntityManagerFactory, locking, and container-integration classes fail provider lifecycle, transaction, exception, or insertion-order requirements. The exact 249 failing classes are listed individually in `exclusions/persistence-javatest.txt`; 201 classes remain enabled. |
 | `enterprise-beans-32` | All 18 `ClientEjblitejspTest` vehicle classes | Java 21, 2026-07-14 | The shared EJB Lite JSP vehicle imports `jakarta.tags.core`, so Jasper returns HTTP 500 before any EJB assertion can run. The corresponding servlet, filtered-servlet, and Faces vehicles retain the EJB coverage; this exclusion is a secondary effect of the Jakarta Tags URI gap. |
 | `enterprise-beans-32` | Six non-JSP schedule-transaction vehicle classes, covering persistent and nonpersistent timers | Java 21, 2026-07-14 | Timer callbacks reproduce TomEE's transaction-manager fault: an EJB starts but does not complete its transaction, failed timeout callbacks are not retried as required, and rollback state leaks between methods. |
 | `enterprise-beans-30` | All 73 `ClientEjblitejspTest` vehicle classes | Java 21, 2026-07-14 | The shared EJB Lite JSP vehicle imports `jakarta.tags.core`, so Jasper returns HTTP 500 before any EJB assertion can run. The corresponding servlet, filtered-servlet, and Faces vehicles retain the EJB coverage; this exclusion is a secondary effect of the Jakarta Tags URI gap. |
@@ -36,7 +30,7 @@ them, but retaining one method would not constitute useful Tags coverage.
 | `transactions` | Four `jta.ee.transactional.ClientEjblite*Test` vehicle classes | Java 21, 2026-07-14 | TomEE's CDI transactional interceptors fail transaction propagation, rollback-rule, and `TransactionScoped` context assertions across the servlet, JSP, JSF, and filtered-servlet vehicles. A failed assertion can leave transaction state active and cascade into later methods, so the affected vehicle classes are excluded as a unit. |
 | `transactions` | JSP and servlet vehicles for `UserTransaction` rollback, `setRollbackOnly`, and timeout (six classes) | Java 21, 2026-07-14 | TomEE misses required `IllegalStateException`/`RollbackException` outcomes, and timed-out transactions remain associated with request threads. The resulting `NotSupportedException` failures move between methods according to execution order, so method-level exclusions would be unstable. Begin, commit, and status classes remain covered. |
 | `tags` | All 50 classes using the Jakarta Tags 3 short URIs | Java 21, 2026-07-14 | Jasper treats `jakarta.tags.core`, `jakarta.tags.fmt`, `jakarta.tags.functions`, `jakarta.tags.sql`, and `jakarta.tags.xml` as resource paths because the TomEE common-library TLDs are not registered. |
-| `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | TomEE does not register the Jakarta Persistence 3.2 CDI beans (`EntityManagerFactory`/`EntityManager`/`PersistenceUnitUtil` with the qualifiers declared in `persistence.xml`). Deployment fails with an `UnsatisfiedResolutionException` for `@CtsEm2Qualifier` on both the OpenJPA-based webprofile ZIP and the EclipseLink-based Plume ZIP, so this is TomEE container integration, not a provider defect. [OPENJPA-2940](https://issues.apache.org/jira/browse/OPENJPA-2940) covers only the provider side. |
+| `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | TomEE does not register the Jakarta Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/`EntityManager`/`PersistenceUnitUtil`) declared in `persistence.xml`; deployment fails with an `UnsatisfiedResolutionException` for `@CtsEm2Qualifier`. |
 | `rest` | Two methods in `jaxrs21.platform.providers.jsonp.JAXRSClientIT` | Java 21, 2026-07-14 | The TomEE/CXF client has no message-body writer for scalar JSON-P `JsonString` and `JsonNumber` entities. This is part of the default-provider work tracked by [TOMEE-4436](https://issues.apache.org/jira/browse/TOMEE-4436). |
 | `rest` | Ten methods in `platform.beanvalidation.annotation.JAXRSClientIT`, plus both exception-mapper classes | Java 21, 2026-07-14 | `CxfRsHttpListener` does not install JAX-RS Bean Validation interceptors when CDI is active, so invalid arguments and return values are not validated. This remains recorded under the [TomEE REST TCK umbrella](https://issues.apache.org/jira/browse/TOMEE-4166). |
 | `rest` | `platform.environment.servlet.JAXRSClientIT#checkServletExtensionTest` | Java 21, 2026-07-14 | `@Context ServletConfig` resolves to `null` through `OpenEJBRestServlet`; the other three servlet-environment tests pass. This remains recorded under the [TomEE REST TCK umbrella](https://issues.apache.org/jira/browse/TOMEE-4166). |
@@ -47,19 +41,14 @@ them, but retaining one method would not constitute useful Tags coverage.
 The complete 450-class `persistence-javatest` catalog and the
 `persistence-servlet` class were run against the TomEE Plume snapshot
 (EclipseLink 5.0.1) on Java 21, 2026-07-17, with no exclusions applied.
-448 of 450 javatest classes pass (3,817 tests). The webprofile distribution's
-249 Jakarta Persistence exclusions are OpenJPA gaps, not TomEE gaps: none of
-them reproduce on EclipseLink. The default persistence exclusions
-(`exclusions/persistence-javatest.txt` and
-`exclusions/persistence-servlet.txt`) therefore contain only:
+448 of 450 javatest classes pass (3,817 tests). The default persistence
+exclusions (`exclusions/persistence-javatest.txt` and
+`exclusions/persistence-servlet.txt`) contain only:
 
 | Partition | Excluded class | Reproduced | Product gap |
 |---|---|---|---|
 | `persistence-javatest` | Both `entityManagerFactoryCloseExceptions` servlet vehicles | Java 21, 2026-07-17 | The `exceptionsTest` methods themselves pass. The test legitimately closes the container-managed `EntityManagerFactory`; TomEE's subsequent undeploy calls `close()` again and `Assembler.destroyApplication` fails with "Attempting to execute an operation on a closed EntityManagerFactory", so the class reports an undeploy error. TomEE must tolerate an already-closed EMF during undeploy. |
-| `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | Same missing Jakarta Persistence 3.2 CDI qualifier-bean integration as on the webprofile distribution; the provider swap does not change the result. |
+| `persistence-servlet` | `ee.jakarta.tck.persistence.ee.cdi.ServletEMLookupTest` | Java 21, 2026-07-17 | TomEE does not register the Jakarta Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/`EntityManager`/`PersistenceUnitUtil`) declared in `persistence.xml`; deployment fails with an `UnsatisfiedResolutionException` for `@CtsEm2Qualifier`. |
 
 All remaining partitions were re-run on Plume on Java 21, 2026-07-17: every
-partition passes with the same expectations and exclusions that were
-established on the webprofile distribution, including the Faces vehicles,
-which run on Mojarra there instead of MyFaces. The recorded non-persistence
-gaps are container behavior shared by both distributions.
+partition passes with the same expectations and exclusions recorded above.
