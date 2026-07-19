@@ -40,7 +40,7 @@ Detail lives next to each runner:
 | security | 132 tests, 5 F + 2 E; signature test passes | 7 tests | TomEE Jakarta Security |
 | authentication | 106 tests, 1 F; signature test passes | 1 method (spi `CheckMsgInfoKey`) | TCK challenge #219 (hard-codes a JACC requirement) |
 | websocket | 737 tests, 3 E | 3 methods | Client container advertises permessage-deflate in the negotiated extension lists |
-| faces (modern modules) | 327 tests, 45 F + 6 E (failsafe reruns inflate the counts; 10 distinct failing classes) | 10 classes | 1 TomEE faces-config gap + Mojarra/TomEE CDI-injection, whole-bean/method validation, and one Chrome ajax quirk |
+| faces (modern modules + old-tck-selenium) | 298 tests, 0 F + 0 E, 17 skipped (with exclusions applied) | 10 classes | 1 TomEE faces-config gap + Mojarra/TomEE CDI-injection, whole-bean/method validation, and one Chrome ajax quirk |
 | faces-old (JavaTest) | 5,391 tests, all pass (recorded run: 5 F from a foreign server answering :8080 mid-run; pass on re-run) | — | — (standalone mode, no exclusions) |
 | faces-signaturetest | passes against Plume's Mojarra (org.glassfish:jakarta.faces 4.1.9) | — | — |
 
@@ -248,14 +248,10 @@ Need triage/fixes in the upstream projects TomEE ships.
 Not product bugs — gaps in this repository's coverage.
 
 - **Modern faces reactor not in CI**: the `faces` runner (modern Arquillian
-  modules plus the signature test) runs locally via
-  `run-standalone-suite.sh`; it joins the Jenkins branch list once its
-  baseline and exclusion wiring have a verified green run. The `faces-old`
-  JavaTest half runs in CI.
-- **Faces `old-tck-selenium` module uncovered**: the extracted TCK reactor
-  ships an `old-tck-selenium` module (22 tests) that neither the `faces`
-  runner (which drives faces22/23/40/41 + faces-signaturetest) nor the
-  `faces-old` JavaTest runner executes; wire it into one of them.
+  modules, the Chrome/Selenium `old-tck-selenium` modules, and the signature
+  test) runs locally via `run-standalone-suite.sh`; it joins the Jenkins
+  branch list once its baseline and exclusion wiring have a verified green
+  run. The `faces-old` JavaTest half runs in CI.
 
 ## What CI runs
 

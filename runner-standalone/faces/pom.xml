@@ -18,15 +18,17 @@
 
   <artifactId>runner-standalone-faces</artifactId>
   <packaging>pom</packaging>
-  <name>Jakarta Faces 4.1 TCK runner (modern modules + signature test)</name>
+  <name>Jakarta Faces 4.1 TCK runner (modern modules + old-tck-selenium + signature test)</name>
   <description>
     Runs the modern Arquillian modules of the Jakarta Faces 4.1 TCK
-    (faces22/23/40/41 and util, roughly 319 tests) plus the
-    faces-signaturetest module against TomEE Plume, which ships Mojarra.
-    The signature test checks the Mojarra artifact TomEE bundles
-    (faces.impl.version below must track the jakarta.faces jar in the
-    distribution's lib directory). The legacy JavaTest old-tck half lives in
-    runner-standalone-faces-old. Run with: run-standalone-suite.sh faces
+    (faces22/23/40/41 and util) plus the Chrome/Selenium old-tck-selenium
+    modules (ajax, commandLink, protectedViews) and the faces-signaturetest
+    module against TomEE Plume, which ships Mojarra. With exclusions applied
+    the suite runs 298 tests. The signature test checks the Mojarra artifact
+    TomEE bundles (faces.impl.version below must track the jakarta.faces jar
+    in the distribution's lib directory). The legacy JavaTest old-tck half
+    lives in runner-standalone-faces-old. Run with:
+    run-standalone-suite.sh faces
   </description>
 
   <properties>
@@ -147,6 +149,7 @@
                 <argument>faces23</argument>
                 <argument>faces40</argument>
                 <argument>faces41</argument>
+                <argument>old-tck-selenium</argument>
                 <argument>faces-signaturetest</argument>
               </arguments>
             </configuration>
@@ -173,7 +176,12 @@
             <phase>integration-test</phase>
             <goals><goal>run</goal></goals>
             <configuration>
-              <goals><goal>verify</goal></goals>
+              <!-- clean before verify so the aggregating verify step never
+                   counts stale surefire/failsafe reports left in a module's
+                   target/ by an earlier run (e.g. a full-baseline pass whose
+                   now-excluded classes no longer re-run and overwrite their
+                   reports). -->
+              <goals><goal>clean</goal><goal>verify</goal></goals>
               <profiles><profile>tomee-remote</profile></profiles>
               <!-- Each include is a multi-module reactor; collect the whole
                    baseline instead of stopping at the first failing module.
@@ -189,6 +197,7 @@
                 <pomInclude>faces23/pom.xml</pomInclude>
                 <pomInclude>faces40/pom.xml</pomInclude>
                 <pomInclude>faces41/pom.xml</pomInclude>
+                <pomInclude>old-tck-selenium/pom.xml</pomInclude>
                 <pomInclude>faces-signaturetest/pom.xml</pomInclude>
               </pomIncludes>
             </configuration>

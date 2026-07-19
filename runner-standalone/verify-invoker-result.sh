@@ -43,18 +43,34 @@ fail() {
 }
 
 # --- Test failures and errors across every raw report under the reactor. ---
-# TEST-*.xml carries failures="" errors="" on the <testsuite> element;
-# failsafe-summary.xml carries <failures>/<errors> (and records deployment
-# errors the build log does not surface as a "Tests run" line).
+# Count only *final* outcomes. A <testcase> that failed but passed on a
+# failsafe/surefire rerun records its failed attempt as a <flakyError> or
+# <flakyFailure> (and the run reports <flakes> in failsafe-summary.xml); the
+# <testsuite> failures="" errors="" attributes still tally those recovered
+# attempts, so summing the attributes turns a green flaky test red. Count the
+# real <failure>/<error> elements that hang directly off a <testcase> instead,
+# which excludes the recovered flaky/rerun attempts.
 report_failures=0
 report_errors=0
 for report in $(find "$reactor_root" -name 'TEST-*.xml' -path '*-reports/*' 2>/dev/null); do
-  f=$(sed -n 's/.*<testsuite[^>]* failures="\([0-9]*\)".*/\1/p' "$report" | head -1)
-  e=$(sed -n 's/.*<testsuite[^>]* errors="\([0-9]*\)".*/\1/p' "$report" | head -1)
+  # grep -c prints the count and exits non-zero on no match; strip any newline
+  # and default to 0 so the arithmetic stays single-line. <error and <failure
+  # do not match the recovered <flakyError>/<rerunError>/<flakyFailure>/
+  # <rerunFailure> attempts (their tag name is not preceded by '<error'/
+  # '<failure').
+  f=$(grep -c '<failure' "$report" 2>/dev/null | head -1)
+  e=$(grep -c '<error' "$report" 2>/dev/null | head -1)
   report_failures=$((report_failures + ${f:-0}))
   report_errors=$((report_errors + ${e:-0}))
 done
+# failsafe-summary.xml records a deployment error the build log never surfaces
+# as a "Tests run" line and that writes no TEST-*.xml; count those summaries
+# only, so the per-testcase tally above is not double-counted.
 for summary in $(find "$reactor_root" -name 'failsafe-summary.xml' 2>/dev/null); do
+  reports_dir=$(dirname "$summary")
+  if ls "$reports_dir"/TEST-*.xml >/dev/null 2>&1; then
+    continue
+  fi
   f=$(sed -n 's/.*<failures>\([0-9]*\)<.*/\1/p' "$summary" | head -1)
   e=$(sed -n 's/.*<errors>\([0-9]*\)<.*/\1/p' "$summary" | head -1)
   report_failures=$((report_failures + ${f:-0}))

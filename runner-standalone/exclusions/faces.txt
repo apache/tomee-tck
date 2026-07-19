@@ -1,10 +1,10 @@
 # Jakarta Faces 4.1 TCK source reactor (4.1.2), modern Arquillian modules
-# (faces22/23/40/41 + faces-signaturetest) on TomEE Plume's Mojarra, Java 21,
-# 2026-07-18. Full baseline without this file: 327 tests, 45 failures + 6
-# errors, 5 skipped (the failsafe rerun mechanism counts each retried method
-# up to five times, so these totals cover 10 distinct failing test classes).
-# The excluded work splits into one TomEE product gap and four Mojarra/TomEE
-# integration behaviors:
+# (faces22/23/40/41), the Chrome/Selenium old-tck-selenium modules (ajax,
+# commandLink, protectedViews), and faces-signaturetest on TomEE Plume's
+# Mojarra, Java 21. With this file applied the suite runs 298 tests, 0
+# failures, 0 errors, 17 skipped. The 10 classes excluded below split into
+# one TomEE product gap and four Mojarra/TomEE integration behaviors;
+# old-tck-selenium runs unmodified and needs no exclusions:
 #   - faces-config xsi:schemaLocation on the nonstandard https XSI namespace:
 #     1 class (Spec1760IT) whose faces-config carries child elements.
 #   - Faces CDI implicit-object injection (@Inject @RequestCookieMap /
@@ -15,7 +15,8 @@
 #   - Mojarra ajax re-init under Chrome (flagged in the TCK source itself): 1
 #     class.
 # The signature test and the rest of the reactor pass. The legacy JavaTest
-# old-tck half lives in runner-standalone-faces-old and is not covered here.
+# old-tck half (a separate JavaTest harness) lives in
+# runner-standalone-faces-old and is not covered here.
 #
 # Format: maven-surefire/failsafe excludesFile patterns; the runner passes
 # this file to every TCK module through the invoker as
