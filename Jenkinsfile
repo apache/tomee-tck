@@ -119,16 +119,6 @@ from xml.etree import ElementTree
                 }
               }
             }
-            post {
-              always {
-                archiveArtifacts(
-                  artifacts: 'runner-smoke/target/surefire-reports/**/*,runner-smoke/target/failsafe-reports/**/*,runner-smoke/target/**/logs/**/*,runner-smoke/target/*.log',
-                  allowEmptyArchive: true
-                )
-                junit(testResults: 'runner-smoke/target/**/TEST-*.xml', allowEmptyResults: true)
-                deleteDir()
-              }
-            }
           }
         }
       }
