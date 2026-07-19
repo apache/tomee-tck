@@ -36,6 +36,18 @@ if [ "$PROTOCOL" != "servlet" ] && [ "$PROTOCOL" != "javatest" ]; then
   exit 2
 fi
 
+# Select free ports once at branch start; all partitions in the loop run
+# sequentially on one node so a single selection covers them. Each preferred
+# port avoids the ones already chosen. The validate-phase guards inside each
+# mvnw run then assert these chosen ports immediately before servers start.
+SELECT_PORT="$ROOT_DIR/environment/ports/select-free-port.sh"
+TOMEE_HTTP_PORT=$(sh "$SELECT_PORT" 8080)
+TOMEE_HTTPS_PORT=$(sh "$SELECT_PORT" 8443 "$TOMEE_HTTP_PORT")
+TOMEE_SHUTDOWN_PORT=$(sh "$SELECT_PORT" 8005 "$TOMEE_HTTP_PORT" "$TOMEE_HTTPS_PORT")
+TCK_DERBY_PORT=$(sh "$SELECT_PORT" 1527 "$TOMEE_HTTP_PORT" "$TOMEE_HTTPS_PORT" "$TOMEE_SHUTDOWN_PORT")
+TCK_HARNESS_LOG_PORT=$(sh "$SELECT_PORT" 2000 "$TOMEE_HTTP_PORT" "$TOMEE_HTTPS_PORT" "$TOMEE_SHUTDOWN_PORT" "$TCK_DERBY_PORT")
+echo "Using ports: http=$TOMEE_HTTP_PORT https=$TOMEE_HTTPS_PORT shutdown=$TOMEE_SHUTDOWN_PORT derby=$TCK_DERBY_PORT harness-log=$TCK_HARNESS_LOG_PORT"
+
 # Build the shared modules once so the per-partition runs can skip -am and
 # not rebuild the unchanged reactor every iteration.
 "$ROOT_DIR/mvnw" -B -ntp -pl tomee-porting -am install </dev/null
@@ -65,6 +77,11 @@ while IFS="$TAB" read -r partition artifact protocol groups source_classes expec
     "-Dtck.groups=$groups" \
     "-Dtck.test=$test_pattern" \
     "-Dtck.exclusions.file=$exclusions_file" \
+    "-Dtomee.http.port=$TOMEE_HTTP_PORT" \
+    "-Dtomee.https.port=$TOMEE_HTTPS_PORT" \
+    "-Dtomee.shutdown.port=$TOMEE_SHUTDOWN_PORT" \
+    "-Dtck.derby.port=$TCK_DERBY_PORT" \
+    "-Dtck.harness.log.port=$TCK_HARNESS_LOG_PORT" \
     verify </dev/null
 
   actual_classes=0

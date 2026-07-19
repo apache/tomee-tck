@@ -135,6 +135,26 @@
               </resources>
             </configuration>
           </execution>
+          <execution>
+            <!-- Stage the JavaTest harness config through a filtered copy so
+                 ts.jte's webServerPort/harness.log.port track the chosen ports.
+                 derby.dml.sql carries no ${ tokens and copies alongside it.
+                 Unresolvable ts.jte placeholders (${signature.bin.dir},
+                 ${signature.classpath}) pass through untouched for runtime
+                 resolution from the harness props bag. -->
+            <id>stage-tck-harness-configuration</id>
+            <phase>generate-test-resources</phase>
+            <goals><goal>copy-resources</goal></goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/tck</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../../environment/tck</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
@@ -216,6 +236,25 @@
                 <argument>${tck.derby.port}</argument>
               </arguments>
               <classpathScope>test</classpathScope>
+            </configuration>
+          </execution>
+          <execution>
+            <!-- New for platform branches: assert the chosen container ports
+                 are free immediately before TomEE starts, closing the adapter's
+                 silent attach-to-foreign-server path. The harness log port is
+                 deliberately not passed: servlet-protocol partitions never bind
+                 it and a leftover listener on 2000 must not fail them. -->
+            <id>require-free-tomee-ports</id>
+            <phase>validate</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${project.basedir}/../../environment/tomee/require-tomee-ports-free.sh</argument>
+                <argument>${tomee.http.port}</argument>
+                <argument>${tomee.https.port}</argument>
+                <argument>${tomee.shutdown.port}</argument>
+              </arguments>
             </configuration>
           </execution>
           <execution>
@@ -397,7 +436,7 @@
             <signature.bin.dir>${project.build.directory}/signature/com/sun/ts/tests/signaturetest/signature-repository</signature.bin.dir>
             <signature.classpath>${signature.classpath}</signature.classpath>
             <tck.ts.home>${tck.ts.home}</tck.ts.home>
-            <securedWebServicePort>8443</securedWebServicePort>
+            <securedWebServicePort>${tomee.https.port}</securedWebServicePort>
             <ws_wait>5</ws_wait>
             <servlet_adaptor>org.apache.openejb.server.rest.OpenEJBRestServlet</servlet_adaptor>
             <org.apache.cxf.transport.http.forceURLConnection>true</org.apache.cxf.transport.http.forceURLConnection>
@@ -430,7 +469,16 @@
     <tck.test>**/*IT.java</tck.test>
     <tck.groups>web &amp; !tck-javatest</tck.groups>
     <tck.host>localhost</tck.host>
-    <tck.http.port>8080</tck.http.port>
+    <!-- Container bind ports. run-platform-suite.sh selects free values and
+         passes them as -D overrides; the arquillian-tomee-remote adapter
+         rewrites the staged server.xml literals to these. -->
+    <tomee.http.port>8080</tomee.http.port>
+    <tomee.https.port>8443</tomee.https.port>
+    <tomee.shutdown.port>8005</tomee.shutdown.port>
+    <tck.harness.log.port>2000</tck.harness.log.port>
+    <!-- The failsafe client target (webServerPort) must always equal the
+         container bind port, so chain it off tomee.http.port. -->
+    <tck.http.port>${tomee.http.port}</tck.http.port>
     <tck.trace>false</tck.trace>
     <tck.ts.home>${java.io.tmpdir}</tck.ts.home>
     <!-- Matches the datasources in environment/tomee/conf/tomee.xml. -->

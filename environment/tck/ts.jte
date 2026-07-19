@@ -14,7 +14,7 @@ bin.dir=${signature.bin.dir}
 sigTestClasspath=${signature.classpath}
 
 webServerHost=localhost
-webServerPort=8080
+webServerPort=${tomee.http.port}
 logical.hostname.servlet=localhost
 
 # Vendor VariableMapper implementation the expression-language TCK's
@@ -45,7 +45,7 @@ longvarbinarySize=50
 db.supports.sequence=false
 db.dml.file=environment/tck/derby.dml.sql
 
-harness.log.port=2000
+harness.log.port=${tck.harness.log.port}
 harness.log.traceflag=false
 harness.socket.retry.count=10
 harness.temp.directory=${java.io.tmpdir}
