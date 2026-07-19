@@ -60,6 +60,7 @@ pipeline {
           sh -n runner-webprofile/run-platform-suite.sh
           sh -n runner-standalone/run-standalone-suite.sh
           sh -n runner-standalone/verify-invoker-result.sh
+          sh -n runner-standalone/javatest-report-to-junit.sh
           sh -n runner-smoke/run-smoke-suite.sh
         '''
         sh '''python3 -c '

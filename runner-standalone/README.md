@@ -38,6 +38,15 @@ so the runner selects TomEE's HTTP port around 8080 and leaves it free.
 Maven build compiles these modules but runs nothing; execution requires
 `-Dtck.standalone=true` (the script passes it).
 
+The JavaTest-harness suites (`transactions`, `security-old`, `faces-old`)
+report through the JT Harness work/report directories instead of surefire.
+After each run (red or green) `run-standalone-suite.sh` converts the harness
+text report into JUnit XML under the module's `target/surefire-reports/` via
+[javatest-report-to-junit.sh](javatest-report-to-junit.sh), embedding each
+failed test's `.jtr` harness log in its `<failure>` element, so CI's junit
+ingestion shows per-test results and failure logs alongside the archived
+HTML report.
+
 Every wired runner applies the reviewed known-gap exclusion list from
 [exclusions/](exclusions/README.md) by default, so a default run is expected
 green and a failure is a regression. Pass

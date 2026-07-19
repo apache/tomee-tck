@@ -123,8 +123,25 @@ if [ "$selected" = yes ]; then
   echo "run-standalone-suite: selected ports http=${HTTP:-} https=${HTTPS:-} shutdown=${SHUTDOWN:-} derby=${DERBY:-} harness=${HARNESS:-}" >&2
 fi
 
-exec "$ROOT_DIR/mvnw" -B -ntp \
+# No exec: the JavaTest suites need post-processing after Maven returns,
+# red or green - a failed run is exactly when the JUnit conversion matters.
+set +e
+"$ROOT_DIR/mvnw" -B -ntp \
   -pl "$MODULES" -am \
   -Dtck.standalone=true \
   "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
   "$GOAL" "$@"
+MVN_STATUS=$?
+set -e
+
+# Convert the JT Harness report of the legacy JavaTest suites into JUnit XML
+# under target/surefire-reports/ so the Jenkins junit step surfaces per-test
+# results (with the .jtr harness log embedded for failures). Conversion
+# problems never mask the Maven result.
+case "$ID" in
+  transactions|security-old|faces-old)
+    sh "$SCRIPT_DIR/javatest-report-to-junit.sh" "$SCRIPT_DIR/$ID" ||
+      echo "run-standalone-suite: WARN: JavaTest report conversion failed" >&2 ;;
+esac
+
+exit "$MVN_STATUS"
