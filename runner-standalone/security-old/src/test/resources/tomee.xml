@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test-only TomEE resources for the Jakarta Security 4.0 legacy JavaTest
+     old-tck. The DatabaseIdentityStore tree looks up jdbc/securityAPIDB; the
+     runner pom substitutes @derby.port@ while staging the overlay and the
+     harness' init.derby task seeds the caller/caller_groups schema into the
+     same derbyDB database. -->
+<openejb>
+  <Resource id="jdbc/securityAPIDB" type="DataSource">
+    JdbcDriver org.apache.derby.jdbc.ClientDriver
+    JdbcUrl jdbc:derby://localhost:@derby.port@/derbyDB;create=true
+    UserName cts1
+    Password cts1
+    JtaManaged false
+  </Resource>
+</openejb>
