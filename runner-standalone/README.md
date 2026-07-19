@@ -29,6 +29,11 @@ deployments. `tck.derby.port` propagates into the staged `tomee.xml`
 datasources, so a full side-by-side run overrides it together with the
 TomEE ports.
 
+The `rest` runner reserves port 8080 for the TCK instead of giving it to
+TomEE. Its `SeBootstrapIT` tests boot their own embedded Jetty on the
+SeBootstrap default port the spec mandates and cannot be pointed elsewhere,
+so the runner selects TomEE's HTTP port around 8080 and leaves it free.
+
 `TOMEE_CLASSIFIER` selects the distribution, default `plume`. The default
 Maven build compiles these modules but runs nothing; execution requires
 `-Dtck.standalone=true` (the script passes it).

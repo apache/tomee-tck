@@ -80,33 +80,43 @@ case "$ID" in
   # annotations, di, el, jsonp, jsonb, debugging: no ports.
 esac
 
+# Ports no selection may hand out, whatever else is free. The rest runner's
+# SeBootstrap tests boot their own embedded Jetty on the SeBootstrap default
+# port the spec mandates (8080) and cannot be pointed elsewhere, so TomEE must
+# not take it: inside the branch's private network namespace 8080 is otherwise
+# free and the selector's preferred pick would collide with the test server.
+RESERVED=
+case "$ID" in
+  rest) RESERVED=8080 ;;
+esac
+
 selected=no
 if [ "$NEED_TOMEE" = yes ] || [ "$NEED_HTTP_ONLY" = yes ]; then
   HTTP=$(arg_value -Dtomee.http.port= "$@")
   if [ -z "$HTTP" ]; then
-    HTTP=$(sh "$SELECT_PORT" 8080); set -- "$@" "-Dtomee.http.port=$HTTP"; selected=yes
+    HTTP=$(sh "$SELECT_PORT" 8080 $RESERVED); set -- "$@" "-Dtomee.http.port=$HTTP"; selected=yes
   fi
 fi
 if [ "$NEED_TOMEE" = yes ]; then
   HTTPS=$(arg_value -Dtomee.https.port= "$@")
   if [ -z "$HTTPS" ]; then
-    HTTPS=$(sh "$SELECT_PORT" 8443 ${HTTP:-}); set -- "$@" "-Dtomee.https.port=$HTTPS"; selected=yes
+    HTTPS=$(sh "$SELECT_PORT" 8443 $RESERVED ${HTTP:-}); set -- "$@" "-Dtomee.https.port=$HTTPS"; selected=yes
   fi
   SHUTDOWN=$(arg_value -Dtomee.shutdown.port= "$@")
   if [ -z "$SHUTDOWN" ]; then
-    SHUTDOWN=$(sh "$SELECT_PORT" 8005 ${HTTP:-} ${HTTPS:-}); set -- "$@" "-Dtomee.shutdown.port=$SHUTDOWN"; selected=yes
+    SHUTDOWN=$(sh "$SELECT_PORT" 8005 $RESERVED ${HTTP:-} ${HTTPS:-}); set -- "$@" "-Dtomee.shutdown.port=$SHUTDOWN"; selected=yes
   fi
 fi
 if [ "$NEED_DERBY" = yes ]; then
   DERBY=$(arg_value -Dtck.derby.port= "$@")
   if [ -z "$DERBY" ]; then
-    DERBY=$(sh "$SELECT_PORT" 1527 ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-}); set -- "$@" "-Dtck.derby.port=$DERBY"; selected=yes
+    DERBY=$(sh "$SELECT_PORT" 1527 $RESERVED ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-}); set -- "$@" "-Dtck.derby.port=$DERBY"; selected=yes
   fi
 fi
 if [ "$NEED_HARNESS" = yes ]; then
   HARNESS=$(arg_value -Dtck.harness.log.port= "$@")
   if [ -z "$HARNESS" ]; then
-    HARNESS=$(sh "$SELECT_PORT" "$HARNESS_PREF" ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-} ${DERBY:-}); set -- "$@" "-Dtck.harness.log.port=$HARNESS"; selected=yes
+    HARNESS=$(sh "$SELECT_PORT" "$HARNESS_PREF" $RESERVED ${HTTP:-} ${HTTPS:-} ${SHUTDOWN:-} ${DERBY:-}); set -- "$@" "-Dtck.harness.log.port=$HARNESS"; selected=yes
   fi
 fi
 if [ "$selected" = yes ]; then
