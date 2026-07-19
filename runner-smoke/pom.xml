@@ -18,6 +18,10 @@
     <properties>
         <!-- A small Web Profile test which creates and deploys one JAX-RS WAR. -->
         <smoke.test>com.sun.ts.tests.jaxrs.platform.servletconfig.JAXRSClientIT</smoke.test>
+        <!-- Container bind ports; run-smoke-suite.sh overrides these with
+             free ports selected at branch start. -->
+        <tomee.http.port>8080</tomee.http.port>
+        <tomee.shutdown.port>8005</tomee.shutdown.port>
     </properties>
 
     <dependencies>
@@ -66,6 +70,36 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- Assert the effective container ports are free
+                             inside the build, immediately before the remote
+                             adapter starts TomEE. This asserts ${tomee.*.port}
+                             as Maven resolves them, so a caller -D override
+                             (last-wins on the mvnw command line) is guarded on
+                             its actual value, and the check runs after the
+                             reactor build rather than in the wrapper script, so
+                             a daemon binding the port during the build cannot
+                             slip past. Without it the adapter would silently
+                             attach to a foreign server already on the port. -->
+                        <id>require-free-tomee-ports</id>
+                        <phase>validate</phase>
+                        <goals><goal>exec</goal></goals>
+                        <configuration>
+                            <executable>sh</executable>
+                            <arguments>
+                                <argument>${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh</argument>
+                                <argument>${tomee.http.port}</argument>
+                                <argument></argument>
+                                <argument>${tomee.shutdown.port}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
@@ -92,7 +126,7 @@
                     </includes>
                     <systemPropertyVariables>
                         <webServerHost>localhost</webServerHost>
-                        <webServerPort>8080</webServerPort>
+                        <webServerPort>${tomee.http.port}</webServerPort>
                         <junit.log.traceflag>true</junit.log.traceflag>
                     </systemPropertyVariables>
                 </configuration>

@@ -39,10 +39,12 @@ pipeline {
           sh -n environment/database/require-derby-port-free.sh
           sh -n environment/database/wait-for-derby.sh
           sh -n environment/tomee/require-tomee-ports-free.sh
+          sh -n environment/ports/select-free-port.sh
           sh -n environment/certificates/generate-test-certificates.sh
           sh -n runner-webprofile/run-platform-suite.sh
           sh -n runner-standalone/run-standalone-suite.sh
           sh -n runner-standalone/verify-invoker-result.sh
+          sh -n runner-smoke/run-smoke-suite.sh
         '''
         sh '''python3 -c '
 from pathlib import Path
@@ -64,8 +66,10 @@ from xml.etree import ElementTree
       }
     }
 
-    // Each branch requests a single-executor ephemeral agent. TomEE and Derby
-    // use fixed localhost ports, so two partitions must never share a host.
+    // Each branch requests a single-executor ephemeral agent. The runner
+    // scripts select free localhost ports at branch start and the
+    // require-*-free guards assert the chosen ports right before the servers
+    // bind them.
     stage('Smoke') {
       matrix {
         axes {
@@ -82,7 +86,7 @@ from xml.etree import ElementTree
             steps {
               deleteDir()
               unstash 'source'
-              sh './mvnw -B -ntp -pl runner-smoke -am verify'
+              sh 'runner-smoke/run-smoke-suite.sh'
             }
             post {
               always {

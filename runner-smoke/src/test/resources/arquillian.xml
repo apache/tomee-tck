@@ -14,8 +14,8 @@
             <property name="classifier">${tomee.classifier}</property>
             <property name="type">zip</property>
             <property name="host">localhost</property>
-            <property name="httpPort">8080</property>
-            <property name="stopPort">8005</property>
+            <property name="httpPort">${tomee.http.port}</property>
+            <property name="stopPort">${tomee.shutdown.port}</property>
             <property name="ajpPort">8009</property>
             <property name="cleanOnStartUp">true</property>
             <property name="removeUnusedWebapps">true</property>
