@@ -89,7 +89,12 @@ from xml.etree import ElementTree
     // on the host. Inside the container the image's own JDK is used
     // (JAVA_HOME=/opt/java/openjdk), never a host tool(...) install, and
     // checkout/archive/junit/deleteDir stay on the node, around the
-    // container.
+    // container. HOME points at the workspace: .inside() runs the container
+    // as the host uid, which has no passwd entry in the image, so HOME
+    // otherwise resolves to / and the Maven wrapper's ${HOME}/.m2 default
+    // lands on an unwritable //.m2. With the override, the wrapper dist and
+    // local repo live under the workspace, populated from scratch each build
+    // and removed by deleteDir().
     stage('Smoke') {
       matrix {
         axes {
@@ -107,7 +112,8 @@ from xml.etree import ElementTree
               unstash 'source'
               script {
                 docker.image(smokeImages[SMOKE_JDK]).inside {
-                  withEnv(['JAVA_HOME=/opt/java/openjdk',
+                  withEnv(["HOME=${env.WORKSPACE}",
+                           'JAVA_HOME=/opt/java/openjdk',
                            'PATH+JDK=/opt/java/openjdk/bin']) {
                     sh 'runner-smoke/run-smoke-suite.sh'
                   }
@@ -142,7 +148,8 @@ from xml.etree import ElementTree
                   try {
                     timeout(time: 360, unit: 'MINUTES') {
                       docker.image(jdk21Image).inside {
-                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                        withEnv(["HOME=${env.WORKSPACE}",
+                                 'JAVA_HOME=/opt/java/openjdk',
                                  'PATH+JDK=/opt/java/openjdk/bin',
                                  "TOMEE_CLASSIFIER=${classifier}"]) {
                           sh "runner-webprofile/run-platform-suite.sh ${protocol} ${partition}"
@@ -198,7 +205,8 @@ from xml.etree import ElementTree
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
                       docker.image(jdk21Image).inside {
-                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                        withEnv(["HOME=${env.WORKSPACE}",
+                                 'JAVA_HOME=/opt/java/openjdk',
                                  'PATH+JDK=/opt/java/openjdk/bin']) {
                           sh "runner-standalone/run-standalone-suite.sh ${id}"
                         }
@@ -228,12 +236,12 @@ from xml.etree import ElementTree
           // 147 on Ubuntu 24.04 (so Selenium Manager resolves the driver
           // offline). checkout/archive/junit/deleteDir stay on the node, around
           // the container. Inside the container we use the image's JDK (its own
-          // JAVA_HOME=/opt/java/openjdk), never the host tool(...) install. The
-          // runner leaves Maven's local repo at the container default: docker
-          // .inside() runs a fresh container per build, so ~/.m2 is populated
-          // from scratch and discarded with the container - the faces runner's
-          // nested install-tck-util/invoker steps must all share one repo, so an
-          // override would only split them apart. --shm-size=2g gives headless
+          // JAVA_HOME=/opt/java/openjdk), never the host tool(...) install.
+          // HOME points at the workspace (see the Smoke comment), so Maven's
+          // local repo lives at ${WORKSPACE}/.m2: populated from scratch each
+          // build, removed by deleteDir(), and shared by the faces runner's
+          // nested install-tck-util/invoker steps, which must all resolve
+          // against one repo. --shm-size=2g gives headless
           // Chrome enough shared memory: the TCK's ChromeDevtoolsDriver sets
           // --headless=new --no-sandbox --disable-gpu but not
           // --disable-dev-shm-usage, so the default 64 MB /dev/shm would crash
@@ -250,7 +258,8 @@ from xml.etree import ElementTree
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
                       docker.image(facesImage).inside('--shm-size=2g') {
-                        withEnv(['JAVA_HOME=/opt/java/openjdk',
+                        withEnv(["HOME=${env.WORKSPACE}",
+                                 'JAVA_HOME=/opt/java/openjdk',
                                  'PATH+JDK=/opt/java/openjdk/bin']) {
                           sh 'runner-standalone/run-standalone-suite.sh faces'
                         }

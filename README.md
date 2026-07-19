@@ -96,7 +96,10 @@ workers are available, so the pipeline uses available capacity without
 imposing a fixed partition count.
 Configure an ASF Jenkins multibranch Pipeline job to use `Jenkinsfile` from
 SCM; Jenkins supplies the checkout, the container images supply the JDKs, and
-the checked-in Maven wrapper supplies Maven 3.9.9 inside each container.
+the checked-in Maven wrapper supplies Maven 3.9.9 inside each container. Each
+branch sets `HOME` to its Jenkins workspace inside the container, so the Maven
+wrapper distribution and local repository live under the workspace and are
+populated from scratch every build.
 
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.
