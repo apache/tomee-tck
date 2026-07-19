@@ -404,6 +404,12 @@
             <openejb.jaxrs.fail-on-constrainedto>false</openejb.jaxrs.fail-on-constrainedto>
             <ts_home>${project.build.directory}</ts_home>
             <junit.log.traceflag>${tck.trace}</junit.log.traceflag>
+            <!-- Vendor VariableMapper implementation the expression-language
+                 partition's TCK VarMapperELContext instantiates for the
+                 client-side variablemapper and mapper tests; Tomcat's Jasper
+                 EL provides it. The JSP and servlet vehicle tests read the
+                 same property from the harness bag set in environment/tck/ts.jte. -->
+            <variable.mapper>org.apache.el.lang.VariableMapperImpl</variable.mapper>
           </systemPropertyVariables>
         </configuration>
         <executions>

@@ -17,6 +17,12 @@ webServerHost=localhost
 webServerPort=8080
 logical.hostname.servlet=localhost
 
+# Vendor VariableMapper implementation the expression-language TCK's
+# VarMapperELContext instantiates from the harness properties bag (testProps);
+# Tomcat's Jasper EL provides it. Reaches the JSP and servlet vehicle tests
+# that build the context inside the container.
+variable.mapper=org.apache.el.lang.VariableMapperImpl
+
 user=j2ee
 password=j2ee
 authuser=javajoe
