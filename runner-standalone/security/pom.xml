@@ -127,6 +127,38 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
+          <!-- Assert the fixed port set free immediately before the reactor
+               runs. The downloaded Security TCK pins these ports in places no
+               -D reaches: 8080 is baked into app-openid's
+               openid-configuration.json endpoints and the app-openid2/3
+               client-callback DB seeds (moving tomee.httpPort alone would
+               break the OIDC flows), the provider Tomcat's server.xml pins
+               8443/8005 and ProtectedServlet's providerURI is a compile-time
+               8443 constant, and the in-process UnboundID LDAP listener is
+               hardcoded to 33389. Because the adapter silently attaches to any
+               server already answering, the branch asserts this fixed set free
+               and refuses fast rather than relocating. (tomee.stopPort,
+               tomee.ajpPort and httpsPort are -1 in tomee-remote-profile.xml
+               and self-randomize via the adapter; they need no assertion.)
+               Declared first so it runs before install-tck-parent within
+               pre-integration-test, and in any case before the invoker at
+               integration-test. -->
+          <execution>
+            <id>require-free-tomee-ports</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh</argument>
+                <argument>8080</argument>
+                <argument>8443</argument>
+                <argument>8005</argument>
+                <argument>33389</argument>
+              </arguments>
+            </configuration>
+          </execution>
           <execution>
             <id>install-tck-parent</id>
             <phase>pre-integration-test</phase>

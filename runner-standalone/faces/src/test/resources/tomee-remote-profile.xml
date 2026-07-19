@@ -68,7 +68,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <tomee.stopPort>-1</tomee.stopPort>
-                        <tomee.httpPort>8080</tomee.httpPort>
+                        <tomee.httpPort>${tomee.http.port}</tomee.httpPort>
                         <tomee.ajpPort>-1</tomee.ajpPort>
                         <tomee.dir>target/tomee/server</tomee.dir>
                         <tomee.appWorkingDir>target/tomee/arquillian</tomee.appWorkingDir>

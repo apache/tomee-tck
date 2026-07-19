@@ -125,6 +125,27 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
+          <!-- Assert the sole bound host port free immediately before the
+               reactor runs: each invoker sub-build starts its own
+               arquillian-tomee-remote TomEE on this port, and the adapter
+               silently attaches to any server already answering there, so a
+               foreign listener would make the suite look green without ever
+               exercising the TomEE under test. Declared first so it runs
+               before install-tck-parent within pre-integration-test, and in
+               any case before the invoker at integration-test. -->
+          <execution>
+            <id>require-free-tomee-ports</id>
+            <phase>pre-integration-test</phase>
+            <goals><goal>exec</goal></goals>
+            <configuration>
+              <skip>${tck.standalone.skip}</skip>
+              <executable>sh</executable>
+              <arguments>
+                <argument>${maven.multiModuleProjectDirectory}/environment/tomee/require-tomee-ports-free.sh</argument>
+                <argument>${tomee.http.port}</argument>
+              </arguments>
+            </configuration>
+          </execution>
           <execution>
             <id>install-tck-parent</id>
             <phase>pre-integration-test</phase>
