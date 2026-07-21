@@ -27,7 +27,7 @@ Detail lives next to each runner:
 | servlet | 1,706 tests, 12 E | 2 classes (12 methods) | TomEE aborts context startup on a missing referenced servlet/filter class |
 | pages | 682/682 pass | — | — (needs the runner's spec-default encoding overlay) |
 | rest | 2,803 tests, 2 F + 1 E | 3 tests | Feature/DynamicFeature `META-INF/services` discovery (TOMEE-4321/CXF-9005) + 405-vs-404 matching |
-| validation | 1,049 tests, 0 F (incl. signature test) | — | — (server pins the JAXB RI; see product gaps) |
+| validation | 1,049 tests, 0 F (incl. signature test) | — | — |
 | cdi (core) | 1,388 run, 81 F (incl. signature test) | 54 methods + 27 deploy-failing classes | OpenWebBeans 4.1 build-compatible-extensions gap |
 | cdi-ee | 1,829 run, 106 F | 79 methods + 27 deploy-failing classes | OpenWebBeans 4.1 build-compatible-extensions gap + EE integration |
 | el | 361/361 pass (incl. signature test) | — | — |
@@ -178,17 +178,6 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
     and pass: the runner's Arquillian extension tolerates the deployment
     failure so each client probe still runs.
     [websocket.txt](runner-standalone/exclusions/websocket.txt).
-13. **Bean Validation XML config broken on stock Plume** — the Plume
-    distribution ships EclipseLink MOXy (`eclipselink-5.0.1.jar`) and the JAXB
-    RI (`jaxb-runtime-4.0.4.jar`) side by side. EclipseLink registers a
-    `jakarta.xml.bind.JAXBContextFactory` service and wins ServiceLoader
-    discovery, but MOXy rejects the namespace rewriting Apache BVal performs
-    while parsing `validation.xml`/constraint-mapping descriptors, so every
-    Bean Validation XML-configuration path fails on an out-of-the-box Plume
-    server. The validation runner works around it by pinning the JAXB RI as the
-    `jakarta.xml.bind.JAXBContextFactory` system property in the server JVM;
-    TomEE should pin the factory itself so applications relying on Bean
-    Validation XML config work on stock Plume.
 
 ## Upstream provider gaps
 

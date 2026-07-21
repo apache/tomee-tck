@@ -2,13 +2,6 @@
 # TomEE Plume, Java 21: 1,049 tests, 0 failures, and the mandatory API
 # signature test passes. No exclusions.
 #
-# The runner pins the JAXB RI as the jakarta.xml.bind.JAXBContextFactory in the
-# server JVM (validation/src/tomee-conf/system.properties). Plume ships both
-# EclipseLink MOXy and the JAXB RI; without the pin MOXy wins ServiceLoader
-# discovery and rejects the namespace rewriting Apache BVal performs while
-# parsing validation.xml and constraint-mapping descriptors, which broke every
-# XML-configuration test. With the RI pinned all descriptor parsing succeeds.
-#
 # Format: one fully-qualified class name (excludes the whole class) or
 # Class#method per line. Read by the ExclusionsAnnotationTransformer TestNG
 # listener through -Dtck.exclusions.file (see runner-standalone/README.md).
