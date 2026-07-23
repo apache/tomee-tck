@@ -30,6 +30,32 @@ ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 ID=${1:-}
 TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
 
+# The security runner starts its bundled OpenID provider through Tomcat's
+# startup.sh, which reads JAVA_HOME/JRE_HOME directly and ignores PATH. When
+# neither is set (Maven still runs, since java is on PATH), the provider never
+# comes up, the client's .well-known fetch is refused, and the OpenID tests
+# fail in a way that looks like a token-validation bug. Derive JAVA_HOME from
+# the java on PATH so the child JVMs launched by shell scripts inherit it.
+if [ -z "${JAVA_HOME:-}" ] && [ -z "${JRE_HOME:-}" ]; then
+  if JAVA_BIN=$(command -v java 2>/dev/null) && [ -n "$JAVA_BIN" ]; then
+    JAVA_BIN=$(cd -- "$(dirname -- "$JAVA_BIN")" && pwd -P)/$(basename -- "$JAVA_BIN")
+    while [ -h "$JAVA_BIN" ]; do
+      LINK=$(readlink "$JAVA_BIN")
+      case $LINK in
+        /*) JAVA_BIN=$LINK ;;
+        *)  JAVA_BIN=$(cd -- "$(dirname -- "$JAVA_BIN")" && cd -- "$(dirname -- "$LINK")" && pwd -P)/$(basename -- "$LINK") ;;
+      esac
+    done
+    JAVA_HOME=$(cd -- "$(dirname -- "$JAVA_BIN")/.." && pwd -P)
+    export JAVA_HOME
+    echo "run-standalone-suite: JAVA_HOME was unset; using $JAVA_HOME (from java on PATH)" >&2
+  else
+    echo "run-standalone-suite: ERROR: JAVA_HOME/JRE_HOME are unset and no java found on PATH." >&2
+    echo "run-standalone-suite: the security runner's bundled provider needs JAVA_HOME; set it and re-run." >&2
+    exit 2
+  fi
+fi
+
 usage() {
   cat >&2 <<'EOF'
 Usage: run-standalone-suite.sh <id> [extra mvn args]
