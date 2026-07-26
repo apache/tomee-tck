@@ -18,7 +18,10 @@
 # security source reactor still assumes its fixed ports. Selection matters
 # because the Arquillian adapter silently attaches to any server already on
 # the port, so a foreign server on 8080 would make a runner look green.
-# TOMEE_CLASSIFIER selects the distribution (default: plume).
+# TOMEE_CLASSIFIER selects the distribution (default: plume);
+# TOMEE_VERSION selects a specific TomEE build, typically one
+# environment/tomee/build-tomee.sh produced from a tag or branch (default:
+# the pom's snapshot version).
 # The reviewed exclusion list in runner-standalone/exclusions/<id>.txt is
 # applied by default; append -Dtck.exclusions.file=... to override (see
 # exclusions/none.txt for full baseline runs).
@@ -29,6 +32,12 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 ID=${1:-}
 TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
+case "$TOMEE_CLASSIFIER" in
+  webprofile|microprofile|plus|plume) ;;
+  *)
+    echo "Unknown TOMEE_CLASSIFIER '$TOMEE_CLASSIFIER'; supported: webprofile, microprofile, plus, plume" >&2
+    exit 2 ;;
+esac
 
 # The security runner starts its bundled OpenID provider through Tomcat's
 # startup.sh, which reads JAVA_HOME/JRE_HOME directly and ignores PATH. When
@@ -155,6 +164,7 @@ set +e
 "$ROOT_DIR/mvnw" -B -ntp \
   -pl "$MODULES" -am \
   -Dtck.standalone=true \
+  ${TOMEE_VERSION:+"-Dtomee.version=$TOMEE_VERSION"} \
   "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
   "$GOAL" "$@"
 MVN_STATUS=$?

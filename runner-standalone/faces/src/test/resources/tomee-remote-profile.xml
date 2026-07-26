@@ -38,7 +38,7 @@
             <artifactId>apache-tomee</artifactId>
             <version>${tomee.version}</version>
             <type>zip</type>
-            <classifier>plume</classifier>
+            <classifier>${tomee.classifier}</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -75,7 +75,7 @@
                         <tomee.cleanOnStartUp>true</tomee.cleanOnStartUp>
                         <!-- Plume ships Mojarra, the implementation the TCK
                              was developed against. -->
-                        <tomee.classifier>plume</tomee.classifier>
+                        <tomee.classifier>${tomee.classifier}</tomee.classifier>
                         <tomee.properties>openejb.environment.default=true</tomee.properties>
                         <!-- The faces40/41 WARs bundle util-4.1.2.jar, whose
                              BaseITNG @Deployment method references ShrinkWrap

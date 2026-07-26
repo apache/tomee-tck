@@ -23,12 +23,15 @@
 
     <defaultProtocol type="Servlet 5.0"/>
 
-    <container qualifier="tomee-plus" default="true">
+    <!-- ${tomee.classifier} is expanded by the antrun copy in pom.xml when
+         this file is overlaid into the TCK reactor; this is not a
+         stand-alone Arquillian descriptor. -->
+    <container qualifier="tomee" default="true">
         <configuration>
             <property name="httpPort">-1</property>
             <property name="ajpPort">-1</property>
             <property name="stopPort">-1</property>
-            <property name="classifier">plus</property>
+            <property name="classifier">${tomee.classifier}</property>
             <property name="debug">false</property>
             <property name="cleanOnStartUp">true</property>
             <property name="dir">target/tomee</property>

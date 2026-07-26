@@ -58,3 +58,25 @@ release tree and is passed as the adapter's additional-property statement file.
 `persistence-derby.ddl.sql` is derived from the Jakarta EE 11 Platform TCK
 `jakartaeetck-11.0.1` GlassFish runner, with only clean-database `DROP`
 statements and the runner-specific procedure-jar installation removed.
+
+## Building the TomEE under test
+
+`tomee/build-tomee.sh <git-ref> [repository-directory]` builds Apache TomEE
+from any tag, branch, or commit and installs every distribution ZIP plus the
+`arquillian-tomee-remote` adapter into a Maven repository, so a suite can test
+a build that was never deployed. The clone lives in `target/tomee-src`
+(override with `TOMEE_SRC_DIR`) and the source is `apache/tomee` (override
+with `TOMEE_REPO_URL`).
+
+apache/tomee ships no Maven wrapper, so the build runs through this
+repository's wrapper pointed at the TomEE reactor. It skips TomEE's own tests
+— the TCK suites are what validate the build — and uses TomEE's `quick`
+profile, the narrowest one that still assembles all four distributions and
+builds the adapter.
+
+The script writes diagnostics to stderr and a single `TOMEE_VERSION=<version>`
+line to stdout, read from the reactor rather than derived from the ref, so a
+caller can capture it with a plain command substitution and pass it to the
+runners as `TOMEE_VERSION`. It fails if the build did not install all four
+distribution ZIPs and the adapter, rather than letting each suite fail later
+on an unresolvable artifact.

@@ -45,7 +45,7 @@
             <artifactId>apache-tomee</artifactId>
             <version>${tomee.version}</version>
             <type>zip</type>
-            <classifier>plume</classifier>
+            <classifier>${tomee.classifier}</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -82,7 +82,7 @@
                         <tomee.dir>target/tomee/server</tomee.dir>
                         <tomee.appWorkingDir>target/tomee/arquillian</tomee.appWorkingDir>
                         <tomee.cleanOnStartUp>true</tomee.cleanOnStartUp>
-                        <tomee.classifier>plume</tomee.classifier>
+                        <tomee.classifier>${tomee.classifier}</tomee.classifier>
                         <provider.configuration.file>${authentication.tck.dir}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
                         <vendor.authconfig.factory>org.apache.catalina.authenticator.jaspic.AuthConfigFactoryImpl</vendor.authconfig.factory>
                         <log.file.name.test>authentication-tck-test.log</log.file.name.test>

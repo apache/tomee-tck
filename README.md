@@ -2,8 +2,12 @@
 
 This repository is the harness for running the Jakarta EE TCKs against Apache
 TomEE — currently the Jakarta EE 11 Web Profile TCK against TomEE 11. Runs
-target the TomEE Plume distribution by default; set
-`TOMEE_CLASSIFIER=webprofile` to test the Web Profile distribution instead.
+target the TomEE Plume distribution by default; set `TOMEE_CLASSIFIER` to
+`webprofile`, `microprofile`, or `plus` to test another distribution.
+
+A run can test either a TomEE already published to a Maven repository or one
+built from a specific tag, branch, or commit of apache/tomee — see
+[Test a specific TomEE ref](#test-a-specific-tomee-ref).
 
 The harness uses the TCK's published Maven artifacts, JUnit 5 and Arquillian;
 there is no Ant launcher, `TSDeployment`, or checked-in TCK distribution. A
@@ -26,16 +30,16 @@ The build uses these centrally managed inputs:
 | Jakarta EE API | `jakarta.platform:jakarta.jakartaee-api:11.0.0` | Maven Central transport and repository checksums |
 | Platform TCK artifacts | `jakarta.tck:artifacts-bom:11.0.3` | SHA-256 in `environment/versions.env` |
 | TCK Arquillian porting library | `jakarta.tck.arquillian:tck-porting-lib:11.1.3` | version selected by the 11.0.3 BOM |
-| TomEE Plume (default target under test) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:plume:zip` | mutable development snapshot; not locked yet |
-| TomEE Web Profile (opt-in via `TOMEE_CLASSIFIER=webprofile`) | `org.apache.tomee:apache-tomee:11.0.0-SNAPSHOT:webprofile:zip` | mutable development snapshot; not locked yet |
-| TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:11.0.0-SNAPSHOT` | mutable development snapshot; not locked yet |
+| TomEE distribution under test | `org.apache.tomee:apache-tomee:${tomee.version}:${tomee.classifier}:zip` | git commit when built from a ref; otherwise a mutable development snapshot |
+| TomEE remote adapter | `org.apache.tomee:arquillian-tomee-remote:${tomee.version}` | git commit when built from a ref; otherwise a mutable development snapshot |
 | Derby runtime | `derbyclient`, `derbynet`, `derbyshared`, and `derbytools` `10.15.2.0` | per-jar SHA-256 values in `environment/versions.env` |
 
-TomEE is sourced from the snapshot repository while the harness tracks active
-TomEE 11 development after the 11.0.0-M1 milestone. Maven always
-uses the current `11.0.0-SNAPSHOT`; CI does not pin or checksum those changing
-bytes. A timestamped version and checksum should only be added when the harness
-needs a stable qualification candidate.
+TomEE comes from one of two places. Built from a git ref, the exact commit
+identifies the bytes and no checksum is needed. Resolved from the snapshot
+repository instead — the default when `TOMEE_VERSION` is unset — Maven uses
+the current `11.0.0-SNAPSHOT` and neither pins nor checksums those changing
+bytes. Build from a tag when the harness needs a stable qualification
+candidate.
 
 Verify the immutable TCK BOM metadata only (a plain
 `sh environment/verify-inputs.sh` also downloads and verifies the pinned
@@ -75,15 +79,65 @@ on OpenJPA. Test the OpenJPA-based `webprofile` ZIP instead with:
 TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest persistence-javatest
 ```
 
+`TOMEE_CLASSIFIER` accepts `plume`, `webprofile`, `microprofile`, and `plus`,
+and every runner script rejects anything else. The Platform catalog manifest
+and the reviewed exclusion lists describe `plume` and `webprofile`; a
+`microprofile` or `plus` run reuses the `plume` expectations, so read its
+failures against that distribution's own scope rather than as regressions.
+
+## Test a specific TomEE ref
+
+`environment/tomee/build-tomee.sh` builds Apache TomEE from any tag, branch,
+or commit and installs every distribution ZIP and the `arquillian-tomee-remote`
+adapter into a Maven repository, so the suites can run against a build that
+was never deployed:
+
+```sh
+environment/tomee/build-tomee.sh tomee-project-9.1.3
+```
+
+It prints the built version as a single `TOMEE_VERSION=<version>` line — read
+from the reactor, so a tag builds its release version and a branch builds
+whatever `-SNAPSHOT` it carries. Pass that version and the flavour back to any
+runner:
+
+```sh
+TOMEE_VERSION=11.0.0-SNAPSHOT TOMEE_CLASSIFIER=plume \
+  runner-webprofile/run-platform-suite.sh servlet rest
+```
+
+Both variables are optional: unset, `TOMEE_VERSION` leaves the pom's snapshot
+version in place and `TOMEE_CLASSIFIER` defaults to `plume`. Set
+`TOMEE_REPO_URL` to build from a fork, and `TOMEE_SRC_DIR` to place the clone
+somewhere other than `target/tomee-src`. The build skips TomEE's own tests and
+uses its `quick` profile, which drops the examples, itests, and TomEE's own
+tck modules while still assembling all four distributions.
+
 ## ASF Jenkins pipeline
 
 The root `Jenkinsfile` is the authoritative CI definition. It targets the ASF
-Jenkins `ubuntu` agents. The pipeline validates the environment, runs the
-smoke gate on JDK 17 and JDK 21 in parallel, and then fans out every manifest
-partition as an independent JDK 21 branch against the default TomEE Plume
-distribution. One additional branch runs the Jakarta Persistence javatest
-partition against the OpenJPA-based webprofile distribution to track its
-reviewed exclusion list. Test reports and TomEE logs are archived for 14 days.
+Jenkins `ubuntu` agents. The pipeline validates the environment, builds the
+TomEE under test, runs the smoke gate on JDK 17 and JDK 21 in parallel, and
+then fans out every manifest partition and every standalone suite as an
+independent JDK 21 branch. Test reports and TomEE logs are archived for 14
+days.
+
+Three build parameters select what is tested:
+
+| Parameter | Default | Meaning |
+| --- | --- | --- |
+| `TOMEE_REF` | `main` | Tag, branch, or commit of apache/tomee to build and test |
+| `TOMEE_REPO_URL` | `https://github.com/apache/tomee.git` | Clone source; point at a fork for an unmerged branch |
+| `TOMEE_CLASSIFIER` | `plume` | Distribution to test: `plume`, `webprofile`, `microprofile`, or `plus` |
+
+The `Build TomEE` stage runs `environment/tomee/build-tomee.sh` for the chosen
+ref, installs the result into a workspace-local Maven repository, and stashes
+the `org/apache/tomee` slice of it. Every downstream branch unstashes that
+slice into its own workspace repository and passes the built version and the
+selected flavour to its runner, so the whole pipeline reports on one TomEE
+build. Nothing is deployed to a shared repository, so concurrent jobs and
+workstation repositories are untouched. The build description records the ref,
+version, and flavour each run tested.
 
 Parallel branches request `ubuntu && ephemeral` agents and run their suites
 inside digest-pinned containers (`eclipse-temurin` JDK images; a
@@ -104,10 +158,11 @@ populated from scratch every build.
 See `runner-webprofile/README.md` for the available artifact profiles and the
 coverage gaps that remain before this can produce a certification result.
 
-For a locally built TomEE snapshot, install the distribution under test (Plume
-by default) and the remote Arquillian adapter into the same Maven repository
-first. Development runs intentionally consume the mutable snapshot without a
-checksum lock.
+To test a TomEE checkout you already have locally, install the distribution
+under test and the remote Arquillian adapter into the same Maven repository
+first, or let `environment/tomee/build-tomee.sh` do it from a git ref.
+Development runs that resolve the snapshot instead intentionally consume the
+mutable bytes without a checksum lock.
 
 ## Standalone specification TCKs
 

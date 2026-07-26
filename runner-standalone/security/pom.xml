@@ -35,10 +35,12 @@
     <security.tck.url>https://download.eclipse.org/jakartaee/security/4.0/jakarta-security-tck-${security.tck.version}.zip</security.tck.url>
     <security.tck.sha256>87172900057200e0a30a9f30cb3a75331fe428b9dac42153a093ee5c412b7d6d</security.tck.sha256>
     <tck.dir>${project.build.directory}/security-tck-${security.tck.version}/tck</tck.dir>
-    <!-- The security TCK exercises full-profile features; TomEE Plus is the
-         distribution apache/tomee validates it against. The plus classifier
-         is set in src/test/resources/arquillian.xml and
-         tomee-remote-profile.xml. -->
+    <!-- The security TCK exercises full-profile features; apache/tomee
+         validates it against TomEE Plus. The run's tomee.classifier reaches
+         the reactor through src/test/resources/arquillian.xml and
+         tomee-remote-profile.xml, both expanded by the antrun steps below,
+         so a webprofile or microprofile run tests that distribution instead
+         and its results are read against that profile's scope. -->
     <!-- The artifact whose -tomcat repackaging TomEE ships as
          lib/jakartaee-api-*-tomcat.jar; its jakarta.security.enterprise
          classes are byte-identical to the distribution jar. Keep in sync
@@ -81,8 +83,14 @@
                   <fileset dir="${tck.dir}" includes="*/target/failsafe-reports/**,*/target/surefire-reports/**"/>
                 </delete>
 
-                <!-- Overlay the TomEE arquillian.xml into the TCK common resources. -->
-                <copy file="${project.basedir}/src/test/resources/arquillian.xml" tofile="${tck.dir}/common/src/main/resources/arquillian.xml" overwrite="true"/>
+                <!-- Overlay the TomEE arquillian.xml into the TCK common
+                     resources, expanding ${tomee.classifier} so the reactor
+                     starts the distribution the run selected. -->
+                <copy file="${project.basedir}/src/test/resources/arquillian.xml" tofile="${tck.dir}/common/src/main/resources/arquillian.xml" overwrite="true">
+                  <filterchain>
+                    <expandproperties/>
+                  </filterchain>
+                </copy>
 
                 <!-- Inject the tomee-remote profile into the TCK parent pom. -->
                 <loadfile property="tomee.remote.profile" srcFile="${project.basedir}/src/test/resources/tomee-remote-profile.xml" encoding="UTF-8">

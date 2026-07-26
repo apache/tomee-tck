@@ -69,7 +69,7 @@
             <artifactId>apache-tomee</artifactId>
             <version>${tomee.version}</version>
             <type>zip</type>
-            <classifier>plus</classifier>
+            <classifier>${tomee.classifier}</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -99,7 +99,7 @@
                         <tomee.dir>target/tomee/server</tomee.dir>
                         <tomee.appWorkingDir>target/tomee/arquillian</tomee.appWorkingDir>
                         <tomee.cleanOnStartUp>true</tomee.cleanOnStartUp>
-                        <tomee.classifier>plus</tomee.classifier>
+                        <tomee.classifier>${tomee.classifier}</tomee.classifier>
                         <!--
                           SSL configuration for app-openid2/app-openid3.
                           Those tests deploy an OpenID provider in a separate Tomcat with a

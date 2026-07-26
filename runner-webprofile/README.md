@@ -24,6 +24,19 @@ OpenJPA provider blocks 249 of the 450 persistence classes there:
 TOMEE_CLASSIFIER=webprofile runner-webprofile/run-platform-suite.sh javatest persistence-javatest
 ```
 
+`TOMEE_CLASSIFIER` also accepts `microprofile` and `plus`; the script rejects
+any other value. Those two carry no manifest overrides or exclusion
+subdirectory, so they run against the `plume` expectations and their failures
+have to be read against that distribution's own scope.
+
+`TOMEE_VERSION` selects the TomEE build to test — typically one
+`environment/tomee/build-tomee.sh` produced from a tag or branch. Unset, the
+pom's snapshot version applies:
+
+```shell
+TOMEE_VERSION=11.0.0-SNAPSHOT runner-webprofile/run-platform-suite.sh servlet rest
+```
+
 For diagnosis, run one partition and optionally one class directly:
 
 ```shell

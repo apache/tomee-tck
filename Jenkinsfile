@@ -8,6 +8,12 @@
 
 def platformPartitions = []
 
+// The version of the TomEE built by the 'Build TomEE' stage, read out of its
+// reactor rather than derived from the ref: a tomee-11.0.0 tag builds 11.0.0
+// and a branch builds whatever -SNAPSHOT it carries. Every downstream branch
+// passes it back in as -Dtomee.version so the whole pipeline tests one build.
+def tomeeVersion = ''
+
 // Every test branch runs its suite inside a container so each TomEE, Derby,
 // LDAP and JavaTest port binds a container-private network namespace: nothing
 // else on the host can collide with a chosen port, and no foreign server can
@@ -27,6 +33,30 @@ def smokeImages = [
 
 pipeline {
   agent none
+
+  parameters {
+    string(
+      name: 'TOMEE_REF',
+      defaultValue: 'main',
+      description: 'Git tag, branch, or commit of apache/tomee to build and test. ' +
+                   'The build stage clones this ref, builds the distributions and the ' +
+                   'Arquillian adapter, and feeds them to every branch below.'
+    )
+    string(
+      name: 'TOMEE_REPO_URL',
+      defaultValue: 'https://github.com/apache/tomee.git',
+      description: 'Repository to clone TOMEE_REF from. Point at a fork to test an ' +
+                   'unmerged branch.'
+    )
+    choice(
+      name: 'TOMEE_CLASSIFIER',
+      choices: ['plume', 'webprofile', 'microprofile', 'plus'],
+      description: 'TomEE distribution to test. The Platform catalog manifest and ' +
+                   'the reviewed exclusion lists describe plume and webprofile; a ' +
+                   'microprofile or plus run falls back to the plume expectations, ' +
+                   'so read its failures against that distribution\'s scope.'
+    )
+  }
 
   options {
     buildDiscarder(logRotator(daysToKeepStr: '14', numToKeepStr: '10'))
@@ -55,6 +85,7 @@ pipeline {
           sh -n environment/database/require-derby-port-free.sh
           sh -n environment/database/wait-for-derby.sh
           sh -n environment/tomee/require-tomee-ports-free.sh
+          sh -n environment/tomee/build-tomee.sh
           sh -n environment/ports/select-free-port.sh
           sh -n environment/certificates/generate-test-certificates.sh
           sh -n runner-webprofile/run-platform-suite.sh
@@ -77,6 +108,64 @@ from xml.etree import ElementTree
               [partition: columns[0], protocol: columns[2]]
             }
         }
+      }
+      post {
+        always { deleteDir() }
+      }
+    }
+
+    // Build the TomEE under test once, from the requested ref, and hand the
+    // result to every branch below. The harness needs more than the
+    // distribution ZIP -- arquillian-tomee-remote and its TomEE dependencies,
+    // jakartaee-api for the signature tests -- so the stage installs the whole
+    // reactor into a workspace-local repository and stashes the
+    // org/apache/tomee slice of it. Each branch unstashes that slice into its
+    // own workspace repository before running, which is why every branch sets
+    // HOME to its workspace: the Maven wrapper's ${HOME}/.m2/repository is
+    // then the directory the slice lands in. Nothing is deployed anywhere, so
+    // concurrent jobs and workstation repositories are untouched.
+    //
+    // The slice is ~1.6 GB, so the stash is the pipeline's one large artifact
+    // transfer; it is deliberately scoped to org/apache/tomee rather than the
+    // whole repository, since every other dependency each branch needs is
+    // resolvable from Maven Central and Apache snapshots.
+    //
+    // The git clone and the TomEE build run on the node rather than in a
+    // container: the build needs no fixed ports and produces artifacts the
+    // node must stash afterwards.
+    stage('Build TomEE') {
+      agent { label 'ubuntu' }
+      tools { jdk 'jdk_21_latest' }
+      options { timeout(time: 90, unit: 'MINUTES') }
+      steps {
+        deleteDir()
+        checkout scm
+
+        script {
+          def output = sh(
+            returnStdout: true,
+            script: """
+              TOMEE_REPO_URL='${params.TOMEE_REPO_URL}' \
+              sh environment/tomee/build-tomee.sh '${params.TOMEE_REF}' "\${WORKSPACE}/.m2/repository"
+            """
+          ).trim()
+
+          // The script prints diagnostics to stderr and the version to
+          // stdout, so this reads the one line the pipeline consumes. Plain
+          // string work rather than a java.util.regex.Matcher, which is not
+          // serializable and would break the CPS transform.
+          tomeeVersion = output.readLines()
+            .findAll { it.startsWith('TOMEE_VERSION=') }
+            .collect { it.substring('TOMEE_VERSION='.length()).trim() }
+            .find { it }
+          if (!tomeeVersion) {
+            error("build-tomee.sh did not report a TOMEE_VERSION; output was:\n${output}")
+          }
+          echo "Built TomEE ${tomeeVersion} from ${params.TOMEE_REF} (${params.TOMEE_REPO_URL})"
+          currentBuild.description = "TomEE ${tomeeVersion} @ ${params.TOMEE_REF} (${params.TOMEE_CLASSIFIER})"
+        }
+
+        stash(name: 'tomee-repo', includes: '.m2/repository/org/apache/tomee/**')
       }
       post {
         always { deleteDir() }
@@ -110,11 +199,14 @@ from xml.etree import ElementTree
             steps {
               deleteDir()
               checkout scm
+              unstash 'tomee-repo'
               script {
                 docker.image(smokeImages[SMOKE_JDK]).inside {
                   withEnv(["HOME=${env.WORKSPACE}",
                            'JAVA_HOME=/opt/java/openjdk',
-                           'PATH+JDK=/opt/java/openjdk/bin']) {
+                           'PATH+JDK=/opt/java/openjdk/bin',
+                           "TOMEE_VERSION=${tomeeVersion}",
+                           "TOMEE_CLASSIFIER=${params.TOMEE_CLASSIFIER}"]) {
                     sh 'runner-smoke/run-smoke-suite.sh'
                   }
                 }
@@ -134,6 +226,7 @@ from xml.etree import ElementTree
                 node('ubuntu && ephemeral') {
                   deleteDir()
                   checkout scm
+                  unstash 'tomee-repo'
 
                   try {
                     timeout(time: 360, unit: 'MINUTES') {
@@ -141,6 +234,7 @@ from xml.etree import ElementTree
                         withEnv(["HOME=${env.WORKSPACE}",
                                  'JAVA_HOME=/opt/java/openjdk',
                                  'PATH+JDK=/opt/java/openjdk/bin',
+                                 "TOMEE_VERSION=${tomeeVersion}",
                                  "TOMEE_CLASSIFIER=${classifier}"]) {
                           sh "runner-webprofile/run-platform-suite.sh ${protocol} ${partition}"
                         }
@@ -159,10 +253,11 @@ from xml.etree import ElementTree
             }
           }
 
-          // The EclipseLink-based Plume distribution is the target under test.
+          // Every partition runs against the distribution TOMEE_CLASSIFIER
+          // selects (the EclipseLink-based Plume by default).
           def branches = platformPartitions.collectEntries { entry ->
             def branchName = "${entry.protocol} - ${entry.partition}"
-            [(branchName): catalogBranch(branchName, entry.protocol, entry.partition, 'plume')]
+            [(branchName): catalogBranch(branchName, entry.protocol, entry.partition, params.TOMEE_CLASSIFIER)]
           }
 
           // Standalone specification TCK runners. Every suite runs with its
@@ -191,13 +286,16 @@ from xml.etree import ElementTree
                 node('ubuntu && ephemeral') {
                   deleteDir()
                   checkout scm
+                  unstash 'tomee-repo'
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
                       docker.image(jdk21Image).inside {
                         withEnv(["HOME=${env.WORKSPACE}",
                                  'JAVA_HOME=/opt/java/openjdk',
-                                 'PATH+JDK=/opt/java/openjdk/bin']) {
+                                 'PATH+JDK=/opt/java/openjdk/bin',
+                                 "TOMEE_VERSION=${tomeeVersion}",
+                                 "TOMEE_CLASSIFIER=${params.TOMEE_CLASSIFIER}"]) {
                           sh "runner-standalone/run-standalone-suite.sh ${id}"
                         }
                       }
@@ -244,13 +342,16 @@ from xml.etree import ElementTree
                 node('ubuntu && ephemeral') {
                   deleteDir()
                   checkout scm
+                  unstash 'tomee-repo'
 
                   try {
                     timeout(time: timeoutMinutes, unit: 'MINUTES') {
                       docker.image(facesImage).inside('--shm-size=2g') {
                         withEnv(["HOME=${env.WORKSPACE}",
                                  'JAVA_HOME=/opt/java/openjdk',
-                                 'PATH+JDK=/opt/java/openjdk/bin']) {
+                                 'PATH+JDK=/opt/java/openjdk/bin',
+                                 "TOMEE_VERSION=${tomeeVersion}",
+                                 "TOMEE_CLASSIFIER=${params.TOMEE_CLASSIFIER}"]) {
                           sh 'runner-standalone/run-standalone-suite.sh faces'
                         }
                       }

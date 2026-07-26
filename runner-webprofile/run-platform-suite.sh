@@ -13,10 +13,20 @@ PROTOCOL=${1:-servlet}
 ONLY_PARTITION=${2:-}
 
 # The TomEE distribution under test. The default manifest and exclusions
-# describe the EclipseLink-based Plume ZIP; TOMEE_CLASSIFIER=webprofile
-# selects the OpenJPA-based distribution together with its
-# platform-suite-webprofile.tsv counts and exclusions/webprofile overrides.
+# describe the EclipseLink-based Plume ZIP; another TOMEE_CLASSIFIER selects
+# that distribution together with its platform-suite-<classifier>.tsv counts
+# and exclusions/<classifier> overrides, when those exist.
 TOMEE_CLASSIFIER=${TOMEE_CLASSIFIER:-plume}
+case "$TOMEE_CLASSIFIER" in
+  webprofile|microprofile|plus|plume) ;;
+  *)
+    echo "Unknown TOMEE_CLASSIFIER '$TOMEE_CLASSIFIER'; supported: webprofile, microprofile, plus, plume" >&2
+    exit 2 ;;
+esac
+
+# TOMEE_VERSION points the suite at a specific TomEE build -- typically one
+# environment/tomee/build-tomee.sh produced from a tag or branch. Unset, the
+# pom's default snapshot version applies.
 MANIFEST="$SCRIPT_DIR/platform-suite.tsv"
 # A classifier-specific manifest carries only the rows that differ; merge it
 # over the base manifest by partition id.
@@ -70,6 +80,7 @@ while IFS="$TAB" read -r partition artifact protocol groups source_classes expec
   rm -rf "$report_dir"
   "$ROOT_DIR/mvnw" \
     -pl runner-webprofile/run \
+    ${TOMEE_VERSION:+"-Dtomee.version=$TOMEE_VERSION"} \
     "-Dtomee.classifier=$TOMEE_CLASSIFIER" \
     "-Dtck.artifact=$artifact" \
     "-Dtck.partition=$partition" \
