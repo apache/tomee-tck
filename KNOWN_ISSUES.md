@@ -118,26 +118,16 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    runner drives the reactor's modern Arquillian app modules plus the signature
    test; the reactor's `old-tck` module (legacy JavaTest suite,
    `com.sun.ts.tests.securityapi`) is run by the separate `security-old` runner.
-6. **Jakarta Security `SecurityContext.hasAccessToWebResource()`** — the
-   programmatic access check returns `false` for a caller that is authorized
-   for the resource. The old-tck `securitycontext/callerdata` servlet reports
-   the correct caller and role membership, but `hasAccessToWebResource(
-   "/protectedServlet", "GET")` answers `false` where the spec requires `true`
-   for user `tom` (Manager role) against the `@HttpMethodConstraint("GET")`
-   resource; TomEE's `SecurityContext` is not wired to the servlet
-   authorization/`Policy` layer for this call. Excluded in
-   [security-old.txt](runner-standalone/exclusions/security-old.txt)
-   (`securitycontext/callerdata/Client.java#testSecurityContextHasAccessToWebResource`).
-7. **Persistence integration** — undeploy calls `close()` on an
+6. **Persistence integration** — undeploy calls `close()` on an
    already-closed `EntityManagerFactory` (fails the
    `entityManagerFactoryCloseExceptions` vehicles), and the Jakarta
    Persistence 3.2 CDI qualifier beans (`EntityManagerFactory`/
    `EntityManager` etc. from `persistence.xml`) are not registered
    (`ServletEMLookupTest`). Affects Plume and webprofile alike.
-8. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
+7. **Jakarta Tags TLD registration** — the `jakarta.tags.*` URIs of the
    replacement Jakarta Tags 3.0 jar are not exposed to applications; all 50
    Tags classes plus the EJB-Lite JSP vehicles fail as collateral.
-9. **Transactions — cross-request `UserTransaction` state leakage across
+8. **Transactions — cross-request `UserTransaction` state leakage across
    pooled servlet requests.** A `UserTransaction` a servlet/jsp request leaves
    in a non-clean state poisons the next request served on the same pooled
    Tomcat exec thread; the victim sees an `IllegalStateException` that is not
@@ -158,14 +148,14 @@ Fixes belong in Apache TomEE (or Tomcat); each removes exclusion entries.
    [transactions.txt](runner-standalone/exclusions/transactions.txt). The
    Platform catalog additionally shows CDI `@Transactional` interceptors
    failing propagation, rollback-rule, and `TransactionScoped` assertions.
-10. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
+9. **Enterprise Beans** — timer callbacks expose incomplete/not-retried
    transactions, `java:comp` is mutable where the spec requires
    `OperationNotSupportedException`, and failed CDI/EJB deployments leak
    deployment IDs (`DuplicateDeploymentIdException` in later apps).
-11. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
+10. **webprofile ZIP signature leak** — the combined `jakartaee-api` jar
     exposes Jakarta Batch and Messaging packages although `javaee.level=web`
     does not declare them; strip them or declare and certify them.
-12. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
+11. **WebSocket 2.2 extension advertising (Tomcat)** — the server-side
     configurator reports the extensions the client requested and negotiated.
     TomEE's client-side WebSocket container (Tomcat's `tomcat-websocket`)
     always advertises its built-in `permessage-deflate` extension in the
